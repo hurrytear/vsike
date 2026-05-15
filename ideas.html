@@ -10,7 +10,6 @@
 </head>
 <body>
 
-<div class="cursor" aria-hidden="true"></div>
 <div class="page-transition" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Main navigation">
@@ -19,41 +18,47 @@
     vsike<span class="nav-logo-dot" aria-hidden="true"></span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="about.html">About</a></li>
-    <li><a href="work.html">Work</a></li>
-    <li><a href="ideas.html">Ideas</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a href="about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
   </ul>
-  <button class="nav-toggle" aria-label="Open menu">
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
 <div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
-  <a href="about.html">About</a>
-  <a href="work.html">Work</a>
-  <a href="ideas.html">Ideas</a>
-  <a href="contact.html">Contact</a>
+  <a href="about.html" data-i18n="nav.about">About</a>
+  <a href="work.html" data-i18n="nav.work">Work</a>
+  <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
 </div>
 
 <main>
-  <!-- ── Page Hero ─────────────────────────────────────────────── -->
   <header class="page-hero">
     <div class="page-hero-ghost" aria-hidden="true">03</div>
-    <p class="page-hero-eyebrow reveal">Ideas</p>
-    <h1 class="page-hero-title reveal reveal-d1">
-      Thinking<br>out loud.
-    </h1>
-    <p class="page-hero-sub reveal reveal-d2">
+    <p class="page-hero-eyebrow reveal" data-i18n="ideas.eyebrow">Ideas</p>
+    <h1 class="page-hero-title reveal reveal-d1" data-i18n-html="ideas.title">Thinking<br>out loud.</h1>
+    <p class="page-hero-sub reveal reveal-d2" data-i18n="ideas.sub">
       Notes on AI security, design, and the places where they collide. Covering LLM exploits, zero-days, and the craft of building things that last.
     </p>
   </header>
 
-  <!-- ── Ideas List ─────────────────────────────────────────────── -->
   <div class="section">
     <div class="section-label reveal">
-      <span>All Posts</span>
-      <span class="section-label-count">14 entries</span>
+      <span data-i18n="ideas.section.label">All Posts</span>
+      <span class="section-label-count" data-i18n="ideas.section.count">14 entries</span>
     </div>
 
     <div class="ideas-list" role="list">
@@ -86,7 +91,7 @@
         <div class="idea-num">12</div>
         <div class="idea-content">
           <div class="idea-title">RAG Poisoning: When Your AI Knowledge Base Becomes an Attack Vector</div>
-          <p class="idea-excerpt">Retrieval-Augmented Generation systems trust their data sources implicitly. Injecting adversarial content into a vector database — a document, a webpage, a support ticket — can hijack every query that retrieves it. A walkthrough of the attack surface.</p>
+          <p class="idea-excerpt">Retrieval-Augmented Generation systems trust their data sources implicitly. Injecting adversarial content into a vector database can hijack every query that retrieves it. A walkthrough of the attack surface.</p>
         </div>
         <div class="idea-meta">
           <span class="idea-date">Apr 2025</span>
@@ -134,7 +139,7 @@
         <div class="idea-num">08</div>
         <div class="idea-content">
           <div class="idea-title">AI-Discovered Critical Vulnerabilities in 2025: A Running Tally</div>
-          <p class="idea-excerpt">From Google's Big Sleep SQLite buffer overflow to Microsoft's Security Copilot flagging misconfigurations in Azure deployments — a curated log of vulnerabilities where AI either found the bug, accelerated the patch, or changed the disclosure timeline.</p>
+          <p class="idea-excerpt">From Google's Big Sleep SQLite buffer overflow to Microsoft's Security Copilot flagging misconfigurations in Azure — a curated log of vulnerabilities where AI either found the bug, accelerated the patch, or changed the disclosure timeline.</p>
         </div>
         <div class="idea-meta">
           <span class="idea-date">Jan 2025</span>
@@ -194,7 +199,7 @@
         <div class="idea-num">03</div>
         <div class="idea-content">
           <div class="idea-title">What Dark Mode Actually Means</div>
-          <p class="idea-excerpt">Dark mode isn't an accessibility feature. It isn't a user preference toggle. For some of us, it's the only honest way to work — a disposition, not a setting.</p>
+          <p class="idea-excerpt">Dark mode isn't an accessibility feature or a user preference toggle. For some of us, it's the only honest way to work — a disposition, not a setting.</p>
         </div>
         <div class="idea-meta">
           <span class="idea-date">Jan 2025</span>
@@ -228,31 +233,28 @@
 
     </div>
 
-    <!-- ── Subscribe nudge ────────────────────────────────────── -->
     <div class="reveal" style="margin-top: 5rem; border: 1px solid var(--fg-dim); padding: clamp(1.5rem, 4vw, 3rem); display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
       <div>
-        <p class="label label-accent" style="margin-bottom: .75rem;">Stay in the loop</p>
-        <p style="font-family: var(--serif); font-size: var(--fs-lg); letter-spacing: -.01em; line-height: 1.3;">
+        <p class="label label-accent" style="margin-bottom: .75rem;" data-i18n="ideas.loop.label">Stay in the loop</p>
+        <p style="font-family: var(--serif); font-size: var(--fs-lg); letter-spacing: -.01em; line-height: 1.3;" data-i18n="ideas.loop.title">
           New ideas, when they're ready.
         </p>
       </div>
-      <a href="contact.html" class="btn">Get notified &nbsp;→</a>
+      <a href="contact.html" class="btn" data-i18n="ideas.loop.cta">Get notified &nbsp;→</a>
     </div>
   </div>
 </main>
 
 <footer>
-  <div class="footer-left">
-    vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv
-  </div>
+  <div class="footer-left">vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv</div>
   <div class="footer-right">
-    <a href="about.html">About</a>
+    <a href="about.html" data-i18n="nav.about">About</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="work.html">Work</a>
+    <a href="work.html" data-i18n="nav.work">Work</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="ideas.html">Ideas</a>
+    <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="contact.html">Contact</a>
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
   </div>
 </footer>
 

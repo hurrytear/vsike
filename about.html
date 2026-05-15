@@ -9,7 +9,6 @@
 </head>
 <body>
 
-<div class="cursor" aria-hidden="true"></div>
 <div class="page-transition" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Main navigation">
@@ -18,77 +17,81 @@
     vsike<span class="nav-logo-dot" aria-hidden="true"></span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="about.html">About</a></li>
-    <li><a href="work.html">Work</a></li>
-    <li><a href="ideas.html">Ideas</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a href="about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
   </ul>
-  <button class="nav-toggle" aria-label="Open menu">
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
 <div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
-  <a href="about.html">About</a>
-  <a href="work.html">Work</a>
-  <a href="ideas.html">Ideas</a>
-  <a href="contact.html">Contact</a>
+  <a href="about.html" data-i18n="nav.about">About</a>
+  <a href="work.html" data-i18n="nav.work">Work</a>
+  <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
 </div>
 
 <main>
-  <!-- ── Page Hero ────────────────────────────────────────────── -->
   <header class="page-hero">
     <div class="page-hero-ghost" aria-hidden="true">01</div>
-    <p class="page-hero-eyebrow reveal">About vsike</p>
-    <h1 class="page-hero-title reveal reveal-d1">
-      Vision.<br>Style.<br>Instinct.
-    </h1>
-    <p class="page-hero-sub reveal reveal-d2">
+    <p class="page-hero-eyebrow reveal" data-i18n="about.eyebrow">About vsike</p>
+    <h1 class="page-hero-title reveal reveal-d1" data-i18n-html="about.title">Vision.<br>Style.<br>Instinct.</h1>
+    <p class="page-hero-sub reveal reveal-d2" data-i18n="about.sub">
       A philosophy, a practice, and an obsession with making things that actually matter.
     </p>
   </header>
 
-  <!-- ── Manifesto ─────────────────────────────────────────────── -->
   <div class="section">
-    <div class="section-label">
-      <span>The Manifesto</span>
+    <div class="section-label reveal">
+      <span data-i18n="manifesto.label">The Manifesto</span>
     </div>
     <div class="manifesto-block reveal">
-      <p class="manifesto-intro">
+      <p class="manifesto-intro" data-i18n="manifesto.intro">
         vsike is not a studio. It's not an agency. It's a stance.
       </p>
       <div class="manifesto-body">
-        <p>In a world that rewards speed over substance, vsike bets on both. True velocity isn't just fast — it's directed. It's the kind of momentum that comes from knowing exactly where you're going, and why each step matters.</p>
-        <p>Style, here, isn't decoration. It's clarity made visible. The discipline to remove everything that doesn't belong, and the courage to commit fully to what does. A style is a worldview — consistent, recognizable, earned.</p>
-        <p>And instinct? That's the hardest thing to teach and the most valuable thing to develop. The gut-level knowing that comes from years of looking, making, failing, and looking again. vsike exists to sharpen that edge — for the work, and for the maker behind it.</p>
-        <p>We believe the best work happens at the intersection of all three: a clear vision to aim at, the style to carry it through, and the instinct to know when you've arrived.</p>
+        <p data-i18n="manifesto.p1">In a world that rewards speed over substance, vsike bets on both. True velocity isn't just fast — it's directed. It's the kind of momentum that comes from knowing exactly where you're going, and why each step matters.</p>
+        <p data-i18n="manifesto.p2">Style, here, isn't decoration. It's clarity made visible. The discipline to remove everything that doesn't belong, and the courage to commit fully to what does. A style is a worldview — consistent, recognizable, earned.</p>
+        <p data-i18n="manifesto.p3">And instinct? That's the hardest thing to teach and the most valuable thing to develop. The gut-level knowing that comes from years of looking, making, failing, and looking again. vsike exists to sharpen that edge — for the work, and for the maker behind it.</p>
+        <p data-i18n="manifesto.p4">We believe the best work happens at the intersection of all three: a clear vision to aim at, the style to carry it through, and the instinct to know when you've arrived.</p>
       </div>
     </div>
 
-    <!-- ── Pillars ───────────────────────────────────────────── -->
     <div class="pillars reveal" style="margin-top: 5rem;">
       <div class="pillar">
         <div class="pillar-letter">V</div>
-        <div class="pillar-word">Vision</div>
-        <p class="pillar-body">The ability to see what isn't there yet. To imagine the destination before the path exists. Vision is the engine — without it, even the fastest motion is just drift. It's the first and most important skill.</p>
+        <div class="pillar-word" data-i18n="pillar.v">Vision</div>
+        <p class="pillar-body">The ability to see what isn't there yet. To imagine the destination before the path exists. Vision is the engine — without it, even the fastest motion is just drift.</p>
       </div>
       <div class="pillar">
         <div class="pillar-letter">S</div>
-        <div class="pillar-word">Style</div>
-        <p class="pillar-body">Not aesthetic vanity — earned clarity. A style is a worldview made visible. The consistent hand that makes disparate things recognizable as the same intelligence, the same care, the same point of view.</p>
+        <div class="pillar-word" data-i18n="pillar.s">Style</div>
+        <p class="pillar-body">Not aesthetic vanity — earned clarity. A style is a worldview made visible. The consistent hand that makes disparate things recognizable as the same intelligence, the same care.</p>
       </div>
       <div class="pillar">
         <div class="pillar-letter">I</div>
-        <div class="pillar-word">Instinct</div>
-        <p class="pillar-body">Compressed experience. The part of your mind that has seen enough to know without knowing how it knows. Raw instinct misleads. Trained instinct is the sharpest compass in any uncertain terrain.</p>
+        <div class="pillar-word" data-i18n="pillar.i">Instinct</div>
+        <p class="pillar-body">Compressed experience. The part of your mind that has seen enough to know without knowing how it knows. Raw instinct misleads. Trained instinct is the sharpest compass.</p>
       </div>
     </div>
   </div>
 
-  <!-- ── The Path ──────────────────────────────────────────────── -->
   <div class="section" style="padding-top: 0;">
     <div class="section-label reveal">
-      <span>The Path</span>
+      <span data-i18n="path.label">The Path</span>
       <span class="section-label-count">2021 → present</span>
     </div>
     <div class="timeline">
@@ -103,21 +106,21 @@
         <div class="timeline-year">2022</div>
         <div>
           <div class="timeline-title">The Experiments</div>
-          <p class="timeline-body">Late nights and failed prototypes. Building systems that didn't survive contact with reality. Trying everything. Learning what mattered, learning what didn't. The necessary mess of figuring it out.</p>
+          <p class="timeline-body">Late nights and failed prototypes. Building systems that didn't survive contact with reality. Trying everything. Learning what mattered, learning what didn't.</p>
         </div>
       </div>
       <div class="timeline-item reveal">
         <div class="timeline-year">2023</div>
         <div>
           <div class="timeline-title">The Focus</div>
-          <p class="timeline-body">Narrowing down. Removing the noise. Discovering that the best work comes not from doing more, but from doing the right things with total commitment and no apology for what gets left behind.</p>
+          <p class="timeline-body">Narrowing down. Removing the noise. Discovering that the best work comes not from doing more, but from doing the right things with total commitment.</p>
         </div>
       </div>
       <div class="timeline-item reveal">
         <div class="timeline-year">2024</div>
         <div>
           <div class="timeline-title">The Practice</div>
-          <p class="timeline-body">Systems, rhythms, rituals. Turning insight into output, consistently. The craft of shipping — not just building. Learning the difference between the work that feels good and the work that actually lands.</p>
+          <p class="timeline-body">Systems, rhythms, rituals. Turning insight into output, consistently. The craft of shipping — not just building.</p>
         </div>
       </div>
       <div class="timeline-item reveal">
@@ -130,32 +133,29 @@
     </div>
   </div>
 
-  <!-- ── CTA ───────────────────────────────────────────────────── -->
   <div class="section" style="padding-top: 0; text-align: center; padding-bottom: 2rem;">
     <div class="reveal">
-      <p style="font-family: var(--serif); font-size: var(--fs-xl); letter-spacing: -.02em; margin-bottom: 2rem; color: var(--fg-muted);">
+      <p style="font-family: var(--serif); font-size: var(--fs-xl); letter-spacing: -.02em; margin-bottom: 2rem; color: var(--fg-muted);" data-i18n="about.cta.text">
         Ready to see what we've made?
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="work.html" class="btn">View work &nbsp;→</a>
-        <a href="contact.html" class="btn-ghost btn">Get in touch</a>
+        <a href="work.html" class="btn" data-i18n="about.cta1">View work &nbsp;→</a>
+        <a href="contact.html" class="btn-ghost btn" data-i18n="about.cta2">Get in touch</a>
       </div>
     </div>
   </div>
 </main>
 
 <footer>
-  <div class="footer-left">
-    vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv
-  </div>
+  <div class="footer-left">vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv</div>
   <div class="footer-right">
-    <a href="about.html">About</a>
+    <a href="about.html" data-i18n="nav.about">About</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="work.html">Work</a>
+    <a href="work.html" data-i18n="nav.work">Work</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="ideas.html">Ideas</a>
+    <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="contact.html">Contact</a>
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
   </div>
 </footer>
 

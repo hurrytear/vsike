@@ -9,7 +9,6 @@
 </head>
 <body>
 
-<div class="cursor" aria-hidden="true"></div>
 <div class="page-transition" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Main navigation">
@@ -18,44 +17,50 @@
     vsike<span class="nav-logo-dot" aria-hidden="true"></span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="about.html">About</a></li>
-    <li><a href="work.html">Work</a></li>
-    <li><a href="ideas.html">Ideas</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a href="about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
   </ul>
-  <button class="nav-toggle" aria-label="Open menu">
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
 <div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
-  <a href="about.html">About</a>
-  <a href="work.html">Work</a>
-  <a href="ideas.html">Ideas</a>
-  <a href="contact.html">Contact</a>
+  <a href="about.html" data-i18n="nav.about">About</a>
+  <a href="work.html" data-i18n="nav.work">Work</a>
+  <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
 </div>
 
 <main>
-  <!-- ── Page Hero ─────────────────────────────────────────────── -->
   <header class="page-hero">
     <div class="page-hero-ghost" aria-hidden="true">02</div>
-    <p class="page-hero-eyebrow reveal">Selected Work</p>
-    <h1 class="page-hero-title reveal reveal-d1">Things<br>we've built.</h1>
-    <p class="page-hero-sub reveal reveal-d2">
+    <p class="page-hero-eyebrow reveal" data-i18n="work.eyebrow">Selected Work</p>
+    <h1 class="page-hero-title reveal reveal-d1" data-i18n-html="work.title">Things<br>we've built.</h1>
+    <p class="page-hero-sub reveal reveal-d2" data-i18n="work.sub">
       A curated collection of digital work — interfaces, systems, and experiments made with intention.
     </p>
   </header>
 
-  <!-- ── Work Grid ─────────────────────────────────────────────── -->
   <div class="section">
     <div class="section-label reveal">
-      <span>Projects</span>
-      <span class="section-label-count">06 works</span>
+      <span data-i18n="work.section.label">Projects</span>
+      <span class="section-label-count" data-i18n="work.section.count">06 works</span>
     </div>
 
     <div class="work-grid">
-
-      <!-- Featured -->
       <article class="work-card work-card-featured reveal">
         <div class="work-card-fill" aria-hidden="true"></div>
         <div>
@@ -132,31 +137,25 @@
         <p class="work-card-desc">A command-line scaffolding tool for design-aware developers. Generates opinionated project structures with sensible defaults. Zero config to first pixel in under 30 seconds.</p>
         <span class="work-card-arrow" aria-hidden="true">↗</span>
       </article>
-
     </div>
 
-    <!-- ── CTA ─────────────────────────────────────────────────── -->
     <div class="reveal" style="margin-top: 4rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-      <a href="contact.html" class="btn">Start a project &nbsp;→</a>
-      <span style="font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); letter-spacing: .15em;">
-        New inquiries open
-      </span>
+      <a href="contact.html" class="btn" data-i18n="work.cta1">Start a project &nbsp;→</a>
+      <span style="font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); letter-spacing: .15em;" data-i18n="work.cta2.label">New inquiries open</span>
     </div>
   </div>
 </main>
 
 <footer>
-  <div class="footer-left">
-    vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv
-  </div>
+  <div class="footer-left">vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv</div>
   <div class="footer-right">
-    <a href="about.html">About</a>
+    <a href="about.html" data-i18n="nav.about">About</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="work.html">Work</a>
+    <a href="work.html" data-i18n="nav.work">Work</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="ideas.html">Ideas</a>
+    <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
     &nbsp;<span class="footer-sep">·</span>&nbsp;
-    <a href="contact.html">Contact</a>
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
   </div>
 </footer>
 
