@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Discovered Critical Vulnerabilities in 2025: A Running Tally — vsike</title>
+  <meta name="description" content="From Google's Big Sleep SQLite buffer overflow to Microsoft's Security Copilot flagging misconfigurations in Azure — a curated log of vulnerabilities where AI changed the disclosure timeline.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Security</span>
+          <span class="article-date-label">Jan 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">AI-Discovered Critical Vulnerabilities in 2025: A Running Tally</h1>
+        <p class="article-lead" data-i18n="a.lead">From Google's Big Sleep SQLite buffer overflow to Microsoft's Security Copilot flagging misconfigurations in Azure — a curated log of vulnerabilities where AI either found the bug, accelerated the patch, or changed the disclosure timeline.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">We're at an inflection point in the history of vulnerability research. For most of that history, the discovery side was human-only: researchers, auditors, and occasionally automated fuzzers. AI is now a genuine participant. This is a log of the cases where that participation was documented and significant.</p>
+        <p data-i18n="a.2">Google Project Big Sleep — SQLite buffer overflow (Oct 2024): The first publicly confirmed case of an AI agent discovering a previously unknown vulnerability in widely-deployed open-source software. A stack buffer overflow in SQLite's JDBC driver, found through agent-based code reasoning rather than fuzzing. Patched the same day it was reported to the SQLite team. Zero user impact — the AI was faster than any attacker.</p>
+        <h2 data-i18n="a.h1">The Cases That Changed the Timeline</h2>
+        <p data-i18n="a.3">Microsoft Security Copilot — Azure misconfiguration patterns (Q1 2025): Microsoft's AI security tooling flagged a class of Azure RBAC misconfigurations that allowed privilege escalation across tenant boundaries under specific conditions. The finding affected a non-trivial percentage of enterprise Azure deployments. Microsoft quietly released guidance before the pattern became publicly known. The AI's value here wasn't novel vulnerability research — it was scale: pattern-matching across millions of configurations that no human team could audit manually.</p>
+        <p data-i18n="a.4">Trail of Bits — AI-assisted audit of Ethereum client code (2024–2025): Security firm Trail of Bits used a custom LLM pipeline to audit the Go implementation of the Ethereum execution client. The tool flagged edge cases in the RLP encoding layer that manual auditors had reviewed and passed. Two of the flagged cases turned out to be valid findings — one potentially consensus-breaking under adversarial conditions. The AI didn't replace the human auditors; it extended their coverage into code paths too tedious to trace manually.</p>
+        <blockquote data-i18n="a.q">"The log of AI-found vulnerabilities will be the definitive argument for or against the technology. Right now, the argument is building."</blockquote>
+        <h2 data-i18n="a.h2">What the Pattern Shows</h2>
+        <p data-i18n="a.5">Looking across the documented cases, a clear pattern emerges: AI is not replacing vulnerability researchers. It's extending their reach into three specific areas where human cognition hits limits. First: scale — AI can audit millions of configurations or thousands of code paths simultaneously. Second: persistence — AI doesn't get bored tracing deeply nested call chains. Third: cross-codebase correlation — AI can flag a pattern across multiple repositories that no single human reviewer would have reason to connect.</p>
+        <p data-i18n="a.6">The cases that haven't appeared yet — and will — are the ones where AI autonomously chains multiple findings into a working exploit. We're not there in the public record. But the trajectory from "AI finds the bug" to "AI constructs the proof of concept" is measurable and shortening. The organizations that invest in defensive AI tooling in 2025 are building a lead that compounds. Those that wait are betting the gap stays comfortable long enough for them to catch up.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Security',
+    'a.title': 'AI-Discovered Critical Vulnerabilities in 2025: A Running Tally',
+    'a.lead': "From Google's Big Sleep SQLite buffer overflow to Microsoft's Security Copilot flagging misconfigurations in Azure — a curated log of vulnerabilities where AI either found the bug, accelerated the patch, or changed the disclosure timeline.",
+    'a.1': "We're at an inflection point in the history of vulnerability research. For most of that history, the discovery side was human-only: researchers, auditors, and occasionally automated fuzzers. AI is now a genuine participant. This is a log of the cases where that participation was documented and significant.",
+    'a.2': "Google Project Big Sleep — SQLite buffer overflow (Oct 2024): The first publicly confirmed case of an AI agent discovering a previously unknown vulnerability in widely-deployed open-source software. A stack buffer overflow in SQLite's JDBC driver, found through agent-based code reasoning rather than fuzzing. Patched the same day it was reported to the SQLite team. Zero user impact — the AI was faster than any attacker.",
+    'a.h1': 'The Cases That Changed the Timeline',
+    'a.3': "Microsoft Security Copilot — Azure misconfiguration patterns (Q1 2025): Microsoft's AI security tooling flagged a class of Azure RBAC misconfigurations that allowed privilege escalation across tenant boundaries under specific conditions. The finding affected a non-trivial percentage of enterprise Azure deployments. Microsoft quietly released guidance before the pattern became publicly known. The AI's value here wasn't novel vulnerability research — it was scale: pattern-matching across millions of configurations that no human team could audit manually.",
+    'a.4': "Trail of Bits — AI-assisted audit of Ethereum client code (2024–2025): Security firm Trail of Bits used a custom LLM pipeline to audit the Go implementation of the Ethereum execution client. The tool flagged edge cases in the RLP encoding layer that manual auditors had reviewed and passed. Two of the flagged cases turned out to be valid findings — one potentially consensus-breaking under adversarial conditions. The AI didn't replace the human auditors; it extended their coverage into code paths too tedious to trace manually.",
+    'a.q': '"The log of AI-found vulnerabilities will be the definitive argument for or against the technology. Right now, the argument is building."',
+    'a.h2': 'What the Pattern Shows',
+    'a.5': "Looking across the documented cases, a clear pattern emerges: AI is not replacing vulnerability researchers. It's extending their reach into three specific areas where human cognition hits limits. First: scale — AI can audit millions of configurations or thousands of code paths simultaneously. Second: persistence — AI doesn't get bored tracing deeply nested call chains. Third: cross-codebase correlation — AI can flag a pattern across multiple repositories that no single human reviewer would have reason to connect.",
+    'a.6': "The cases that haven't appeared yet — and will — are the ones where AI autonomously chains multiple findings into a working exploit. We're not there in the public record. But the trajectory from \"AI finds the bug\" to \"AI constructs the proof of concept\" is measurable and shortening. The organizations that invest in defensive AI tooling in 2025 are building a lead that compounds. Those that wait are betting the gap stays comfortable long enough for them to catch up.",
+  },
+  zh: {
+    'a.cat': 'AI 安全',
+    'a.title': '2025 年 AI 发现的关键漏洞：持续记录',
+    'a.lead': '从谷歌 Big Sleep 发现的 SQLite 缓冲区溢出，到微软 Security Copilot 标记的 Azure 错误配置——一份记录 AI 发现漏洞、加速修补或改变披露时间线的案例精选。',
+    'a.1': '我们正处于漏洞研究史上的一个拐点。在此之前的大部分历史中，发现侧都是纯人工的：研究人员、审计员，偶尔辅以自动化模糊测试器。AI 现在是一个真正的参与者。这是那些参与被记录且具有重要意义的案例日志。',
+    'a.2': '谷歌 Project Big Sleep——SQLite 缓冲区溢出（2024 年 10 月）：这是 AI 智能体发现广泛部署的开源软件中未知漏洞的第一个公开确认案例。SQLite JDBC 驱动中的栈缓冲区溢出，通过基于智能体的代码推理而非模糊测试发现。报告给 SQLite 团队的当天即完成修补。零用户影响——AI 比任何攻击者都快。',
+    'a.h1': '改变时间线的案例',
+    'a.3': '微软 Security Copilot——Azure 错误配置模式（2025 年第一季度）：微软的 AI 安全工具标记了一类 Azure RBAC 错误配置，在特定条件下允许跨租户边界的权限提升。这一发现影响了相当比例的企业 Azure 部署。微软在该模式公开之前悄悄发布了指南。AI 的价值不在于新颖的漏洞研究——而在于规模：跨数百万种配置进行模式匹配，这是任何人工团队都无法手动审计的。',
+    'a.4': 'Trail of Bits——以太坊客户端代码的 AI 辅助审计（2024–2025）：安全公司 Trail of Bits 使用定制的 LLM 管道审计了以太坊执行客户端的 Go 实现。该工具标记了 RLP 编码层中手动审计员已审查并通过的边缘案例。被标记的案例中有两个被证明是有效发现——其中一个在对抗性条件下可能破坏共识。AI 并未取代人工审计员；它将他们的覆盖范围扩展到了手动追踪过于繁琐的代码路径。',
+    'a.q': '「AI 发现的漏洞日志将成为支持或反对这一技术的决定性论据。现在，这个论据正在积累。」',
+    'a.h2': '模式显示了什么',
+    'a.5': '纵观有记录的案例，一个清晰的模式浮现：AI 并非在取代漏洞研究人员。它在三个人类认知触及极限的特定领域扩展了他们的覆盖范围。第一：规模——AI 可以同时审计数百万种配置或数千条代码路径。第二：持久性——AI 不会因追踪深度嵌套的调用链而感到厌倦。第三：跨代码库关联——AI 可以在多个存储库中标记任何单一人工审查员都不会有理由联系起来的模式。',
+    'a.6': '尚未出现但终将出现的案例，是 AI 自主将多个发现链接成可用漏洞利用的案例。在公开记录中我们还没到那一步。但从"AI 发现漏洞"到"AI 构建概念验证"的轨迹是可测量的且在缩短。2025 年投资防御性 AI 工具的组织正在建立一个复利式的领先优势。那些等待观望的组织，是在赌这个差距保持足够舒适，能让他们赶上。',
+  },
+  ja: {
+    'a.cat': 'AIセキュリティ',
+    'a.title': '2025年のAI発見の重大脆弱性：進行中の集計',
+    'a.lead': 'GoogleのBig SleepによるSQLiteバッファオーバーフローから、MicrosoftのSecurity CopilotによるAzureの設定ミスのフラグまで——AIがバグを発見したか、パッチを加速したか、開示のタイムラインを変えた脆弱性の厳選ログ。',
+    'a.1': '私たちは脆弱性研究の歴史における変曲点にいる。その歴史の大部分において、発見側は人間だけだった：研究者、監査者、そして時折自動化ファザー。AIは今や真の参加者だ。これはその参加が記録され、重大だった事例のログだ。',
+    'a.2': 'Google Project Big Sleep——SQLiteバッファオーバーフロー（2024年10月）：AIエージェントが広く展開されたオープンソースソフトウェアの未知の脆弱性を発見した最初の公式確認ケース。SQLiteのJDBCドライバのスタックバッファオーバーフローで、ファジングではなくエージェントベースのコード推論を通じて発見された。SQLiteチームに報告された当日にパッチが当てられた。ユーザーへの影響ゼロ——AIはどんな攻撃者より速かった。',
+    'a.h1': 'タイムラインを変えた事例',
+    'a.3': 'Microsoft Security Copilot——Azure設定ミスパターン（2025年Q1）：MicrosoftのAIセキュリティツールが、特定の条件下でテナント境界を越えた権限昇格を可能にするAzure RBACの設定ミスのクラスにフラグを立てた。この発見は企業のAzure展開の相当な割合に影響した。Microsoftはパターンが公知になる前にひっそりとガイダンスをリリースした。AIの価値はここでは新規の脆弱性研究ではなく——スケールだった：どの人間チームも手動で監査できない数百万の設定にわたるパターンマッチング。',
+    'a.4': 'Trail of Bits——Ethereumクライアントコードのアシスト監査（2024–2025）：セキュリティ会社Trail of BitsはカスタムLLMパイプラインを使ってEthereumの実行クライアントのGo実装を監査した。ツールは手動監査者がレビューして通過したRLPエンコーディングレイヤのエッジケースにフラグを立てた。フラグを立てられたケースのうち二つが有効な発見であることが判明した——一つは敵対的条件下でコンセンサスを破壊する可能性がある。AIは人間の監査者を置き換えなかった；手動で追跡するには退屈すぎるコードパスへのカバレッジを拡大した。',
+    'a.q': '「AI発見の脆弱性のログは、この技術に対する肯定か否定かの決定的な議論になるだろう。今、その議論は積み上がっている。」',
+    'a.h2': 'パターンが示すもの',
+    'a.5': '記録された事例全体を見渡すと、明確なパターンが浮かび上がる：AIは脆弱性研究者を置き換えていない。人間の認知が限界に達する三つの特定の領域でその到達範囲を拡大している。第一：スケール——AIは数百万の設定や数千のコードパスを同時に監査できる。第二：持続性——AIは深くネストされたコールチェーンのトレースに飽きない。第三：クロスコードベース相関——AIは複数のリポジトリにわたって、どの単一の人間レビュアーも繋げる理由を持たないパターンにフラグを立てられる。',
+    'a.6': 'まだ現れていないが現れるであろう事例は、AIが複数の発見を自律的に連鎖させて動作するエクスプロイトにする事例だ。公開記録ではまだそこにいない。しかし「AIがバグを発見する」から「AIが概念実証を構築する」への軌跡は測定可能で短縮している。2025年に防御的AIツールに投資する組織は複利式のリードを築いている。待つ組織は、格差が彼らが追いつくのに十分な長さ快適に保たれることに賭けている。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

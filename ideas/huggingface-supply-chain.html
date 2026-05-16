@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malicious Models on Hugging Face: The New Supply Chain Attack — vsike</title>
+  <meta name="description" content="Researchers discovered over 100 models on Hugging Face Hub containing serialized payloads that execute arbitrary code on load via pickle deserialization.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">Supply Chain</span>
+          <span class="article-date-label">Mar 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">Malicious Models on Hugging Face: The New Supply Chain Attack</h1>
+        <p class="article-lead" data-i18n="a.lead">Researchers discovered over 100 models on Hugging Face Hub containing serialized payloads that execute arbitrary code on load via pickle deserialization. The ML supply chain has the same vulnerabilities as npm — and less scrutiny.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">The Python ML ecosystem has a problem that its practitioners largely chose to accept: pickle. The default serialization format for PyTorch model weights is Python's pickle protocol, which can embed arbitrary Python bytecode. Load a malicious pickle file and you execute whatever code it contains — no exploit required, no vulnerability to patch. It's a feature being used as a weapon.</p>
+        <p data-i18n="a.2">In 2024, security researchers scanning the Hugging Face Hub found over 100 model repositories containing pickle payloads designed to run code on the researcher's machine the moment the model was loaded. The payloads ranged from proof-of-concept demonstrations — a file write, a DNS ping — to full reverse shells. All of them were uploaded as legitimate-looking model checkpoints. Most had download counts in the thousands.</p>
+        <h2 data-i18n="a.h1">The npm Parallel</h2>
+        <p data-i18n="a.3">The ML ecosystem is repeating a history the JavaScript community lived through a decade ago. npm became a supply chain attack surface when it grew fast enough that no one could meaningfully audit every package. The solution — imperfect, incremental, still ongoing — involved package signing, automated malware scanning, maintainer verification, and eventually institutional pressure to adopt safer practices. Hugging Face Hub is at the early stage of that same trajectory.</p>
+        <p data-i18n="a.4">The difference is that the blast radius of an ML supply chain compromise can be larger. A malicious npm package in a dev dependency might affect a few developers. A malicious model checkpoint in a popular base model repository could affect every organization that fine-tunes from it — potentially at training time, before any security review of the inference endpoint.</p>
+        <blockquote data-i18n="a.q">"Hugging Face is where you go to trust strangers with arbitrary code execution on your GPU cluster. The community just hasn't named it that way yet."</blockquote>
+        <h2 data-i18n="a.h2">What Organizations Should Do Now</h2>
+        <p data-i18n="a.5">The safest format for model weights is safetensors — Hugging Face's own format, which explicitly cannot contain executable code. Organizations that load model weights in production should treat any model not available in safetensors format as untrusted, and loading it in a sandboxed, network-isolated environment if at all.</p>
+        <p data-i18n="a.6">For organizations building ML pipelines, model provenance deserves the same treatment as software dependencies: pinned versions, integrity verification, and a preference for models from publishers whose identity is verifiable. The ML community is early enough in this arc that establishing good hygiene now costs less than remediation later. The window where most practitioners still find this surprising is closing.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'Supply Chain',
+    'a.title': 'Malicious Models on Hugging Face: The New Supply Chain Attack',
+    'a.lead': "Researchers discovered over 100 models on Hugging Face Hub containing serialized payloads that execute arbitrary code on load via pickle deserialization. The ML supply chain has the same vulnerabilities as npm — and less scrutiny.",
+    'a.1': "The Python ML ecosystem has a problem that its practitioners largely chose to accept: pickle. The default serialization format for PyTorch model weights is Python's pickle protocol, which can embed arbitrary Python bytecode. Load a malicious pickle file and you execute whatever code it contains — no exploit required, no vulnerability to patch. It's a feature being used as a weapon.",
+    'a.2': "In 2024, security researchers scanning the Hugging Face Hub found over 100 model repositories containing pickle payloads designed to run code on the researcher's machine the moment the model was loaded. The payloads ranged from proof-of-concept demonstrations — a file write, a DNS ping — to full reverse shells. All of them were uploaded as legitimate-looking model checkpoints. Most had download counts in the thousands.",
+    'a.h1': 'The npm Parallel',
+    'a.3': "The ML ecosystem is repeating a history the JavaScript community lived through a decade ago. npm became a supply chain attack surface when it grew fast enough that no one could meaningfully audit every package. The solution — imperfect, incremental, still ongoing — involved package signing, automated malware scanning, maintainer verification, and eventually institutional pressure to adopt safer practices. Hugging Face Hub is at the early stage of that same trajectory.",
+    'a.4': "The difference is that the blast radius of an ML supply chain compromise can be larger. A malicious npm package in a dev dependency might affect a few developers. A malicious model checkpoint in a popular base model repository could affect every organization that fine-tunes from it — potentially at training time, before any security review of the inference endpoint.",
+    'a.q': '"Hugging Face is where you go to trust strangers with arbitrary code execution on your GPU cluster. The community just hasn\'t named it that way yet."',
+    'a.h2': 'What Organizations Should Do Now',
+    'a.5': "The safest format for model weights is safetensors — Hugging Face's own format, which explicitly cannot contain executable code. Organizations that load model weights in production should treat any model not available in safetensors format as untrusted, and loading it in a sandboxed, network-isolated environment if at all.",
+    'a.6': "For organizations building ML pipelines, model provenance deserves the same treatment as software dependencies: pinned versions, integrity verification, and a preference for models from publishers whose identity is verifiable. The ML community is early enough in this arc that establishing good hygiene now costs less than remediation later. The window where most practitioners still find this surprising is closing.",
+  },
+  zh: {
+    'a.cat': '供应链',
+    'a.title': 'Hugging Face 上的恶意模型：新型供应链攻击',
+    'a.lead': '研究人员在 Hugging Face Hub 上发现了超过 100 个模型，这些模型包含序列化载荷，可通过 pickle 反序列化在加载时执行任意代码。ML 供应链与 npm 具有相同的漏洞——但受到的审查更少。',
+    'a.1': 'Python ML 生态系统有一个从业者大多选择接受的问题：pickle。PyTorch 模型权重的默认序列化格式是 Python 的 pickle 协议，它可以嵌入任意 Python 字节码。加载恶意的 pickle 文件，你就会执行其中包含的任何代码——不需要利用漏洞，也没有漏洞可以修补。这是一个被当作武器使用的特性。',
+    'a.2': '2024 年，扫描 Hugging Face Hub 的安全研究人员发现了超过 100 个模型存储库，其中包含 pickle 载荷，设计用于在模型加载的瞬间在研究人员的机器上运行代码。这些载荷从概念验证演示——文件写入、DNS 探测——到完整的反向 shell 不等。它们都以看起来合法的模型检查点上传。大多数有数千次下载量。',
+    'a.h1': 'npm 的平行历史',
+    'a.3': 'ML 生态系统正在重复 JavaScript 社区十年前经历的历史。npm 在增长速度足够快以至于没有人能有效审计每个包时，成为了供应链攻击面。解决方案——不完美、渐进式、仍在进行中——涉及包签名、自动化恶意软件扫描、维护者验证，以及最终采用更安全做法的机构压力。Hugging Face Hub 正处于同一轨迹的早期阶段。',
+    'a.4': '区别在于 ML 供应链被攻陷的爆炸半径可能更大。开发依赖中的恶意 npm 包可能影响几个开发者。热门基础模型存储库中的恶意模型检查点可能影响每个从中微调的组织——可能在训练时，在对推理端点进行任何安全审查之前。',
+    'a.q': '「Hugging Face 是你去信任陌生人在你的 GPU 集群上执行任意代码的地方。社区只是还没有这样命名它。」',
+    'a.h2': '组织现在应该做什么',
+    'a.5': '模型权重最安全的格式是 safetensors——Hugging Face 自己的格式，明确不能包含可执行代码。在生产环境中加载模型权重的组织应该将任何不以 safetensors 格式提供的模型视为不可信的，如果必须加载，则在沙盒化、网络隔离的环境中进行。',
+    'a.6': '对于构建 ML 管道的组织，模型溯源应该得到与软件依赖相同的处理：固定版本、完整性验证，以及偏好来自身份可验证的发布者的模型。ML 社区在这条弧线上还足够早期，现在建立良好卫生习惯的成本低于事后补救。大多数从业者仍然觉得这令人惊讶的窗口正在关闭。',
+  },
+  ja: {
+    'a.cat': 'サプライチェーン',
+    'a.title': 'Hugging Faceの悪意あるモデル：新しいサプライチェーン攻撃',
+    'a.lead': '研究者たちはHugging Face Hubで、pickleデシリアライゼーションを通じてロード時に任意コードを実行するシリアライズペイロードを含む100以上のモデルを発見した。MLサプライチェーンはnpmと同じ脆弱性を持つ——そしてより少ない監視しか受けていない。',
+    'a.1': 'Python MLエコシステムには、実務家が大部分受け入れることを選択した問題がある：pickle。PyTorchモデルウェイトのデフォルトシリアライゼーション形式はPythonのpickleプロトコルで、任意のPythonバイトコードを埋め込める。悪意あるpickleファイルをロードすると、それが含むあらゆるコードを実行してしまう——エクスプロイトも不要、パッチを当てる脆弱性もない。これは武器として使われている機能だ。',
+    'a.2': '2024年、Hugging Face Hubをスキャンするセキュリティ研究者たちは、モデルがロードされた瞬間に研究者のマシンでコードを実行するよう設計されたpickleペイロードを含む100以上のモデルリポジトリを発見した。ペイロードはファイル書き込み、DNSピングなどのPoCデモから、完全なリバースシェルまで多岐にわたった。すべて正当に見えるモデルチェックポイントとしてアップロードされていた。ほとんどはダウンロード数が数千に上っていた。',
+    'a.h1': 'npmとの並列性',
+    'a.3': 'MLエコシステムはJavaScriptコミュニティが10年前に経験した歴史を繰り返している。npmは誰もすべてのパッケージを意味のある形で監査できないほど急速に成長したとき、サプライチェーン攻撃面になった。解決策——不完全で、段階的で、まだ続いている——はパッケージ署名、自動マルウェアスキャン、メンテナー検証、そして最終的により安全な実践を採用する制度的圧力を含んだ。Hugging Face Hubはその同じ軌跡の初期段階にある。',
+    'a.4': '違いは、MLサプライチェーンの侵害の爆発半径がより大きくなりうることだ。開発依存関係の悪意あるnpmパッケージは数人の開発者に影響するかもしれない。人気のあるベースモデルリポジトリの悪意あるモデルチェックポイントは、そこからファインチューニングするすべての組織に影響する可能性がある——推論エンドポイントのセキュリティレビューの前、トレーニング時点で。',
+    'a.q': '「Hugging Faceは、GPUクラスタでの任意コード実行を見知らぬ人に信頼する場所だ。コミュニティはまだそのように名付けていないだけだ。」',
+    'a.h2': '組織が今すべきこと',
+    'a.5': 'モデルウェイトの最も安全な形式はsafetensors——Hugging Face自身の形式で、明示的に実行可能コードを含めない。本番環境でモデルウェイトをロードする組織は、safetensors形式で利用できないモデルは信頼できないものとして扱い、ロードする場合はサンドボックス化されたネットワーク隔離環境で行うべきだ。',
+    'a.6': 'MLパイプラインを構築する組織にとって、モデルの出所はソフトウェア依存関係と同じ扱いに値する：バージョン固定、完全性検証、そして身元確認可能なパブリッシャーのモデルへの優先。MLコミュニティはこのアーク上でまだ十分に早期にあり、今良い衛生習慣を確立することは後の修復よりコストが低い。ほとんどの実務家がまだこれを驚くべきことと感じる窓は閉じつつある。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

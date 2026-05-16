@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Case Against Consistent Design — vsike</title>
+  <meta name="description" content="Why the obsession with pixel-perfect consistency might be the thing that's making your product feel lifeless — and what to reach for instead.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">Design</span>
+          <span class="article-date-label">May 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">The Case Against Consistent Design</h1>
+        <p class="article-lead" data-i18n="a.lead">Why the obsession with pixel-perfect consistency might be the thing that's making your product feel lifeless — and what to reach for instead.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">Design systems sold us a specific promise: define the components once, apply them everywhere, and the product becomes coherent. The promise was real. Consistency reduces cognitive load. Familiar patterns lower the barrier to learning. A well-applied design system genuinely makes products more usable. But something got lost in the execution, and it took a decade to notice what it was.</p>
+        <p data-i18n="a.2">The problem isn't consistency — it's the conflation of consistency with sameness. A great jazz ensemble is consistent: the musicians share a key, a time signature, a tradition. But they don't play the same notes at the same time. The coherence comes from shared constraints, not identical expression. When design systems enforce identical expression — the same button radius everywhere, the same spacing tokens applied mechanically — they produce the product equivalent of a band that can only play in unison. Technically correct. Emotionally flat.</p>
+        <h2 data-i18n="a.h1">What Consistency Actually Means</h2>
+        <p data-i18n="a.3">Consistency, properly understood, is about predictability of behavior and legibility of intent — not visual uniformity. A user should be able to predict what a button does from its appearance. They shouldn't need every button on every screen to look identical. The moment consistency becomes a goal in itself rather than a means to legibility, it starts working against the product.</p>
+        <p data-i18n="a.4">The most engaging products have always understood this. They establish a grammar — a set of rules governing how elements relate — and then use that grammar expressively. The rules exist to be played with, not to foreclose play. Figma's marketing site, early Stripe, the best Apple product pages: all deeply coherent, none pixel-identical. The coherence is felt, not measured.</p>
+        <blockquote data-i18n="a.q">"A design system should be a vocabulary, not a script. Vocabulary lets you say what you mean. A script tells you what to say."</blockquote>
+        <h2 data-i18n="a.h2">What to Reach For Instead</h2>
+        <p data-i18n="a.5">The alternative isn't inconsistency. It's expressive coherence — a design that has a strong point of view, uses deliberate variation to create emphasis and rhythm, and treats the design system as a starting point rather than a ceiling. This requires more judgment than applying tokens mechanically. It also requires giving designers room to exercise that judgment, rather than treating any deviation from the system as a regression.</p>
+        <p data-i18n="a.6">The best design systems I've seen leave deliberate blank space — places where the system gives principles rather than components, where the designer is expected to interpret rather than implement. This is harder to document and harder to audit. It's also the difference between a product that users recognize and one they remember. Recognition is table stakes. Memory is brand.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'Design',
+    'a.title': 'The Case Against Consistent Design',
+    'a.lead': "Why the obsession with pixel-perfect consistency might be the thing that's making your product feel lifeless — and what to reach for instead.",
+    'a.1': "Design systems sold us a specific promise: define the components once, apply them everywhere, and the product becomes coherent. The promise was real. Consistency reduces cognitive load. Familiar patterns lower the barrier to learning. A well-applied design system genuinely makes products more usable. But something got lost in the execution, and it took a decade to notice what it was.",
+    'a.2': "The problem isn't consistency — it's the conflation of consistency with sameness. A great jazz ensemble is consistent: the musicians share a key, a time signature, a tradition. But they don't play the same notes at the same time. The coherence comes from shared constraints, not identical expression. When design systems enforce identical expression — the same button radius everywhere, the same spacing tokens applied mechanically — they produce the product equivalent of a band that can only play in unison. Technically correct. Emotionally flat.",
+    'a.h1': 'What Consistency Actually Means',
+    'a.3': "Consistency, properly understood, is about predictability of behavior and legibility of intent — not visual uniformity. A user should be able to predict what a button does from its appearance. They shouldn't need every button on every screen to look identical. The moment consistency becomes a goal in itself rather than a means to legibility, it starts working against the product.",
+    'a.4': "The most engaging products have always understood this. They establish a grammar — a set of rules governing how elements relate — and then use that grammar expressively. The rules exist to be played with, not to foreclose play. Figma's marketing site, early Stripe, the best Apple product pages: all deeply coherent, none pixel-identical. The coherence is felt, not measured.",
+    'a.q': '"A design system should be a vocabulary, not a script. Vocabulary lets you say what you mean. A script tells you what to say."',
+    'a.h2': 'What to Reach For Instead',
+    'a.5': "The alternative isn't inconsistency. It's expressive coherence — a design that has a strong point of view, uses deliberate variation to create emphasis and rhythm, and treats the design system as a starting point rather than a ceiling. This requires more judgment than applying tokens mechanically. It also requires giving designers room to exercise that judgment, rather than treating any deviation from the system as a regression.",
+    'a.6': "The best design systems I've seen leave deliberate blank space — places where the system gives principles rather than components, where the designer is expected to interpret rather than implement. This is harder to document and harder to audit. It's also the difference between a product that users recognize and one they remember. Recognition is table stakes. Memory is brand.",
+  },
+  zh: {
+    'a.cat': '设计',
+    'a.title': '反对一致性设计的理由',
+    'a.lead': '为什么对像素级完美一致性的执念，可能正是让你的产品感觉毫无生气的原因——以及应该追求什么来代替它。',
+    'a.1': '设计系统向我们承诺了一件具体的事：一次定义组件，到处应用，产品就会变得连贯。这个承诺是真实的。一致性降低了认知负担。熟悉的模式降低了学习门槛。一个应用良好的设计系统确实能让产品更易用。但在执行过程中，有什么东西丢失了，花了十年才注意到是什么。',
+    'a.2': '问题不在于一致性——而在于将一致性与同一性混为一谈。一个优秀的爵士乐团是一致的：音乐家们共享调性、拍子、传统。但他们不会同时演奏相同的音符。连贯性来自共同的约束，而非相同的表达。当设计系统强制执行相同的表达——到处都是相同的按钮圆角，相同的间距标记机械地应用——它们产生的产品等同于一支只能齐奏的乐队。技术上正确，情感上平淡。',
+    'a.h1': '一致性真正的含义',
+    'a.3': '正确理解的一致性，关乎行为的可预测性和意图的可读性——而非视觉上的统一。用户应该能够从按钮的外观预测它的功能。他们不需要每个屏幕上的每个按钮看起来完全相同。当一致性本身成为目标，而非可读性的手段时，它就开始对产品产生反效果了。',
+    'a.4': '最引人入胜的产品始终理解这一点。它们建立了一套语法——一套规定元素如何关联的规则——然后富有表现力地运用这套语法。这些规则存在的意义是被玩弄，而非封闭玩弄的可能。Figma 的营销网站、早期的 Stripe、最好的苹果产品页面：都深度连贯，但没有一个是像素完全相同的。这种连贯性是被感受到的，而非被测量的。',
+    'a.q': '「设计系统应该是词汇表，而非剧本。词汇表让你说出你想说的。剧本告诉你该说什么。」',
+    'a.h2': '应该追求什么',
+    'a.5': '替代方案不是不一致。而是富有表现力的连贯性——一种有强烈观点的设计，使用刻意的变化来创造强调和节奏，将设计系统视为起点而非天花板。这比机械地应用标记需要更多的判断力。这也需要给设计师留出发挥这种判断力的空间，而非将任何偏离系统的地方视为倒退。',
+    'a.6': '我见过的最好的设计系统留有刻意的空白——系统给出原则而非组件的地方，设计师被期望去诠释而非实现。这更难以记录，也更难以审计。这也是用户能认出的产品与能记住的产品之间的差距。被认出是基本要求，被记住才是品牌。',
+  },
+  ja: {
+    'a.cat': 'デザイン',
+    'a.title': '一貫性デザインへの異議',
+    'a.lead': 'ピクセルパーフェクトな一貫性への執着が、あなたのプロダクトを生気のないものにしているかもしれない理由——そして代わりに何を目指すべきか。',
+    'a.1': 'デザインシステムは特定の約束を売ってきた：コンポーネントを一度定義し、至る所に適用すれば、プロダクトはまとまりを持つ。その約束は本物だった。一貫性は認知負荷を下げる。馴染みのあるパターンは学習の障壁を下げる。よく適用されたデザインシステムは本当にプロダクトをより使いやすくする。しかし実行の過程で何かが失われ、それが何だったか気付くのに10年かかった。',
+    'a.2': '問題は一貫性ではない——一貫性と同一性の混同だ。素晴らしいジャズアンサンブルは一貫している：ミュージシャンたちはキー、拍子、伝統を共有する。しかし彼らは同時に同じ音符を演奏しない。まとまりは共通の制約から来る、同一の表現からではない。デザインシステムが同一の表現を強制するとき——どこでも同じボタンの半径、機械的に適用される同じスペーシングトークン——それらはユニゾンでしか演奏できないバンドと同等のプロダクトを生み出す。技術的には正確。感情的には平板。',
+    'a.h1': '一貫性が実際に意味するもの',
+    'a.3': '適切に理解された一貫性は、行動の予測可能性と意図の読みやすさについてだ——視覚的な均一性ではない。ユーザーはボタンの見た目からその機能を予測できるべきだ。すべての画面のすべてのボタンが同一に見える必要はない。一貫性が読みやすさのための手段ではなくそれ自体の目標になった瞬間、プロダクトに対して逆効果を生み始める。',
+    'a.4': '最も魅力的なプロダクトは常にこれを理解してきた。それらは文法——要素の関係を規定する一連のルール——を確立し、その文法を表現豊かに使う。ルールはもてあそばれるために存在する、遊びを封じるためではない。Figmaのマーケティングサイト、初期のStripe、最高のAppleプロダクトページ：どれも深くまとまりがあり、ピクセルが同一のものは一つもない。まとまりは感じられるものであり、測定されるものではない。',
+    'a.q': '「デザインシステムは語彙集であるべきで、脚本であるべきではない。語彙集はあなたが意味することを言わせてくれる。脚本は何を言うべきかを教える。」',
+    'a.h2': '代わりに何を目指すか',
+    'a.5': '代替案は不一貫性ではない。表現豊かなまとまり——強い視点を持ち、意図的な変化を使って強調とリズムを生み出し、デザインシステムを天井ではなく出発点として扱うデザインだ。これはトークンを機械的に適用するより多くの判断を必要とする。また、システムからのどんな逸脱も後退として扱うのではなく、デザイナーにその判断を行使する余地を与えることも必要だ。',
+    'a.6': '私が見た最高のデザインシステムは意図的な余白を残す——システムがコンポーネントではなく原則を与える場所、デザイナーが実装ではなく解釈することが期待される場所。これは文書化が難しく、監査も難しい。これはまた、ユーザーが認識するプロダクトと記憶するプロダクトの違いでもある。認識はテーブルステークス。記憶はブランドだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

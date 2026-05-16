@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Dark Mode Actually Means — vsike</title>
+  <meta name="description" content="Dark mode isn't an accessibility feature or a user preference toggle. For some of us, it's the only honest way to work — a disposition, not a setting.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">Philosophy</span>
+          <span class="article-date-label">Jan 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">What Dark Mode Actually Means</h1>
+        <p class="article-lead" data-i18n="a.lead">Dark mode isn't an accessibility feature or a user preference toggle. For some of us, it's the only honest way to work — a disposition, not a setting.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">Dark mode arrived in mainstream consumer software around 2019 and was immediately misunderstood. Apple's framing — a preference for "users who prefer a darker appearance" — reduced it to a toggle in a settings pane. Something you might turn on at night, like a lamp dimmer. But for a certain kind of person, dark mode isn't a preference. It's a posture toward screens and toward work.</p>
+        <p data-i18n="a.2">The screen, in its default state, is a light box. A white document in a bright window simulates a printed page — it says "look at this, the way you'd look at paper." Dark mode inverts this. The screen becomes a void from which content emerges. Light is signal; dark is substrate. This is how terminal emulators have always worked, how code editors look to people who take editing seriously, how radar displays and instrument panels are designed when the work demands sustained attention without fatigue.</p>
+        <h2 data-i18n="a.h1">The Physics of Attention</h2>
+        <p data-i18n="a.3">A bright white screen in a dim environment creates significant luminance contrast between the screen and the surroundings. The pupil constricts to accommodate the bright screen; the surrounding room looks darker. Transition between screen and room repeatedly over hours and something tires. Dark mode reduces this contrast. The screen and the room occupy a more similar luminance range. The eyes adjust less, tire more slowly.</p>
+        <p data-i18n="a.4">This isn't the real argument for dark mode, though. The real argument is about signal isolation. On a dark interface, a brightly colored notification, a new chat message, an error indicator — these are genuinely urgent. They break from the background because the background is dark. On a light interface, everything has similar luminance, and distinguishing what demands attention from what is merely present requires more active scanning. Dark mode is a choice about information hierarchy, not about eye comfort.</p>
+        <blockquote data-i18n="a.q">"The terminal was always black. The people who built the internet worked in the dark. Not because they had to — because it helped."</blockquote>
+        <h2 data-i18n="a.h2">What It Signals</h2>
+        <p data-i18n="a.5">Dark mode preference correlates, imperfectly, with certain kinds of knowledge workers: developers, designers, writers who work at night, people who spend long stretches in front of screens and have optimized their environment accordingly. This is partly why the aesthetic carries the associations it does — it reads as technical, focused, slightly adversarial toward the casual consumer UX assumptions that make everything white and friendly and unthreatening.</p>
+        <p data-i18n="a.6">None of this is to say dark mode is objectively superior. For reading long-form text in good light, light mode wins on legibility. For document work, the white-page metaphor earns its keep. Dark mode as a universal default is as wrong as light mode as a universal default. The point is that dark mode, for those who choose it deliberately, is a statement about how they work and what they value in a working environment — not a cosmetic preference, and certainly not a trend.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'Philosophy',
+    'a.title': 'What Dark Mode Actually Means',
+    'a.lead': "Dark mode isn't an accessibility feature or a user preference toggle. For some of us, it's the only honest way to work — a disposition, not a setting.",
+    'a.1': "Dark mode arrived in mainstream consumer software around 2019 and was immediately misunderstood. Apple's framing — a preference for \"users who prefer a darker appearance\" — reduced it to a toggle in a settings pane. Something you might turn on at night, like a lamp dimmer. But for a certain kind of person, dark mode isn't a preference. It's a posture toward screens and toward work.",
+    'a.2': "The screen, in its default state, is a light box. A white document in a bright window simulates a printed page — it says \"look at this, the way you'd look at paper.\" Dark mode inverts this. The screen becomes a void from which content emerges. Light is signal; dark is substrate. This is how terminal emulators have always worked, how code editors look to people who take editing seriously, how radar displays and instrument panels are designed when the work demands sustained attention without fatigue.",
+    'a.h1': 'The Physics of Attention',
+    'a.3': "A bright white screen in a dim environment creates significant luminance contrast between the screen and the surroundings. The pupil constricts to accommodate the bright screen; the surrounding room looks darker. Transition between screen and room repeatedly over hours and something tires. Dark mode reduces this contrast. The screen and the room occupy a more similar luminance range. The eyes adjust less, tire more slowly.",
+    'a.4': "This isn't the real argument for dark mode, though. The real argument is about signal isolation. On a dark interface, a brightly colored notification, a new chat message, an error indicator — these are genuinely urgent. They break from the background because the background is dark. On a light interface, everything has similar luminance, and distinguishing what demands attention from what is merely present requires more active scanning. Dark mode is a choice about information hierarchy, not about eye comfort.",
+    'a.q': '"The terminal was always black. The people who built the internet worked in the dark. Not because they had to — because it helped."',
+    'a.h2': 'What It Signals',
+    'a.5': "Dark mode preference correlates, imperfectly, with certain kinds of knowledge workers: developers, designers, writers who work at night, people who spend long stretches in front of screens and have optimized their environment accordingly. This is partly why the aesthetic carries the associations it does — it reads as technical, focused, slightly adversarial toward the casual consumer UX assumptions that make everything white and friendly and unthreatening.",
+    'a.6': "None of this is to say dark mode is objectively superior. For reading long-form text in good light, light mode wins on legibility. For document work, the white-page metaphor earns its keep. Dark mode as a universal default is as wrong as light mode as a universal default. The point is that dark mode, for those who choose it deliberately, is a statement about how they work and what they value in a working environment — not a cosmetic preference, and certainly not a trend.",
+  },
+  zh: {
+    'a.cat': '哲学',
+    'a.title': '深色模式真正的含义',
+    'a.lead': '深色模式不是一个无障碍功能，也不是用户偏好切换开关。对我们中的一些人来说，它是唯一诚实的工作方式——一种倾向，而非设置。',
+    'a.1': '深色模式大约在 2019 年进入主流消费软件，并立即被误解了。苹果的定位——"偏好较暗外观的用户的偏好"——将其简化为设置面板中的一个切换。类似你可能在夜晚打开的灯光调节器。但对某类人来说，深色模式不是偏好，而是对屏幕和工作的一种姿态。',
+    'a.2': '屏幕在默认状态下是一个光箱。亮窗口中的白色文档模拟打印页面——它说"看这个，就像你看纸一样。"深色模式颠覆了这一点。屏幕成为内容从中浮现的虚空。光是信号；暗是基底。这就是终端模拟器一直以来的工作方式，是认真对待编辑工作的人的代码编辑器的样子，是雷达显示器和仪表盘在工作需要持续注意力而不疲劳时的设计方式。',
+    'a.h1': '注意力的物理学',
+    'a.3': '昏暗环境中的明亮白色屏幕会在屏幕和周围环境之间产生显著的亮度对比。瞳孔收缩以适应明亮的屏幕；周围的房间看起来更暗。在屏幕和房间之间反复转换数小时后，某些东西会疲劳。深色模式减少了这种对比。屏幕和房间占据更相似的亮度范围。眼睛调整更少，疲劳更慢。',
+    'a.4': '但这不是深色模式的真正论据。真正的论据是关于信号隔离。在深色界面上，明亮的彩色通知、新的聊天消息、错误指示符——这些是真正紧急的。它们从背景中突破，因为背景是暗的。在浅色界面上，一切都有相似的亮度，区分需要注意的内容和仅仅存在的内容需要更主动的扫描。深色模式是关于信息层次结构的选择，而非关于眼睛舒适度的选择。',
+    'a.q': '「终端一直是黑色的。建造互联网的人们在黑暗中工作。不是因为不得不——而是因为这有帮助。」',
+    'a.h2': '它传达了什么',
+    'a.5': '深色模式偏好与某些类型的知识工作者不完美地相关：开发者、设计师、在夜间工作的作家、长时间面对屏幕并相应优化了环境的人。这在一定程度上解释了为什么这种美学带有它所携带的联想——它读起来很技术性、专注，对使一切变白、友好、无威胁感的普通消费者 UX 假设略显对立。',
+    'a.6': '这并不是说深色模式客观上更优越。对于在良好光线下阅读长篇文本，浅色模式在可读性上胜出。对于文档工作，白纸隐喻物有所值。深色模式作为通用默认和浅色模式作为通用默认一样是错误的。关键在于，对于那些刻意选择深色模式的人来说，它是一种关于他们如何工作以及他们在工作环境中重视什么的声明——不是表面的偏好，当然也不是趋势。',
+  },
+  ja: {
+    'a.cat': '哲学',
+    'a.title': 'ダークモードが実際に意味するもの',
+    'a.lead': 'ダークモードはアクセシビリティ機能でもユーザー設定トグルでもない。私たちの一部にとっては、それが唯一の正直な働き方だ——設定ではなく、傾向だ。',
+    'a.1': 'ダークモードは2019年頃に主流の消費者向けソフトウェアに登場し、すぐに誤解された。Appleのフレーミング——「暗い外観を好むユーザー」のための設定——は、それを設定ペインのトグルに矮小化した。夜に調光器のようにオンにするもの。しかし特定の種類の人にとって、ダークモードは好みではない。スクリーンと仕事に対する姿勢だ。',
+    'a.2': 'スクリーンはデフォルト状態ではライトボックスだ。明るいウィンドウの白いドキュメントは印刷されたページをシミュレートする——紙を見るように、これを見てと言っている。ダークモードはこれを反転する。スクリーンはコンテンツが現れる虚空になる。光はシグナル；暗さは基板だ。これはターミナルエミュレータが常に機能してきた方法、編集を真剣に取る人のコードエディタの様子、仕事が疲労なく持続的な注意力を要求するときのレーダーディスプレイと計器盤の設計方法だ。',
+    'a.h1': '注意力の物理学',
+    'a.3': '薄暗い環境での明るい白いスクリーンはスクリーンと周囲の間に著しい輝度コントラストを生み出す。瞳孔は明るいスクリーンに対応するために収縮し、周囲の部屋はより暗く見える。何時間もスクリーンと部屋の間を繰り返し移行すると何かが疲れる。ダークモードはこのコントラストを減らす。スクリーンと部屋はより似た輝度範囲を占める。目はより少なく調整し、より遅く疲れる。',
+    'a.4': 'しかしこれはダークモードの本当の議論ではない。本当の議論はシグナル分離についてだ。暗いインターフェースでは、明るい色の通知、新しいチャットメッセージ、エラーインジケーター——これらは本当に緊急だ。背景が暗いので背景から抜け出す。ライトインターフェースでは、すべてが似た輝度を持ち、注意を要するものと単に存在するものを区別するのにより積極的なスキャンが必要だ。ダークモードは目の快適さではなく、情報階層についての選択だ。',
+    'a.q': '「ターミナルは常に黒だった。インターネットを構築した人々は暗闇の中で働いた。そうしなければならなかったからではなく——それが助けになったからだ。」',
+    'a.h2': 'それが伝えること',
+    'a.5': 'ダークモードの好みは不完全ながら特定の種類のナレッジワーカーと相関する：開発者、デザイナー、夜に仕事をするライター、長い時間スクリーンの前に座りそれに応じて環境を最適化してきた人々。これはその美学がなぜそれが持つ連想を持つかの一部だ——技術的で、集中していて、すべてを白く友好的で無脅威にする偶発的な消費者UXの仮定に少し敵対的に読める。',
+    'a.6': 'これはダークモードが客観的に優れていると言いたいのではない。良い光の中で長文テキストを読むには、ライトモードが読みやすさで勝る。ドキュメント作業には、白いページの比喩がその役割を果たす。ユニバーサルデフォルトとしてのダークモードは、ユニバーサルデフォルトとしてのライトモードと同様に間違っている。要点は、ダークモードを意図的に選ぶ人にとって、それは自分がどのように働き、作業環境で何を大切にするかについての声明だということだ——外見上の好みではなく、もちろんトレンドでもない。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

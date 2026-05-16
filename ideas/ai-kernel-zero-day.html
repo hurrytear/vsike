@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Finds 0-Day in Linux Kernel — vsike</title>
+  <meta name="description" content="Google's Project Big Sleep autonomously discovered a memory-corruption vulnerability in the Linux kernel — patched before public disclosure.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Security</span>
+          <span class="article-date-label">May 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">AI Finds 0-Day in Linux Kernel Before Any Human Did</h1>
+        <p class="article-lead" data-i18n="a.lead">In late 2024, Google's Project Big Sleep made history: an AI agent autonomously discovered a previously unknown vulnerability in the Linux kernel — patched before any human reported it.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">Project Big Sleep is Google DeepMind's experiment in AI-driven vulnerability research. Unlike static analyzers that match known patterns, Big Sleep operates more like an experienced security engineer: it reads code, forms hypotheses about risky behavior, and investigates paths that seem logically dangerous — even when no one has exploited them yet.</p>
+        <p data-i18n="a.2">The bug it found was a stack buffer underflow in io_uring — one of the most complex and security-critical interfaces in modern Linux. It required understanding interactions across multiple kernel subsystems, exactly the kind of non-obvious, context-dependent vulnerability that tends to survive for years in heavily-reviewed code.</p>
+        <h2 data-i18n="a.h1">Why This Is Different From What Came Before</h2>
+        <p data-i18n="a.3">AI security tools have existed for years: fuzzers, SAST scanners, CVE pattern-matchers. All valuable, all limited to finding what they were trained to look for. Big Sleep doesn't need to know what it's looking for. It reasons about code behavior from first principles — asking "could this go wrong?" rather than "does this match a known bad pattern?"</p>
+        <p data-i18n="a.4">That distinction matters because most long-lived vulnerabilities in mature codebases aren't there due to lack of review. They persist because understanding them requires holding more context simultaneously than any human reviewer comfortably can. An AI system without working-memory constraints changes that equation entirely.</p>
+        <blockquote data-i18n="a.q">"The era of AI-first vulnerability research isn't coming. It arrived quietly, without a press release, when a machine found a bug in one of the most reviewed codebases on earth."</blockquote>
+        <h2 data-i18n="a.h2">What This Means for the Security Landscape</h2>
+        <p data-i18n="a.5">Short term, this shifts the advantage toward defenders. Organizations can run AI-powered security audits against their codebases continuously, before any attacker exploits the same capability. The tooling isn't yet accessible to most teams, but the direction is clear.</p>
+        <p data-i18n="a.6">Medium term, the same capability becomes available to attackers. The window between "AI finds vulnerability" and "AI exploitation" is likely to compress significantly. The organizations that adopt AI-assisted security tooling early will have a meaningful advantage. Those that don't will be increasingly exposed to an asymmetric threat where the offense can scale in ways the defense cannot.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Security',
+    'a.title': 'AI Finds 0-Day in Linux Kernel Before Any Human Did',
+    'a.lead': "In late 2024, Google's Project Big Sleep made history: an AI agent autonomously discovered a previously unknown vulnerability in the Linux kernel — patched before any human reported it.",
+    'a.1': "Project Big Sleep is Google DeepMind's experiment in AI-driven vulnerability research. Unlike static analyzers that match known patterns, Big Sleep operates more like an experienced security engineer: it reads code, forms hypotheses about risky behavior, and investigates paths that seem logically dangerous — even when no one has exploited them yet.",
+    'a.2': 'The bug it found was a stack buffer underflow in io_uring — one of the most complex and security-critical interfaces in modern Linux. It required understanding interactions across multiple kernel subsystems, exactly the kind of non-obvious, context-dependent vulnerability that tends to survive for years in heavily-reviewed code.',
+    'a.h1': 'Why This Is Different From What Came Before',
+    'a.3': "AI security tools have existed for years: fuzzers, SAST scanners, CVE pattern-matchers. All valuable, all limited to finding what they were trained to look for. Big Sleep doesn't need to know what it's looking for. It reasons about code behavior from first principles — asking 'could this go wrong?' rather than 'does this match a known bad pattern?'",
+    'a.4': "That distinction matters because most long-lived vulnerabilities in mature codebases aren't there due to lack of review. They persist because understanding them requires holding more context simultaneously than any human reviewer comfortably can. An AI system without working-memory constraints changes that equation entirely.",
+    'a.q': '"The era of AI-first vulnerability research isn\'t coming. It arrived quietly, without a press release, when a machine found a bug in one of the most reviewed codebases on earth."',
+    'a.h2': 'What This Means for the Security Landscape',
+    'a.5': "Short term, this shifts the advantage toward defenders. Organizations can run AI-powered security audits against their codebases continuously, before any attacker exploits the same capability. The tooling isn't yet accessible to most teams, but the direction is clear.",
+    'a.6': "Medium term, the same capability becomes available to attackers. The window between 'AI finds vulnerability' and 'AI exploitation' is likely to compress significantly. The organizations that adopt AI-assisted security tooling early will have a meaningful advantage. Those that don't will be increasingly exposed to an asymmetric threat where the offense can scale in ways the defense cannot.",
+  },
+  zh: {
+    'a.cat': 'AI 安全',
+    'a.title': 'AI 在人类之前发现了 Linux 内核零日漏洞',
+    'a.lead': '2024 年底，谷歌的 Project Big Sleep 创造了历史：一个 AI 智能体自主发现了 Linux 内核中此前未知的漏洞，并在公开披露前完成了修补。',
+    'a.1': 'Project Big Sleep 是 Google DeepMind 在 AI 驱动漏洞研究领域的实验。与匹配已知模式的静态分析器不同，Big Sleep 更像一位经验丰富的安全工程师：它阅读代码，针对可疑行为建立假设，并深入调查那些看起来逻辑上存在风险的路径——即便没有人利用过这些路径。',
+    'a.2': '它发现的漏洞是 io_uring 中的栈缓冲区下溢——这是现代 Linux 中最复杂、最关键的安全接口之一。该漏洞涉及多个内核子系统之间的交互，正是那种隐蔽的、依赖上下文的漏洞，往往能在高度审查的代码中存活多年。',
+    'a.h1': '为何与以往不同',
+    'a.3': 'AI 安全工具已存在多年：模糊测试器、静态分析扫描器、CVE 模式匹配器。这些工具都有价值，但都局限于寻找它们被训练去寻找的东西。Big Sleep 不需要预先知道自己在找什么。它从第一原理推理代码行为——问的是"这里可能出错吗？"而非"这是否匹配已知的坏模式？"',
+    'a.4': '这一区别至关重要，因为成熟代码库中长期存在的漏洞，并不是因为无人审查而存在。它们之所以能存续，是因为理解它们需要同时把握的上下文，超出了任何人类审查者的工作记忆所能容纳的范围。一个没有工作记忆限制的 AI 系统，从根本上改变了这一等式。',
+    'a.q': '「AI 优先的漏洞研究时代并非即将到来——它已经悄然降临。没有新闻发布会，一台机器在地球上被审查最多的代码库之一中找到了一个漏洞。」',
+    'a.h2': '对安全格局意味着什么',
+    'a.5': '短期来看，这将优势转向了防守方。组织可以持续对其代码库运行 AI 驱动的安全审计，先于任何攻击者利用相同能力。大多数团队目前还无法获得这类工具，但方向已经明确。',
+    'a.6': '中期来看，攻击者也会获得同样的能力。"AI 发现漏洞"与"AI 漏洞利用"之间的窗口期可能会大幅压缩。率先采用 AI 辅助安全工具的组织将获得显著优势；而那些等待观望的组织，将日益面临一种攻击方可以任意扩展规模、而防守方却难以为继的不对称威胁。',
+  },
+  ja: {
+    'a.cat': 'AIセキュリティ',
+    'a.title': 'AIが人間より先にLinuxカーネルのゼロデイを発見',
+    'a.lead': '2024年末、GoogleのProject Big Sleepは歴史を作った。AIエージェントがLinuxカーネルの未知の脆弱性を自律的に発見し、公開開示前にパッチが当てられたのだ。',
+    'a.1': 'Project Big SleepはGoogle DeepMindによるAI主導の脆弱性研究実験だ。既知のパターンをマッチングする静態解析器とは異なり、Big Sleepは経験豊富なセキュリティエンジニアのように動作する。コードを読み、リスクある動作についての仮説を立て、誰も悪用していなくても論理的に危険に思えるコードパスを調査する。',
+    'a.2': 'Big Sleepが発見したのは、io_uringにおけるスタックバッファアンダーフローだ。io_uringは現代のLinuxで最も複雑でセキュリティ上重要なインターフェースの一つ。この脆弱性は複数のカーネルサブシステム間の相互作用の理解を必要とする、まさに高度にレビューされたコードの中に何年も生き残りやすい類のものだ。',
+    'a.h1': 'これまでとは何が違うのか',
+    'a.3': 'AIセキュリティツールは何年も前から存在している。ファジング、SAST、CVEパターンマッチャー。いずれも価値があるが、学習済みのものを探すことしかできない。Big Sleepは何を探すかを事前に知る必要がない。コードの動作をファーストプリンシプルから推論し、「これは問題になりうるか？」と問う。「既知の悪いパターンに一致するか？」ではなく。',
+    'a.4': 'この違いは重要だ。成熟したコードベースに長年存在する脆弱性の多くは、レビュー不足のせいではない。それらが生き残るのは、理解するために人間のレビュアーが快適に保持できる以上の文脈を同時に把握する必要があるからだ。ワーキングメモリに制約のないAIシステムは、この方程式を根本から変える。',
+    'a.q': '「AI優先の脆弱性研究の時代は来るのではない。それはすでに静かにやってきた。プレスリリースもなく、地球上で最もレビューされたコードベースの一つで、マシンがバグを見つけた時に。」',
+    'a.h2': 'セキュリティ環境への意味',
+    'a.5': '短期的には、防御側に優位性をもたらす。組織はコードベースに対してAI主導のセキュリティ監査を継続的に実行できる。攻撃者が同じ能力を使う前に。ツールはまだほとんどのチームには手が届かないが、方向性は明確だ。',
+    'a.6': '中期的には、攻撃者も同じ能力を持つようになる。「AIが脆弱性を発見する」から「AIが悪用する」までの窓口は大幅に短縮されるだろう。AI支援のセキュリティツールを早期に導入する組織は大きな優位性を持つ。そうでない組織は、攻撃側がスケールできる非対称の脅威にますます晒されることになる。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speed Is a Design Choice — vsike</title>
+  <meta name="description" content="Performance and aesthetics are the same conversation. A 3-second load time isn't a technical problem — it's a trust problem, a brand problem, a relationship problem.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">Performance</span>
+          <span class="article-date-label">Mar 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">Speed Is a Design Choice</h1>
+        <p class="article-lead" data-i18n="a.lead">Performance and aesthetics are the same conversation. A 3-second load time isn't a technical problem — it's a trust problem, a brand problem, a relationship problem.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">The handoff model of web development — designer produces comps, engineer implements, performance is the engineer's problem — has given us a generation of beautiful, slow websites. The assumption embedded in that model is that performance is a technical property, separable from design intent. It isn't. Every visual decision has a weight. Every animation has a cost. Every web font is a network request. Design that ignores performance isn't actually complete.</p>
+        <p data-i18n="a.2">Speed is perceived, not measured. A 200ms response that feels snappy is better UX than a 150ms response that feels laggy — and the difference is almost entirely in the transition design: whether the interface acknowledges the user's action immediately, whether feedback is instant even if the underlying operation isn't. This is the designer's domain. The engineer can optimize the network; the designer decides whether the interaction feels fast.</p>
+        <h2 data-i18n="a.h1">What Slow Actually Signals</h2>
+        <p data-i18n="a.3">Users don't consciously diagnose slow load times. They form an impression — something between "this isn't working" and "this isn't worth my time" — and that impression attaches to the brand. It doesn't attach to the CDN configuration or the JavaScript bundle size. It attaches to the product experience, which is the designer's responsibility.</p>
+        <p data-i18n="a.4">The relationship between speed and trust is direct and largely unconscious. Fast interfaces read as competent. Slow interfaces read as struggling. This is independent of the actual functionality — a slow SaaS dashboard with sophisticated features reads as less capable than a fast one with fewer. Speed is a proxy for engineering quality, and users apply that proxy universally, even when it's wrong.</p>
+        <blockquote data-i18n="a.q">"Speed is a feature. It's just one that no one asks for in a brief and everyone notices in a review."</blockquote>
+        <h2 data-i18n="a.h2">The Designer's Performance Vocabulary</h2>
+        <p data-i18n="a.5">Designers don't need to understand TCP congestion control. But they do need to understand the weight of their decisions. Web fonts cost time — is this typeface worth the milliseconds? Third-party scripts cost time — does this tracking pixel earn its latency? Full-bleed video backgrounds cost time — does this hero video generate enough engagement to justify what it costs every user who just wants to read the page?</p>
+        <p data-i18n="a.6">The answer to all of these questions is sometimes yes. But the question has to be asked. Performance isn't a value to maximize at the expense of design — it's a constraint to design within, like any other. The designers who understand this constraint produce work that's faster to deliver, more satisfying to use, and more durable over time. Speed compounds: a fast site gains trust incrementally with every interaction. A slow one loses it the same way.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'Performance',
+    'a.title': 'Speed Is a Design Choice',
+    'a.lead': "Performance and aesthetics are the same conversation. A 3-second load time isn't a technical problem — it's a trust problem, a brand problem, a relationship problem.",
+    'a.1': "The handoff model of web development — designer produces comps, engineer implements, performance is the engineer's problem — has given us a generation of beautiful, slow websites. The assumption embedded in that model is that performance is a technical property, separable from design intent. It isn't. Every visual decision has a weight. Every animation has a cost. Every web font is a network request. Design that ignores performance isn't actually complete.",
+    'a.2': "Speed is perceived, not measured. A 200ms response that feels snappy is better UX than a 150ms response that feels laggy — and the difference is almost entirely in the transition design: whether the interface acknowledges the user's action immediately, whether feedback is instant even if the underlying operation isn't. This is the designer's domain. The engineer can optimize the network; the designer decides whether the interaction feels fast.",
+    'a.h1': 'What Slow Actually Signals',
+    'a.3': "Users don't consciously diagnose slow load times. They form an impression — something between \"this isn't working\" and \"this isn't worth my time\" — and that impression attaches to the brand. It doesn't attach to the CDN configuration or the JavaScript bundle size. It attaches to the product experience, which is the designer's responsibility.",
+    'a.4': "The relationship between speed and trust is direct and largely unconscious. Fast interfaces read as competent. Slow interfaces read as struggling. This is independent of the actual functionality — a slow SaaS dashboard with sophisticated features reads as less capable than a fast one with fewer. Speed is a proxy for engineering quality, and users apply that proxy universally, even when it's wrong.",
+    'a.q': '"Speed is a feature. It\'s just one that no one asks for in a brief and everyone notices in a review."',
+    'a.h2': "The Designer's Performance Vocabulary",
+    'a.5': "Designers don't need to understand TCP congestion control. But they do need to understand the weight of their decisions. Web fonts cost time — is this typeface worth the milliseconds? Third-party scripts cost time — does this tracking pixel earn its latency? Full-bleed video backgrounds cost time — does this hero video generate enough engagement to justify what it costs every user who just wants to read the page?",
+    'a.6': "The answer to all of these questions is sometimes yes. But the question has to be asked. Performance isn't a value to maximize at the expense of design — it's a constraint to design within, like any other. The designers who understand this constraint produce work that's faster to deliver, more satisfying to use, and more durable over time. Speed compounds: a fast site gains trust incrementally with every interaction. A slow one loses it the same way.",
+  },
+  zh: {
+    'a.cat': '性能',
+    'a.title': '速度是一种设计选择',
+    'a.lead': '性能和美学是同一场对话。3 秒的加载时间不是技术问题——它是信任问题、品牌问题、关系问题。',
+    'a.1': '网页开发的交接模型——设计师出设计稿，工程师实现，性能是工程师的问题——给了我们一代美丽但缓慢的网站。这个模型中隐含的假设是，性能是一种技术属性，与设计意图是可分离的。并非如此。每一个视觉决策都有重量。每一个动画都有成本。每一个网络字体都是一次网络请求。忽视性能的设计实际上并不完整。',
+    'a.2': '速度是被感知的，而非被测量的。感觉流畅的 200 毫秒响应比感觉迟钝的 150 毫秒响应有更好的用户体验——而差异几乎完全在于过渡设计：界面是否立即响应用户的操作，即使底层操作不是即时的，反馈是否也是即时的。这是设计师的领域。工程师可以优化网络；设计师决定交互是否感觉快速。',
+    'a.h1': '缓慢真正传达了什么',
+    'a.3': '用户不会有意识地诊断缓慢的加载时间。他们会形成一种印象——介于"这不起作用"和"这不值得我花时间"之间——这种印象会附着在品牌上。它不会附着在 CDN 配置或 JavaScript 包大小上。它附着在产品体验上，而产品体验是设计师的责任。',
+    'a.4': '速度与信任之间的关系是直接的，且很大程度上是无意识的。快速的界面读起来显得有能力，缓慢的界面读起来显得在挣扎。这与实际功能无关——一个具有复杂功能但缓慢的 SaaS 仪表板，读起来比一个功能较少但快速的仪表板能力差。速度是工程质量的代理指标，用户普遍应用这个代理，即使它有时是错的。',
+    'a.q': '「速度是一种特性。只不过没有人在需求文档中要求它，而每个人在评审中都会注意到它。」',
+    'a.h2': '设计师的性能词汇',
+    'a.5': '设计师不需要了解 TCP 拥塞控制。但他们确实需要了解自己决策的重量。网络字体需要时间——这种字体值得这些毫秒吗？第三方脚本需要时间——这个跟踪像素值得其带来的延迟吗？全出血视频背景需要时间——这个主页视频产生的参与度足以证明它对每个只想阅读页面的用户的成本吗？',
+    'a.6': '这些问题的答案有时是肯定的。但必须要提出这个问题。性能不是一个需要以牺牲设计为代价来最大化的价值——它是一种设计约束，与其他任何约束一样。理解这一约束的设计师会生产出更快交付、更令人满意、随时间更耐用的作品。速度会复利积累：快速的网站在每次交互中都会增量获得信任。缓慢的网站以同样的方式失去信任。',
+  },
+  ja: {
+    'a.cat': 'パフォーマンス',
+    'a.title': 'スピードはデザインの選択だ',
+    'a.lead': 'パフォーマンスと美学は同じ会話だ。3秒のロード時間は技術的な問題ではない——信頼の問題、ブランドの問題、関係の問題だ。',
+    'a.1': 'ウェブ開発のハンドオフモデル——デザイナーがコンプを作り、エンジニアが実装し、パフォーマンスはエンジニアの問題——は、美しく遅いウェブサイトの世代を生み出してきた。そのモデルに組み込まれた仮定は、パフォーマンスはデザインの意図から切り離せる技術的な属性だということだ。それは違う。すべてのビジュアル決定には重さがある。すべてのアニメーションにはコストがある。すべてのWebフォントはネットワークリクエストだ。パフォーマンスを無視するデザインは実際には完全ではない。',
+    'a.2': 'スピードは測定されるのではなく、知覚される。軽快に感じられる200ms応答は、もっさりと感じられる150ms応答よりも優れたUXだ——その違いはほぼ完全にトランジションデザインにある：インターフェースがユーザーのアクションを即座に認識するかどうか、基礎となる操作がそうでなくても、フィードバックが即座かどうか。これはデザイナーの領域だ。エンジニアはネットワークを最適化できる；デザイナーはインタラクションが速く感じるかどうかを決める。',
+    'a.h1': '遅さが実際に伝えること',
+    'a.3': 'ユーザーは遅いロード時間を意識的に診断しない。彼らは印象を形成する——「これは動いていない」と「これは私の時間に値しない」の間の何か——そしてその印象はブランドに付着する。CDNの設定やJavaScriptのバンドルサイズに付着するのではない。プロダクト体験に付着する、そしてそれはデザイナーの責任だ。',
+    'a.4': 'スピードと信頼の関係は直接的で、ほとんど無意識だ。速いインターフェースは有能に読める。遅いインターフェースは苦労しているように読める。これは実際の機能とは関係ない——高度な機能を持つ遅いSaaSダッシュボードは、機能の少ない速いものより能力が低く読める。スピードはエンジニアリング品質の代理指標であり、ユーザーはその代理を普遍的に適用する、たとえそれが間違っていても。',
+    'a.q': '「スピードは機能だ。ただ、誰もブリーフでそれを求めず、みんながレビューでそれに気づく機能だ。」',
+    'a.h2': 'デザイナーのパフォーマンス語彙',
+    'a.5': 'デザイナーはTCPの輻輳制御を理解する必要はない。しかし自分の決定の重さを理解する必要はある。Webフォントには時間がかかる——この書体はミリ秒に値するか？サードパーティスクリプトには時間がかかる——このトラッキングピクセルはそのレイテンシを稼いでいるか？フルブリードビデオ背景には時間がかかる——このヒーロービデオは、ただページを読みたいすべてのユーザーへのコストを正当化するだけのエンゲージメントを生み出しているか？',
+    'a.6': 'これらすべての質問への答えはときにはイエスだ。しかし質問は問われなければならない。パフォーマンスはデザインを犠牲にして最大化する価値ではない——他のどれとも同じように、設計すべき制約だ。この制約を理解するデザイナーは、より速く提供でき、より満足のいく使用で、より長く耐える仕事を作る。スピードは複利で蓄積する：速いサイトはすべてのインタラクションで段階的に信頼を得る。遅いサイトは同じように失う。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

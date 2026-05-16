@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Poisoning: When Your AI Knowledge Base Becomes an Attack Vector — vsike</title>
+  <meta name="description" content="Retrieval-Augmented Generation systems trust their data sources implicitly. Injecting adversarial content into a vector database can hijack every query that retrieves it.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">LLM Security</span>
+          <span class="article-date-label">Apr 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">RAG Poisoning: When Your AI Knowledge Base Becomes an Attack Vector</h1>
+        <p class="article-lead" data-i18n="a.lead">Retrieval-Augmented Generation systems trust their data sources implicitly. Injecting adversarial content into a vector database can hijack every query that retrieves it. A walkthrough of the attack surface.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">Retrieval-Augmented Generation is now the standard architecture for production AI systems that need to answer questions about private or recent data. The pattern is simple: embed documents into a vector database, retrieve semantically similar chunks at query time, and feed them to an LLM as context. It's elegant, scalable, and — in its default form — deeply trusting.</p>
+        <p data-i18n="a.2">The trust model of a RAG system is implicit but significant: the LLM treats retrieved documents as ground truth. When the model is asked "What is our refund policy?" it reads the retrieved chunks and answers from them, with no inherent mechanism to question their authenticity. This trust is the attack surface.</p>
+        <h2 data-i18n="a.h1">How RAG Poisoning Works</h2>
+        <p data-i18n="a.3">An attacker who can write to the knowledge base — whether through a compromised ingestion pipeline, a public wiki with write access, or uploaded documents — can inject content designed to be retrieved for specific queries. The injected document doesn't need to be the only result; it just needs to appear in context. Once retrieved, it can contain embedded prompt injection: instructions disguised as legitimate content that redirect the model's behavior.</p>
+        <p data-i18n="a.4">The attack compounds in agentic systems. A RAG-powered agent that can take actions — send emails, create calendar invites, execute API calls — becomes a vehicle for those actions once its context is poisoned. The attacker's instructions ride inside seemingly legitimate retrieved content, invisible to any log that only records the user's query.</p>
+        <blockquote data-i18n="a.q">"The vector database is the new SQL table. The question is whether anyone is treating it with the same security discipline."</blockquote>
+        <h2 data-i18n="a.h2">The Defense Surface</h2>
+        <p data-i18n="a.5">Unlike prompt injection in the input layer, RAG poisoning is easier to mitigate in principle: you control the knowledge base. Access controls, write audit logs, and document provenance tracking are all conventional security measures that apply directly. The failure mode is organizational — teams that treat the vector database as an append-only cache rather than as a security boundary.</p>
+        <p data-i18n="a.6">The harder problem is external RAG — systems that retrieve from the live web, third-party APIs, or user-provided documents. Here the attack surface is unbounded. The appropriate model is to treat all retrieved content as untrusted input, never as trusted instructions — but current LLM architectures make this distinction difficult to enforce architecturally. Until that changes, the most reliable defense is careful scoping: don't build RAG agents that can take irreversible actions without explicit human confirmation.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'LLM Security',
+    'a.title': 'RAG Poisoning: When Your AI Knowledge Base Becomes an Attack Vector',
+    'a.lead': "Retrieval-Augmented Generation systems trust their data sources implicitly. Injecting adversarial content into a vector database can hijack every query that retrieves it. A walkthrough of the attack surface.",
+    'a.1': "Retrieval-Augmented Generation is now the standard architecture for production AI systems that need to answer questions about private or recent data. The pattern is simple: embed documents into a vector database, retrieve semantically similar chunks at query time, and feed them to an LLM as context. It's elegant, scalable, and — in its default form — deeply trusting.",
+    'a.2': "The trust model of a RAG system is implicit but significant: the LLM treats retrieved documents as ground truth. When the model is asked \"What is our refund policy?\" it reads the retrieved chunks and answers from them, with no inherent mechanism to question their authenticity. This trust is the attack surface.",
+    'a.h1': 'How RAG Poisoning Works',
+    'a.3': "An attacker who can write to the knowledge base — whether through a compromised ingestion pipeline, a public wiki with write access, or uploaded documents — can inject content designed to be retrieved for specific queries. The injected document doesn't need to be the only result; it just needs to appear in context. Once retrieved, it can contain embedded prompt injection: instructions disguised as legitimate content that redirect the model's behavior.",
+    'a.4': "The attack compounds in agentic systems. A RAG-powered agent that can take actions — send emails, create calendar invites, execute API calls — becomes a vehicle for those actions once its context is poisoned. The attacker's instructions ride inside seemingly legitimate retrieved content, invisible to any log that only records the user's query.",
+    'a.q': '"The vector database is the new SQL table. The question is whether anyone is treating it with the same security discipline."',
+    'a.h2': 'The Defense Surface',
+    'a.5': "Unlike prompt injection in the input layer, RAG poisoning is easier to mitigate in principle: you control the knowledge base. Access controls, write audit logs, and document provenance tracking are all conventional security measures that apply directly. The failure mode is organizational — teams that treat the vector database as an append-only cache rather than as a security boundary.",
+    'a.6': "The harder problem is external RAG — systems that retrieve from the live web, third-party APIs, or user-provided documents. Here the attack surface is unbounded. The appropriate model is to treat all retrieved content as untrusted input, never as trusted instructions — but current LLM architectures make this distinction difficult to enforce architecturally. Until that changes, the most reliable defense is careful scoping: don't build RAG agents that can take irreversible actions without explicit human confirmation.",
+  },
+  zh: {
+    'a.cat': 'LLM 安全',
+    'a.title': 'RAG 投毒：当你的 AI 知识库变成攻击向量',
+    'a.lead': '检索增强生成系统隐式信任其数据源。将对抗性内容注入向量数据库，可以劫持每一次检索到该内容的查询。一次对攻击面的深入解析。',
+    'a.1': '检索增强生成（RAG）现已成为需要回答私有数据或近期数据问题的生产 AI 系统的标准架构。模式很简单：将文档嵌入向量数据库，在查询时检索语义相似的片段，并将其作为上下文输入给 LLM。这种方式优雅、可扩展——但在默认形式下，信任度极高。',
+    'a.2': 'RAG 系统的信任模型是隐式但重要的：LLM 将检索到的文档视为基础事实。当模型被问到"我们的退款政策是什么？"时，它会读取检索到的片段并从中作答，没有任何内在机制来质疑其真实性。这种信任就是攻击面。',
+    'a.h1': 'RAG 投毒的工作原理',
+    'a.3': '能够向知识库写入的攻击者——无论是通过被入侵的数据摄取管道、具有写入权限的公共 Wiki，还是上传的文档——都可以注入专门设计用来在特定查询中被检索到的内容。注入的文档不需要是唯一结果；它只需要出现在上下文中。一旦被检索到，它可以包含嵌入式提示词注入：伪装成合法内容的指令，可以重定向模型的行为。',
+    'a.4': '在智能体系统中，这种攻击会成倍放大。一旦上下文被投毒，能够执行操作的 RAG 驱动智能体——发送电子邮件、创建日历邀请、执行 API 调用——就会成为执行这些操作的工具。攻击者的指令隐藏在看似合法的检索内容中，对任何仅记录用户查询的日志都不可见。',
+    'a.q': '「向量数据库是新的 SQL 表。问题在于是否有人以同等的安全纪律来对待它。」',
+    'a.h2': '防御面',
+    'a.5': '与输入层的提示词注入不同，RAG 投毒在原则上更容易缓解：你控制着知识库。访问控制、写入审计日志和文档溯源追踪都是可以直接适用的常规安全措施。失败的模式在于组织层面——一些团队将向量数据库视为只追加的缓存，而非安全边界。',
+    'a.6': '更难解决的问题是外部 RAG——从互联网、第三方 API 或用户提供的文档检索的系统。在这里，攻击面是无界的。适当的模型是将所有检索到的内容视为不可信输入，而非可信指令——但当前的 LLM 架构使这种区分在架构层面难以强制执行。在此改变之前，最可靠的防御是谨慎划定范围：不要构建能够在没有明确人工确认的情况下执行不可逆操作的 RAG 智能体。',
+  },
+  ja: {
+    'a.cat': 'LLMセキュリティ',
+    'a.title': 'RAGポイズニング：AIナレッジベースが攻撃ベクターになるとき',
+    'a.lead': 'Retrieval-Augmented Generationシステムはデータソースを暗黙的に信頼する。ベクターデータベースに敵対的コンテンツを注入すると、それを検索するすべてのクエリを乗っ取ることができる。攻撃面の解説。',
+    'a.1': 'Retrieval-Augmented Generation（RAG）は今や、プライベートデータや最新データについて質問に答える必要がある本番AIシステムの標準アーキテクチャになっている。パターンはシンプルだ：ドキュメントをベクターデータベースに埋め込み、クエリ時に意味的に類似したチャンクを検索し、コンテキストとしてLLMに渡す。エレガントでスケーラブル——しかしデフォルトの形では、深く信頼している。',
+    'a.2': 'RAGシステムのトラストモデルは暗黙的だが重要だ：LLMは検索したドキュメントをグラウンドトゥルースとして扱う。「返金ポリシーは何ですか？」と聞かれると、検索したチャンクを読んでそこから答え、その真正性を疑う固有のメカニズムがない。この信頼が攻撃面だ。',
+    'a.h1': 'RAGポイズニングの仕組み',
+    'a.3': 'ナレッジベースに書き込めた攻撃者は——侵害されたインジェストパイプライン、書き込みアクセス権のある公開Wiki、アップロードされたドキュメントを通じてでも——特定クエリで検索されるよう設計されたコンテンツを注入できる。注入したドキュメントが唯一の結果である必要はない。コンテキストに現れるだけでいい。一度検索されれば、組み込みプロンプトインジェクションを含められる：正当なコンテンツに偽装した指示でモデルの動作をリダイレクトする。',
+    'a.4': 'エージェントシステムではこの攻撃が複合する。コンテキストが汚染されると、アクションを実行できるRAG駆動エージェント——メール送信、カレンダー招待作成、API呼び出し実行——がそれらのアクションの媒体になる。攻撃者の指示は一見正当な検索コンテンツの中に潜み、ユーザーのクエリだけを記録するログからは見えない。',
+    'a.q': '「ベクターデータベースは新しいSQLテーブルだ。問題は、誰かが同じセキュリティ規律でそれを扱っているかどうかだ。」',
+    'a.h2': '防御面',
+    'a.5': '入力層のプロンプトインジェクションとは異なり、RAGポイズニングは原則として緩和が容易だ：あなたはナレッジベースを制御している。アクセス制御、書き込み監査ログ、文書プロベナンス追跡はすべて直接適用できる従来のセキュリティ対策だ。失敗するのは組織的な側面——ベクターデータベースをセキュリティ境界ではなく追記専用キャッシュとして扱うチームだ。',
+    'a.6': 'より難しい問題は外部RAGだ——ライブウェブ、サードパーティAPI、ユーザー提供ドキュメントから検索するシステム。ここでは攻撃面は無限だ。適切なモデルは、すべての検索コンテンツを信頼できる指示としてではなく、信頼できない入力として扱うことだ——しかし現在のLLMアーキテクチャでは、この区別をアーキテクチャ的に強制することが難しい。それが変わるまで、最も信頼できる防御は慎重なスコーピングだ：明示的な人間の確認なしに取り消し不可能なアクションを実行できるRAGエージェントを構築しないこと。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

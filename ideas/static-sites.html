@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Sites and the Long Game — vsike</title>
+  <meta name="description" content="Every framework promises the future. HTML has already survived three decades. There's something to be said for betting on the thing that doesn't need updating.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">Web</span>
+          <span class="article-date-label">Dec 2024</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">Static Sites and the Long Game</h1>
+        <p class="article-lead" data-i18n="a.lead">Every framework promises the future. HTML has already survived three decades. There's something to be said for betting on the thing that doesn't need updating.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">Somewhere between 2015 and 2020, the web development community collectively decided that serving HTML files was too simple to be taken seriously. The static site became unfashionable — acceptable for personal projects, perhaps, but insufficient for anything real. Everything real needed a framework, a build step, hydration, client-side routing, a node_modules folder measured in gigabytes. The frameworks were impressive. The deploys were complicated. The sites were, in many cases, slower.</p>
+        <p data-i18n="a.2">The static site has been rehabilitated since, partly by the JAMstack movement and partly by the dawning recognition that client-side rendering has real costs — in performance, in SEO, in accessibility, in the complexity budget of small teams. But the rehabilitation has mostly been about static-ish sites: HTML generated at build time by JavaScript tools. The genuinely static site — files you can open directly in a browser — remains culturally undersized relative to what it can actually do.</p>
+        <h2 data-i18n="a.h1">What Static Actually Gives You</h2>
+        <p data-i18n="a.3">A static site served from a CDN is fast in a way that server-rendered applications fundamentally cannot match: there's no origin server to reach, no database to query, no runtime to initialize. The file is already compiled; the CDN is already close. Time to first byte approaches the speed of light over fiber. This isn't optimization — it's the architecture being naturally aligned with how HTTP works.</p>
+        <p data-i18n="a.4">Static sites also age differently. A React application from 2019 may require significant effort to run today — dependencies have changed, Node.js APIs have shifted, the toolchain has moved. An HTML file from 2019 opens in a browser with no modification. This longevity isn't trivial: for content that's meant to endure — documentation, archives, portfolios, reference material — the maintenance burden of a dynamic stack compounds over time in ways that static files don't.</p>
+        <blockquote data-i18n="a.q">"The most durable technology on the web is HTML. That's not a consolation — it's a design principle."</blockquote>
+        <h2 data-i18n="a.h2">When Static Falls Short</h2>
+        <p data-i18n="a.5">Static sites have genuine limits. Personalization, authentication, real-time data, user-generated content — these require server involvement at some layer. The JAMstack approach of pushing this to edge functions and third-party services is viable and often the right call. But "use a static site where it works" isn't the same as "never build anything dynamic." The mistake is applying dynamic architecture to problems static sites solve better, not the reverse.</p>
+        <p data-i18n="a.6">For most marketing sites, documentation portals, portfolios, and content-first publishing platforms, static is the right default. The question to ask is: does this page need to be different for different users, at request time, based on server-side data? If no, static wins. If yes, evaluate what the smallest possible dynamic surface is, and keep everything else static. The frameworks will keep changing. The web platform has been backward-compatible for thirty years and shows no sign of stopping.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'Web',
+    'a.title': 'Static Sites and the Long Game',
+    'a.lead': "Every framework promises the future. HTML has already survived three decades. There's something to be said for betting on the thing that doesn't need updating.",
+    'a.1': "Somewhere between 2015 and 2020, the web development community collectively decided that serving HTML files was too simple to be taken seriously. The static site became unfashionable — acceptable for personal projects, perhaps, but insufficient for anything real. Everything real needed a framework, a build step, hydration, client-side routing, a node_modules folder measured in gigabytes. The frameworks were impressive. The deploys were complicated. The sites were, in many cases, slower.",
+    'a.2': "The static site has been rehabilitated since, partly by the JAMstack movement and partly by the dawning recognition that client-side rendering has real costs — in performance, in SEO, in accessibility, in the complexity budget of small teams. But the rehabilitation has mostly been about static-ish sites: HTML generated at build time by JavaScript tools. The genuinely static site — files you can open directly in a browser — remains culturally undersized relative to what it can actually do.",
+    'a.h1': 'What Static Actually Gives You',
+    'a.3': "A static site served from a CDN is fast in a way that server-rendered applications fundamentally cannot match: there's no origin server to reach, no database to query, no runtime to initialize. The file is already compiled; the CDN is already close. Time to first byte approaches the speed of light over fiber. This isn't optimization — it's the architecture being naturally aligned with how HTTP works.",
+    'a.4': "Static sites also age differently. A React application from 2019 may require significant effort to run today — dependencies have changed, Node.js APIs have shifted, the toolchain has moved. An HTML file from 2019 opens in a browser with no modification. This longevity isn't trivial: for content that's meant to endure — documentation, archives, portfolios, reference material — the maintenance burden of a dynamic stack compounds over time in ways that static files don't.",
+    'a.q': '"The most durable technology on the web is HTML. That\'s not a consolation — it\'s a design principle."',
+    'a.h2': 'When Static Falls Short',
+    'a.5': "Static sites have genuine limits. Personalization, authentication, real-time data, user-generated content — these require server involvement at some layer. The JAMstack approach of pushing this to edge functions and third-party services is viable and often the right call. But \"use a static site where it works\" isn't the same as \"never build anything dynamic.\" The mistake is applying dynamic architecture to problems static sites solve better, not the reverse.",
+    'a.6': "For most marketing sites, documentation portals, portfolios, and content-first publishing platforms, static is the right default. The question to ask is: does this page need to be different for different users, at request time, based on server-side data? If no, static wins. If yes, evaluate what the smallest possible dynamic surface is, and keep everything else static. The frameworks will keep changing. The web platform has been backward-compatible for thirty years and shows no sign of stopping.",
+  },
+  zh: {
+    'a.cat': '网页',
+    'a.title': '静态网站与长远考量',
+    'a.lead': '每个框架都承诺未来。HTML 已经存活了三十年。有些东西值得押注于不需要更新的东西。',
+    'a.1': '大约在 2015 到 2020 年之间，网页开发社区集体决定，提供 HTML 文件过于简单，不值得认真对待。静态网站变得不再时髦——也许对个人项目来说是可以接受的，但对任何真实的东西都是不够的。一切真实的东西都需要框架、构建步骤、注水、客户端路由、以 GB 为单位的 node_modules 文件夹。框架令人印象深刻。部署很复杂。在很多情况下，网站更慢了。',
+    'a.2': '此后静态网站得到了平反，部分原因是 JAMstack 运动，部分原因是对客户端渲染有实际成本的逐渐认识——在性能、SEO、无障碍访问和小团队的复杂性预算方面。但这种平反主要是关于类静态网站：在构建时由 JavaScript 工具生成的 HTML。真正的静态网站——你可以直接在浏览器中打开的文件——相对于它实际能做的事情，在文化上仍然被低估。',
+    'a.h1': '静态真正给你的东西',
+    'a.3': '从 CDN 提供的静态网站的速度是服务器渲染应用程序从根本上无法匹敌的：没有原始服务器可达，没有数据库可查询，没有运行时可初始化。文件已经编译好了；CDN 已经很近了。首字节时间接近光纤上的光速。这不是优化——这是架构与 HTTP 工作方式的自然对齐。',
+    'a.4': '静态网站的老化方式也不同。2019 年的 React 应用程序今天可能需要大量工作才能运行——依赖项已经改变，Node.js API 已经转移，工具链已经移动。2019 年的 HTML 文件无需修改即可在浏览器中打开。这种长久性并非微不足道：对于旨在持久的内容——文档、档案、作品集、参考资料——动态堆栈的维护负担随时间以静态文件所没有的方式复利累积。',
+    'a.q': '「网络上最耐久的技术是 HTML。这不是安慰——这是一个设计原则。」',
+    'a.h2': '静态网站何时力不从心',
+    'a.5': '静态网站有真正的限制。个性化、认证、实时数据、用户生成的内容——这些在某个层面上需要服务器参与。将这些推送到边缘函数和第三方服务的 JAMstack 方法是可行的，通常也是正确的选择。但"在它有效的地方使用静态网站"与"从不构建任何动态的东西"不同。错误是将动态架构应用于静态网站更好解决的问题，而非反过来。',
+    'a.6': '对于大多数营销网站、文档门户、作品集和以内容为首的发布平台，静态是正确的默认选择。要问的问题是：这个页面需要根据服务器端数据，在请求时为不同用户呈现不同的内容吗？如果不需要，静态胜出。如果需要，评估最小可能的动态面是什么，并保持其他一切静态。框架将继续变化。网页平台已向后兼容三十年，没有停止的迹象。',
+  },
+  ja: {
+    'a.cat': 'ウェブ',
+    'a.title': '静的サイトと長期戦略',
+    'a.lead': 'すべてのフレームワークは未来を約束する。HTMLはすでに30年生き延びた。更新を必要としないものに賭けることには、何か言うべきことがある。',
+    'a.1': '2015年から2020年の間のどこかで、ウェブ開発コミュニティはHTMLファイルを提供することは真剣に受け取られるには単純すぎると集団的に決定した。静的サイトは時代遅れになった——個人プロジェクトには受け入れられるかもしれないが、本物には不十分だ。本物にはすべてフレームワーク、ビルドステップ、ハイドレーション、クライアントサイドルーティング、ギガバイト単位のnode_modulesフォルダが必要だった。フレームワークは印象的だった。デプロイは複雑だった。サイトは多くの場合、遅かった。',
+    'a.2': 'その後静的サイトは復権した。部分的にはJAMstackムーブメントによって、部分的にはクライアントサイドレンダリングに実際のコスト——パフォーマンス、SEO、アクセシビリティ、小チームの複雑性予算において——があることの認識によって。しかし復権の多くは静的っぽいサイトについてだった：JavaScriptツールによってビルド時に生成されたHTML。本当に静的なサイト——ブラウザで直接開けるファイル——は、実際に何ができるかに比べて、文化的にまだ過小評価されている。',
+    'a.h1': '静的が実際に与えるもの',
+    'a.3': 'CDNから提供される静的サイトは、サーバーレンダリングアプリケーションが根本的に太刀打ちできない速さだ：到達するオリジンサーバーがなく、クエリするデータベースがなく、初期化するランタイムがない。ファイルはすでにコンパイルされている；CDNはすでに近い。最初のバイトまでの時間は光ファイバー上の光速に近づく。これは最適化ではない——アーキテクチャがHTTPの仕組みと自然に一致しているのだ。',
+    'a.4': '静的サイトはまた異なる老い方をする。2019年のReactアプリケーションは今日動かすのに大きな努力が必要かもしれない——依存関係が変わり、Node.js APIが移行し、ツールチェーンが移った。2019年のHTMLファイルは修正なしにブラウザで開く。この長寿命は些細なことではない：永続するコンテンツのために——ドキュメント、アーカイブ、ポートフォリオ、参考資料——動的スタックのメンテナンス負担は静的ファイルがしない方法で時間とともに複利で蓄積する。',
+    'a.q': '「ウェブで最も耐久性のある技術はHTMLだ。それは慰めではない——設計原則だ。」',
+    'a.h2': '静的が及ばないとき',
+    'a.5': '静的サイトには本当の限界がある。パーソナライゼーション、認証、リアルタイムデータ、ユーザー生成コンテンツ——これらはある層でサーバーの関与を必要とする。これをエッジ関数とサードパーティサービスにプッシュするJAMstackアプローチは実行可能で、しばしば正しい選択だ。しかし「機能するところで静的サイトを使う」は「動的なものを決して作らない」とは異なる。間違いは、静的サイトがより上手く解決する問題に動的アーキテクチャを適用することで、その逆ではない。',
+    'a.6': 'ほとんどのマーケティングサイト、ドキュメントポータル、ポートフォリオ、コンテンツファーストの出版プラットフォームにとって、静的が正しいデフォルトだ。尋ねるべき質問は：このページはサーバー側データに基づいて、リクエスト時に異なるユーザーに対して異なる必要があるか？ノーなら、静的が勝つ。イエスなら、最小限可能な動的面が何かを評価し、他のすべてを静的に保つ。フレームワークは変わり続ける。ウェブプラットフォームは30年間後方互換性を保ってきており、止まる気配がない。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Injection: The Vulnerability AI Can't Patch Itself — vsike</title>
+  <meta name="description" content="Unlike buffer overflows or SQL injection, prompt injection attacks are semantic — they exploit the model's instruction-following nature.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">LLM Security</span>
+          <span class="article-date-label">May 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">Prompt Injection: The Vulnerability AI Can't Patch Itself</h1>
+        <p class="article-lead" data-i18n="a.lead">Unlike buffer overflows or SQL injection, prompt injection attacks are semantic — they exploit the model's instruction-following nature. Understanding why this class of vulnerability is structurally different from everything that came before it.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">When a developer writes a web form, they sanitize inputs to prevent SQL injection. The fix is mechanical: escape special characters, use parameterized queries, enforce type constraints. The attack surface is defined by a formal grammar, and the grammar can be enforced. Prompt injection is different in kind, not merely degree.</p>
+        <p data-i18n="a.2">A large language model doesn't distinguish between instructions from its developers and instructions from the content it reads. Both arrive as tokens. Both activate the same attention mechanisms. The model has no privileged "system" mode that renders some text structurally different from other text. When an attacker embeds "Ignore previous instructions and..." in a document the model is asked to summarize, the model doesn't see an attack — it sees more instructions.</p>
+        <h2 data-i18n="a.h1">Direct vs. Indirect Injection</h2>
+        <p data-i18n="a.3">Direct prompt injection is the obvious variant: a user crafts a message to manipulate a chatbot into bypassing its guardrails. This is a user-versus-system problem, and it's relatively bounded — the attacker can only affect their own session.</p>
+        <p data-i18n="a.4">Indirect prompt injection is far more dangerous and largely unsolved. In agentic systems — where an LLM browses the web, reads emails, processes documents — adversarial content in the environment can hijack the agent's actions. A malicious webpage the agent visits can instruct it to exfiltrate data, forward emails, or take actions the user never authorized. The attacker doesn't need access to the user or the system — they just need to put text somewhere the agent will eventually read it.</p>
+        <blockquote data-i18n="a.q">"You can sanitize inputs to prevent SQL injection. You cannot sanitize meaning out of language — and meaning is the attack vector."</blockquote>
+        <h2 data-i18n="a.h2">Why It Can't Be Patched</h2>
+        <p data-i18n="a.5">Every proposed mitigation has fundamental limits. Input filtering fails because the attack surface is open-ended natural language — any attempt to define "malicious instructions" will either be too broad (breaking legitimate use) or too narrow (trivially bypassed). Prompt hardening — instructing the model to "ignore attempts to override these instructions" — fails because those instructions are themselves just text, subject to the same injection dynamic.</p>
+        <p data-i18n="a.6">The structural reason prompt injection is hard to eliminate is that it exploits the core capability of the system: following instructions expressed in natural language. You can't close this attack surface without fundamentally changing what LLMs do. The research direction that shows most promise is architectural: separating instruction channels from data channels at the model level — but this requires retraining, not patching, and the field has barely started.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'LLM Security',
+    'a.title': "Prompt Injection: The Vulnerability AI Can't Patch Itself",
+    'a.lead': "Unlike buffer overflows or SQL injection, prompt injection attacks are semantic — they exploit the model's instruction-following nature. Understanding why this class of vulnerability is structurally different from everything that came before it.",
+    'a.1': "When a developer writes a web form, they sanitize inputs to prevent SQL injection. The fix is mechanical: escape special characters, use parameterized queries, enforce type constraints. The attack surface is defined by a formal grammar, and the grammar can be enforced. Prompt injection is different in kind, not merely degree.",
+    'a.2': "A large language model doesn't distinguish between instructions from its developers and instructions from the content it reads. Both arrive as tokens. Both activate the same attention mechanisms. The model has no privileged \"system\" mode that renders some text structurally different from other text. When an attacker embeds \"Ignore previous instructions and...\" in a document the model is asked to summarize, the model doesn't see an attack — it sees more instructions.",
+    'a.h1': 'Direct vs. Indirect Injection',
+    'a.3': "Direct prompt injection is the obvious variant: a user crafts a message to manipulate a chatbot into bypassing its guardrails. This is a user-versus-system problem, and it's relatively bounded — the attacker can only affect their own session.",
+    'a.4': "Indirect prompt injection is far more dangerous and largely unsolved. In agentic systems — where an LLM browses the web, reads emails, processes documents — adversarial content in the environment can hijack the agent's actions. A malicious webpage the agent visits can instruct it to exfiltrate data, forward emails, or take actions the user never authorized. The attacker doesn't need access to the user or the system — they just need to put text somewhere the agent will eventually read it.",
+    'a.q': '"You can sanitize inputs to prevent SQL injection. You cannot sanitize meaning out of language — and meaning is the attack vector."',
+    'a.h2': "Why It Can't Be Patched",
+    'a.5': "Every proposed mitigation has fundamental limits. Input filtering fails because the attack surface is open-ended natural language — any attempt to define \"malicious instructions\" will either be too broad (breaking legitimate use) or too narrow (trivially bypassed). Prompt hardening — instructing the model to \"ignore attempts to override these instructions\" — fails because those instructions are themselves just text, subject to the same injection dynamic.",
+    'a.6': "The structural reason prompt injection is hard to eliminate is that it exploits the core capability of the system: following instructions expressed in natural language. You can't close this attack surface without fundamentally changing what LLMs do. The research direction that shows most promise is architectural: separating instruction channels from data channels at the model level — but this requires retraining, not patching, and the field has barely started.",
+  },
+  zh: {
+    'a.cat': 'LLM 安全',
+    'a.title': '提示词注入：AI 无法自我修补的漏洞',
+    'a.lead': '与缓冲区溢出或 SQL 注入不同，提示词注入攻击是语义层面的——它们利用的是模型遵循指令的本质特性。理解为什么这类漏洞在结构上与以往所有漏洞都有本质区别。',
+    'a.1': '当开发者编写一个 Web 表单时，他们会对输入进行过滤以防止 SQL 注入。这个修复是机械性的：转义特殊字符，使用参数化查询，强制类型约束。攻击面由一套形式语法定义，而这套语法是可以强制执行的。提示词注入在性质上不同，而不仅仅是程度上的差异。',
+    'a.2': '大型语言模型无法区分来自开发者的指令和它所读取内容中的指令。两者都以 token 的形式到达，都激活相同的注意力机制。模型没有特权"系统"模式，使某些文本在结构上与其他文本不同。当攻击者在模型被要求总结的文档中嵌入"忽略之前的指令并……"时，模型看到的不是攻击——而是更多的指令。',
+    'a.h1': '直接注入与间接注入',
+    'a.3': '直接提示词注入是显而易见的变体：用户精心构造消息，操纵聊天机器人绕过其安全护栏。这是用户与系统之间的问题，范围相对有限——攻击者只能影响自己的会话。',
+    'a.4': '间接提示词注入危险得多，且大体上尚未解决。在智能体系统中——当 LLM 浏览网页、阅读电子邮件、处理文档时——环境中的对抗性内容可以劫持智能体的行动。智能体访问的恶意网页可以指示它泄露数据、转发电子邮件，或执行用户从未授权的操作。攻击者不需要访问用户或系统——他们只需要把文本放在智能体最终会读到的地方。',
+    'a.q': '「你可以过滤输入来防止 SQL 注入。但你无法从语言中过滤掉意义——而意义正是攻击向量。」',
+    'a.h2': '为何无法修补',
+    'a.5': '每种提议的缓解措施都有根本性的局限。输入过滤失败，因为攻击面是开放式的自然语言——任何定义"恶意指令"的尝试要么范围太广（破坏合法使用），要么太窄（被轻易绕过）。提示词加固——指示模型"忽略覆盖这些指令的尝试"——失败，因为这些指令本身也只是文本，同样受到相同注入动态的影响。',
+    'a.6': '提示词注入难以消除的结构性原因在于，它利用了系统的核心能力：遵循用自然语言表达的指令。你无法在不从根本上改变 LLM 功能的情况下关闭这个攻击面。目前最有前景的研究方向是架构层面的：在模型层面将指令通道与数据通道分离——但这需要重新训练而非打补丁，而该领域才刚刚起步。',
+  },
+  ja: {
+    'a.cat': 'LLMセキュリティ',
+    'a.title': 'プロンプトインジェクション：AIが自分でパッチを当てられない脆弱性',
+    'a.lead': 'バッファオーバーフローやSQLインジェクションとは異なり、プロンプトインジェクション攻撃はセマンティックだ——モデルの指示追従という本質的な性質を悪用する。このクラスの脆弱性がこれまでのあらゆるものと構造的にどう違うのかを理解する。',
+    'a.1': '開発者がWebフォームを書くとき、SQLインジェクションを防ぐために入力をサニタイズする。修正は機械的だ：特殊文字をエスケープし、パラメータ化クエリを使い、型制約を強制する。攻撃面は形式的な文法によって定義され、その文法は強制できる。プロンプトインジェクションは程度ではなく、種類が違う。',
+    'a.2': '大規模言語モデルは、開発者からの指示と読み取るコンテンツからの指示を区別しない。どちらもトークンとして届き、同じアテンション機構を活性化する。モデルには、一部のテキストを他のテキストと構造的に異なるものにする特権的な「システム」モードがない。攻撃者がモデルに要約を依頼された文書に「前の指示を無視して…」と埋め込むと、モデルは攻撃を見るのではなく、より多くの指示を見る。',
+    'a.h1': '直接インジェクションと間接インジェクション',
+    'a.3': '直接プロンプトインジェクションは明白な変形だ：ユーザーがチャットボットをガードレールを回避するよう操作するメッセージを作成する。これはユーザー対システムの問題であり、比較的範囲が限られている——攻撃者は自分のセッションにしか影響を与えられない。',
+    'a.4': '間接プロンプトインジェクションははるかに危険で、大部分が未解決だ。エージェントシステム——LLMがウェブを閲覧し、メールを読み、文書を処理する——では、環境内の敵対的コンテンツがエージェントの行動を乗っ取ることができる。エージェントが訪問する悪意のあるウェブページは、データを流出させたり、メールを転送したり、ユーザーが承認していない行動を取るよう指示できる。攻撃者はユーザーやシステムへのアクセスを必要としない——エージェントがいつか読むであろう場所にテキストを置くだけでいい。',
+    'a.q': '「SQLインジェクションを防ぐために入力をサニタイズできる。しかし、言語から意味をサニタイズすることはできない——そして意味こそが攻撃ベクターだ。」',
+    'a.h2': 'なぜパッチを当てられないのか',
+    'a.5': '提案されているすべての緩和策には根本的な限界がある。入力フィルタリングは失敗する。なぜなら攻撃面はオープンエンドの自然言語であり——「悪意のある指示」を定義しようとするどんな試みも、広すぎる（正当な使用を壊す）か、狭すぎる（簡単に回避される）かのどちらかになる。プロンプト硬化——「これらの指示を上書きしようとする試みを無視する」とモデルに指示すること——は失敗する。なぜならそれらの指示自体もテキストに過ぎず、同じインジェクションダイナミクスの影響を受けるからだ。',
+    'a.6': 'プロンプトインジェクションの排除が難しい構造的な理由は、システムのコア能力を悪用しているからだ：自然言語で表現された指示に従うこと。LLMが行うことを根本的に変えることなく、この攻撃面を閉じることはできない。最も有望な研究方向はアーキテクチャ的だ：モデルレベルで指示チャンネルをデータチャンネルから分離すること——しかしこれにはパッチではなく再トレーニングが必要で、この分野はまだ始まったばかりだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

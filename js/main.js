@@ -61,7 +61,8 @@ const LANG = {
     'contact.placeholder.name': 'Your name',
     'contact.placeholder.subject': "What’s this about?",
     'contact.placeholder.message': 'Tell me about your project, idea, or just say hello.',
-    'contact.quote': '“The best collaborations start with someone who has a real problem and someone who genuinely wants to solve it.”',
+    'contact.quote': '”The best collaborations start with someone who has a real problem and someone who genuinely wants to solve it.”',
+    'article.back': '← All Ideas',
   },
 
   zh: {
@@ -126,6 +127,7 @@ const LANG = {
     'contact.placeholder.subject': '主题是什么？',
     'contact.placeholder.message': '请告诉我您的项目、想法，或只是打个招呼。',
     'contact.quote': '「最好的合作，始于真正有问题的人，遇见真正想解决问题的人。」',
+    'article.back': '← 全部想法',
   },
 
   ja: {
@@ -190,8 +192,18 @@ const LANG = {
     'contact.placeholder.subject': '件名は何ですか？',
     'contact.placeholder.message': 'プロジェクト、アイデア、またはご挨拶をお聞かせください。',
     'contact.quote': '「最高のコラボレーションは、本物の問題を持つ人と、それを本当に解決したい人との出会いから始まる。」',
+    'article.back': '← アイデア一覧',
   }
 };
+
+/* Merge article-specific translations when present (inline script on detail pages) */
+if (window.ARTICLE_TRANS) {
+  ['en', 'zh', 'ja'].forEach(lang => {
+    if (LANG[lang] && window.ARTICLE_TRANS[lang]) {
+      Object.assign(LANG[lang], window.ARTICLE_TRANS[lang]);
+    }
+  });
+}
 
 /* ─── Apply Language ─────────────────────────────────────────────── */
 function applyLang(lang) {
