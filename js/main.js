@@ -62,6 +62,12 @@ const LANG = {
     'contact.placeholder.subject': "What’s this about?",
     'contact.placeholder.message': 'Tell me about your project, idea, or just say hello.',
     'contact.quote': '”The best collaborations start with someone who has a real problem and someone who genuinely wants to solve it.”',
+    'contact.link.site.label': 'About this site',
+    'contact.link.site': 'Stack, design decisions & colophon  →',
+    'contact.link.careers.label': 'Join the team',
+    'contact.link.careers': 'View open roles  →',
+    'nav.site': 'This Site',
+    'nav.careers': 'Careers',
     'article.back': '← All Ideas',
   },
 
@@ -127,6 +133,12 @@ const LANG = {
     'contact.placeholder.subject': '主题是什么？',
     'contact.placeholder.message': '请告诉我您的项目、想法，或只是打个招呼。',
     'contact.quote': '「最好的合作，始于真正有问题的人，遇见真正想解决问题的人。」',
+    'contact.link.site.label': '关于本站',
+    'contact.link.site': '技术栈、设计决策与版权页  →',
+    'contact.link.careers.label': '加入团队',
+    'contact.link.careers': '查看开放职位  →',
+    'nav.site': '本站',
+    'nav.careers': '招聘',
     'article.back': '← 全部想法',
   },
 
@@ -192,6 +204,12 @@ const LANG = {
     'contact.placeholder.subject': '件名は何ですか？',
     'contact.placeholder.message': 'プロジェクト、アイデア、またはご挨拶をお聞かせください。',
     'contact.quote': '「最高のコラボレーションは、本物の問題を持つ人と、それを本当に解決したい人との出会いから始まる。」',
+    'contact.link.site.label': 'このサイトについて',
+    'contact.link.site': 'スタック、デザインの決断、コロフォン  →',
+    'contact.link.careers.label': 'チームに参加',
+    'contact.link.careers': 'オープンポジションを見る  →',
+    'nav.site': 'このサイト',
+    'nav.careers': '採用',
     'article.back': '← アイデア一覧',
   }
 };

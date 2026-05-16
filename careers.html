@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careers — vsike</title>
+  <meta name="description" content="Open roles at vsike. We hire for instinct as much as skill. Build at the edge of AI, design, and engineering.">
+  <meta name="keywords" content="vsike careers, vsike jobs, AI security jobs, design jobs, frontend jobs, open roles">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .job-list { margin: 0; }
+    .job-item { border-bottom: 1px solid var(--fg-dim); padding: 2.5rem 0; }
+    .job-item:first-child { border-top: 1px solid var(--fg-dim); }
+    .job-header { display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .job-title { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.02em; }
+    .job-badges { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .job-badge { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; padding: .2rem .65rem; border: 1px solid var(--fg-dim); color: var(--fg-muted); }
+    .job-badge-accent { border-color: var(--accent); color: var(--accent); }
+    .job-desc { color: var(--fg-muted); line-height: 1.75; max-width: 640px; margin-bottom: 1.25rem; }
+    .job-req-list { margin: 0; padding: 0; list-style: none; }
+    .job-req-list li { font-size: var(--fs-sm); color: var(--fg-muted); padding: .25rem 0; padding-left: 1.25rem; position: relative; }
+    .job-req-list li::before { content: '—'; position: absolute; left: 0; color: var(--accent); }
+    .job-apply { display: inline-block; margin-top: 1.5rem; font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+    .job-apply:hover { opacity: .7; }
+    .careers-cta { background: color-mix(in srgb, var(--accent) 6%, var(--bg)); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); padding: 2.5rem; margin-top: 3rem; }
+    .careers-cta-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); text-transform: uppercase; margin-bottom: .75rem; }
+    .careers-cta-text { font-size: var(--fs-lg); font-family: var(--serif); letter-spacing: -.02em; line-height: 1.45; margin-bottom: 1.25rem; }
+    .careers-cta-email { font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .08em; color: var(--accent); text-decoration: none; }
+    .careers-cta-email:hover { opacity: .75; }
+  </style>
+</head>
+<body>
+
+<div class="page-transition" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="index.html" class="nav-logo" aria-label="vsike home">
+    vsike<span class="nav-logo-dot" aria-hidden="true"></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="about.html" data-i18n="nav.about">About</a>
+  <a href="work.html" data-i18n="nav.work">Work</a>
+  <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <header class="page-hero">
+    <div class="page-hero-ghost" aria-hidden="true">06</div>
+    <p class="page-hero-eyebrow reveal" data-i18n="careers.eyebrow">Careers</p>
+    <h1 class="page-hero-title reveal reveal-d1" data-i18n-html="careers.title">Build what<br>matters.</h1>
+    <p class="page-hero-sub reveal reveal-d2" data-i18n="careers.sub">
+      We hire people who care about the details, move with intent, and aren't afraid to work at the edge of what's known. Open roles below.
+    </p>
+  </header>
+
+  <div class="section">
+    <div class="section-label reveal">
+      <span data-i18n="careers.section.label">Open Roles</span>
+      <span class="section-label-count" data-i18n="careers.section.count">5 positions</span>
+    </div>
+
+    <div class="job-list reveal">
+
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title" data-i18n="careers.j1.title">AI Security Researcher</div>
+          <div class="job-badges">
+            <span class="job-badge job-badge-accent" data-i18n="careers.badge.full">Full-time</span>
+            <span class="job-badge" data-i18n="careers.badge.remote">Remote</span>
+          </div>
+        </div>
+        <p class="job-desc" data-i18n="careers.j1.desc">
+          We're looking for someone who thinks about LLM vulnerabilities the way a compiler author thinks about undefined behavior — with rigor, curiosity, and a healthy suspicion of everyone who says "it'll be fine." You'll research AI attack surfaces, write about what you find, and help shape how vsike covers the frontier of AI security.
+        </p>
+        <ul class="job-req-list">
+          <li data-i18n="careers.j1.r1">Hands-on experience with LLM security: prompt injection, jailbreaks, model extraction, or red-teaming</li>
+          <li data-i18n="careers.j1.r2">Ability to write clearly for technical and non-technical audiences</li>
+          <li data-i18n="careers.j1.r3">Familiarity with the AI landscape: Anthropic, OpenAI, open-weight models, agent frameworks</li>
+          <li data-i18n="careers.j1.r4">Track record of responsible disclosure or published security research</li>
+        </ul>
+        <a href="mailto:recruit@vsike.com?subject=AI Security Researcher" class="job-apply" data-i18n="careers.apply">Apply for this role →</a>
+      </div>
+
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title" data-i18n="careers.j2.title">Frontend Engineer</div>
+          <div class="job-badges">
+            <span class="job-badge job-badge-accent" data-i18n="careers.badge.full">Full-time</span>
+            <span class="job-badge" data-i18n="careers.badge.remote">Remote</span>
+          </div>
+        </div>
+        <p class="job-desc" data-i18n="careers.j2.desc">
+          You understand the browser as a platform, not just a target environment for your framework. You can read a CSS cascade error without Googling it. You have opinions about typography and can defend them. You write code that ships fast and lasts long. You'll build and maintain vsike's digital products from the ground up.
+        </p>
+        <ul class="job-req-list">
+          <li data-i18n="careers.j2.r1">Deep command of HTML, CSS, and JavaScript — frameworks are tools, not identities</li>
+          <li data-i18n="careers.j2.r2">Performance-first mindset: Core Web Vitals, Lighthouse, render-blocking awareness</li>
+          <li data-i18n="careers.j2.r3">Experience building multilingual interfaces (i18n, RTL, CJK typography)</li>
+          <li data-i18n="careers.j2.r4">Accessibility isn't an afterthought for you — it's part of the first draft</li>
+        </ul>
+        <a href="mailto:recruit@vsike.com?subject=Frontend Engineer" class="job-apply" data-i18n="careers.apply">Apply for this role →</a>
+      </div>
+
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title" data-i18n="careers.j3.title">Product Designer</div>
+          <div class="job-badges">
+            <span class="job-badge job-badge-accent" data-i18n="careers.badge.full">Full-time</span>
+            <span class="job-badge" data-i18n="careers.badge.remote">Remote</span>
+          </div>
+        </div>
+        <p class="job-desc" data-i18n="careers.j3.desc">
+          Not "make it pretty." We need someone who can think through a product from first principles, prototype with purpose, and ship interfaces that feel inevitable. You obsess over the details that users never consciously notice but would immediately miss. You can work at the intersection of visual design and product logic without losing either.
+        </p>
+        <ul class="job-req-list">
+          <li data-i18n="careers.j3.r1">Strong portfolio demonstrating product thinking, not just visual craft</li>
+          <li data-i18n="careers.j3.r2">Proficiency in Figma; experience bridging design to production implementation</li>
+          <li data-i18n="careers.j3.r3">Understanding of design systems and when to build vs. borrow</li>
+          <li data-i18n="careers.j3.r4">Comfort working directly with engineers — you can read a pull request</li>
+        </ul>
+        <a href="mailto:recruit@vsike.com?subject=Product Designer" class="job-apply" data-i18n="careers.apply">Apply for this role →</a>
+      </div>
+
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title" data-i18n="careers.j4.title">Technical Writer / Content Strategist</div>
+          <div class="job-badges">
+            <span class="job-badge" data-i18n="careers.badge.contract">Contract</span>
+            <span class="job-badge" data-i18n="careers.badge.remote">Remote</span>
+          </div>
+        </div>
+        <p class="job-desc" data-i18n="careers.j4.desc">
+          vsike's Ideas section is the edge where AI security meets design thinking. We need a writer who can hold both. You know enough about LLMs to explain them without lying, enough about design to argue for craft, and enough about structure to make a 3,000-word technical post feel effortless to read. Your byline exists because ideas deserve to be clear.
+        </p>
+        <ul class="job-req-list">
+          <li data-i18n="careers.j4.r1">Portfolio of technical writing that is also genuinely enjoyable to read</li>
+          <li data-i18n="careers.j4.r2">Familiarity with AI/ML concepts: you can explain attention mechanisms without hand-waving</li>
+          <li data-i18n="careers.j4.r3">Research skills: you know how to find primary sources and how to cite them honestly</li>
+          <li data-i18n="careers.j4.r4">Bilingual preferred (EN + ZH or EN + JA) — we publish in three languages</li>
+        </ul>
+        <a href="mailto:recruit@vsike.com?subject=Technical Writer" class="job-apply" data-i18n="careers.apply">Apply for this role →</a>
+      </div>
+
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title" data-i18n="careers.j5.title">AI Agent Engineer</div>
+          <div class="job-badges">
+            <span class="job-badge job-badge-accent" data-i18n="careers.badge.full">Full-time</span>
+            <span class="job-badge" data-i18n="careers.badge.remote">Remote</span>
+          </div>
+        </div>
+        <p class="job-desc" data-i18n="careers.j5.desc">
+          You build things that build things. You've worked with MCP servers, Claude Code, or similar agentic frameworks — not as a user but as someone who extended them. You understand the trust boundary between an AI agent and the systems it touches, and you've thought about what goes wrong when those boundaries are unclear. You'll help vsike build and maintain AI-augmented tooling for content, research, and product.
+        </p>
+        <ul class="job-req-list">
+          <li data-i18n="careers.j5.r1">Experience building MCP servers, LLM-driven agents, or AI workflow pipelines</li>
+          <li data-i18n="careers.j5.r2">Strong TypeScript or Python; you've shipped code that calls the Anthropic or OpenAI APIs in production</li>
+          <li data-i18n="careers.j5.r3">Security awareness: you think about prompt injection, tool abuse, and least-privilege by default</li>
+          <li data-i18n="careers.j5.r4">Understanding of when AI is the right tool and the intellectual honesty to say when it isn't</li>
+        </ul>
+        <a href="mailto:recruit@vsike.com?subject=AI Agent Engineer" class="job-apply" data-i18n="careers.apply">Apply for this role →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section" style="padding-top: 0; padding-bottom: 2rem;">
+    <div class="careers-cta reveal">
+      <div class="careers-cta-label" data-i18n="careers.cta.label">Don't see your role?</div>
+      <p class="careers-cta-text" data-i18n="careers.cta.text">
+        If you're exceptional and you care about the right things, we'd rather hear from you than miss you. Send us a note explaining what you'd bring.
+      </p>
+      <a href="mailto:recruit@vsike.com" class="careers-cta-email">recruit@vsike.com</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-left">vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv</div>
+  <div class="footer-right">
+    <a href="about.html" data-i18n="nav.about">About</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="work.html" data-i18n="nav.work">Work</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="site.html" data-i18n="nav.site">This Site</a>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'careers.eyebrow': 'Careers',
+    'careers.title': 'Build what<br>matters.',
+    'careers.sub': 'We hire people who care about the details, move with intent, and aren\'t afraid to work at the edge of what\'s known. Open roles below.',
+    'careers.section.label': 'Open Roles',
+    'careers.section.count': '5 positions',
+    'careers.badge.full': 'Full-time',
+    'careers.badge.contract': 'Contract',
+    'careers.badge.remote': 'Remote',
+    'careers.apply': 'Apply for this role →',
+    'careers.j1.title': 'AI Security Researcher',
+    'careers.j1.desc': 'We\'re looking for someone who thinks about LLM vulnerabilities the way a compiler author thinks about undefined behavior — with rigor, curiosity, and a healthy suspicion of everyone who says "it\'ll be fine." You\'ll research AI attack surfaces, write about what you find, and help shape how vsike covers the frontier of AI security.',
+    'careers.j1.r1': 'Hands-on experience with LLM security: prompt injection, jailbreaks, model extraction, or red-teaming',
+    'careers.j1.r2': 'Ability to write clearly for technical and non-technical audiences',
+    'careers.j1.r3': 'Familiarity with the AI landscape: Anthropic, OpenAI, open-weight models, agent frameworks',
+    'careers.j1.r4': 'Track record of responsible disclosure or published security research',
+    'careers.j2.title': 'Frontend Engineer',
+    'careers.j2.desc': 'You understand the browser as a platform, not just a target environment for your framework. You can read a CSS cascade error without Googling it. You have opinions about typography and can defend them. You write code that ships fast and lasts long. You\'ll build and maintain vsike\'s digital products from the ground up.',
+    'careers.j2.r1': 'Deep command of HTML, CSS, and JavaScript — frameworks are tools, not identities',
+    'careers.j2.r2': 'Performance-first mindset: Core Web Vitals, Lighthouse, render-blocking awareness',
+    'careers.j2.r3': 'Experience building multilingual interfaces (i18n, RTL, CJK typography)',
+    'careers.j2.r4': 'Accessibility isn\'t an afterthought for you — it\'s part of the first draft',
+    'careers.j3.title': 'Product Designer',
+    'careers.j3.desc': 'Not "make it pretty." We need someone who can think through a product from first principles, prototype with purpose, and ship interfaces that feel inevitable. You obsess over the details that users never consciously notice but would immediately miss. You can work at the intersection of visual design and product logic without losing either.',
+    'careers.j3.r1': 'Strong portfolio demonstrating product thinking, not just visual craft',
+    'careers.j3.r2': 'Proficiency in Figma; experience bridging design to production implementation',
+    'careers.j3.r3': 'Understanding of design systems and when to build vs. borrow',
+    'careers.j3.r4': 'Comfort working directly with engineers — you can read a pull request',
+    'careers.j4.title': 'Technical Writer / Content Strategist',
+    'careers.j4.desc': 'vsike\'s Ideas section is the edge where AI security meets design thinking. We need a writer who can hold both. You know enough about LLMs to explain them without lying, enough about design to argue for craft, and enough about structure to make a 3,000-word technical post feel effortless to read. Your byline exists because ideas deserve to be clear.',
+    'careers.j4.r1': 'Portfolio of technical writing that is also genuinely enjoyable to read',
+    'careers.j4.r2': 'Familiarity with AI/ML concepts: you can explain attention mechanisms without hand-waving',
+    'careers.j4.r3': 'Research skills: you know how to find primary sources and how to cite them honestly',
+    'careers.j4.r4': 'Bilingual preferred (EN + ZH or EN + JA) — we publish in three languages',
+    'careers.j5.title': 'AI Agent Engineer',
+    'careers.j5.desc': 'You build things that build things. You\'ve worked with MCP servers, Claude Code, or similar agentic frameworks — not as a user but as someone who extended them. You understand the trust boundary between an AI agent and the systems it touches, and you\'ve thought about what goes wrong when those boundaries are unclear. You\'ll help vsike build and maintain AI-augmented tooling for content, research, and product.',
+    'careers.j5.r1': 'Experience building MCP servers, LLM-driven agents, or AI workflow pipelines',
+    'careers.j5.r2': 'Strong TypeScript or Python; you\'ve shipped code that calls the Anthropic or OpenAI APIs in production',
+    'careers.j5.r3': 'Security awareness: you think about prompt injection, tool abuse, and least-privilege by default',
+    'careers.j5.r4': 'Understanding of when AI is the right tool and the intellectual honesty to say when it isn\'t',
+    'careers.cta.label': 'Don\'t see your role?',
+    'careers.cta.text': 'If you\'re exceptional and you care about the right things, we\'d rather hear from you than miss you. Send us a note explaining what you\'d bring.',
+    'nav.site': 'This Site',
+    'nav.careers': 'Careers',
+  },
+  zh: {
+    'careers.eyebrow': '招聘',
+    'careers.title': '构建真正<br>重要的事物。',
+    'careers.sub': '我们招募关注细节、有目的地行动、不惧在未知边界工作的人。以下是开放职位。',
+    'careers.section.label': '开放职位',
+    'careers.section.count': '5 个职位',
+    'careers.badge.full': '全职',
+    'careers.badge.contract': '合同制',
+    'careers.badge.remote': '远程',
+    'careers.apply': '申请此职位 →',
+    'careers.j1.title': 'AI 安全研究员',
+    'careers.j1.desc': '我们正在寻找一个思考 LLM 漏洞方式如同编译器作者思考未定义行为的人——严谨、好奇，对所有说"没问题"的人保持健康的怀疑。你将研究 AI 攻击面，撰写你的发现，并帮助塑造 vsike 对 AI 安全前沿的报道方式。',
+    'careers.j1.r1': '具备 LLM 安全的实践经验：提示注入、越狱、模型提取或红队测试',
+    'careers.j1.r2': '能够面向技术和非技术受众清晰地写作',
+    'careers.j1.r3': '熟悉 AI 领域格局：Anthropic、OpenAI、开源权重模型、智能体框架',
+    'careers.j1.r4': '有负责任披露或已发表安全研究的记录',
+    'careers.j2.title': '前端工程师',
+    'careers.j2.desc': '你将浏览器理解为一个平台，而不仅仅是你的框架的目标环境。你不需要 Google 就能读懂 CSS 级联错误。你对排版有独到见解并能捍卫它们。你写出的代码发布快且经久耐用。你将从零开始构建和维护 vsike 的数字产品。',
+    'careers.j2.r1': '深入掌握 HTML、CSS 和 JavaScript——框架是工具，不是身份认同',
+    'careers.j2.r2': '性能优先的思维：Core Web Vitals、Lighthouse、渲染阻塞意识',
+    'careers.j2.r3': '有构建多语言界面的经验（i18n、RTL、CJK 排版）',
+    'careers.j2.r4': '可访问性对你来说不是事后考虑——它是初稿的一部分',
+    'careers.j3.title': '产品设计师',
+    'careers.j3.desc': '不是"让它好看"。我们需要能从第一原理思考产品、有目的地制作原型、交付让人感觉不可避免的界面的人。你对用户从不有意识注意但会立即感到缺失的细节着迷。你能在视觉设计和产品逻辑的交叉点工作，且两者兼顾。',
+    'careers.j3.r1': '展示产品思维而非仅仅视觉工艺的强大作品集',
+    'careers.j3.r2': '精通 Figma；有将设计与生产实现连接的经验',
+    'careers.j3.r3': '理解设计系统以及何时构建与何时借鉴',
+    'careers.j3.r4': '能与工程师直接合作——你能读懂 pull request',
+    'careers.j4.title': '技术写作 / 内容策略师',
+    'careers.j4.desc': 'vsike 的 Ideas 栏目是 AI 安全与设计思维交汇的前沿。我们需要一位能驾驭两者的写作者。你对 LLM 的了解足以在不撒谎的情况下解释它们，对设计的了解足以为工艺辩护，对结构的把握足以让一篇 3000 字的技术文章读起来毫不费力。你的署名存在是因为想法值得被清晰表达。',
+    'careers.j4.r1': '既有技术深度又真正令人愉悦的技术写作作品集',
+    'careers.j4.r2': '熟悉 AI/ML 概念：你能在不含糊其辞的情况下解释注意力机制',
+    'careers.j4.r3': '研究技能：你知道如何找到一手资料以及如何诚实地引用它们',
+    'careers.j4.r4': '优先考虑双语候选人（英中或英日）——我们以三种语言发布内容',
+    'careers.j5.title': 'AI 智能体工程师',
+    'careers.j5.desc': '你构建能构建事物的事物。你与 MCP 服务器、Claude Code 或类似的智能体框架合作过——不是作为用户，而是作为扩展它们的人。你理解 AI 智能体与其接触的系统之间的信任边界，并思考过当这些边界不清晰时会出什么问题。你将帮助 vsike 为内容、研究和产品构建和维护 AI 增强工具。',
+    'careers.j5.r1': '有构建 MCP 服务器、LLM 驱动智能体或 AI 工作流管道的经验',
+    'careers.j5.r2': '扎实的 TypeScript 或 Python；你曾在生产中交付过调用 Anthropic 或 OpenAI API 的代码',
+    'careers.j5.r3': '安全意识：你默认会考虑提示注入、工具滥用和最小权限',
+    'careers.j5.r4': '理解 AI 何时是正确工具，并具备在它不是时坦诚说出的智识诚实',
+    'careers.cta.label': '没有看到适合你的职位？',
+    'careers.cta.text': '如果你出色且关注正确的事物，我们宁可听到你的声音也不愿错过你。给我们发一封说明你能带来什么的邮件。',
+    'nav.site': '本站',
+    'nav.careers': '招聘',
+  },
+  ja: {
+    'careers.eyebrow': '採用',
+    'careers.title': '重要なものを<br>つくろう。',
+    'careers.sub': '細部にこだわり、意図を持って行動し、未知の領域で働くことを恐れない人材を採用しています。以下のオープンポジションをご覧ください。',
+    'careers.section.label': 'オープンポジション',
+    'careers.section.count': '5 ポジション',
+    'careers.badge.full': 'フルタイム',
+    'careers.badge.contract': '契約',
+    'careers.badge.remote': 'リモート',
+    'careers.apply': 'このポジションに応募する →',
+    'careers.j1.title': 'AIセキュリティ研究者',
+    'careers.j1.desc': 'コンパイラ作者が未定義動作を考えるように——厳密さ、好奇心、そして「大丈夫」と言う人への健全な疑念を持って——LLMの脆弱性を考える人を求めています。AIの攻撃面を調査し、発見したことを書き、vsike がAIセキュリティの最前線をどのようにカバーするかを形作るお手伝いをしていただきます。',
+    'careers.j1.r1': 'LLMセキュリティの実践的経験：プロンプトインジェクション、ジェイルブレイク、モデル抽出、レッドチーミングなど',
+    'careers.j1.r2': '技術的なオーディエンスと非技術的なオーディエンスの両方に向けて明確に書く能力',
+    'careers.j1.r3': 'AIランドスケープへの精通：Anthropic、OpenAI、オープンウェイトモデル、エージェントフレームワーク',
+    'careers.j1.r4': '責任ある開示または発表済みのセキュリティ研究の実績',
+    'careers.j2.title': 'フロントエンドエンジニア',
+    'careers.j2.desc': 'ブラウザをフレームワークのターゲット環境としてではなく、プラットフォームとして理解している方。Googleなしでも CSSカスケードエラーを読める方。タイポグラフィについて意見を持ち、それを守れる方。速くリリースでき、長持ちするコードを書く方。vsike のデジタルプロダクトをゼロから構築・維持していただきます。',
+    'careers.j2.r1': 'HTML、CSS、JavaScriptの深い習熟度——フレームワークはアイデンティティではなくツール',
+    'careers.j2.r2': 'パフォーマンス優先の思考：Core Web Vitals、Lighthouse、レンダリングブロッキングへの意識',
+    'careers.j2.r3': '多言語インターフェースの構築経験（i18n、RTL、CJKタイポグラフィ）',
+    'careers.j2.r4': 'アクセシビリティはあなたにとって後付けではなく——最初の草稿から存在する',
+    'careers.j3.title': 'プロダクトデザイナー',
+    'careers.j3.desc': '「きれいにする」ではありません。ゼロベースでプロダクトを考え、目的を持ってプロトタイプを作り、必然に感じられるインターフェースをリリースできる方が必要です。ユーザーが意識的に気づかないが欠けたらすぐわかる細部にこだわる方。どちらも失わずにビジュアルデザインとプロダクトロジックの交差点で働ける方。',
+    'careers.j3.r1': 'ビジュアルクラフトだけでなくプロダクト思考を示す強力なポートフォリオ',
+    'careers.j3.r2': 'Figmaの習熟度；デザインから本番実装へのブリッジ経験',
+    'careers.j3.r3': 'デザインシステムの理解と構築vs.借用の判断力',
+    'careers.j3.r4': 'エンジニアと直接協働できる力——プルリクエストを読める',
+    'careers.j4.title': 'テクニカルライター / コンテンツストラテジスト',
+    'careers.j4.desc': 'vsike の Ideas セクションはAIセキュリティとデザイン思考が出会う最前線です。両方を扱えるライターが必要です。LLMについて嘘なく説明できるほど知っており、クラフトのために主張できるほどデザインを知っており、3,000字の技術的な投稿を苦もなく読めるほど構造を理解している方。アイデアが明確に伝えられるべきだから、あなたの署名がそこにある。',
+    'careers.j4.r1': '技術的でありながら本当に楽しく読めるテクニカルライティングのポートフォリオ',
+    'careers.j4.r2': 'AI/MLの概念への精通：曖昧さなしにアテンションメカニズムを説明できる',
+    'careers.j4.r3': '調査スキル：一次資料を見つけ、誠実に引用する方法を知っている',
+    'careers.j4.r4': 'バイリンガル優先（英中または英日）——私たちは3言語で発行します',
+    'careers.j5.title': 'AIエージェントエンジニア',
+    'careers.j5.desc': 'あなたは物を作る物を作る。ユーザーとしてではなく、拡張した人として、MCPサーバー、Claude Code、または類似のエージェントフレームワークで仕事をした経験がある方。AIエージェントとそれが接触するシステムの間の信頼境界を理解し、その境界が不明確なときに何がうまくいかないかを考えたことがある方。vsike のコンテンツ、研究、プロダクト向けのAI強化ツールの構築と維持をお手伝いいただきます。',
+    'careers.j5.r1': 'MCPサーバー、LLM駆動エージェント、またはAIワークフローパイプラインの構築経験',
+    'careers.j5.r2': '確かなTypeScriptまたはPython；AnthropicまたはOpenAI APIを呼び出すコードを本番でリリースした経験',
+    'careers.j5.r3': 'セキュリティ意識：プロンプトインジェクション、ツール悪用、最小権限をデフォルトで考える',
+    'careers.j5.r4': 'AIが正しいツールである場合の理解と、そうでない時に正直に言える知的誠実さ',
+    'careers.cta.label': 'ご希望のポジションが見つかりませんか？',
+    'careers.cta.text': '優秀で正しいことを大切にする方なら、お声がけいただく方が私たちにとって価値があります。あなたが持ち込めるものを説明するメモをお送りください。',
+    'nav.site': 'このサイト',
+    'nav.careers': '採用',
+  }
+};
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

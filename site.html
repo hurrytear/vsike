@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About This Site — vsike</title>
+  <meta name="description" content="What vsike.com is, how it's built, and the thinking behind it. A colophon for the digital atelier.">
+  <meta name="keywords" content="vsike, about site, colophon, static site, design philosophy, tech stack">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .site-spec-row { display: flex; gap: 0; border-bottom: 1px solid var(--fg-dim); }
+    .site-spec-row:first-child { border-top: 1px solid var(--fg-dim); }
+    .site-spec-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--fg-muted); text-transform: uppercase; width: 160px; flex-shrink: 0; padding: 1.1rem 0; }
+    .site-spec-value { font-size: var(--fs-sm); padding: 1.1rem 0 1.1rem 2rem; line-height: 1.7; color: var(--fg); }
+    .site-spec-value a { color: var(--accent); text-decoration: none; }
+    .site-spec-value a:hover { text-decoration: underline; }
+    .section-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--fg-dim); margin: 2rem 0; }
+    .section-col-item { background: var(--bg); padding: 1.5rem; }
+    .section-col-num { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); margin-bottom: .5rem; }
+    .section-col-title { font-weight: 700; margin-bottom: .4rem; }
+    .section-col-desc { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.65; }
+    @media (max-width: 600px) {
+      .section-col { grid-template-columns: 1fr; }
+      .site-spec-label { width: 110px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-transition" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="index.html" class="nav-logo" aria-label="vsike home">
+    vsike<span class="nav-logo-dot" aria-hidden="true"></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="about.html" data-i18n="nav.about">About</a>
+  <a href="work.html" data-i18n="nav.work">Work</a>
+  <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <header class="page-hero">
+    <div class="page-hero-ghost" aria-hidden="true">05</div>
+    <p class="page-hero-eyebrow reveal" data-i18n="site.eyebrow">This Site</p>
+    <h1 class="page-hero-title reveal reveal-d1" data-i18n-html="site.title">What this<br>place is.</h1>
+    <p class="page-hero-sub reveal reveal-d2" data-i18n="site.sub">
+      A colophon for vsike.com — how it's built, what it's for, and why it looks the way it does.
+    </p>
+  </header>
+
+  <div class="section">
+    <div class="section-label reveal">
+      <span data-i18n="site.spec.label">Specifications</span>
+    </div>
+
+    <div class="reveal">
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.name">Site</div>
+        <div class="site-spec-value">vsike.com</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.est">Established</div>
+        <div class="site-spec-value">2025</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.tech">Stack</div>
+        <div class="site-spec-value" data-i18n="site.spec.tech.val">Pure HTML · CSS · Vanilla JS — no frameworks, no build step, no dependencies.</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.host">Hosting</div>
+        <div class="site-spec-value" data-i18n="site.spec.host.val">Cloudflare Pages — deployed via GitHub. Every push to main goes live in seconds.</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.type">Type</div>
+        <div class="site-spec-value" data-i18n="site.spec.type.val">Serif body (Georgia), monospace UI (system mono stack). Variable font weights where supported.</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.lang">Languages</div>
+        <div class="site-spec-value" data-i18n="site.spec.lang.val">English · 中文 · 日本語 — all content translated inline, no server roundtrip.</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.perf">Performance</div>
+        <div class="site-spec-value" data-i18n="site.spec.perf.val">No JavaScript frameworks. No web fonts loaded remotely. No third-party trackers. Lighthouse 100.</div>
+      </div>
+      <div class="site-spec-row">
+        <div class="site-spec-label" data-i18n="site.spec.contact">Contact</div>
+        <div class="site-spec-value"><a href="mailto:help@vsike.com">help@vsike.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label reveal">
+      <span data-i18n="site.why.label">Why It Exists</span>
+    </div>
+
+    <div class="reveal" style="max-width: 680px;">
+      <p style="font-size: var(--fs-lg); font-family: var(--serif); letter-spacing: -.02em; line-height: 1.55; margin-bottom: 2rem;" data-i18n="site.why.p1">
+        vsike started as a question: what would a digital space look like if it was built for the work itself, not for the algorithm that indexes it?
+      </p>
+      <p style="color: var(--fg-muted); line-height: 1.8; margin-bottom: 1.5rem;" data-i18n="site.why.p2">
+        Most portfolios are optimised for first impressions — big hero sections, motion-heavy carousels, personality-free brutalism. vsike is optimised for the second and third visit. The reader who came back because the thinking was worth returning to.
+      </p>
+      <p style="color: var(--fg-muted); line-height: 1.8; margin-bottom: 1.5rem;" data-i18n="site.why.p3">
+        The no-framework constraint is a design decision, not a technical flex. Every component on this site is something a person can read, understand, and modify without a build toolchain. That's a value statement about craft: understand your tools, own your stack, don't abstract away the interesting parts.
+      </p>
+      <p style="color: var(--fg-muted); line-height: 1.8;" data-i18n="site.why.p4">
+        The trilingual structure reflects the audience vsike actually speaks to: teams in East Asia building at the edge of AI and design, and the wider global community watching the same frontiers from different vantage points.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label reveal">
+      <span data-i18n="site.sections.label">Sections</span>
+    </div>
+
+    <div class="section-col reveal">
+      <div class="section-col-item">
+        <div class="section-col-num">01</div>
+        <div class="section-col-title"><a href="about.html" data-i18n="nav.about" style="color:inherit;text-decoration:none;">About</a></div>
+        <div class="section-col-desc" data-i18n="site.sec.about">The philosophy behind vsike — velocity, style, instinct, and why those three things belong together.</div>
+      </div>
+      <div class="section-col-item">
+        <div class="section-col-num">02</div>
+        <div class="section-col-title"><a href="work.html" data-i18n="nav.work" style="color:inherit;text-decoration:none;">Work</a></div>
+        <div class="section-col-desc" data-i18n="site.sec.work">Selected digital projects — interfaces, systems, and experiments made with deliberate intention.</div>
+      </div>
+      <div class="section-col-item">
+        <div class="section-col-num">03</div>
+        <div class="section-col-title"><a href="ideas.html" data-i18n="nav.ideas" style="color:inherit;text-decoration:none;">Ideas</a></div>
+        <div class="section-col-desc" data-i18n="site.sec.ideas">Notes on AI security, design craft, and the places they collide. 22 articles and counting.</div>
+      </div>
+      <div class="section-col-item">
+        <div class="section-col-num">04</div>
+        <div class="section-col-title"><a href="contact.html" data-i18n="nav.contact" style="color:inherit;text-decoration:none;">Contact</a></div>
+        <div class="section-col-desc" data-i18n="site.sec.contact">Projects, collaborations, sharp ideas. Reach us at <a href="mailto:help@vsike.com" style="color:var(--accent);">help@vsike.com</a>.</div>
+      </div>
+      <div class="section-col-item">
+        <div class="section-col-num">05</div>
+        <div class="section-col-title"><a href="site.html" data-i18n="nav.site" style="color:inherit;text-decoration:none;">This Site</a></div>
+        <div class="section-col-desc" data-i18n="site.sec.site">You're here. The colophon: stack, decisions, and the reasoning behind the design.</div>
+      </div>
+      <div class="section-col-item">
+        <div class="section-col-num">06</div>
+        <div class="section-col-title"><a href="careers.html" data-i18n="nav.careers" style="color:inherit;text-decoration:none;">Careers</a></div>
+        <div class="section-col-desc" data-i18n="site.sec.careers">Open roles at vsike. We hire for instinct as much as skill. See what we're building toward.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-bottom: 2rem;">
+    <div class="reveal" style="border-top: 1px solid var(--fg-dim); padding-top: 3rem; display: flex; align-items: flex-start; gap: 4rem; flex-wrap: wrap;">
+      <div>
+        <p class="label" style="margin-bottom: 1rem;" data-i18n="site.contact.label">Questions about this site</p>
+        <a href="mailto:help@vsike.com" style="font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .08em; color: var(--accent);">help@vsike.com</a>
+      </div>
+      <div>
+        <p class="label" style="margin-bottom: 1rem;" data-i18n="site.careers.label">Join the team</p>
+        <a href="careers.html" style="font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .08em; color: var(--accent);" data-i18n="site.careers.link">View open roles  →</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-left">vsike.com &nbsp;<span class="footer-sep">·</span>&nbsp; mmxxv</div>
+  <div class="footer-right">
+    <a href="about.html" data-i18n="nav.about">About</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="work.html" data-i18n="nav.work">Work</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="ideas.html" data-i18n="nav.ideas">Ideas</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
+    &nbsp;<span class="footer-sep">·</span>&nbsp;
+    <a href="careers.html" data-i18n="nav.careers">Careers</a>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'site.eyebrow': 'This Site',
+    'site.title': 'What this<br>place is.',
+    'site.sub': 'A colophon for vsike.com — how it\'s built, what it\'s for, and why it looks the way it does.',
+    'site.spec.label': 'Specifications',
+    'site.spec.name': 'Site',
+    'site.spec.est': 'Established',
+    'site.spec.tech': 'Stack',
+    'site.spec.tech.val': 'Pure HTML · CSS · Vanilla JS — no frameworks, no build step, no dependencies.',
+    'site.spec.host': 'Hosting',
+    'site.spec.host.val': 'Cloudflare Pages — deployed via GitHub. Every push to main goes live in seconds.',
+    'site.spec.type': 'Type',
+    'site.spec.type.val': 'Serif body (Georgia), monospace UI (system mono stack). Variable font weights where supported.',
+    'site.spec.lang': 'Languages',
+    'site.spec.lang.val': 'English · 中文 · 日本語 — all content translated inline, no server roundtrip.',
+    'site.spec.perf': 'Performance',
+    'site.spec.perf.val': 'No JavaScript frameworks. No web fonts loaded remotely. No third-party trackers. Lighthouse 100.',
+    'site.spec.contact': 'Contact',
+    'site.why.label': 'Why It Exists',
+    'site.why.p1': 'vsike started as a question: what would a digital space look like if it was built for the work itself, not for the algorithm that indexes it?',
+    'site.why.p2': 'Most portfolios are optimised for first impressions — big hero sections, motion-heavy carousels, personality-free brutalism. vsike is optimised for the second and third visit. The reader who came back because the thinking was worth returning to.',
+    'site.why.p3': 'The no-framework constraint is a design decision, not a technical flex. Every component on this site is something a person can read, understand, and modify without a build toolchain. That\'s a value statement about craft: understand your tools, own your stack, don\'t abstract away the interesting parts.',
+    'site.why.p4': 'The trilingual structure reflects the audience vsike actually speaks to: teams in East Asia building at the edge of AI and design, and the wider global community watching the same frontiers from different vantage points.',
+    'site.sections.label': 'Sections',
+    'site.sec.about': 'The philosophy behind vsike — velocity, style, instinct, and why those three things belong together.',
+    'site.sec.work': 'Selected digital projects — interfaces, systems, and experiments made with deliberate intention.',
+    'site.sec.ideas': 'Notes on AI security, design craft, and the places they collide. 22 articles and counting.',
+    'site.sec.contact': 'Projects, collaborations, sharp ideas. Reach us at help@vsike.com.',
+    'site.sec.site': 'You\'re here. The colophon: stack, decisions, and the reasoning behind the design.',
+    'site.sec.careers': 'Open roles at vsike. We hire for instinct as much as skill. See what we\'re building toward.',
+    'site.contact.label': 'Questions about this site',
+    'site.careers.label': 'Join the team',
+    'site.careers.link': 'View open roles  →',
+    'nav.site': 'This Site',
+    'nav.careers': 'Careers',
+  },
+  zh: {
+    'site.eyebrow': '本站',
+    'site.title': '这个地方<br>是什么。',
+    'site.sub': 'vsike.com 的版权页——它如何构建、有何用途，以及为何呈现这种样貌。',
+    'site.spec.label': '规格参数',
+    'site.spec.name': '站点',
+    'site.spec.est': '创立',
+    'site.spec.tech': '技术栈',
+    'site.spec.tech.val': '纯 HTML · CSS · 原生 JS — 无框架、无构建步骤、无依赖项。',
+    'site.spec.host': '托管',
+    'site.spec.host.val': 'Cloudflare Pages — 通过 GitHub 部署。每次推送到 main 分支，几秒内即可上线。',
+    'site.spec.type': '字体',
+    'site.spec.type.val': '正文衬线体（Georgia），UI 等宽字体（系统字体栈）。在支持的情况下使用可变字重。',
+    'site.spec.lang': '语言',
+    'site.spec.lang.val': '英文 · 中文 · 日文 — 所有内容内联翻译，无服务器往返。',
+    'site.spec.perf': '性能',
+    'site.spec.perf.val': '无 JavaScript 框架。无远程加载字体。无第三方追踪器。Lighthouse 满分 100。',
+    'site.spec.contact': '联系',
+    'site.why.label': '为何存在',
+    'site.why.p1': 'vsike 始于一个问题：如果一个数字空间是为工作本身而建，而非为索引它的算法而建，它会是什么样子？',
+    'site.why.p2': '大多数作品集都为第一印象而优化——巨型 hero 区块、动效轰炸的轮播图、毫无个性的野兽派设计。vsike 为第二次、第三次访问而优化。那种因为思考值得重回而再次回来的读者。',
+    'site.why.p3': '无框架的约束是一个设计决定，而非技术炫技。这个网站上的每个组件都是任何人无需构建工具链就能阅读、理解和修改的东西。这是关于工艺的价值宣言：理解你的工具，掌控你的技术栈，不要将有趣的部分抽象掉。',
+    'site.why.p4': '三语结构反映了 vsike 真正服务的受众：在 AI 与设计前沿构建的东亚团队，以及从不同视角关注同一前沿的更广泛全球社区。',
+    'site.sections.label': '栏目',
+    'site.sec.about': 'vsike 背后的哲学——速度、风格、直觉，以及这三者为何应该在一起。',
+    'site.sec.work': '精选数字项目——有意为之的界面、系统与实验。',
+    'site.sec.ideas': '关于 AI 安全、设计工艺及其交汇处的笔记。22 篇文章，持续更新中。',
+    'site.sec.contact': '项目、合作、犀利想法。联系我们：help@vsike.com。',
+    'site.sec.site': '您正在此处。版权页：技术栈、决策，以及设计背后的理由。',
+    'site.sec.careers': 'vsike 的开放职位。我们对直觉的重视程度不亚于技能。了解我们正在构建的方向。',
+    'site.contact.label': '关于本站的问题',
+    'site.careers.label': '加入团队',
+    'site.careers.link': '查看开放职位  →',
+    'nav.site': '本站',
+    'nav.careers': '招聘',
+  },
+  ja: {
+    'site.eyebrow': 'このサイト',
+    'site.title': 'ここは<br>何か。',
+    'site.sub': 'vsike.com のコロフォン——どう作られているか、何のためにあるか、なぜこう見えるのか。',
+    'site.spec.label': '仕様',
+    'site.spec.name': 'サイト',
+    'site.spec.est': '設立',
+    'site.spec.tech': 'スタック',
+    'site.spec.tech.val': '純粋な HTML · CSS · バニラJS — フレームワークなし、ビルドステップなし、依存関係なし。',
+    'site.spec.host': 'ホスティング',
+    'site.spec.host.val': 'Cloudflare Pages — GitHubを経由してデプロイ。mainへのプッシュが数秒で公開される。',
+    'site.spec.type': 'フォント',
+    'site.spec.type.val': '本文はセリフ体（Georgia）、UIはモノスペース（システムフォントスタック）。対応する場合は可変フォントウェイト。',
+    'site.spec.lang': '言語',
+    'site.spec.lang.val': '英語 · 中国語 · 日本語 — すべてのコンテンツはインラインで翻訳され、サーバーのラウンドトリップは不要。',
+    'site.spec.perf': 'パフォーマンス',
+    'site.spec.perf.val': 'JavaScriptフレームワークなし。リモートWebフォントの読み込みなし。サードパーティトラッカーなし。Lighthouse 100点。',
+    'site.spec.contact': '連絡先',
+    'site.why.label': 'なぜ存在するか',
+    'site.why.p1': 'vsike はひとつの問いから始まった：デジタルスペースが、それをインデックスするアルゴリズムのためではなく、仕事そのものために作られたとしたら、どんな姿になるだろうか？',
+    'site.why.p2': 'ほとんどのポートフォリオは第一印象のために最適化されている——大きなヒーローセクション、動きの多いカルーセル、個性のないブルータリズム。vsike は二度目、三度目の訪問のために最適化されている。考えが戻る価値があったから戻ってきた読者のために。',
+    'site.why.p3': 'フレームワークなしの制約はデザイン上の決断であり、技術的な見せびらかしではない。このサイトのすべてのコンポーネントは、ビルドツールチェーンなしで誰でも読み、理解し、修正できるものだ。それはクラフトに関する価値宣言だ：ツールを理解し、スタックを自分のものにし、面白い部分を抽象化しない。',
+    'site.why.p4': '三言語構造は、vsike が実際に語りかけるオーディエンスを反映している：AIとデザインの最前線で構築している東アジアのチーム、そして異なる視点から同じフロンティアを見ているより広いグローバルコミュニティ。',
+    'site.sections.label': 'セクション',
+    'site.sec.about': 'vsike の背後にある哲学——速度、スタイル、直感、そしてなぜその三つが一緒にある必要があるのか。',
+    'site.sec.work': '厳選されたデジタルプロジェクト——意図を持って作られたインターフェース、システム、実験。',
+    'site.sec.ideas': 'AIセキュリティ、デザインクラフト、そしてその交差点に関するノート。22本の記事、増え続けています。',
+    'site.sec.contact': 'プロジェクト、コラボレーション、鋭いアイデア。help@vsike.comまでどうぞ。',
+    'site.sec.site': 'あなたはここにいます。コロフォン：スタック、決断、デザインの背後にある理由。',
+    'site.sec.careers': 'vsike のオープンポジション。スキルと同様に直感を重視して採用します。私たちが向かっている方向をご覧ください。',
+    'site.contact.label': 'このサイトについての質問',
+    'site.careers.label': 'チームに参加する',
+    'site.careers.link': 'オープンポジションを見る  →',
+    'nav.site': 'このサイト',
+    'nav.careers': '採用',
+  }
+};
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
