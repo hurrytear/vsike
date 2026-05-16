@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Complete Guide: What It Is, How to Build It, How to Use It — vsike</title>
+  <meta name="description" content="Model Context Protocol explained from first principles. Architecture, creating MCP servers in TypeScript and Python, configuring Claude Desktop, and when MCP is the right tool.">
+  <meta name="keywords" content="MCP tutorial, Model Context Protocol guide, create MCP server, MCP TypeScript, MCP Python, Claude MCP setup, MCP vs skills">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .arch-row { display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .arch-box { flex: 1; min-width: 180px; border: 1px solid var(--fg-dim); padding: 1rem 1.25rem; }
+    .arch-box-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; text-transform: uppercase; }
+    .arch-box-title { font-weight: 700; margin-bottom: .35rem; }
+    .arch-box-desc { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .compare-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--fs-sm); }
+    .compare-table th { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-align: left; padding: .6rem 1rem; border-bottom: 1px solid var(--fg); }
+    .compare-table td { padding: .6rem 1rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .compare-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Development</span>
+          <span class="article-date-label">May 2026</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">MCP Complete Guide: Architecture, Building Servers, and Real-World Use</h1>
+        <p class="article-lead" data-i18n="a.lead">Model Context Protocol is Anthropic's open standard for connecting AI to the outside world. This guide covers the full picture: what MCP is and isn't, how to build an MCP server in TypeScript and Python, how to wire it into Claude Desktop or Cursor, and when MCP is the right choice versus higher-level alternatives like Skills.</p>
+      </header>
+      <div class="article-body">
+
+        <h2 data-i18n="a.h1">What MCP Is — and What It Isn't</h2>
+        <p data-i18n="a.1">MCP is a protocol — a standardized communication contract between an AI host application and external capability providers. It is not a library, a cloud service, or a specific tool. Think of it as USB-C for AI: a single standard connector that lets any compliant tool plug into any compliant AI host, regardless of who built either side.</p>
+        <p data-i18n="a.2">Before MCP, every AI integration was bespoke. You wanted Claude to read your database? Write a custom integration in the host app. You wanted Cursor to access your internal docs? Another bespoke solution. MCP collapses all of this into one protocol: build an MCP server once, and it works with every MCP-compatible host — Claude Desktop, Cursor, VS Code extensions, custom agents, and any application built with the Anthropic SDK.</p>
+
+        <h2 data-i18n="a.h2">Architecture: Three Roles</h2>
+        <p data-i18n="a.arch_intro">MCP defines three distinct roles in every interaction:</p>
+
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="arch-box-label">Host</div>
+            <div class="arch-box-title" data-i18n="a.host_title">MCP Host</div>
+            <div class="arch-box-desc" data-i18n="a.host_desc">The AI-powered application the user directly uses. Examples: Claude Desktop, Cursor, custom agent apps. The host manages the AI model and decides which MCP servers to connect.</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-box-label">Client</div>
+            <div class="arch-box-title" data-i18n="a.client_title">MCP Client</div>
+            <div class="arch-box-desc" data-i18n="a.client_desc">The component inside the host that speaks the MCP protocol to servers. Each host-server connection has one client. Handles the wire protocol, request/response lifecycle, and capability negotiation.</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-box-label">Server</div>
+            <div class="arch-box-title" data-i18n="a.server_title">MCP Server</div>
+            <div class="arch-box-desc" data-i18n="a.server_desc">A lightweight process you build that exposes capabilities to the AI. Can be a local process (stdio) or a remote service (HTTP+SSE). This is what you write when you "build with MCP."</div>
+          </div>
+        </div>
+
+        <h2 data-i18n="a.h3">What an MCP Server Can Expose</h2>
+        <p data-i18n="a.primitives">MCP servers can expose three categories of capability to the AI:</p>
+        <ul style="margin: 1rem 0 1rem 1.5rem; line-height: 2;">
+          <li><strong>Tools</strong> — <span data-i18n="a.tools_desc">functions the AI can call to take actions or retrieve data (search the web, query a database, send an email)</span></li>
+          <li><strong>Resources</strong> — <span data-i18n="a.resources_desc">read-only data the AI can access (files, database rows, API responses, live documentation)</span></li>
+          <li><strong>Prompts</strong> — <span data-i18n="a.prompts_desc">reusable prompt templates with arguments (useful for standardizing how tasks are requested across a team)</span></li>
+        </ul>
+
+        <h2 data-i18n="a.h4">Building an MCP Server in TypeScript</h2>
+        <p data-i18n="a.ts_intro">The official MCP SDK for TypeScript is the easiest starting point. This example creates a server with one tool that fetches weather data:</p>
+
+        <pre class="code-block"><span class="comment"># Initialize project</span>
+mkdir my-mcp-server && cd my-mcp-server
+npm init -y
+npm install @modelcontextprotocol/sdk zod
+npm install -D typescript @types/node tsx</pre>
+
+        <pre class="code-block"><span class="comment">// src/index.ts</span>
+<span class="kw">import</span> { McpServer } from <span class="str">"@modelcontextprotocol/sdk/server/mcp.js"</span>;
+<span class="kw">import</span> { StdioServerTransport } from <span class="str">"@modelcontextprotocol/sdk/server/stdio.js"</span>;
+<span class="kw">import</span> { z } from <span class="str">"zod"</span>;
+
+<span class="comment">// 1. Create the server</span>
+<span class="kw">const</span> server = <span class="kw">new</span> McpServer({
+  name: <span class="str">"weather-server"</span>,
+  version: <span class="str">"1.0.0"</span>,
+});
+
+<span class="comment">// 2. Register a tool</span>
+server.tool(
+  <span class="str">"get_weather"</span>,
+  <span class="str">"Get current weather for a city"</span>,
+  { city: z.string().describe(<span class="str">"City name"</span>) },
+  <span class="kw">async</span> ({ city }) => {
+    <span class="comment">// Replace with real API call</span>
+    <span class="kw">const</span> data = <span class="kw">await</span> fetch(
+      `https://api.example.com/weather?q=${city}`
+    ).then(r => r.json());
+
+    <span class="kw">return</span> {
+      content: [{
+        type: <span class="str">"text"</span>,
+        text: `${city}: ${data.temp}°C, ${data.condition}`,
+      }],
+    };
+  }
+);
+
+<span class="comment">// 3. Register a resource (read-only data)</span>
+server.resource(
+  <span class="str">"config"</span>,
+  <span class="str">"app://config"</span>,
+  <span class="kw">async</span> () => ({
+    contents: [{
+      uri: <span class="str">"app://config"</span>,
+      text: JSON.stringify({ version: <span class="str">"1.0"</span>, env: <span class="str">"production"</span> }),
+    }],
+  })
+);
+
+<span class="comment">// 4. Connect via stdio transport</span>
+<span class="kw">const</span> transport = <span class="kw">new</span> StdioServerTransport();
+<span class="kw">await</span> server.connect(transport);
+console.error(<span class="str">"MCP server running"</span>); <span class="comment">// stderr only — stdout is the protocol</span></pre>
+
+        <pre class="code-block"><span class="comment"># Run the server</span>
+npx tsx src/index.ts</pre>
+
+        <h2 data-i18n="a.h5">Building an MCP Server in Python</h2>
+        <p data-i18n="a.py_intro">The Python SDK uses a decorator pattern that keeps server code readable:</p>
+
+        <pre class="code-block"><span class="comment"># Install</span>
+pip install mcp</pre>
+
+        <pre class="code-block"><span class="comment"># server.py</span>
+<span class="kw">from</span> mcp.server.fastmcp <span class="kw">import</span> FastMCP
+<span class="kw">import</span> httpx
+
+mcp = FastMCP(<span class="str">"weather-server"</span>)
+
+<span class="comment"># Tool — AI can call this</span>
+@mcp.tool()
+<span class="kw">async def</span> get_weather(city: str) -> str:
+    <span class="str">"""Get current weather for a city."""</span>
+    <span class="kw">async with</span> httpx.AsyncClient() <span class="kw">as</span> client:
+        r = <span class="kw">await</span> client.get(f<span class="str">"https://api.example.com/weather?q={city}"</span>)
+        data = r.json()
+    <span class="kw">return</span> f<span class="str">"{city}: {data['temp']}°C, {data['condition']}"</span>
+
+<span class="comment"># Resource — AI can read this</span>
+@mcp.resource(<span class="str">"docs://readme"</span>)
+<span class="kw">def</span> get_readme() -> str:
+    <span class="str">"""Project README."""</span>
+    <span class="kw">with</span> open(<span class="str">"README.md"</span>) <span class="kw">as</span> f:
+        <span class="kw">return</span> f.read()
+
+<span class="comment"># Prompt template</span>
+@mcp.prompt()
+<span class="kw">def</span> analyze_weather(city: str) -> str:
+    <span class="kw">return</span> f<span class="str">"Fetch weather for {city} and summarize in one sentence."</span>
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    mcp.run()  <span class="comment"># stdio transport by default</span></pre>
+
+        <h2 data-i18n="a.h6">Connecting to Claude Desktop</h2>
+        <p data-i18n="a.config_intro">Add your server to Claude Desktop's config file. The location varies by OS:</p>
+
+        <pre class="code-block"><span class="comment"># macOS</span>
+~/Library/Application Support/Claude/claude_desktop_config.json
+
+<span class="comment"># Windows</span>
+%APPDATA%\Claude\claude_desktop_config.json</pre>
+
+        <pre class="code-block"><span class="comment">// claude_desktop_config.json</span>
+{
+  <span class="str">"mcpServers"</span>: {
+    <span class="str">"weather"</span>: {
+      <span class="str">"command"</span>: <span class="str">"npx"</span>,
+      <span class="str">"args"</span>: [<span class="str">"tsx"</span>, <span class="str">"/absolute/path/to/src/index.ts"</span>]
+    },
+    <span class="str">"weather-python"</span>: {
+      <span class="str">"command"</span>: <span class="str">"python"</span>,
+      <span class="str">"args"</span>: [<span class="str">"/absolute/path/to/server.py"</span>],
+      <span class="str">"env"</span>: {
+        <span class="str">"API_KEY"</span>: <span class="str">"your-key-here"</span>
+      }
+    }
+  }
+}</pre>
+
+        <p data-i18n="a.config_note">Restart Claude Desktop after editing. The AI will now see your tools listed in the tool picker and can call them during any conversation. No further configuration needed — the AI discovers available tools automatically at connection time.</p>
+
+        <blockquote data-i18n="a.q">"MCP is plumbing. It doesn't tell the AI what to do — it gives the AI the pipes to reach things it couldn't reach before. What the AI does with those pipes is determined by Skills, prompts, and the task at hand."</blockquote>
+
+        <h2 data-i18n="a.h7">MCP vs Skills: Where the Boundary Is</h2>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th data-i18n="a.compare.aspect">Aspect</th>
+              <th>MCP</th>
+              <th>Skills</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="a.compare.what">What it is</td>
+              <td data-i18n="a.compare.mcp1">Protocol for external connectivity</td>
+              <td data-i18n="a.compare.skill1">Packaged AI workflows / slash commands</td>
+            </tr>
+            <tr>
+              <td data-i18n="a.compare.layer">Layer</td>
+              <td data-i18n="a.compare.mcp2">Infrastructure (how AI accesses tools)</td>
+              <td data-i18n="a.compare.skill2">Behavior (what the AI does)</td>
+            </tr>
+            <tr>
+              <td data-i18n="a.compare.trigger">Triggered by</td>
+              <td data-i18n="a.compare.mcp3">AI autonomously, based on task needs</td>
+              <td data-i18n="a.compare.skill3">User explicitly (/command) or AI matching</td>
+            </tr>
+            <tr>
+              <td data-i18n="a.compare.build">Built with</td>
+              <td data-i18n="a.compare.mcp4">TypeScript / Python server code</td>
+              <td data-i18n="a.compare.skill4">Markdown prompts, CLAUDE.md, config files</td>
+            </tr>
+            <tr>
+              <td data-i18n="a.compare.when">Use when</td>
+              <td data-i18n="a.compare.mcp5">AI needs to reach external systems</td>
+              <td data-i18n="a.compare.skill5">You want repeatable, named workflows</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p data-i18n="a.closing">MCP and Skills are complementary, not competing. A Skill can invoke MCP tools internally. An MCP server doesn't know or care what Skill triggered the tool call. The right mental model: MCP is the toolbox, Skills are the instructions for how to use the tools on a specific job. For a deeper look at Skills and how to build them, see the companion article.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Development',
+    'a.title': 'MCP Complete Guide: Architecture, Building Servers, and Real-World Use',
+    'a.lead': "Model Context Protocol is Anthropic's open standard for connecting AI to the outside world. This guide covers the full picture: what MCP is and isn't, how to build an MCP server in TypeScript and Python, how to wire it into Claude Desktop or Cursor, and when MCP is the right choice versus higher-level alternatives like Skills.",
+    'a.h1': 'What MCP Is — and What It Isn\'t',
+    'a.1': "MCP is a protocol — a standardized communication contract between an AI host application and external capability providers. It is not a library, a cloud service, or a specific tool. Think of it as USB-C for AI: a single standard connector that lets any compliant tool plug into any compliant AI host, regardless of who built either side.",
+    'a.2': "Before MCP, every AI integration was bespoke. You wanted Claude to read your database? Write a custom integration in the host app. You wanted Cursor to access your internal docs? Another bespoke solution. MCP collapses all of this into one protocol: build an MCP server once, and it works with every MCP-compatible host — Claude Desktop, Cursor, VS Code extensions, custom agents, and any application built with the Anthropic SDK.",
+    'a.h2': 'Architecture: Three Roles',
+    'a.arch_intro': 'MCP defines three distinct roles in every interaction:',
+    'a.host_title': 'MCP Host', 'a.host_desc': "The AI-powered application the user directly uses. Examples: Claude Desktop, Cursor, custom agent apps. The host manages the AI model and decides which MCP servers to connect.",
+    'a.client_title': 'MCP Client', 'a.client_desc': "The component inside the host that speaks the MCP protocol to servers. Each host-server connection has one client. Handles the wire protocol, request/response lifecycle, and capability negotiation.",
+    'a.server_title': 'MCP Server', 'a.server_desc': "A lightweight process you build that exposes capabilities to the AI. Can be a local process (stdio) or a remote service (HTTP+SSE). This is what you write when you \"build with MCP.\"",
+    'a.h3': 'What an MCP Server Can Expose',
+    'a.primitives': 'MCP servers can expose three categories of capability to the AI:',
+    'a.tools_desc': 'functions the AI can call to take actions or retrieve data (search the web, query a database, send an email)',
+    'a.resources_desc': 'read-only data the AI can access (files, database rows, API responses, live documentation)',
+    'a.prompts_desc': 'reusable prompt templates with arguments (useful for standardizing how tasks are requested across a team)',
+    'a.h4': 'Building an MCP Server in TypeScript',
+    'a.ts_intro': 'The official MCP SDK for TypeScript is the easiest starting point. This example creates a server with one tool that fetches weather data:',
+    'a.h5': 'Building an MCP Server in Python',
+    'a.py_intro': 'The Python SDK uses a decorator pattern that keeps server code readable:',
+    'a.h6': 'Connecting to Claude Desktop',
+    'a.config_intro': "Add your server to Claude Desktop's config file. The location varies by OS:",
+    'a.config_note': "Restart Claude Desktop after editing. The AI will now see your tools listed in the tool picker and can call them during any conversation. No further configuration needed — the AI discovers available tools automatically at connection time.",
+    'a.q': '"MCP is plumbing. It doesn\'t tell the AI what to do — it gives the AI the pipes to reach things it couldn\'t reach before. What the AI does with those pipes is determined by Skills, prompts, and the task at hand."',
+    'a.h7': 'MCP vs Skills: Where the Boundary Is',
+    'a.compare.aspect': 'Aspect', 'a.compare.what': 'What it is', 'a.compare.layer': 'Layer',
+    'a.compare.trigger': 'Triggered by', 'a.compare.build': 'Built with', 'a.compare.when': 'Use when',
+    'a.compare.mcp1': 'Protocol for external connectivity', 'a.compare.skill1': 'Packaged AI workflows / slash commands',
+    'a.compare.mcp2': 'Infrastructure (how AI accesses tools)', 'a.compare.skill2': 'Behavior (what the AI does)',
+    'a.compare.mcp3': 'AI autonomously, based on task needs', 'a.compare.skill3': 'User explicitly (/command) or AI matching',
+    'a.compare.mcp4': 'TypeScript / Python server code', 'a.compare.skill4': 'Markdown prompts, CLAUDE.md, config files',
+    'a.compare.mcp5': 'AI needs to reach external systems', 'a.compare.skill5': 'You want repeatable, named workflows',
+    'a.closing': "MCP and Skills are complementary, not competing. A Skill can invoke MCP tools internally. An MCP server doesn't know or care what Skill triggered the tool call. The right mental model: MCP is the toolbox, Skills are the instructions for how to use the tools on a specific job. For a deeper look at Skills and how to build them, see the companion article.",
+  },
+  zh: {
+    'a.cat': 'AI 开发',
+    'a.title': 'MCP 完整指南：架构原理、服务器构建与实际使用',
+    'a.lead': '模型上下文协议（MCP）是 Anthropic 将 AI 连接到外部世界的开放标准。本指南涵盖完整内容：MCP 是什么、如何用 TypeScript 和 Python 构建 MCP 服务器、如何接入 Claude Desktop 或 Cursor，以及何时选择 MCP 而非 Skills 等更高层次的替代方案。',
+    'a.h1': 'MCP 是什么——以及不是什么',
+    'a.1': 'MCP 是一个协议——AI 宿主应用与外部能力提供者之间标准化的通信契约。它不是一个库、云服务或特定工具。把它想象成 AI 的 USB-C：一个标准连接器，让任何合规工具都能插入任何合规 AI 宿主，无论双方是谁构建的。',
+    'a.2': '在 MCP 之前，每一个 AI 集成都是定制的。你想让 Claude 读取你的数据库？在宿主应用中编写自定义集成。你想让 Cursor 访问你的内部文档？又一个定制解决方案。MCP 将这一切折叠成一个协议：构建一次 MCP 服务器，它就能在所有兼容 MCP 的宿主上运行——Claude Desktop、Cursor、VS Code 扩展、自定义智能体，以及任何用 Anthropic SDK 构建的应用程序。',
+    'a.h2': '架构：三个角色',
+    'a.arch_intro': 'MCP 在每次交互中定义了三个不同的角色：',
+    'a.host_title': 'MCP 宿主', 'a.host_desc': '用户直接使用的 AI 应用程序。例如：Claude Desktop、Cursor、自定义智能体应用。宿主管理 AI 模型并决定连接哪些 MCP 服务器。',
+    'a.client_title': 'MCP 客户端', 'a.client_desc': '宿主内部与服务器使用 MCP 协议通信的组件。每个宿主-服务器连接有一个客户端。负责处理传输协议、请求/响应生命周期和能力协商。',
+    'a.server_title': 'MCP 服务器', 'a.server_desc': '你构建的向 AI 暴露能力的轻量级进程。可以是本地进程（stdio）或远程服务（HTTP+SSE）。这就是你"使用 MCP 构建"时所编写的内容。',
+    'a.h3': 'MCP 服务器可以暴露什么',
+    'a.primitives': 'MCP 服务器可以向 AI 暴露三类能力：',
+    'a.tools_desc': 'AI 可以调用的函数，用于执行操作或获取数据（搜索网络、查询数据库、发送电子邮件）',
+    'a.resources_desc': 'AI 可以访问的只读数据（文件、数据库行、API 响应、实时文档）',
+    'a.prompts_desc': '带参数的可复用提示模板（用于在团队中标准化任务请求方式）',
+    'a.h4': '用 TypeScript 构建 MCP 服务器',
+    'a.ts_intro': 'TypeScript 官方 MCP SDK 是最简单的起点。此示例创建一个带有获取天气数据工具的服务器：',
+    'a.h5': '用 Python 构建 MCP 服务器',
+    'a.py_intro': 'Python SDK 使用装饰器模式，使服务器代码保持可读性：',
+    'a.h6': '连接到 Claude Desktop',
+    'a.config_intro': '将服务器添加到 Claude Desktop 的配置文件。位置因操作系统而异：',
+    'a.config_note': '编辑后重启 Claude Desktop。AI 现在将在工具选择器中看到你的工具，并可以在任何对话中调用它们。无需进一步配置——AI 在连接时自动发现可用工具。',
+    'a.q': '「MCP 是管道。它不告诉 AI 做什么——它给 AI 提供管道，让 AI 能够触及之前无法触及的东西。AI 如何使用这些管道，由 Skills、提示词和手头的任务决定。」',
+    'a.h7': 'MCP 与 Skills：边界在哪里',
+    'a.compare.aspect': '方面', 'a.compare.what': '是什么', 'a.compare.layer': '层次',
+    'a.compare.trigger': '触发方式', 'a.compare.build': '构建方式', 'a.compare.when': '使用时机',
+    'a.compare.mcp1': '外部连接协议', 'a.compare.skill1': '打包的 AI 工作流 / 斜杠命令',
+    'a.compare.mcp2': '基础设施（AI 如何访问工具）', 'a.compare.skill2': '行为（AI 做什么）',
+    'a.compare.mcp3': 'AI 根据任务需求自主触发', 'a.compare.skill3': '用户明确指定（/命令）或 AI 匹配',
+    'a.compare.mcp4': 'TypeScript / Python 服务器代码', 'a.compare.skill4': 'Markdown 提示词、CLAUDE.md、配置文件',
+    'a.compare.mcp5': 'AI 需要访问外部系统', 'a.compare.skill5': '你想要可重复、有命名的工作流',
+    'a.closing': 'MCP 和 Skills 是互补的，而非竞争关系。一个 Skill 可以在内部调用 MCP 工具。MCP 服务器不知道也不关心是哪个 Skill 触发了工具调用。正确的心智模型：MCP 是工具箱，Skills 是针对特定工作如何使用工具的说明。关于 Skills 的深入解析和构建方法，请参阅配套文章。',
+  },
+  ja: {
+    'a.cat': 'AI開発',
+    'a.title': 'MCP完全ガイド：アーキテクチャ、サーバー構築、実際の活用',
+    'a.lead': 'Model Context Protocol（MCP）はAnthropicがAIを外部世界に接続するためのオープンスタンダードだ。このガイドでは全体像をカバーする：MCPが何であり何ではないか、TypeScriptとPythonでMCPサーバーを構築する方法、Claude DesktopやCursorに接続する方法、そしてSkillsなどの高レベルな代替手段よりもMCPが適切な選択となる場合。',
+    'a.h1': 'MCPとは何か——そして何ではないか',
+    'a.1': 'MCPはプロトコルだ——AIホストアプリケーションと外部能力プロバイダー間の標準化された通信契約。ライブラリでもクラウドサービスでも特定のツールでもない。AIのUSB-Cと考えるとよい：どちらを誰が構築したかに関わらず、準拠したツールが準拠したAIホストに接続できる単一の標準コネクタ。',
+    'a.2': 'MCP以前、すべてのAI統合はカスタムだった。ClaudeにDBを読ませたい？ホストアプリにカスタム統合を書く。Cursorにドキュメントをアクセスさせたい？また別のカスタム解決策。MCPはこれすべてを一つのプロトコルに集約する：MCPサーバーを一度構築すれば、すべてのMCP互換ホスト——Claude Desktop、Cursor、VS Code拡張機能、カスタムエージェント、Anthropic SDKで構築されたあらゆるアプリ——で機能する。',
+    'a.h2': 'アーキテクチャ：3つの役割',
+    'a.arch_intro': 'MCPはすべてのインタラクションで3つの異なる役割を定義する：',
+    'a.host_title': 'MCPホスト', 'a.host_desc': 'ユーザーが直接使用するAI駆動アプリケーション。例：Claude Desktop、Cursor、カスタムエージェントアプリ。ホストはAIモデルを管理し、接続するMCPサーバーを決定する。',
+    'a.client_title': 'MCPクライアント', 'a.client_desc': 'ホスト内でサーバーとMCPプロトコルで通信するコンポーネント。各ホスト-サーバー接続には一つのクライアントがある。ワイヤプロトコル、リクエスト/レスポンスのライフサイクル、能力ネゴシエーションを処理する。',
+    'a.server_title': 'MCPサーバー', 'a.server_desc': 'あなたが構築するAIに能力を公開する軽量プロセス。ローカルプロセス（stdio）またはリモートサービス（HTTP+SSE）が可能。「MCPで構築する」とき書くのがこれだ。',
+    'a.h3': 'MCPサーバーが公開できるもの',
+    'a.primitives': 'MCPサーバーはAIに3カテゴリの能力を公開できる：',
+    'a.tools_desc': 'AIがアクションを実行したりデータを取得するために呼び出せる関数（ウェブ検索、DB照会、メール送信）',
+    'a.resources_desc': 'AIがアクセスできる読み取り専用データ（ファイル、DBレコード、APIレスポンス、ライブドキュメント）',
+    'a.prompts_desc': '引数付きの再利用可能なプロンプトテンプレート（チーム全体でタスクの依頼方法を標準化するのに有用）',
+    'a.h4': 'TypeScriptでMCPサーバーを構築する',
+    'a.ts_intro': 'TypeScript公式MCPSDKが最も簡単な出発点だ。この例は天気データを取得するツールを一つ持つサーバーを作成する：',
+    'a.h5': 'PythonでMCPサーバーを構築する',
+    'a.py_intro': 'Python SDKはデコレーターパターンを使用し、サーバーコードを読みやすく保つ：',
+    'a.h6': 'Claude Desktopへの接続',
+    'a.config_intro': 'Claude Desktopの設定ファイルにサーバーを追加する。場所はOSによって異なる：',
+    'a.config_note': '編集後はClaude Desktopを再起動する。AIはツールピッカーにあなたのツールが表示され、どの会話でも呼び出せる。追加設定は不要——AIは接続時に利用可能なツールを自動的に発見する。',
+    'a.q': '「MCPは配管だ。AIに何をすべきかを告げるのではなく——以前は届かなかった場所に届く管をAIに与える。AIがその管で何をするかは、Skills、プロンプト、手元のタスクによって決まる。」',
+    'a.h7': 'MCPとSkills：境界はどこか',
+    'a.compare.aspect': '側面', 'a.compare.what': '何であるか', 'a.compare.layer': 'レイヤー',
+    'a.compare.trigger': 'トリガー', 'a.compare.build': '構築方法', 'a.compare.when': '使用タイミング',
+    'a.compare.mcp1': '外部接続プロトコル', 'a.compare.skill1': 'パッケージ化されたAIワークフロー／スラッシュコマンド',
+    'a.compare.mcp2': 'インフラ（AIがどのようにツールにアクセスするか）', 'a.compare.skill2': '動作（AIが何をするか）',
+    'a.compare.mcp3': 'AIがタスクニーズに基づいて自律的に', 'a.compare.skill3': 'ユーザーが明示的に（/コマンド）またはAIがマッチング',
+    'a.compare.mcp4': 'TypeScript / Pythonサーバーコード', 'a.compare.skill4': 'Markdownプロンプト、CLAUDE.md、設定ファイル',
+    'a.compare.mcp5': 'AIが外部システムにアクセスする必要がある', 'a.compare.skill5': '繰り返し可能な名前付きワークフローが必要',
+    'a.closing': 'MCPとSkillsは補完的であり、競合ではない。SkillはMCPツールを内部的に呼び出せる。MCPサーバーはどのSkillがツール呼び出しをトリガーしたか知らないし、気にしない。正しいメンタルモデル：MCPは道具箱で、Skillsは特定の仕事でその道具をどう使うかの指示書だ。Skillsの詳細とその構築方法については、コンパニオン記事を参照せよ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

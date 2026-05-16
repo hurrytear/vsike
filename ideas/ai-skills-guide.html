@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Skills vs MCP: The Workflow Layer vs the Tool Layer — vsike</title>
+  <meta name="description" content="Skills and MCP both extend AI agents, but they operate at completely different layers. Skills define what the agent does; MCP defines what the agent can reach. Here's how to create and use both.">
+  <meta name="keywords" content="AI skills, MCP skills, CLAUDE.md skills, slash commands AI, AI workflow automation, MCP vs skills, skills tutorial, Claude skills">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .arch-row { display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .arch-box { flex: 1; min-width: 180px; border: 1px solid var(--fg-dim); padding: 1rem 1.25rem; }
+    .arch-box-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; text-transform: uppercase; }
+    .arch-box-title { font-weight: 700; margin-bottom: .35rem; }
+    .arch-box-desc { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .compare-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--fs-sm); }
+    .compare-table th { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-align: left; padding: .6rem 1rem; border-bottom: 1px solid var(--fg); }
+    .compare-table td { padding: .6rem 1rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .step-block { margin: 2rem 0; }
+    .step-num { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="skills.cat">AI Development</span>
+        <span class="article-date" data-i18n="skills.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="skills.title">AI Skills vs MCP:<br>Workflow Layer vs Tool Layer</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="skills.lead">Skills and MCP both extend AI agents, but they operate at completely different layers. Skills define what the agent does; MCP defines what the agent can reach. Here's how to create and use both — and why you usually want both.</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="skills.s1.h">The Fundamental Distinction</h2>
+      <p data-i18n-html="skills.s1.p1">Before diving into syntax, get the mental model right. <strong>MCP</strong> is infrastructure — it's a protocol that lets an AI agent connect to external tools, APIs, and data sources. <strong>Skills</strong> are behavior — they're reusable workflow definitions that tell the agent how to accomplish a class of tasks. MCP answers "what can you reach?" Skills answer "how do you work?"</p>
+      <p data-i18n="skills.s1.p2">A good analogy: MCP is like a USB port standard — it defines how devices connect. Skills are like macros or scripts — they encode a sequence of operations into a reusable unit. You need the ports to be able to plug anything in; you write the macros to stop repeating yourself.</p>
+
+      <div class="arch-row">
+        <div class="arch-box">
+          <div class="arch-box-label" data-i18n="skills.box1.label">Skills Layer</div>
+          <div class="arch-box-title" data-i18n="skills.box1.title">What the Agent Does</div>
+          <div class="arch-box-desc" data-i18n="skills.box1.desc">Slash commands, reusable workflows, step-by-step task definitions, domain-specific behaviors. Defined in CLAUDE.md or config files. Invoked with /command syntax.</div>
+        </div>
+        <div class="arch-box">
+          <div class="arch-box-label" data-i18n="skills.box2.label">MCP Layer</div>
+          <div class="arch-box-title" data-i18n="skills.box2.title">What the Agent Can Reach</div>
+          <div class="arch-box-desc" data-i18n="skills.box2.desc">External tools, databases, APIs, file systems. Defined as MCP servers. Exposes tools, resources, and prompts to any compliant host via JSON-RPC over stdio or SSE.</div>
+        </div>
+        <div class="arch-box">
+          <div class="arch-box-label" data-i18n="skills.box3.label">Composition</div>
+          <div class="arch-box-title" data-i18n="skills.box3.title">Skills + MCP Together</div>
+          <div class="arch-box-desc" data-i18n="skills.box3.desc">A Skill can orchestrate multiple MCP tool calls as steps. MCP provides the primitives; Skills provide the choreography. This is the most powerful pattern.</div>
+        </div>
+      </div>
+
+      <h2 data-i18n="skills.s2.h">What Are Skills, Exactly?</h2>
+      <p data-i18n="skills.s2.p1">In the Claude Code and Claude Agent ecosystem, a Skill is a named, reusable workflow that can be triggered by a slash command. Skills live in a project's CLAUDE.md file (or a global ~/.claude/CLAUDE.md for cross-project skills) and are loaded automatically when an agent session starts in that directory.</p>
+      <p data-i18n="skills.s2.p2">Think of Skills as the difference between raw capability and packaged expertise. An agent with access to bash, file read/write, and git tools has raw capability. A "deploy" Skill that runs tests, bumps the version, commits, and pushes with the right message format — that's packaged expertise. The agent knows the steps; you don't have to spell them out every time.</p>
+      <p data-i18n="skills.s2.p3">Skills are also documentation. A well-written CLAUDE.md is a contract between the team and the AI: here is how we do things here, here are the patterns we use, here are the commands that matter. New team members and new agent sessions both benefit.</p>
+
+      <h2 data-i18n="skills.s3.h">Creating Skills in CLAUDE.md</h2>
+      <p data-i18n="skills.s3.p1">A Skill definition in CLAUDE.md uses a markdown header starting with a slash, followed by a description of what the agent should do when that command is invoked. The format is intentionally human-readable — it's prose, not code.</p>
+
+      <div class="step-block">
+        <div class="step-num" data-i18n="skills.step.basic">Basic Skill Syntax</div>
+        <pre class="code-block"><span class="comment"># CLAUDE.md — project root</span>
+
+<span class="comment">## /review</span>
+Review the staged changes for correctness, security issues, and style
+consistency with the existing codebase. Output a bulleted list of
+findings. Flag anything that looks like a security vulnerability first,
+then logic issues, then style. Be concise — one line per finding.
+
+<span class="comment">## /deploy</span>
+Deploy the current branch to staging:
+1. Run `npm test` — abort if tests fail
+2. Run `npm run build`
+3. Commit any build artifacts
+4. Push to origin
+5. Notify in Slack #deployments channel via the Slack MCP tool
+6. Report the deploy URL
+
+<span class="comment">## /sync-docs</span>
+Update the API documentation to match the current source code.
+Read all TypeScript files in src/, extract exported functions with
+their JSDoc comments, and regenerate docs/api.md. Preserve the
+existing intro section at the top of docs/api.md.
+</pre>
+      </div>
+
+      <p data-i18n="skills.s3.p2">Skills can reference other skills, call MCP tools by name, run shell commands, read files, and chain multiple operations. The agent interprets the skill description using its full reasoning capability — you're writing intent, not imperative code.</p>
+
+      <h2 data-i18n="skills.s4.h">A Real CLAUDE.md Structure</h2>
+      <p data-i18n="skills.s4.p1">A production CLAUDE.md typically has three sections: project context (what this codebase is), development conventions (how we write code here), and skills (commands the agent should understand). Here's a realistic example:</p>
+
+      <pre class="code-block"><span class="comment"># CLAUDE.md</span>
+
+<span class="comment">## Project</span>
+This is a TypeScript/Node.js API serving a fintech SaaS product.
+The stack: Express, Prisma ORM, PostgreSQL, Redis for caching.
+Deployment: Kubernetes on GKE. CI: GitHub Actions.
+
+<span class="comment">## Conventions</span>
+- All database queries go through the repository layer in src/repos/
+- Never use raw SQL — always Prisma
+- Error types live in src/errors/; use them, don't invent new strings
+- All routes must have integration tests in tests/integration/
+- Commit format: &lt;type&gt;(&lt;scope&gt;): &lt;subject&gt; — no period at end
+- Types must be explicit — no implicit any
+
+<span class="comment">## /ship &lt;description&gt;</span>
+Prepare the current work for review:
+1. Run `npx tsc --noEmit` — fix any type errors first
+2. Run `npm test` — fix failing tests
+3. Run `npm run lint -- --fix`
+4. Stage all changes except .env files
+5. Create a commit with the provided description following our format
+6. Push to origin on the current branch
+7. Create a GitHub PR targeting main with a summary of the changes
+
+<span class="comment">## /add-endpoint &lt;name&gt;</span>
+Add a new REST endpoint following our conventions:
+- Create route file in src/routes/&lt;name&gt;.ts
+- Create repository in src/repos/&lt;name&gt;Repo.ts
+- Add integration test in tests/integration/&lt;name&gt;.test.ts
+- Register the route in src/app.ts
+- Export types from src/types/&lt;name&gt;.ts
+Use the existing user endpoint (src/routes/users.ts) as a template.
+
+<span class="comment">## /audit-security</span>
+Perform a security review of the codebase:
+1. Check for any raw SQL or unsanitized inputs
+2. Check all auth middleware is applied to protected routes
+3. Look for secrets hardcoded anywhere (not in env vars)
+4. Check CORS configuration in src/app.ts
+5. Verify rate limiting on authentication endpoints
+6. Report findings with file:line references
+</pre>
+
+      <h2 data-i18n="skills.s5.h">Invoking Skills</h2>
+      <p data-i18n="skills.s5.p1">Once defined in CLAUDE.md, skills are invoked with the slash syntax directly in a conversation or Claude Code session. The agent resolves the command, loads the skill definition, and executes it with any provided arguments.</p>
+
+      <pre class="code-block"><span class="comment"># In a Claude Code session:</span>
+
+/ship "feat(auth): add OAuth2 PKCE support"
+
+/add-endpoint payments
+
+/review
+
+/audit-security
+</pre>
+
+      <p data-i18n="skills.s5.p2">Skills accept arguments naturally — the agent understands that the text after the command name is the argument, and uses it as context within the skill. You don't define formal parameter schemas; the model interprets intent.</p>
+
+      <h2 data-i18n="skills.s6.h">Skills Calling MCP Tools</h2>
+      <p data-i18n="skills.s6.p1">The real power comes when Skills orchestrate MCP tools as steps. An MCP server might expose a "send_slack_message" tool, a "create_github_issue" tool, and a "query_database" tool. A Skill can call all three in sequence as part of a larger workflow.</p>
+
+      <pre class="code-block"><span class="comment">## /incident-response &lt;service&gt; &lt;severity&gt;</span>
+Handle a production incident for the given service:
+1. Use the GitHub MCP tool to check for recent PRs merged to &lt;service&gt;
+2. Use the database MCP tool to query error_logs for the last 30 minutes
+3. Use the Slack MCP tool to post an incident thread in #incidents:
+   - Service name, severity, timestamp
+   - Recent deploys (from step 1)
+   - Error summary (from step 2)
+   - Your initial hypothesis
+4. Create a GitHub issue via the GitHub MCP tool titled
+   "[INCIDENT] &lt;service&gt; - &lt;date&gt;" with full details
+5. Assign the issue to the on-call person from the Pagerduty MCP tool
+</pre>
+
+      <p data-i18n="skills.s6.p2">This is a Skill that coordinates four different MCP servers (GitHub, database, Slack, PagerDuty) into a single workflow. Without Skills, you'd either call each tool manually or write a script. With Skills, the agent understands the intent and executes the sequence with full context.</p>
+
+      <h2 data-i18n="skills.s7.h">Scope: Project vs Global vs Agent Skills</h2>
+      <p data-i18n="skills.s7.p1">Skills can live at different scopes. A project CLAUDE.md in the repository root applies only to that project. A global CLAUDE.md at ~/.claude/CLAUDE.md applies to all Claude Code sessions. When both exist, they're merged — project skills take precedence for name conflicts.</p>
+      <p data-i18n="skills.s7.p2">For autonomous agents built with the Claude Agent SDK, Skills can also be provided programmatically at session initialization. This lets you dynamically compose skill sets based on the task context — a customer support agent gets different skills than a code review agent, even though both run on the same underlying model.</p>
+
+      <pre class="code-block"><span class="comment">// Agent SDK — programmatic skill injection</span>
+<span class="kw">const</span> agent = <span class="kw">new</span> ClaudeAgent({
+  systemPrompt: baseSystemPrompt,
+  skills: [
+    {
+      name: <span class="str">'review'</span>,
+      description: <span class="str">'Review code changes for correctness and security'</span>,
+      instructions: reviewSkillInstructions,
+    },
+    {
+      name: <span class="str">'deploy'</span>,
+      description: <span class="str">'Deploy the current branch to staging'</span>,
+      instructions: deploySkillInstructions,
+    }
+  ],
+  mcpServers: [githubMCP, slackMCP, dbMCP],
+});
+</pre>
+
+      <h2 data-i18n="skills.s8.h">MCP vs Skills: When to Use Which</h2>
+      <p data-i18n="skills.s8.p1">Now that you understand both, the decision tree is straightforward:</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th data-i18n="skills.tbl.q">Question</th>
+            <th data-i18n="skills.tbl.use">Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="skills.tbl.r1q">I need the agent to access an external API or data source</td>
+            <td data-i18n="skills.tbl.r1a">MCP server</td>
+          </tr>
+          <tr>
+            <td data-i18n="skills.tbl.r2q">I want to package a multi-step workflow the team runs often</td>
+            <td data-i18n="skills.tbl.r2a">Skill in CLAUDE.md</td>
+          </tr>
+          <tr>
+            <td data-i18n="skills.tbl.r3q">I want to encode project conventions so the agent follows them</td>
+            <td data-i18n="skills.tbl.r3a">CLAUDE.md conventions section (not a skill)</td>
+          </tr>
+          <tr>
+            <td data-i18n="skills.tbl.r4q">I want to connect the agent to our internal database</td>
+            <td data-i18n="skills.tbl.r4a">MCP server with database tools</td>
+          </tr>
+          <tr>
+            <td data-i18n="skills.tbl.r5q">I want a /deploy command that runs tests, builds, and notifies</td>
+            <td data-i18n="skills.tbl.r5a">Skill (which may call MCP tools internally)</td>
+          </tr>
+          <tr>
+            <td data-i18n="skills.tbl.r6q">I want to share a tool across many projects and teams</td>
+            <td data-i18n="skills.tbl.r6a">MCP server (single source, many clients)</td>
+          </tr>
+          <tr>
+            <td data-i18n="skills.tbl.r7q">I want project-specific commands that new devs can discover</td>
+            <td data-i18n="skills.tbl.r7a">Skills in project CLAUDE.md</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 data-i18n="skills.s9.h">A Complete Example: Both Together</h2>
+      <p data-i18n="skills.s9.p1">Here's how a production setup combines MCP and Skills into a cohesive developer experience. The MCP layer provides tool access; the Skills layer provides workflow shortcuts.</p>
+
+      <pre class="code-block"><span class="comment"># claude_desktop_config.json — MCP servers</span>
+{
+  <span class="str">"mcpServers"</span>: {
+    <span class="str">"github"</span>: {
+      <span class="str">"command"</span>: <span class="str">"npx"</span>,
+      <span class="str">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@modelcontextprotocol/server-github"</span>],
+      <span class="str">"env"</span>: { <span class="str">"GITHUB_PERSONAL_ACCESS_TOKEN"</span>: <span class="str">"..."</span> }
+    },
+    <span class="str">"postgres"</span>: {
+      <span class="str">"command"</span>: <span class="str">"npx"</span>,
+      <span class="str">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@modelcontextprotocol/server-postgres"</span>],
+      <span class="str">"env"</span>: { <span class="str">"POSTGRES_URL"</span>: <span class="str">"postgresql://..."</span> }
+    },
+    <span class="str">"slack"</span>: {
+      <span class="str">"command"</span>: <span class="str">"npx"</span>,
+      <span class="str">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@modelcontextprotocol/server-slack"</span>],
+      <span class="str">"env"</span>: { <span class="str">"SLACK_BOT_TOKEN"</span>: <span class="str">"xoxb-..."</span> }
+    }
+  }
+}
+</pre>
+
+      <pre class="code-block"><span class="comment"># CLAUDE.md — Skills that use those MCP tools</span>
+
+<span class="comment">## /pr-review &lt;pr-number&gt;</span>
+Review a pull request thoroughly:
+1. Use GitHub MCP to fetch PR #&lt;pr-number&gt; diff and description
+2. Use GitHub MCP to get the PR's CI check results
+3. Use postgres MCP to check if any changed schema files need migrations
+4. Review: correctness, security, test coverage, naming, performance
+5. Post a review comment via GitHub MCP with findings grouped by severity
+6. If critical issues found, request changes; otherwise approve
+
+<span class="comment">## /weekly-report</span>
+Generate this week's engineering report:
+1. Use GitHub MCP to list PRs merged this week
+2. Use postgres MCP to query feature_flags for any that shipped
+3. Use postgres MCP to check error_rate from monitoring table (last 7d)
+4. Use Slack MCP to post a formatted summary to #eng-updates
+   Format: ## Week of &lt;date&gt; / Shipped / Metrics / Next week
+</pre>
+
+      <h2 data-i18n="skills.s10.h">Key Takeaways</h2>
+      <p data-i18n="skills.s10.p1">MCP and Skills are complementary, not competing. MCP is a protocol standard that expands the agent's reach — it solves the connectivity problem. Skills are behavior definitions that expand the agent's repertoire — they solve the repetition problem. Use MCP to connect to the tools your team already uses. Use Skills to encode how your team uses them.</p>
+      <p data-i18n="skills.s10.p2">The best AI-augmented workflows use both: a curated set of MCP servers that give the agent access to the systems that matter, combined with a CLAUDE.md that teaches the agent the workflows that make your team productive. The result is an AI collaborator that understands your stack and knows how to work within it — not a general-purpose assistant that needs to be re-taught every session.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'skills.cat': 'AI Development',
+    'skills.date': 'May 2026',
+    'skills.title': 'AI Skills vs MCP:<br>Workflow Layer vs Tool Layer',
+    'skills.lead': 'Skills and MCP both extend AI agents, but they operate at completely different layers. Skills define what the agent does; MCP defines what the agent can reach. Here\'s how to create and use both — and why you usually want both.',
+    'skills.s1.h': 'The Fundamental Distinction',
+    'skills.s1.p1': 'Before diving into syntax, get the mental model right. <strong>MCP</strong> is infrastructure — it\'s a protocol that lets an AI agent connect to external tools, APIs, and data sources. <strong>Skills</strong> are behavior — they\'re reusable workflow definitions that tell the agent how to accomplish a class of tasks. MCP answers "what can you reach?" Skills answer "how do you work?"',
+    'skills.s1.p2': 'A good analogy: MCP is like a USB port standard — it defines how devices connect. Skills are like macros or scripts — they encode a sequence of operations into a reusable unit. You need the ports to be able to plug anything in; you write the macros to stop repeating yourself.',
+    'skills.box1.label': 'Skills Layer',
+    'skills.box1.title': 'What the Agent Does',
+    'skills.box1.desc': 'Slash commands, reusable workflows, step-by-step task definitions, domain-specific behaviors. Defined in CLAUDE.md or config files. Invoked with /command syntax.',
+    'skills.box2.label': 'MCP Layer',
+    'skills.box2.title': 'What the Agent Can Reach',
+    'skills.box2.desc': 'External tools, databases, APIs, file systems. Defined as MCP servers. Exposes tools, resources, and prompts to any compliant host via JSON-RPC over stdio or SSE.',
+    'skills.box3.label': 'Composition',
+    'skills.box3.title': 'Skills + MCP Together',
+    'skills.box3.desc': 'A Skill can orchestrate multiple MCP tool calls as steps. MCP provides the primitives; Skills provide the choreography. This is the most powerful pattern.',
+    'skills.s2.h': 'What Are Skills, Exactly?',
+    'skills.s2.p1': 'In the Claude Code and Claude Agent ecosystem, a Skill is a named, reusable workflow that can be triggered by a slash command. Skills live in a project\'s CLAUDE.md file (or a global ~/.claude/CLAUDE.md for cross-project skills) and are loaded automatically when an agent session starts in that directory.',
+    'skills.s2.p2': 'Think of Skills as the difference between raw capability and packaged expertise. An agent with access to bash, file read/write, and git tools has raw capability. A "deploy" Skill that runs tests, bumps the version, commits, and pushes with the right message format — that\'s packaged expertise. The agent knows the steps; you don\'t have to spell them out every time.',
+    'skills.s2.p3': 'Skills are also documentation. A well-written CLAUDE.md is a contract between the team and the AI: here is how we do things here, here are the patterns we use, here are the commands that matter. New team members and new agent sessions both benefit.',
+    'skills.s3.h': 'Creating Skills in CLAUDE.md',
+    'skills.s3.p1': 'A Skill definition in CLAUDE.md uses a markdown header starting with a slash, followed by a description of what the agent should do when that command is invoked. The format is intentionally human-readable — it\'s prose, not code.',
+    'skills.step.basic': 'Basic Skill Syntax',
+    'skills.s3.p2': 'Skills can reference other skills, call MCP tools by name, run shell commands, read files, and chain multiple operations. The agent interprets the skill description using its full reasoning capability — you\'re writing intent, not imperative code.',
+    'skills.s4.h': 'A Real CLAUDE.md Structure',
+    'skills.s4.p1': 'A production CLAUDE.md typically has three sections: project context (what this codebase is), development conventions (how we write code here), and skills (commands the agent should understand). Here\'s a realistic example:',
+    'skills.s5.h': 'Invoking Skills',
+    'skills.s5.p1': 'Once defined in CLAUDE.md, skills are invoked with the slash syntax directly in a conversation or Claude Code session. The agent resolves the command, loads the skill definition, and executes it with any provided arguments.',
+    'skills.s5.p2': 'Skills accept arguments naturally — the agent understands that the text after the command name is the argument, and uses it as context within the skill. You don\'t define formal parameter schemas; the model interprets intent.',
+    'skills.s6.h': 'Skills Calling MCP Tools',
+    'skills.s6.p1': 'The real power comes when Skills orchestrate MCP tools as steps. An MCP server might expose a "send_slack_message" tool, a "create_github_issue" tool, and a "query_database" tool. A Skill can call all three in sequence as part of a larger workflow.',
+    'skills.s6.p2': 'This is a Skill that coordinates four different MCP servers (GitHub, database, Slack, PagerDuty) into a single workflow. Without Skills, you\'d either call each tool manually or write a script. With Skills, the agent understands the intent and executes the sequence with full context.',
+    'skills.s7.h': 'Scope: Project vs Global vs Agent Skills',
+    'skills.s7.p1': 'Skills can live at different scopes. A project CLAUDE.md in the repository root applies only to that project. A global CLAUDE.md at ~/.claude/CLAUDE.md applies to all Claude Code sessions. When both exist, they\'re merged — project skills take precedence for name conflicts.',
+    'skills.s7.p2': 'For autonomous agents built with the Claude Agent SDK, Skills can also be provided programmatically at session initialization. This lets you dynamically compose skill sets based on the task context — a customer support agent gets different skills than a code review agent, even though both run on the same underlying model.',
+    'skills.s8.h': 'MCP vs Skills: When to Use Which',
+    'skills.s8.p1': 'Now that you understand both, the decision tree is straightforward:',
+    'skills.tbl.q': 'Question',
+    'skills.tbl.use': 'Use',
+    'skills.tbl.r1q': 'I need the agent to access an external API or data source',
+    'skills.tbl.r1a': 'MCP server',
+    'skills.tbl.r2q': 'I want to package a multi-step workflow the team runs often',
+    'skills.tbl.r2a': 'Skill in CLAUDE.md',
+    'skills.tbl.r3q': 'I want to encode project conventions so the agent follows them',
+    'skills.tbl.r3a': 'CLAUDE.md conventions section (not a skill)',
+    'skills.tbl.r4q': 'I want to connect the agent to our internal database',
+    'skills.tbl.r4a': 'MCP server with database tools',
+    'skills.tbl.r5q': 'I want a /deploy command that runs tests, builds, and notifies',
+    'skills.tbl.r5a': 'Skill (which may call MCP tools internally)',
+    'skills.tbl.r6q': 'I want to share a tool across many projects and teams',
+    'skills.tbl.r6a': 'MCP server (single source, many clients)',
+    'skills.tbl.r7q': 'I want project-specific commands that new devs can discover',
+    'skills.tbl.r7a': 'Skills in project CLAUDE.md',
+    'skills.s9.h': 'A Complete Example: Both Together',
+    'skills.s9.p1': 'Here\'s how a production setup combines MCP and Skills into a cohesive developer experience. The MCP layer provides tool access; the Skills layer provides workflow shortcuts.',
+    'skills.s10.h': 'Key Takeaways',
+    'skills.s10.p1': 'MCP and Skills are complementary, not competing. MCP is a protocol standard that expands the agent\'s reach — it solves the connectivity problem. Skills are behavior definitions that expand the agent\'s repertoire — they solve the repetition problem. Use MCP to connect to the tools your team already uses. Use Skills to encode how your team uses them.',
+    'skills.s10.p2': 'The best AI-augmented workflows use both: a curated set of MCP servers that give the agent access to the systems that matter, combined with a CLAUDE.md that teaches the agent the workflows that make your team productive. The result is an AI collaborator that understands your stack and knows how to work within it — not a general-purpose assistant that needs to be re-taught every session.',
+  },
+  zh: {
+    'skills.cat': 'AI 开发',
+    'skills.date': '2026年5月',
+    'skills.title': 'AI Skills 与 MCP：<br>工作流层 vs 工具层',
+    'skills.lead': 'Skills 和 MCP 都能扩展 AI 智能体的能力，但它们运作在完全不同的层次上。Skills 定义智能体做什么；MCP 定义智能体能访问什么。本文详解如何创建和使用两者，以及为什么通常需要同时使用。',
+    'skills.s1.h': '核心区别',
+    'skills.s1.p1': '在深入语法之前，先建立正确的心智模型。<strong>MCP</strong> 是基础设施——它是一个协议，让 AI 智能体连接到外部工具、API 和数据源。<strong>Skills</strong> 是行为——它们是可复用的工作流定义，告诉智能体如何完成某类任务。MCP 回答"你能访问什么？"Skills 回答"你怎么工作？"',
+    'skills.s1.p2': '一个好的类比：MCP 像 USB 接口标准——定义设备如何连接。Skills 像宏或脚本——将一系列操作编码为可复用单元。你需要接口才能插入任何设备；你编写宏是为了不再重复自己。',
+    'skills.box1.label': 'Skills 层',
+    'skills.box1.title': '智能体做什么',
+    'skills.box1.desc': '斜杠命令、可复用工作流、分步任务定义、领域特定行为。在 CLAUDE.md 或配置文件中定义。通过 /command 语法调用。',
+    'skills.box2.label': 'MCP 层',
+    'skills.box2.title': '智能体能访问什么',
+    'skills.box2.desc': '外部工具、数据库、API、文件系统。定义为 MCP 服务器。通过 stdio 或 SSE 上的 JSON-RPC 向任何兼容主机暴露工具、资源和提示词。',
+    'skills.box3.label': '组合使用',
+    'skills.box3.title': 'Skills + MCP 协同',
+    'skills.box3.desc': 'Skill 可以将多个 MCP 工具调用编排为步骤。MCP 提供原语；Skills 提供编排逻辑。这是最强大的使用模式。',
+    'skills.s2.h': 'Skills 到底是什么？',
+    'skills.s2.p1': '在 Claude Code 和 Claude 智能体生态中，Skill 是一个命名的、可复用的工作流，可通过斜杠命令触发。Skills 存储在项目的 CLAUDE.md 文件中（或全局的 ~/.claude/CLAUDE.md 用于跨项目 Skills），当智能体会话在该目录启动时自动加载。',
+    'skills.s2.p2': '将 Skills 理解为原始能力与打包专业知识的区别。一个拥有 bash、文件读写和 git 工具访问权限的智能体具有原始能力。一个运行测试、更新版本号、提交并以正确消息格式推送的"deploy" Skill——那才是打包的专业知识。智能体知道步骤；你不必每次都重新解释。',
+    'skills.s2.p3': 'Skills 也是文档。写得好的 CLAUDE.md 是团队与 AI 之间的契约：这是我们在这里做事的方式，这是我们使用的模式，这是重要的命令。新团队成员和新的智能体会话都能从中受益。',
+    'skills.s3.h': '在 CLAUDE.md 中创建 Skills',
+    'skills.s3.p1': 'CLAUDE.md 中的 Skill 定义使用以斜杠开头的 markdown 标题，后跟对智能体调用该命令时应执行什么的描述。格式有意设计为人类可读——是散文，不是代码。',
+    'skills.step.basic': '基本 Skill 语法',
+    'skills.s3.p2': 'Skills 可以引用其他 skills、按名称调用 MCP 工具、运行 shell 命令、读取文件并链接多个操作。智能体使用其完整推理能力解释 skill 描述——你在写意图，不是命令式代码。',
+    'skills.s4.h': '真实的 CLAUDE.md 结构',
+    'skills.s4.p1': '生产环境的 CLAUDE.md 通常有三个部分：项目上下文（这个代码库是什么）、开发规范（我们如何在这里编写代码）和 skills（智能体应理解的命令）。以下是一个真实的示例：',
+    'skills.s5.h': '调用 Skills',
+    'skills.s5.p1': '在 CLAUDE.md 中定义后，skills 直接在对话或 Claude Code 会话中用斜杠语法调用。智能体解析命令，加载 skill 定义，并使用提供的任何参数执行它。',
+    'skills.s5.p2': 'Skills 自然地接受参数——智能体理解命令名称后的文本是参数，并在 skill 中将其用作上下文。你不需要定义正式的参数模式；模型解读意图。',
+    'skills.s6.h': 'Skills 调用 MCP 工具',
+    'skills.s6.p1': '当 Skills 将 MCP 工具编排为步骤时，真正的威力才得以显现。MCP 服务器可能暴露"send_slack_message"工具、"create_github_issue"工具和"query_database"工具。Skill 可以在更大工作流中按顺序调用这三者。',
+    'skills.s6.p2': '这是一个将四个不同 MCP 服务器（GitHub、数据库、Slack、PagerDuty）协调为单一工作流的 Skill。没有 Skills，你要么手动调用每个工具，要么编写脚本。有了 Skills，智能体理解意图并在完整上下文中执行序列。',
+    'skills.s7.h': '作用域：项目级 vs 全局 vs 智能体 Skills',
+    'skills.s7.p1': 'Skills 可以存在于不同作用域。仓库根目录的项目 CLAUDE.md 仅适用于该项目。~/.claude/CLAUDE.md 的全局 CLAUDE.md 适用于所有 Claude Code 会话。当两者都存在时，它们会合并——项目 skills 对名称冲突具有优先权。',
+    'skills.s7.p2': '对于使用 Claude Agent SDK 构建的自主智能体，Skills 也可以在会话初始化时以编程方式提供。这让你能根据任务上下文动态组合技能集——客户支持智能体获得与代码审查智能体不同的 skills，即使两者都运行在同一个底层模型上。',
+    'skills.s8.h': 'MCP vs Skills：何时使用哪个',
+    'skills.s8.p1': '现在你理解了两者，决策树就很简单了：',
+    'skills.tbl.q': '问题',
+    'skills.tbl.use': '使用',
+    'skills.tbl.r1q': '我需要智能体访问外部 API 或数据源',
+    'skills.tbl.r1a': 'MCP 服务器',
+    'skills.tbl.r2q': '我想打包团队经常执行的多步骤工作流',
+    'skills.tbl.r2a': 'CLAUDE.md 中的 Skill',
+    'skills.tbl.r3q': '我想编码项目规范让智能体遵循',
+    'skills.tbl.r3a': 'CLAUDE.md 规范部分（不是 skill）',
+    'skills.tbl.r4q': '我想将智能体连接到我们的内部数据库',
+    'skills.tbl.r4a': '带数据库工具的 MCP 服务器',
+    'skills.tbl.r5q': '我想要一个运行测试、构建和通知的 /deploy 命令',
+    'skills.tbl.r5a': 'Skill（可以在内部调用 MCP 工具）',
+    'skills.tbl.r6q': '我想在多个项目和团队间共享工具',
+    'skills.tbl.r6a': 'MCP 服务器（单一来源，多个客户端）',
+    'skills.tbl.r7q': '我想要新开发者能发现的项目特定命令',
+    'skills.tbl.r7a': '项目 CLAUDE.md 中的 Skills',
+    'skills.s9.h': '完整示例：两者结合使用',
+    'skills.s9.p1': '以下是生产环境配置如何将 MCP 和 Skills 结合成连贯的开发者体验。MCP 层提供工具访问；Skills 层提供工作流快捷方式。',
+    'skills.s10.h': '关键结论',
+    'skills.s10.p1': 'MCP 和 Skills 是互补的，而非竞争关系。MCP 是扩展智能体触达范围的协议标准——它解决连接性问题。Skills 是扩展智能体能力库的行为定义——它解决重复性问题。使用 MCP 连接团队已在使用的工具。使用 Skills 编码团队使用这些工具的方式。',
+    'skills.s10.p2': '最好的 AI 增强工作流同时使用两者：一套精心挑选的 MCP 服务器让智能体访问重要系统，加上一个 CLAUDE.md 教智能体使团队高效的工作流。结果是一个理解你的技术栈并知道如何在其中工作的 AI 协作者——而不是每次会话都需要重新教导的通用助手。',
+  },
+  ja: {
+    'skills.cat': 'AI開発',
+    'skills.date': '2026年5月',
+    'skills.title': 'AI SkillsとMCP：<br>ワークフロー層 vs ツール層',
+    'skills.lead': 'SkillsとMCPはどちらもAIエージェントを拡張しますが、完全に異なる層で動作します。Skillsはエージェントが何をするかを定義し、MCPはエージェントが何にアクセスできるかを定義します。両方の作成方法と使用方法、そしてなぜ通常は両方が必要なのかを解説します。',
+    'skills.s1.h': '根本的な違い',
+    'skills.s1.p1': '構文に入る前に、正しいメンタルモデルを持ちましょう。<strong>MCP</strong>はインフラストラクチャです——AIエージェントが外部ツール、API、データソースに接続できるプロトコルです。<strong>Skills</strong>は動作です——エージェントがタスクのクラスを達成する方法を示す再利用可能なワークフロー定義です。MCPは「何にアクセスできるか？」に答え、Skillsは「どうやって動くか？」に答えます。',
+    'skills.s1.p2': '良いアナロジー：MCPはUSBポート規格のようなもの——デバイスの接続方法を定義します。Skillsはマクロやスクリプトのようなもの——一連の操作を再利用可能な単位にエンコードします。何でも接続するにはポートが必要で、繰り返しを止めるためにマクロを書きます。',
+    'skills.box1.label': 'Skills層',
+    'skills.box1.title': 'エージェントが何をするか',
+    'skills.box1.desc': 'スラッシュコマンド、再利用可能なワークフロー、ステップバイステップのタスク定義、ドメイン固有の動作。CLAUDE.mdまたは設定ファイルで定義。/commandシンタックスで呼び出し。',
+    'skills.box2.label': 'MCP層',
+    'skills.box2.title': 'エージェントが何にアクセスできるか',
+    'skills.box2.desc': '外部ツール、データベース、API、ファイルシステム。MCPサーバーとして定義。stdioまたはSSE上のJSON-RPCを介して、準拠するホストにツール、リソース、プロンプトを公開。',
+    'skills.box3.label': '組み合わせ',
+    'skills.box3.title': 'Skills + MCPの協調',
+    'skills.box3.desc': 'Skillは複数のMCPツール呼び出しをステップとして編成できます。MCPがプリミティブを提供し、Skillsが振り付けを提供します。これが最も強力なパターンです。',
+    'skills.s2.h': 'Skillsとは正確に何か？',
+    'skills.s2.p1': 'Claude CodeとClaudeエージェントのエコシステムでは、Skillはスラッシュコマンドでトリガーできる名前付きの再利用可能なワークフローです。SkillsはプロジェクトのCLAUDE.mdファイル（またはクロスプロジェクトSkillsのためのグローバル~/.claude/CLAUDE.md）に存在し、そのディレクトリでエージェントセッションが開始されると自動的に読み込まれます。',
+    'skills.s2.p2': 'Skillsは生の能力とパッケージ化された専門知識の違いと考えてください。bash、ファイルの読み書き、gitツールへのアクセスを持つエージェントは生の能力を持っています。テストを実行し、バージョンを更新し、コミットし、正しいメッセージ形式でプッシュする「deploy」Skill——それがパッケージ化された専門知識です。エージェントはステップを知っています；毎回説明する必要はありません。',
+    'skills.s2.p3': 'Skillsはドキュメントでもあります。よく書かれたCLAUDE.mdはチームとAIの間の契約です：ここでの進め方、使用するパターン、重要なコマンド。新しいチームメンバーも新しいエージェントセッションも両方恩恵を受けます。',
+    'skills.s3.h': 'CLAUDE.mdでSkillsを作成する',
+    'skills.s3.p1': 'CLAUDE.mdのSkill定義は、スラッシュで始まるmarkdownヘッダーを使用し、そのコマンドが呼び出されたときにエージェントが何をすべきかの説明が続きます。形式は意図的に人間が読めるように設計されています——散文であり、コードではありません。',
+    'skills.step.basic': '基本的なSkill構文',
+    'skills.s3.p2': 'Skillsは他のスキルを参照したり、名前でMCPツールを呼び出したり、シェルコマンドを実行したり、ファイルを読んだり、複数の操作を連鎖させたりできます。エージェントは完全な推論能力を使ってskillの説明を解釈します——意図を書いているのであり、命令的なコードではありません。',
+    'skills.s4.h': '実際のCLAUDE.md構造',
+    'skills.s4.p1': '本番環境のCLAUDE.mdは通常3つのセクションを持ちます：プロジェクトコンテキスト（このコードベースは何か）、開発規約（ここでどうコードを書くか）、Skills（エージェントが理解すべきコマンド）。現実的な例を示します：',
+    'skills.s5.h': 'Skillsの呼び出し',
+    'skills.s5.p1': 'CLAUDE.mdで定義されたら、skillsは会話やClaude Codeセッションでスラッシュ構文を使って直接呼び出されます。エージェントはコマンドを解決し、skill定義を読み込み、提供された引数で実行します。',
+    'skills.s5.p2': 'Skillsは自然に引数を受け取ります——エージェントはコマンド名の後のテキストが引数であることを理解し、skill内でコンテキストとして使用します。正式なパラメータスキーマを定義する必要はありません；モデルが意図を解釈します。',
+    'skills.s6.h': 'SkillsがMCPツールを呼び出す',
+    'skills.s6.p1': 'SkillsがMCPツールをステップとして編成するとき、真の力が発揮されます。MCPサーバーは「send_slack_message」ツール、「create_github_issue」ツール、「query_database」ツールを公開するかもしれません。Skillはより大きなワークフローの一部としてこれら3つを順番に呼び出せます。',
+    'skills.s6.p2': 'これは4つの異なるMCPサーバー（GitHub、データベース、Slack、PagerDuty）を単一のワークフローに調整するSkillです。Skillsなしでは、各ツールを手動で呼び出すか、スクリプトを書くかのどちらかです。Skillsがあれば、エージェントは意図を理解し、完全なコンテキストで順序を実行します。',
+    'skills.s7.h': 'スコープ：プロジェクト vs グローバル vs エージェントSkills',
+    'skills.s7.p1': 'Skillsは異なるスコープに存在できます。リポジトリルートのプロジェクトCLAUDE.mdはそのプロジェクトにのみ適用されます。~/.claude/CLAUDE.mdのグローバルCLAUDE.mdはすべてのClaude Codeセッションに適用されます。両方が存在する場合、マージされます——名前の競合にはプロジェクトSkillsが優先されます。',
+    'skills.s7.p2': 'Claude Agent SDKで構築された自律エージェントでは、Skillsはセッション初期化時にプログラムで提供することもできます。これにより、タスクコンテキストに基づいてスキルセットを動的に構成できます——カスタマーサポートエージェントは、同じ基盤モデル上で動作していても、コードレビューエージェントとは異なるSkillsを取得します。',
+    'skills.s8.h': 'MCP vs Skills：いつどちらを使うか',
+    'skills.s8.p1': '両方を理解した今、意思決定ツリーは簡単です：',
+    'skills.tbl.q': '質問',
+    'skills.tbl.use': '使用',
+    'skills.tbl.r1q': 'エージェントに外部APIまたはデータソースへのアクセスが必要',
+    'skills.tbl.r1a': 'MCPサーバー',
+    'skills.tbl.r2q': 'チームが頻繁に実行する多段階ワークフローをパッケージ化したい',
+    'skills.tbl.r2a': 'CLAUDE.mdのSkill',
+    'skills.tbl.r3q': 'エージェントが従うプロジェクト規約をエンコードしたい',
+    'skills.tbl.r3a': 'CLAUDE.mdの規約セクション（Skillではない）',
+    'skills.tbl.r4q': 'エージェントを社内データベースに接続したい',
+    'skills.tbl.r4a': 'データベースツール付きMCPサーバー',
+    'skills.tbl.r5q': 'テスト実行、ビルド、通知を行う/deployコマンドが欲しい',
+    'skills.tbl.r5a': 'Skill（内部でMCPツールを呼び出せる）',
+    'skills.tbl.r6q': '複数のプロジェクトとチームでツールを共有したい',
+    'skills.tbl.r6a': 'MCPサーバー（単一ソース、複数クライアント）',
+    'skills.tbl.r7q': '新しい開発者が発見できるプロジェクト固有のコマンドが欲しい',
+    'skills.tbl.r7a': 'プロジェクトCLAUDE.mdのSkills',
+    'skills.s9.h': '完全な例：両方を組み合わせる',
+    'skills.s9.p1': '本番環境のセットアップがMCPとSkillsをどのように組み合わせて一貫した開発者体験を作るかを示します。MCP層がツールアクセスを提供し、Skills層がワークフローショートカットを提供します。',
+    'skills.s10.h': '重要なポイント',
+    'skills.s10.p1': 'MCPとSkillsは競合ではなく補完的です。MCPはエージェントのリーチを拡大するプロトコル標準です——接続性の問題を解決します。Skillsはエージェントのレパートリーを拡大する動作定義です——繰り返しの問題を解決します。MCPを使ってチームがすでに使っているツールに接続する。Skillsを使ってチームがそれらを使う方法をエンコードする。',
+    'skills.s10.p2': '最高のAI強化ワークフローは両方を使います：重要なシステムへのアクセスをエージェントに与える厳選されたMCPサーバーのセットと、チームを生産的にするワークフローをエージェントに教えるCLAUDE.mdの組み合わせ。結果は、あなたのスタックを理解し、その中で機能する方法を知るAIコラボレーター——毎セッションで再教育が必要な汎用アシスタントではありません。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
