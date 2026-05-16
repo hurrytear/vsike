@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAuth 2.0's Agent Problem: When AI Tokens Live Forever — vsike</title>
+  <meta name="description" content="AI agents that act on behalf of users inherit OAuth tokens — and those tokens often outlive the task, accumulate scope, and become high-value targets. The authorization model wasn't designed for autonomous agents.">
+  <meta name="keywords" content="OAuth AI agents, AI token security, agent authorization, OAuth 2.0 vulnerabilities, refresh token abuse, agentic AI security, MCP OAuth, LLM token theft">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .risk-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .risk-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .fix-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .fix-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .compare-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--fs-sm); }
+    .compare-table th { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-align: left; padding: .6rem 1rem; border-bottom: 1px solid var(--fg); }
+    .compare-table td { padding: .6rem 1rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .compare-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="oat.cat">Web Security</span>
+        <span class="article-date" data-i18n="oat.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="oat.title">OAuth 2.0's Agent Problem:<br>When AI Tokens Live Forever</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="oat.lead">AI agents that act on behalf of users inherit OAuth tokens — and those tokens often outlive the task, accumulate scope, and become high-value attack targets. The authorization model that secures the modern web wasn't designed for autonomous agents, and the gap is widening.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="oat.pub">Published: 2026-05-16 14:42 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="oat.s1.h">OAuth Was Designed for Humans at Keyboards</h2>
+      <p data-i18n="oat.s1.p1">OAuth 2.0 was built around a specific mental model: a human sits at a browser, clicks "Authorize," reviews the requested permissions, and grants a third-party app limited access to their account. The authorization is intentional, visible, and bounded. The human can revoke it. The session ends when the user closes the tab.</p>
+      <p data-i18n="oat.s1.p2">AI agents break every assumption in that model. The agent acts autonomously, often across long-running sessions. It may request tokens without the user observing which scopes are being requested. It stores credentials to re-use across tasks. It may delegate further to sub-agents. The "authorize and forget" pattern that works acceptably for a connected app becomes a liability when the authorized party is an autonomous agent with tool access.</p>
+      <p data-i18n="oat.s1.p3">The result is a growing class of authorization vulnerabilities that security teams haven't fully mapped yet, because the threat model for agentic AI is still being written in real time.</p>
+
+      <h2 data-i18n="oat.s2.h">The Token Lifecycle Problem</h2>
+      <p data-i18n="oat.s2.p1">In a standard OAuth flow, access tokens are short-lived (typically 1 hour) and refresh tokens allow renewal without re-prompting the user. This design assumes the authorized client is a bounded, auditable application. With AI agents, the authorized client is a reasoning system that can decide to use its credentials in ways that weren't anticipated at authorization time.</p>
+
+      <div class="risk-block">
+        <div class="risk-label">Risk — Refresh Token Persistence</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="oat.risk1">An agent authorized for a one-time task ("summarize my emails from last week") may store the refresh token indefinitely. The user forgets the authorization exists. Months later, the token is still valid. If the agent deployment is compromised, the attacker inherits long-term, silent access to the user's Gmail, Calendar, and Drive — without triggering any re-authorization prompt.</p>
+      </div>
+
+      <div class="risk-block">
+        <div class="risk-label">Risk — Scope Accumulation</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="oat.risk2">Agents that handle multiple tasks over time may request progressively broader scopes. An agent that starts with read-only calendar access may later request write access, then contacts, then email — each individually justified by a specific task. No single authorization event looks alarming. The cumulative scope, held in a single token set, represents full account access.</p>
+      </div>
+
+      <pre class="code-block"><span class="comment"># Scope accumulation over a multi-week agent engagement</span>
+
+Week 1:  <span class="str">calendar.readonly</span>          <span class="comment"># "check my schedule"</span>
+Week 2:  <span class="str">calendar.events</span>             <span class="comment"># "book this meeting"</span>
+Week 3:  <span class="str">contacts.readonly</span>           <span class="comment"># "who is this person?"</span>
+Week 4:  <span class="str">gmail.readonly</span>              <span class="comment"># "find that email thread"</span>
+Week 5:  <span class="str">gmail.send</span>                  <span class="comment"># "reply to this for me"</span>
+Week 6:  <span class="str">drive.file</span>                  <span class="comment"># "attach this document"</span>
+<span class="comment">------------------------------------------------------</span>
+<span class="danger">Result:  effective full Google Workspace access,</span>
+<span class="danger">         accumulated across 6 low-friction auth prompts</span>
+</pre>
+
+      <h2 data-i18n="oat.s3.h">Agent-to-Agent Token Delegation</h2>
+      <p data-i18n="oat.s3.p1">Multi-agent architectures introduce a delegation problem that OAuth's token model handles poorly. When a primary agent spawns a sub-agent to complete part of a task, it may pass its own access token to the sub-agent. The sub-agent, which may be less trusted, less hardened, or running in a different environment, now has the same credentials as the primary agent.</p>
+      <p data-i18n="oat.s3.p2">OAuth has a token exchange specification (RFC 8693) designed for delegation scenarios, but it requires deliberate implementation. Most agentic frameworks today use ad-hoc token passing — the simplest approach that works, and the one with the worst security properties. A compromised sub-agent with a delegated token is indistinguishable from the authorized primary agent from the resource server's perspective.</p>
+
+      <pre class="code-block"><span class="comment"># How token delegation typically works today (insecure)</span>
+
+primary_agent.tools = [gmail_tool, calendar_tool, file_tool]
+primary_agent.token = <span class="danger">user_oauth_token</span>   <span class="comment"># full scope</span>
+
+<span class="comment"># Agent spawns specialist sub-agents, passes token directly</span>
+email_agent = SubAgent(token=<span class="danger">primary_agent.token</span>)
+file_agent  = SubAgent(token=<span class="danger">primary_agent.token</span>)
+
+<span class="comment"># Each sub-agent now has the same privileges as the user</span>
+<span class="comment"># Compromise any sub-agent = compromise the user's account</span>
+</pre>
+
+      <h2 data-i18n="oat.s4.h">MCP Servers as OAuth Credential Stores</h2>
+      <p data-i18n="oat.s4.p1">MCP servers that connect to external services (Google Workspace, GitHub, Slack, Notion) typically store OAuth credentials in their configuration — either as long-lived tokens or as app credentials that can generate tokens on demand. The MCP server becomes a credential aggregation point: one compromise yields access to every connected service.</p>
+      <p data-i18n="oat.s4.p2">The attack surface is compounded by the fact that MCP servers are often run locally (stdio transport) with minimal authentication. A malicious process on the same machine, or an indirect prompt injection that reaches the file tool, can read the MCP configuration file and extract credentials for every connected service.</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th data-i18n="oat.tbl.scenario">Compromise Scenario</th>
+            <th data-i18n="oat.tbl.access">What the Attacker Gets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="oat.tbl.r1s">MCP config file read via path traversal</td>
+            <td data-i18n="oat.tbl.r1a">All OAuth tokens for all connected services</td>
+          </tr>
+          <tr>
+            <td data-i18n="oat.tbl.r2s">Indirect injection → agent reads ~/.config/mcp</td>
+            <td data-i18n="oat.tbl.r2a">Token exfiltration without any UI interaction</td>
+          </tr>
+          <tr>
+            <td data-i18n="oat.tbl.r3s">Malicious npm package in agent dependencies</td>
+            <td data-i18n="oat.tbl.r3a">Environment variable harvest including OAUTH_TOKEN</td>
+          </tr>
+          <tr>
+            <td data-i18n="oat.tbl.r4s">Compromised sub-agent with delegated token</td>
+            <td data-i18n="oat.tbl.r4a">Full scope of primary agent's authorization</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 data-i18n="oat.s5.h">What Secure Agent Authorization Looks Like</h2>
+      <p data-i18n="oat.s5.p1">Fixing this requires rethinking the authorization model for agents at the architecture level, not just patching individual implementations. Several principles apply.</p>
+
+      <div class="fix-block">
+        <div class="fix-label">Principle 1 — Task-Scoped Tokens</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="oat.fix1">Generate a new, minimally-scoped token for each agent task. When the task completes, revoke it. The token should carry only the permissions required for that specific task — not the agent's full scope accumulation. This requires the authorization server to support dynamic, short-lived token issuance, which major providers (Google, Microsoft, GitHub) do support but most agent frameworks don't take advantage of.</p>
+      </div>
+
+      <div class="fix-block">
+        <div class="fix-label">Principle 2 — Token Binding to Agent Identity</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="oat.fix2">Use Demonstrating Proof of Possession (DPoP, RFC 9449) or mTLS token binding to tie tokens to a specific agent's cryptographic identity. A stolen token is useless without the private key. This prevents token exfiltration attacks — even if the token is extracted from MCP config or environment variables, it cannot be used from a different process.</p>
+      </div>
+
+      <div class="fix-block">
+        <div class="fix-label">Principle 3 — Scoped Sub-Agent Delegation</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="oat.fix3">Use OAuth token exchange (RFC 8693) when delegating to sub-agents. The primary agent exchanges its token for a narrower-scoped token specific to the sub-task, rather than passing its own token directly. The exchange creates an audit trail and ensures sub-agents can't exceed the scope they were delegated.</p>
+      </div>
+
+      <div class="fix-block">
+        <div class="fix-label">Principle 4 — Visibility and Revocation</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="oat.fix4">Surface all active agent authorizations to users in a single, auditable view. Users should be able to see which agents hold tokens, what scopes they have, and when they were last used — and revoke any of them with one click. Most OAuth providers offer token management pages; agent platforms should surface this information prominently rather than burying it in settings.</p>
+      </div>
+
+      <h2 data-i18n="oat.s6.h">The Regulatory Horizon</h2>
+      <p data-i18n="oat.s6.p1">Agent-held OAuth tokens are increasingly in scope for data protection regulation. If an AI agent holds a refresh token granting access to a user's email and calendar, that agent is effectively a data processor with long-term access to personal data. GDPR's data minimization principle and purpose limitation requirements apply — and most current agent deployments would struggle to demonstrate compliance.</p>
+      <p data-i18n="oat.s6.p2">The EU AI Act, now entering enforcement phase, adds further requirements around transparency and human oversight for high-risk AI systems. An agent that autonomously acts on behalf of users using long-lived credentials, with no visible audit trail, sits uncomfortably close to the high-risk category in several sector definitions.</p>
+      <p data-i18n="oat.s6.p3">The teams building agentic products today are accumulating regulatory debt at the same time as they accumulate security debt. The authorization model needs to be rebuilt for agents — not because it would be nice to have, but because the alternative is a wave of incidents that regulators will use to define the space for everyone.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'oat.cat': 'Web Security',
+    'oat.date': 'May 2026',
+    'oat.title': 'OAuth 2.0\'s Agent Problem:<br>When AI Tokens Live Forever',
+    'oat.lead': 'AI agents that act on behalf of users inherit OAuth tokens — and those tokens often outlive the task, accumulate scope, and become high-value attack targets. The authorization model that secures the modern web wasn\'t designed for autonomous agents, and the gap is widening.',
+    'oat.pub': 'Published: 2026-05-16 14:42 PDT (Oregon)',
+    'oat.s1.h': 'OAuth Was Designed for Humans at Keyboards',
+    'oat.s1.p1': 'OAuth 2.0 was built around a specific mental model: a human sits at a browser, clicks "Authorize," reviews the requested permissions, and grants a third-party app limited access to their account. The authorization is intentional, visible, and bounded. The human can revoke it. The session ends when the user closes the tab.',
+    'oat.s1.p2': 'AI agents break every assumption in that model. The agent acts autonomously, often across long-running sessions. It may request tokens without the user observing which scopes are being requested. It stores credentials to re-use across tasks. It may delegate further to sub-agents. The "authorize and forget" pattern that works acceptably for a connected app becomes a liability when the authorized party is an autonomous agent with tool access.',
+    'oat.s1.p3': 'The result is a growing class of authorization vulnerabilities that security teams haven\'t fully mapped yet, because the threat model for agentic AI is still being written in real time.',
+    'oat.s2.h': 'The Token Lifecycle Problem',
+    'oat.s2.p1': 'In a standard OAuth flow, access tokens are short-lived (typically 1 hour) and refresh tokens allow renewal without re-prompting the user. This design assumes the authorized client is a bounded, auditable application. With AI agents, the authorized client is a reasoning system that can decide to use its credentials in ways that weren\'t anticipated at authorization time.',
+    'oat.risk1': 'An agent authorized for a one-time task ("summarize my emails from last week") may store the refresh token indefinitely. The user forgets the authorization exists. Months later, the token is still valid. If the agent deployment is compromised, the attacker inherits long-term, silent access to the user\'s Gmail, Calendar, and Drive — without triggering any re-authorization prompt.',
+    'oat.risk2': 'Agents that handle multiple tasks over time may request progressively broader scopes. An agent that starts with read-only calendar access may later request write access, then contacts, then email — each individually justified by a specific task. No single authorization event looks alarming. The cumulative scope, held in a single token set, represents full account access.',
+    'oat.s3.h': 'Agent-to-Agent Token Delegation',
+    'oat.s3.p1': 'Multi-agent architectures introduce a delegation problem that OAuth\'s token model handles poorly. When a primary agent spawns a sub-agent to complete part of a task, it may pass its own access token to the sub-agent. The sub-agent, which may be less trusted, less hardened, or running in a different environment, now has the same credentials as the primary agent.',
+    'oat.s3.p2': 'OAuth has a token exchange specification (RFC 8693) designed for delegation scenarios, but it requires deliberate implementation. Most agentic frameworks today use ad-hoc token passing — the simplest approach that works, and the one with the worst security properties. A compromised sub-agent with a delegated token is indistinguishable from the authorized primary agent from the resource server\'s perspective.',
+    'oat.s4.h': 'MCP Servers as OAuth Credential Stores',
+    'oat.s4.p1': 'MCP servers that connect to external services (Google Workspace, GitHub, Slack, Notion) typically store OAuth credentials in their configuration — either as long-lived tokens or as app credentials that can generate tokens on demand. The MCP server becomes a credential aggregation point: one compromise yields access to every connected service.',
+    'oat.s4.p2': 'The attack surface is compounded by the fact that MCP servers are often run locally (stdio transport) with minimal authentication. A malicious process on the same machine, or an indirect prompt injection that reaches the file tool, can read the MCP configuration file and extract credentials for every connected service.',
+    'oat.tbl.scenario': 'Compromise Scenario',
+    'oat.tbl.access': 'What the Attacker Gets',
+    'oat.tbl.r1s': 'MCP config file read via path traversal',
+    'oat.tbl.r1a': 'All OAuth tokens for all connected services',
+    'oat.tbl.r2s': 'Indirect injection → agent reads ~/.config/mcp',
+    'oat.tbl.r2a': 'Token exfiltration without any UI interaction',
+    'oat.tbl.r3s': 'Malicious npm package in agent dependencies',
+    'oat.tbl.r3a': 'Environment variable harvest including OAUTH_TOKEN',
+    'oat.tbl.r4s': 'Compromised sub-agent with delegated token',
+    'oat.tbl.r4a': 'Full scope of primary agent\'s authorization',
+    'oat.s5.h': 'What Secure Agent Authorization Looks Like',
+    'oat.s5.p1': 'Fixing this requires rethinking the authorization model for agents at the architecture level, not just patching individual implementations. Several principles apply.',
+    'oat.fix1': 'Generate a new, minimally-scoped token for each agent task. When the task completes, revoke it. The token should carry only the permissions required for that specific task — not the agent\'s full scope accumulation. This requires the authorization server to support dynamic, short-lived token issuance, which major providers (Google, Microsoft, GitHub) do support but most agent frameworks don\'t take advantage of.',
+    'oat.fix2': 'Use Demonstrating Proof of Possession (DPoP, RFC 9449) or mTLS token binding to tie tokens to a specific agent\'s cryptographic identity. A stolen token is useless without the private key. This prevents token exfiltration attacks — even if the token is extracted from MCP config or environment variables, it cannot be used from a different process.',
+    'oat.fix3': 'Use OAuth token exchange (RFC 8693) when delegating to sub-agents. The primary agent exchanges its token for a narrower-scoped token specific to the sub-task, rather than passing its own token directly. The exchange creates an audit trail and ensures sub-agents can\'t exceed the scope they were delegated.',
+    'oat.fix4': 'Surface all active agent authorizations to users in a single, auditable view. Users should be able to see which agents hold tokens, what scopes they have, and when they were last used — and revoke any of them with one click. Most OAuth providers offer token management pages; agent platforms should surface this information prominently rather than burying it in settings.',
+    'oat.s6.h': 'The Regulatory Horizon',
+    'oat.s6.p1': 'Agent-held OAuth tokens are increasingly in scope for data protection regulation. If an AI agent holds a refresh token granting access to a user\'s email and calendar, that agent is effectively a data processor with long-term access to personal data. GDPR\'s data minimization principle and purpose limitation requirements apply — and most current agent deployments would struggle to demonstrate compliance.',
+    'oat.s6.p2': 'The EU AI Act, now entering enforcement phase, adds further requirements around transparency and human oversight for high-risk AI systems. An agent that autonomously acts on behalf of users using long-lived credentials, with no visible audit trail, sits uncomfortably close to the high-risk category in several sector definitions.',
+    'oat.s6.p3': 'The teams building agentic products today are accumulating regulatory debt at the same time as they accumulate security debt. The authorization model needs to be rebuilt for agents — not because it would be nice to have, but because the alternative is a wave of incidents that regulators will use to define the space for everyone.',
+  },
+  zh: {
+    'oat.cat': 'Web 安全',
+    'oat.date': '2026年5月',
+    'oat.title': 'OAuth 2.0 的智能体问题：<br>当 AI 令牌永不过期',
+    'oat.lead': '代表用户行动的 AI 智能体继承了 OAuth 令牌——而这些令牌往往比任务存活更久、不断积累权限范围，并成为高价值攻击目标。保障现代 Web 安全的授权模型从未为自主智能体而设计，这一差距正在扩大。',
+    'oat.pub': '发布时间：2026-05-16 14:42 PDT（俄勒冈）',
+    'oat.s1.h': 'OAuth 是为坐在键盘前的人类设计的',
+    'oat.s1.p1': 'OAuth 2.0 围绕一个特定的心智模型构建：一个人坐在浏览器前，点击"授权"，审查请求的权限，并授予第三方应用对其账户的有限访问。授权是有意为之的、可见的、有边界的。人类可以撤销它。会话在用户关闭标签页时结束。',
+    'oat.s1.p2': 'AI 智能体打破了这个模型中的每一个假设。智能体自主运作，通常跨越长期会话。它可能在用户未观察所请求权限范围的情况下申请令牌。它存储凭证以跨任务复用。它可能进一步委托给子智能体。对于已连接的应用来说尚可接受的"授权然后忘记"模式，当授权方是拥有工具访问权限的自主智能体时，就变成了一种负担。',
+    'oat.s1.p3': '结果是一类不断增长的授权漏洞，安全团队尚未完全梳理，因为 AI 智能体的威胁模型仍在实时书写中。',
+    'oat.s2.h': '令牌生命周期问题',
+    'oat.s2.p1': '在标准 OAuth 流程中，访问令牌是短期的（通常 1 小时），刷新令牌允许无需重新提示用户即可续期。这种设计假设授权客户端是一个有边界、可审计的应用。对于 AI 智能体，授权客户端是一个推理系统，可以以授权时未曾预料的方式决定使用其凭证。',
+    'oat.risk1': '为一次性任务（"总结我上周的邮件"）授权的智能体可能无限期存储刷新令牌。用户忘记授权的存在。数月后，令牌仍然有效。如果智能体部署被攻破，攻击者将继承对用户的 Gmail、日历和云盘的长期、静默访问——而不会触发任何重新授权提示。',
+    'oat.risk2': '随时间处理多个任务的智能体可能请求越来越广泛的权限范围。从只读日历访问开始的智能体可能稍后请求写入权限，然后是联系人，然后是邮件——每次都由特定任务单独证明合理性。没有任何一个授权事件看起来令人担忧。单一令牌集中持有的累积范围代表完整的账户访问权限。',
+    'oat.s3.h': '智能体间的令牌委托',
+    'oat.s3.p1': '多智能体架构引入了 OAuth 令牌模型处理不善的委托问题。当主智能体生成子智能体以完成部分任务时，它可能将自己的访问令牌传递给子智能体。可能可信度较低、防护较弱或运行在不同环境中的子智能体，现在拥有与主智能体相同的凭证。',
+    'oat.s3.p2': 'OAuth 有专为委托场景设计的令牌交换规范（RFC 8693），但需要刻意实现。今天大多数智能体框架使用临时令牌传递——最简单的有效方法，也是安全特性最差的方法。从资源服务器的角度来看，持有委托令牌的被攻破的子智能体与授权的主智能体无法区分。',
+    'oat.s4.h': 'MCP 服务器作为 OAuth 凭证存储',
+    'oat.s4.p1': '连接到外部服务（Google Workspace、GitHub、Slack、Notion）的 MCP 服务器通常在其配置中存储 OAuth 凭证——无论是长期令牌还是可按需生成令牌的应用凭证。MCP 服务器成为凭证聚合点：一次攻破即可获得每个已连接服务的访问权限。',
+    'oat.s4.p2': 'MCP 服务器通常在本地（stdio 传输）以最少认证运行，这使攻击面更加复杂。同一机器上的恶意进程，或到达文件工具的间接提示注入，可以读取 MCP 配置文件并提取每个已连接服务的凭证。',
+    'oat.tbl.scenario': '攻破场景',
+    'oat.tbl.access': '攻击者获得什么',
+    'oat.tbl.r1s': '通过路径遍历读取 MCP 配置文件',
+    'oat.tbl.r1a': '所有已连接服务的全部 OAuth 令牌',
+    'oat.tbl.r2s': '间接注入 → 智能体读取 ~/.config/mcp',
+    'oat.tbl.r2a': '无任何 UI 交互的令牌外泄',
+    'oat.tbl.r3s': '智能体依赖中的恶意 npm 包',
+    'oat.tbl.r3a': '包括 OAUTH_TOKEN 在内的环境变量采集',
+    'oat.tbl.r4s': '持有委托令牌的被攻破的子智能体',
+    'oat.tbl.r4a': '主智能体授权的完整范围',
+    'oat.s5.h': '安全的智能体授权是什么样的',
+    'oat.s5.p1': '修复这个问题需要在架构层面重新思考智能体的授权模型，而不仅仅是修补个别实现。以下几个原则适用。',
+    'oat.fix1': '为每个智能体任务生成新的、最小范围的令牌。任务完成后撤销它。令牌应仅携带该特定任务所需的权限——而非智能体的全部累积范围。这需要授权服务器支持动态、短期令牌签发，主要提供商（Google、Microsoft、GitHub）确实支持这一点，但大多数智能体框架没有利用这一特性。',
+    'oat.fix2': '使用 Demonstrating Proof of Possession（DPoP，RFC 9449）或 mTLS 令牌绑定，将令牌与特定智能体的加密身份绑定。没有私钥，被盗令牌毫无用处。这可以防止令牌外泄攻击——即使令牌从 MCP 配置或环境变量中被提取，也无法从不同进程使用。',
+    'oat.fix3': '向子智能体委托时使用 OAuth 令牌交换（RFC 8693）。主智能体将其令牌换成子任务专用的更窄范围令牌，而不是直接传递自己的令牌。交换创建审计记录，并确保子智能体不能超出委托给它的范围。',
+    'oat.fix4': '在单一、可审计的视图中向用户展示所有活跃的智能体授权。用户应能看到哪些智能体持有令牌、有哪些权限范围、最后使用时间——并可以一键撤销任何一个。大多数 OAuth 提供商提供令牌管理页面；智能体平台应该将这些信息显著展示，而不是埋在设置中。',
+    'oat.s6.h': '监管地平线',
+    'oat.s6.p1': '智能体持有的 OAuth 令牌越来越多地被纳入数据保护法规的范围。如果 AI 智能体持有授予访问用户邮件和日历的刷新令牌，该智能体实际上是一个对个人数据拥有长期访问权限的数据处理者。GDPR 的数据最小化原则和目的限制要求适用——大多数当前的智能体部署将难以证明合规性。',
+    'oat.s6.p2': '《欧盟人工智能法》现正进入执法阶段，为高风险 AI 系统增加了进一步的透明度和人工监督要求。一个使用长期凭证自主代表用户行动、没有可见审计记录的智能体，在几个行业定义中令人不安地接近高风险类别。',
+    'oat.s6.p3': '今天构建智能体产品的团队在积累安全债务的同时也在积累监管债务。授权模型需要为智能体重建——不是因为拥有它会很好，而是因为替代方案是监管机构将用来为所有人定义该领域的一波事件。',
+  },
+  ja: {
+    'oat.cat': 'Webセキュリティ',
+    'oat.date': '2026年5月',
+    'oat.title': 'OAuth 2.0のエージェント問題：<br>AIトークンが永遠に生き続けるとき',
+    'oat.lead': 'ユーザーの代わりに行動するAIエージェントはOAuthトークンを引き継ぎます——そのトークンはタスクよりも長く生き残り、スコープを蓄積し、高価値の攻撃ターゲットになることが多い。現代のウェブを守る認可モデルは自律エージェント向けに設計されておらず、そのギャップは拡大しています。',
+    'oat.pub': '公開日時：2026-05-16 14:42 PDT（オレゴン）',
+    'oat.s1.h': 'OAuthはキーボードの前の人間のために設計された',
+    'oat.s1.p1': 'OAuth 2.0は特定のメンタルモデルを中心に構築された：人間がブラウザに座り、「認可」をクリックし、要求された権限を確認し、サードパーティアプリにアカウントへの限定的なアクセスを許可する。認可は意図的で、可視であり、境界がある。人間はそれを取り消すことができる。ユーザーがタブを閉じるとセッションは終了する。',
+    'oat.s1.p2': 'AIエージェントはそのモデルのすべての前提を破る。エージェントは自律的に行動し、多くの場合、長期間のセッションにわたって動作する。ユーザーがどのスコープが要求されているかを観察することなくトークンを要求する場合がある。タスクをまたいで再利用するために資格情報を保存する。さらにサブエージェントに委任する場合がある。接続されたアプリには許容できる「認可して忘れる」パターンは、認可された当事者がツールアクセスを持つ自律エージェントである場合、負債になる。',
+    'oat.s1.p3': 'その結果、エージェントAIの脅威モデルがリアルタイムで書かれているため、セキュリティチームがまだ完全にマッピングしていない認可脆弱性のクラスが増加している。',
+    'oat.s2.h': 'トークンライフサイクル問題',
+    'oat.s2.p1': '標準的なOAuthフローでは、アクセストークンは短命（通常1時間）で、リフレッシュトークンによりユーザーへの再プロンプトなしに更新が可能だ。この設計は認可されたクライアントが境界のある、監査可能なアプリケーションであることを前提としている。AIエージェントでは、認可されたクライアントは認可時に予期されなかった方法で資格情報の使用を決定できる推論システムだ。',
+    'oat.risk1': '一回限りのタスク（「先週のメールを要約して」）のために認可されたエージェントは、リフレッシュトークンを無期限に保存する場合がある。ユーザーは認可の存在を忘れる。数ヶ月後、トークンはまだ有効だ。エージェントのデプロイメントが侵害されると、攻撃者はユーザーのGmail、カレンダー、ドライブへの長期的な、サイレントなアクセスを引き継ぐ——再認可プロンプトをトリガーすることなく。',
+    'oat.risk2': '時間をかけて複数のタスクを処理するエージェントは、徐々に広いスコープを要求する場合がある。読み取り専用のカレンダーアクセスから始まったエージェントは、後で書き込みアクセス、次に連絡先、次にメールを要求するかもしれない——それぞれが特定のタスクによって個別に正当化される。単一の認可イベントは警戒を要するようには見えない。単一のトークンセットに保持された累積スコープはフルアカウントアクセスを表す。',
+    'oat.s3.h': 'エージェント間のトークン委任',
+    'oat.s3.p1': 'マルチエージェントアーキテクチャは、OAuthのトークンモデルがうまく処理できない委任問題を引き起こす。プライマリエージェントがタスクの一部を完了するためにサブエージェントを生成するとき、自分のアクセストークンをサブエージェントに渡すかもしれない。信頼性が低い、堅牢でない、または異なる環境で実行されているサブエージェントは、プライマリエージェントと同じ資格情報を持つことになる。',
+    'oat.s3.p2': 'OAuthには委任シナリオのために設計されたトークン交換仕様（RFC 8693）があるが、意図的な実装が必要だ。今日のほとんどのエージェントフレームワークはアドホックなトークン渡しを使用している——機能する最もシンプルなアプローチであり、最悪のセキュリティプロパティを持つもの。委任されたトークンを持つ侵害されたサブエージェントは、リソースサーバーの観点から認可されたプライマリエージェントと区別がつかない。',
+    'oat.s4.h': 'OAuth認証情報ストアとしてのMCPサーバー',
+    'oat.s4.p1': '外部サービス（Google Workspace、GitHub、Slack、Notion）に接続するMCPサーバーは通常、その設定にOAuth認証情報を保存する——長期トークンとして、またはオンデマンドでトークンを生成できるアプリ認証情報として。MCPサーバーは認証情報の集約点になる：一度の侵害で接続されたすべてのサービスへのアクセスが得られる。',
+    'oat.s4.p2': 'MCPサーバーはしばしば最小限の認証でローカル（stdio転送）で実行されるため、攻撃面はさらに複大化する。同じマシン上の悪意あるプロセス、またはファイルツールに到達する間接プロンプトインジェクションが、MCP設定ファイルを読み取り、接続されたすべてのサービスの認証情報を抽出できる。',
+    'oat.tbl.scenario': '侵害シナリオ',
+    'oat.tbl.access': '攻撃者が得るもの',
+    'oat.tbl.r1s': 'パストラバーサルによるMCP設定ファイルの読み取り',
+    'oat.tbl.r1a': 'すべての接続サービスのOAuthトークン全部',
+    'oat.tbl.r2s': '間接インジェクション → エージェントが~/.config/mcpを読む',
+    'oat.tbl.r2a': 'UIインタラクションなしのトークン流出',
+    'oat.tbl.r3s': 'エージェント依存関係内の悪意あるnpmパッケージ',
+    'oat.tbl.r3a': 'OAUTH_TOKENを含む環境変数の収集',
+    'oat.tbl.r4s': '委任されたトークンを持つ侵害されたサブエージェント',
+    'oat.tbl.r4a': 'プライマリエージェントの認可の全スコープ',
+    'oat.s5.h': '安全なエージェント認可とはどのようなものか',
+    'oat.s5.p1': 'これを修正するには、個別の実装にパッチを当てるのではなく、アーキテクチャレベルでエージェントの認可モデルを再考する必要がある。いくつかの原則が適用される。',
+    'oat.fix1': '各エージェントタスクのために新しい、最小スコープのトークンを生成する。タスクが完了したら取り消す。トークンはそのタスクに必要な権限のみを持つべきだ——エージェントの完全なスコープ蓄積ではなく。これには認可サーバーが動的な短期トークン発行をサポートする必要があり、主要なプロバイダ（Google、Microsoft、GitHub）はサポートしているが、ほとんどのエージェントフレームワークはこれを活用していない。',
+    'oat.fix2': 'Demonstrating Proof of Possession（DPoP、RFC 9449）またはmTLSトークンバインディングを使用して、トークンを特定のエージェントの暗号的アイデンティティに紐付ける。秘密鍵なしに盗まれたトークンは役に立たない。これはトークン流出攻撃を防ぐ——トークンがMCP設定や環境変数から抽出されても、別のプロセスから使用できない。',
+    'oat.fix3': 'サブエージェントに委任する際はOAuthトークン交換（RFC 8693）を使用する。プライマリエージェントは自分のトークンを直接渡すのではなく、サブタスクに固有のより狭いスコープのトークンに交換する。交換は監査記録を作成し、サブエージェントが委任されたスコープを超えられないことを保証する。',
+    'oat.fix4': '単一の監査可能なビューですべてのアクティブなエージェント認可をユーザーに表示する。どのエージェントがトークンを持ち、どのスコープを持ち、最後にいつ使用されたかを確認でき——ワンクリックで任意のものを取り消せる必要がある。ほとんどのOAuthプロバイダはトークン管理ページを提供している；エージェントプラットフォームは設定に埋め込むのではなく、この情報を目立つように表示すべきだ。',
+    'oat.s6.h': '規制の地平線',
+    'oat.s6.p1': 'エージェントが保持するOAuthトークンは、データ保護規制の対象として増加している。AIエージェントがユーザーのメールとカレンダーへのアクセスを許可するリフレッシュトークンを保持している場合、そのエージェントは事実上、個人データへの長期アクセスを持つデータ処理者だ。GDPRのデータ最小化原則と目的制限要件が適用される——そして現在のほとんどのエージェントデプロイメントはコンプライアンスを実証するのに苦労するだろう。',
+    'oat.s6.p2': '現在施行フェーズに入っているEU AI法は、高リスクAIシステムの透明性と人間の監督に関するさらなる要件を追加する。長期的な認証情報を使用してユーザーの代わりに自律的に行動し、可視の監査記録がないエージェントは、いくつかのセクター定義で高リスクカテゴリに不快なほど近い。',
+    'oat.s6.p3': '今日エージェント製品を構築しているチームは、セキュリティ負債と同時に規制負債も蓄積している。認可モデルはエージェントのために再構築される必要がある——あると良いからではなく、代替案が規制当局が全員のためにこの空間を定義するために使用する一連のインシデントだからだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
