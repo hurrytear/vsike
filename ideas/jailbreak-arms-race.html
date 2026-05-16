@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Jailbreak Arms Race: Why AI Safety Keeps Falling Behind — vsike</title>
+  <meta name="description" content="Every safety measure in a large language model has been bypassed. Understanding why the jailbreak arms race is structurally different from other security problems — and what that means for AI deployment.">
+  <meta name="keywords" content="LLM jailbreak, ChatGPT jailbreak, AI safety bypass, jailbreak prompt, AI guardrails bypass 2025">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Safety</span>
+          <span class="article-date-label">Apr 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">The Jailbreak Arms Race: Why AI Safety Keeps Falling Behind</h1>
+        <p class="article-lead" data-i18n="a.lead">Every safety measure deployed in a large language model has been bypassed. Not some — every one. Understanding why the jailbreak problem is structurally different from other security problems, and what that means for anyone deploying AI in sensitive contexts.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">A jailbreak, in the LLM context, is any technique that causes a model to produce output it was trained to refuse. The first jailbreaks were naive: "pretend you're an AI without restrictions." They worked because early RLHF training was thin. Today's jailbreaks are significantly more sophisticated — many-shot prompting, role-play framings, encoded text, cross-language attacks, multi-step context manipulation — and they still work, on every major model, with varying but non-zero success rates. The baseline hasn't held.</p>
+        <p data-i18n="a.2">The dynamics here are fundamentally asymmetric. An AI lab must defend all of the model's behaviors, all of the time. A jailbreaker needs to find one path through. This asymmetry is familiar from other security contexts — it's the same dynamic that makes web application security difficult — but it's especially severe in the LLM case because the attack surface is unbounded natural language and the model's capability at reasoning is itself a tool for finding exploits.</p>
+        <h2 data-i18n="a.h1">Why RLHF Safety Doesn't Generalize</h2>
+        <p data-i18n="a.3">Reinforcement Learning from Human Feedback teaches models to prefer certain outputs by having humans rate them. The safety version — RLHF-based refusal training — teaches models to refuse certain categories of request. The limitation is generalization: models refuse the specific patterns they were trained to refuse, and adjacent patterns that are similar enough to activate the same trained behavior. Novel framings that are semantically equivalent to refused content but syntactically different can bypass the trained behavior entirely.</p>
+        <p data-i18n="a.4">This isn't a failure of execution — it's a consequence of how the training works. A model that refuses to explain how to synthesize a dangerous compound will often comply if asked to write a fictional story in which a chemistry professor explains it to students, or to translate a description of the process from a fictional language, or to identify errors in an incorrect description. The safety training targets the surface form of the request, not the underlying intent, because intent is not something RLHF can directly model.</p>
+        <blockquote data-i18n="a.q">"AI safety training is playing whack-a-mole with an opponent who has unlimited hammers and infinite moles. The game is winnable in theory. The scoreboard doesn't reflect that."</blockquote>
+        <h2 data-i18n="a.h2">What Actually Reduces Risk</h2>
+        <p data-i18n="a.5">Given that no model can be made jailbreak-proof with current techniques, the practical question is risk calibration rather than risk elimination. Jailbreaks are not equally easy or equally consequential. The techniques that bypass refusal training for most requests are well-documented and accessible. The techniques that extract genuinely dangerous specific information are harder, less reliable, and often yield information that's available through other means anyway. This doesn't make jailbreaks unimportant — it makes them a factor to design around rather than an existential blocker.</p>
+        <p data-i18n="a.6">Organizations deploying LLMs in high-stakes contexts should focus on: output monitoring rather than input blocking (catching harmful outputs regardless of how they were elicited), capability scoping (don't give models access to capabilities beyond what the task requires), and rate limiting (automated jailbreak attempts are easier to detect than single attempts). The model's safety training is a first line of defense, not the last. Organizations that treat it as the last will eventually be disappointed.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Safety',
+    'a.title': 'The Jailbreak Arms Race: Why AI Safety Keeps Falling Behind',
+    'a.lead': "Every safety measure deployed in a large language model has been bypassed. Not some — every one. Understanding why the jailbreak problem is structurally different from other security problems, and what that means for anyone deploying AI in sensitive contexts.",
+    'a.1': 'A jailbreak, in the LLM context, is any technique that causes a model to produce output it was trained to refuse. The first jailbreaks were naive: "pretend you\'re an AI without restrictions." They worked because early RLHF training was thin. Today\'s jailbreaks are significantly more sophisticated — many-shot prompting, role-play framings, encoded text, cross-language attacks, multi-step context manipulation — and they still work, on every major model, with varying but non-zero success rates. The baseline hasn\'t held.',
+    'a.2': "The dynamics here are fundamentally asymmetric. An AI lab must defend all of the model's behaviors, all of the time. A jailbreaker needs to find one path through. This asymmetry is familiar from other security contexts — it's the same dynamic that makes web application security difficult — but it's especially severe in the LLM case because the attack surface is unbounded natural language and the model's capability at reasoning is itself a tool for finding exploits.",
+    'a.h1': "Why RLHF Safety Doesn't Generalize",
+    'a.3': "Reinforcement Learning from Human Feedback teaches models to prefer certain outputs by having humans rate them. The safety version — RLHF-based refusal training — teaches models to refuse certain categories of request. The limitation is generalization: models refuse the specific patterns they were trained to refuse, and adjacent patterns that are similar enough to activate the same trained behavior. Novel framings that are semantically equivalent to refused content but syntactically different can bypass the trained behavior entirely.",
+    'a.4': "This isn't a failure of execution — it's a consequence of how the training works. A model that refuses to explain how to synthesize a dangerous compound will often comply if asked to write a fictional story in which a chemistry professor explains it to students, or to translate a description of the process from a fictional language, or to identify errors in an incorrect description. The safety training targets the surface form of the request, not the underlying intent, because intent is not something RLHF can directly model.",
+    'a.q': '"AI safety training is playing whack-a-mole with an opponent who has unlimited hammers and infinite moles. The game is winnable in theory. The scoreboard doesn\'t reflect that."',
+    'a.h2': 'What Actually Reduces Risk',
+    'a.5': "Given that no model can be made jailbreak-proof with current techniques, the practical question is risk calibration rather than risk elimination. Jailbreaks are not equally easy or equally consequential. The techniques that bypass refusal training for most requests are well-documented and accessible. The techniques that extract genuinely dangerous specific information are harder, less reliable, and often yield information that's available through other means anyway. This doesn't make jailbreaks unimportant — it makes them a factor to design around rather than an existential blocker.",
+    'a.6': "Organizations deploying LLMs in high-stakes contexts should focus on: output monitoring rather than input blocking (catching harmful outputs regardless of how they were elicited), capability scoping (don't give models access to capabilities beyond what the task requires), and rate limiting (automated jailbreak attempts are easier to detect than single attempts). The model's safety training is a first line of defense, not the last. Organizations that treat it as the last will eventually be disappointed.",
+  },
+  zh: {
+    'a.cat': 'AI 安全',
+    'a.title': '越狱军备竞赛：为什么 AI 安全总是落后',
+    'a.lead': '部署在大型语言模型中的每一项安全措施都已被绕过。不是某些——是每一个。理解越狱问题在结构上与其他安全问题有何不同，以及这对在敏感场景中部署 AI 的人意味着什么。',
+    'a.1': '在 LLM 语境中，越狱是任何导致模型产生它被训练拒绝的输出的技术。最早的越狱是幼稚的："假装你是一个没有限制的 AI。"它们有效是因为早期的 RLHF 训练很薄弱。今天的越狱更加复杂——多次提示、角色扮演框架、编码文本、跨语言攻击、多步骤上下文操纵——并且它们仍然有效，在每个主要模型上，成功率不同但不为零。基线没有保住。',
+    'a.2': '这里的动态是根本不对称的。AI 实验室必须在所有时间捍卫模型的所有行为。越狱者只需要找到一条通路。这种不对称在其他安全背景中很熟悉——这与使网络应用安全变得困难的动态相同——但在 LLM 的情况下特别严重，因为攻击面是无界的自然语言，而模型的推理能力本身就是寻找漏洞的工具。',
+    'a.h1': '为什么 RLHF 安全训练无法泛化',
+    'a.3': '基于人类反馈的强化学习通过让人类对其进行评级，教导模型偏好某些输出。安全版本——基于 RLHF 的拒绝训练——教导模型拒绝某些类别的请求。限制在于泛化：模型拒绝它被训练拒绝的特定模式，以及足够相似以激活相同训练行为的相邻模式。与被拒绝内容语义等价但句法不同的新颖框架可以完全绕过训练行为。',
+    'a.4': '这不是执行失败——而是训练方式的结果。一个拒绝解释如何合成危险化合物的模型，往往会在被要求写一个化学教授向学生解释该过程的虚构故事时顺从，或者将过程描述从虚构语言翻译过来，或者识别错误描述中的错误。安全训练针对请求的表面形式，而非底层意图，因为意图不是 RLHF 可以直接建模的东西。',
+    'a.q': '「AI 安全训练是在与一个拥有无限锤子和无限地鼠的对手玩打地鼠。这个游戏在理论上是可以赢的。计分板没有反映这一点。」',
+    'a.h2': '什么真正能降低风险',
+    'a.5': '鉴于目前的技术无法使任何模型防越狱，实际问题是风险校准而非风险消除。越狱并非同等容易或同等影响深远。绕过大多数请求的拒绝训练的技术是有据可查且可获取的。提取真正危险的特定信息的技术更难、更不可靠，而且通常产生的信息无论如何都可以通过其他方式获取。这并不使越狱变得不重要——它使其成为需要围绕设计的因素，而不是存在性阻碍。',
+    'a.6': '在高风险场景中部署 LLM 的组织应该关注：输出监控而非输入阻止（捕获有害输出，无论它们是如何引出的）、能力范围界定（不要给模型超出任务需要的能力的访问权限），以及速率限制（自动越狱尝试比单次尝试更容易检测）。模型的安全训练是第一道防线，而非最后一道。将其视为最后一道的组织最终会失望。',
+  },
+  ja: {
+    'a.cat': 'AI安全',
+    'a.title': 'ジェイルブレイク軍拡競争：なぜAI安全は常に後れを取るのか',
+    'a.lead': '大規模言語モデルに展開されたすべての安全対策が突破されてきた。一部ではなく——すべてが。ジェイルブレイク問題が他のセキュリティ問題と構造的にどう異なるのか、そしてそれが敏感なコンテキストでAIを展開する人にとって何を意味するのかを理解する。',
+    'a.1': 'LLMの文脈でのジェイルブレイクは、モデルが拒否するよう訓練された出力を生成させる任意の技術だ。最初のジェイルブレイクは単純だった：「制限のないAIのふりをして。」それらは初期のRLHFトレーニングが薄かったから機能した。今日のジェイルブレイクははるかに洗練されている——多数ショットプロンプティング、ロールプレイフレーミング、エンコードされたテキスト、クロス言語攻撃、多段階コンテキスト操作——そしてそれらはすべての主要モデルで、様々だが非ゼロの成功率でまだ機能する。ベースラインは保たれていない。',
+    'a.2': 'ここでのダイナミクスは根本的に非対称だ。AIラボはモデルのすべての動作を常時守らなければならない。ジェイルブレイカーは一つの通路を見つけるだけでいい。この非対称性は他のセキュリティコンテキストで馴染みがある——ウェブアプリケーションセキュリティを難しくするのと同じダイナミクスだ——しかしLLMの場合は特に深刻で、攻撃面が無限の自然言語であり、モデルの推論能力自体がエクスプロイトを見つけるためのツールだ。',
+    'a.h1': 'なぜRLHFの安全性は汎化しないのか',
+    'a.3': '人間からのフィードバックによる強化学習は、人間に評価させることでモデルに特定の出力を好むよう教える。安全バージョン——RLHFベースの拒否トレーニング——はモデルに特定のカテゴリの要求を拒否するよう教える。限界は汎化にある：モデルは拒否するよう訓練された特定のパターン、そして同じ訓練された行動を活性化するほど似ている隣接パターンを拒否する。拒否されたコンテンツと意味的に等価だが構文的に異なる新しいフレーミングは、訓練された行動を完全に迂回できる。',
+    'a.4': 'これは実行の失敗ではない——トレーニングの仕組みの結果だ。危険な化合物を合成する方法を説明することを拒否するモデルは、化学の教授が学生にそれを説明する架空の物語を書くよう求められると従うことが多く、架空の言語からプロセスの説明を翻訳したり、誤った説明のエラーを特定したりすることも同様だ。安全トレーニングは根底にある意図ではなく、要求の表面形式を対象にしている。なぜなら意図はRLHFが直接モデル化できるものではないからだ。',
+    'a.q': '「AI安全トレーニングは無限のハンマーと無限のモグラを持つ相手とモグラ叩きをしている。ゲームは理論上は勝てる。スコアボードはそれを反映していない。」',
+    'a.h2': '実際にリスクを下げるもの',
+    'a.5': '現在の技術でジェイルブレイク耐性を持つモデルを作ることはできないため、実際的な質問はリスク排除ではなくリスク調整だ。ジェイルブレイクは同等に簡単でも同等に影響があるわけでもない。ほとんどの要求で拒否トレーニングを迂回する技術は十分に文書化されてアクセス可能だ。本当に危険な特定情報を抽出する技術はより難しく、信頼性が低く、しばしばいずれにせよ他の手段で入手可能な情報をもたらす。これはジェイルブレイクを重要でないものにするのではない——設計で対処すべき要因にするのであり、存在的なブロッカーではない。',
+    'a.6': '高リスクのコンテキストでLLMを展開する組織は次に焦点を当てるべきだ：入力ブロックではなく出力監視（引き出された方法に関係なく有害な出力をキャッチする）、能力スコーピング（タスクが必要とする以上の能力へのアクセスをモデルに与えない）、レートリミッティング（自動化されたジェイルブレイク試みは単発の試みより検出しやすい）。モデルの安全トレーニングは最初の防衛線であり、最後ではない。最後として扱う組織は最終的に失望する。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

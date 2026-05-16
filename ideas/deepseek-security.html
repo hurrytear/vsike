@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek and the Open-Source LLM Security Question — vsike</title>
+  <meta name="description" content="DeepSeek's emergence forced a real conversation about what open-source LLMs mean for organizational security. The model capability gap is closing. The security governance gap is not.">
+  <meta name="keywords" content="DeepSeek security, DeepSeek R1 risk, open source LLM security, DeepSeek enterprise risk, DeepSeek data privacy">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Security</span>
+          <span class="article-date-label">Feb 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">DeepSeek and the Open-Source LLM Security Question</h1>
+        <p class="article-lead" data-i18n="a.lead">DeepSeek's emergence forced a real conversation that the AI industry had been avoiding: what does it mean to deploy a capable LLM whose training process, data provenance, and safety design you can't fully audit? The model capability gap is closing. The governance gap is not.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">When DeepSeek-R1 appeared in January 2025, the immediate conversation was about capability: a Chinese lab had produced a model competitive with OpenAI's best, at a fraction of the reported training cost. The follow-on conversation — the more important one — was about what organizations should actually do about it. The weights are public. The performance is real. The provenance is opaque. That combination doesn't map cleanly onto any existing security playbook.</p>
+        <p data-i18n="a.2">The security concerns around DeepSeek fall into three distinct categories that are frequently conflated: data privacy (if you use DeepSeek's API service, what happens to your queries?), model behavior (does the model have censorship triggers or hidden behaviors?), and supply chain risk (if you self-host the weights, what are you running?). These are separate questions requiring separate analysis, and treating them as a single "is DeepSeek safe?" question produces unhelpful answers.</p>
+        <h2 data-i18n="a.h1">The API vs. Self-Hosted Distinction</h2>
+        <p data-i18n="a.3">Using DeepSeek's cloud API service involves sending data to servers operated by a Chinese company subject to Chinese law, including national security laws that could compel data disclosure. For most organizations handling sensitive data, this is disqualifying for production use — the same logic that applies to any foreign cloud service where data sovereignty matters. This concern is real, specific, and addressable: don't send sensitive data to the DeepSeek API.</p>
+        <p data-i18n="a.4">Self-hosting the open-weight DeepSeek model is a different question. Here, data stays on your infrastructure. The relevant concerns shift to model behavior: documented censorship behaviors around certain political topics (easily observable and partially mitigable), and the theoretical possibility of backdoors or watermarking in the weights that can't be fully ruled out without exhaustive analysis. Security researchers have examined the weights without finding evidence of active backdoors — but absence of evidence is not evidence of absence, and the training data and process remain partially opaque.</p>
+        <blockquote data-i18n="a.q">"The weights are public. That makes DeepSeek more auditable than most enterprise software you already run — and less auditable than you'd want for a model with this level of access."</blockquote>
+        <h2 data-i18n="a.h2">What DeepSeek Actually Changed</h2>
+        <p data-i18n="a.5">DeepSeek's significance for enterprise security isn't really about DeepSeek. It's about the precedent. The model demonstrated that frontier-grade capability is no longer a moat that only a handful of Western labs can maintain. The implication is that organizations will increasingly face decisions about open-weight models from diverse and not-fully-transparent sources. A governance framework that answers "is DeepSeek safe?" is already too narrow.</p>
+        <p data-i18n="a.6">The framework that organizations need is model provenance policy: a principled answer to "what do we need to know about how a model was trained before we deploy it for use case X?" For low-sensitivity use cases, performance and cost might dominate. For uses involving sensitive data, customer interactions, or consequential decisions, training transparency, safety design visibility, and incident response capability all belong in the evaluation. Most organizations don't have this policy yet. DeepSeek was the trigger event — the question is whether the governance catches up before the next one.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Security',
+    'a.title': 'DeepSeek and the Open-Source LLM Security Question',
+    'a.lead': "DeepSeek's emergence forced a real conversation that the AI industry had been avoiding: what does it mean to deploy a capable LLM whose training process, data provenance, and safety design you can't fully audit? The model capability gap is closing. The governance gap is not.",
+    'a.1': "When DeepSeek-R1 appeared in January 2025, the immediate conversation was about capability: a Chinese lab had produced a model competitive with OpenAI's best, at a fraction of the reported training cost. The follow-on conversation — the more important one — was about what organizations should actually do about it. The weights are public. The performance is real. The provenance is opaque. That combination doesn't map cleanly onto any existing security playbook.",
+    'a.2': "The security concerns around DeepSeek fall into three distinct categories that are frequently conflated: data privacy (if you use DeepSeek's API service, what happens to your queries?), model behavior (does the model have censorship triggers or hidden behaviors?), and supply chain risk (if you self-host the weights, what are you running?). These are separate questions requiring separate analysis, and treating them as a single \"is DeepSeek safe?\" question produces unhelpful answers.",
+    'a.h1': 'The API vs. Self-Hosted Distinction',
+    'a.3': "Using DeepSeek's cloud API service involves sending data to servers operated by a Chinese company subject to Chinese law, including national security laws that could compel data disclosure. For most organizations handling sensitive data, this is disqualifying for production use — the same logic that applies to any foreign cloud service where data sovereignty matters. This concern is real, specific, and addressable: don't send sensitive data to the DeepSeek API.",
+    'a.4': "Self-hosting the open-weight DeepSeek model is a different question. Here, data stays on your infrastructure. The relevant concerns shift to model behavior: documented censorship behaviors around certain political topics (easily observable and partially mitigable), and the theoretical possibility of backdoors or watermarking in the weights that can't be fully ruled out without exhaustive analysis. Security researchers have examined the weights without finding evidence of active backdoors — but absence of evidence is not evidence of absence, and the training data and process remain partially opaque.",
+    'a.q': '"The weights are public. That makes DeepSeek more auditable than most enterprise software you already run — and less auditable than you\'d want for a model with this level of access."',
+    'a.h2': 'What DeepSeek Actually Changed',
+    'a.5': "DeepSeek's significance for enterprise security isn't really about DeepSeek. It's about the precedent. The model demonstrated that frontier-grade capability is no longer a moat that only a handful of Western labs can maintain. The implication is that organizations will increasingly face decisions about open-weight models from diverse and not-fully-transparent sources. A governance framework that answers \"is DeepSeek safe?\" is already too narrow.",
+    'a.6': 'The framework that organizations need is model provenance policy: a principled answer to "what do we need to know about how a model was trained before we deploy it for use case X?" For low-sensitivity use cases, performance and cost might dominate. For uses involving sensitive data, customer interactions, or consequential decisions, training transparency, safety design visibility, and incident response capability all belong in the evaluation. Most organizations don\'t have this policy yet. DeepSeek was the trigger event — the question is whether the governance catches up before the next one.',
+  },
+  zh: {
+    'a.cat': 'AI 安全',
+    'a.title': 'DeepSeek 与开源 LLM 安全问题',
+    'a.lead': 'DeepSeek 的出现迫使 AI 行业正视一个一直在回避的真实对话：部署一个你无法完全审计其训练过程、数据溯源和安全设计的强大 LLM，意味着什么？模型能力差距正在缩小，治理差距却没有。',
+    'a.1': '当 DeepSeek-R1 在 2025 年 1 月出现时，即时对话是关于能力的：一家中国实验室以报道的训练成本的一小部分，生产了与 OpenAI 最佳模型竞争的模型。后续对话——更重要的那个——是关于组织实际上应该如何应对它。权重是公开的。性能是真实的。溯源是不透明的。这种组合无法清晰地映射到任何现有的安全手册上。',
+    'a.2': '围绕 DeepSeek 的安全顾虑属于三个不同的类别，但经常被混为一谈：数据隐私（如果你使用 DeepSeek 的 API 服务，你的查询会发生什么？）、模型行为（模型是否有审查触发器或隐藏行为？）以及供应链风险（如果你自托管权重，你在运行什么？）。这些是需要分别分析的独立问题，将它们作为单一的"DeepSeek 安全吗？"问题来处理会产生无益的答案。',
+    'a.h1': 'API 与自托管的区别',
+    'a.3': '使用 DeepSeek 的云 API 服务意味着将数据发送到受中国法律（包括可能强制披露数据的国家安全法律）约束的中国公司运营的服务器。对于处理敏感数据的大多数组织来说，这使其不适合生产使用——适用于任何数据主权重要的外国云服务的相同逻辑。这个顾虑是真实、具体且可处理的：不要向 DeepSeek API 发送敏感数据。',
+    'a.4': '自托管开放权重的 DeepSeek 模型是另一个问题。在这里，数据保留在你的基础设施上。相关顾虑转移到模型行为：围绕特定政治话题的有记录的审查行为（易于观察且部分可缓解），以及权重中存在后门或水印的理论可能性，在没有详尽分析的情况下无法完全排除。安全研究人员已经检查了权重，没有发现活跃后门的证据——但没有证据不等于不存在证据，训练数据和过程仍然部分不透明。',
+    'a.q': '「权重是公开的。这使 DeepSeek 比你已经运行的大多数企业软件更具可审计性——但对于具有这种访问级别的模型来说，审计性低于你希望的水平。」',
+    'a.h2': 'DeepSeek 真正改变了什么',
+    'a.5': 'DeepSeek 对企业安全的意义并不真正关于 DeepSeek 本身。而是关于先例。这个模型证明，前沿级别的能力不再是只有少数西方实验室能够维持的护城河。这意味着组织将越来越多地面临关于来自多样化且不完全透明来源的开放权重模型的决策。一个回答"DeepSeek 安全吗？"的治理框架已经过于狭窄。',
+    'a.6': '组织需要的框架是模型溯源政策：对"在我们将模型部署用于用例 X 之前，我们需要了解模型训练方式的哪些信息？"的有原则的回答。对于低敏感度用例，性能和成本可能占主导地位。对于涉及敏感数据、客户互动或重要决策的用途，训练透明度、安全设计可见性和事件响应能力都应属于评估范围。大多数组织还没有这项政策。DeepSeek 是触发事件——问题是治理是否能在下一个触发事件之前赶上。',
+  },
+  ja: {
+    'a.cat': 'AIセキュリティ',
+    'a.title': 'DeepSeekとオープンソースLLMセキュリティ問題',
+    'a.lead': 'DeepSeekの登場は、AI業界が避けてきた本当の会話を強いた：トレーニングプロセス、データの出所、安全設計を完全に監査できない強力なLLMを展開するとはどういう意味か？モデル能力のギャップは縮まっている。ガバナンスのギャップは縮まっていない。',
+    'a.1': 'DeepSeek-R1が2025年1月に登場したとき、即時の会話は能力についてだった：中国のラボが報告されたトレーニングコストのほんの一部で、OpenAIの最良のモデルと競合するモデルを生産した。続く会話——より重要なもの——は組織が実際にそれについて何をすべきかについてだった。ウェイトは公開されている。パフォーマンスは現実だ。出所は不透明だ。その組み合わせはどの既存のセキュリティプレイブックにも明確にマッピングされない。',
+    'a.2': 'DeepSeekをめぐるセキュリティ上の懸念は頻繁に混同される三つの異なるカテゴリに分類される：データプライバシー（DeepSeekのAPIサービスを使うと、クエリはどうなるか？）、モデルの動作（モデルは検閲トリガーや隠れた動作を持つか？）、サプライチェーンリスク（ウェイトをセルフホストすると、何を実行しているか？）。これらは別々の分析を必要とする別々の質問であり、それらを単一の「DeepSeekは安全か？」として扱うと役に立たない答えが生じる。',
+    'a.h1': 'APIとセルフホストの区別',
+    'a.3': 'DeepSeekのクラウドAPIサービスを使用することは、データの開示を強制する可能性のある国家安全保障法を含む中国法の下にある中国企業が運営するサーバーにデータを送信することを含む。機密データを扱うほとんどの組織にとって、これは本番使用の資格をなくすものだ——データ主権が重要なあらゆる外国クラウドサービスに適用される同じロジック。この懸念は現実的で、具体的で、対処可能だ：DeepSeek APIに機密データを送らないこと。',
+    'a.4': 'オープンウェイトのDeepSeekモデルをセルフホストすることは別の質問だ。ここでは、データはあなたのインフラに留まる。関連する懸念はモデルの動作にシフトする：特定の政治的トピックに関する文書化された検閲動作（容易に観察可能で部分的に緩和可能）、そして詳細な分析なしには完全に排除できないウェイトのバックドアや透かしの理論的可能性。セキュリティ研究者はウェイトを検査したが、アクティブなバックドアの証拠を発見しなかった——しかし証拠の不在は不在の証拠ではなく、トレーニングデータとプロセスは部分的に不透明なままだ。',
+    'a.q': '「ウェイトは公開されている。それはDeepSeekをあなたがすでに実行しているほとんどのエンタープライズソフトウェアより監査しやすくする——しかし、このレベルのアクセスを持つモデルとして望むほどには監査しやすくない。」',
+    'a.h2': 'DeepSeekが実際に変えたもの',
+    'a.5': 'エンタープライズセキュリティにとってのDeepSeekの意義は、本当はDeepSeekについてではない。先例についてだ。このモデルは、フロンティアグレードの能力がほんの一握りの西洋のラボだけが維持できる堀ではもはやないことを実証した。意味するところは、組織が多様で完全に透明ではないソースからのオープンウェイトモデルについての決定にますます直面するということだ。「DeepSeekは安全か？」に答えるガバナンスフレームワークはすでに狭すぎる。',
+    'a.6': '組織が必要とするフレームワークはモデル出所ポリシーだ：「ユースケースXに展開する前に、モデルがどのようにトレーニングされたかについて何を知る必要があるか？」への原則的な答え。低感度ユースケースでは、パフォーマンスとコストが支配するかもしれない。機密データ、顧客とのやりとり、または重要な決定を含む用途では、トレーニングの透明性、安全設計の可視性、インシデント対応能力がすべて評価に属する。ほとんどの組織はまだこのポリシーを持っていない。DeepSeekはトリガーイベントだった——問題はガバナンスが次のイベントの前に追いつくかどうかだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

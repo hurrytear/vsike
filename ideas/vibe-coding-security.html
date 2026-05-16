@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Coding's Hidden Security Bill — vsike</title>
+  <meta name="description" content="Developers using AI coding assistants are shipping features faster than ever. They're also shipping vulnerabilities faster than ever. The security debt of vibe coding is real and largely invisible.">
+  <meta name="keywords" content="vibe coding security, AI code generation vulnerabilities, GitHub Copilot security, cursor IDE security, AI coding assistant risks">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Security</span>
+          <span class="article-date-label">May 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">Vibe Coding's Hidden Security Bill</h1>
+        <p class="article-lead" data-i18n="a.lead">Developers using AI coding assistants are shipping features faster than ever. They're also shipping vulnerabilities faster than ever. The security debt of vibe coding is real, accumulating, and largely invisible until it isn't.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">"Vibe coding" — the practice of describing what you want to an AI assistant and accepting its output with minimal review — has moved from novelty to mainstream workflow in under two years. GitHub Copilot, Cursor, Claude Code, and a dozen other tools now mediate a significant fraction of the code written in 2025. The productivity gains are real and measurable. The security implications are also real and almost entirely unmeasured.</p>
+        <p data-i18n="a.2">The fundamental problem isn't that AI-generated code is bad. It's often good. The problem is that AI assistants optimize for functional correctness — does the code do what was asked? — and have a systematically weaker grip on security correctness — does the code do only what was asked, without side effects an attacker could exploit? These are different questions, and AI models trained primarily on "working code" rather than "hardened code" tend to produce working code.</p>
+        <h2 data-i18n="a.h1">What the Research Shows</h2>
+        <p data-i18n="a.3">A 2023 study from Stanford found that developers who used GitHub Copilot were significantly more likely to introduce security vulnerabilities than those who wrote code without assistance — and were also significantly more confident that their code was secure. The confidence gap is the dangerous part. Vibe coding produces code that looks finished, reads as intentional, and passes casual inspection. The developer who reviewed it assumes it was reviewed by the AI. The AI assumes it was reviewed by the developer. Neither assumption is valid.</p>
+        <p data-i18n="a.4">The vulnerability patterns that appear most frequently in AI-generated code are predictable: SQL injection from string-concatenated queries, path traversal from unsanitized file paths, insecure deserialization, hardcoded credentials in generated configuration examples, and — most commonly — missing authorization checks. An AI that generates a function to "get user data" will generate a function that gets user data. Whether it should also verify that the requesting user is authorized to see that data is a question the model answers inconsistently, because authorization logic is highly context-dependent in ways that generating a function body is not.</p>
+        <blockquote data-i18n="a.q">"The AI writes the code. The developer ships the code. Nobody reviewed the code. This is the vibe coding security model in its current form."</blockquote>
+        <h2 data-i18n="a.h2">What Responsible Vibe Coding Looks Like</h2>
+        <p data-i18n="a.5">The solution isn't to stop using AI coding tools. The productivity gain is too significant to unilaterally surrender. The solution is to treat AI-generated code the way you'd treat code from a talented but junior developer who has never shipped to production: assume it works, assume it's insecure, and build review processes that specifically target the security gaps AI generates most reliably.</p>
+        <p data-i18n="a.6">Practically, this means: running AI-generated code through SAST tools before it merges, making authorization and input validation explicit in prompts rather than assuming the model will add them, and treating security review as a distinct phase from functionality review rather than combining them. The organizations that figure out how to capture the speed of AI coding while adding back the security hygiene that vibe coding skips will have a significant advantage. The organizations that just ship the vibes will eventually face the bill.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Security',
+    'a.title': "Vibe Coding's Hidden Security Bill",
+    'a.lead': "Developers using AI coding assistants are shipping features faster than ever. They're also shipping vulnerabilities faster than ever. The security debt of vibe coding is real, accumulating, and largely invisible until it isn't.",
+    'a.1': '"Vibe coding" — the practice of describing what you want to an AI assistant and accepting its output with minimal review — has moved from novelty to mainstream workflow in under two years. GitHub Copilot, Cursor, Claude Code, and a dozen other tools now mediate a significant fraction of the code written in 2025. The productivity gains are real and measurable. The security implications are also real and almost entirely unmeasured.',
+    'a.2': "The fundamental problem isn't that AI-generated code is bad. It's often good. The problem is that AI assistants optimize for functional correctness — does the code do what was asked? — and have a systematically weaker grip on security correctness — does the code do only what was asked, without side effects an attacker could exploit? These are different questions, and AI models trained primarily on \"working code\" rather than \"hardened code\" tend to produce working code.",
+    'a.h1': 'What the Research Shows',
+    'a.3': "A 2023 study from Stanford found that developers who used GitHub Copilot were significantly more likely to introduce security vulnerabilities than those who wrote code without assistance — and were also significantly more confident that their code was secure. The confidence gap is the dangerous part. Vibe coding produces code that looks finished, reads as intentional, and passes casual inspection. The developer who reviewed it assumes it was reviewed by the AI. The AI assumes it was reviewed by the developer. Neither assumption is valid.",
+    'a.4': "The vulnerability patterns that appear most frequently in AI-generated code are predictable: SQL injection from string-concatenated queries, path traversal from unsanitized file paths, insecure deserialization, hardcoded credentials in generated configuration examples, and — most commonly — missing authorization checks. An AI that generates a function to \"get user data\" will generate a function that gets user data. Whether it should also verify that the requesting user is authorized to see that data is a question the model answers inconsistently, because authorization logic is highly context-dependent in ways that generating a function body is not.",
+    'a.q': '"The AI writes the code. The developer ships the code. Nobody reviewed the code. This is the vibe coding security model in its current form."',
+    'a.h2': 'What Responsible Vibe Coding Looks Like',
+    'a.5': "The solution isn't to stop using AI coding tools. The productivity gain is too significant to unilaterally surrender. The solution is to treat AI-generated code the way you'd treat code from a talented but junior developer who has never shipped to production: assume it works, assume it's insecure, and build review processes that specifically target the security gaps AI generates most reliably.",
+    'a.6': "Practically, this means: running AI-generated code through SAST tools before it merges, making authorization and input validation explicit in prompts rather than assuming the model will add them, and treating security review as a distinct phase from functionality review rather than combining them. The organizations that figure out how to capture the speed of AI coding while adding back the security hygiene that vibe coding skips will have a significant advantage. The organizations that just ship the vibes will eventually face the bill.",
+  },
+  zh: {
+    'a.cat': 'AI 安全',
+    'a.title': 'Vibe Coding 隐藏的安全账单',
+    'a.lead': '使用 AI 编码助手的开发者比以往任何时候都更快地发布功能，也比以往任何时候都更快地发布漏洞。Vibe coding 的安全债务是真实存在的，正在积累，且在暴露之前基本上是不可见的。',
+    'a.1': '"Vibe coding"——向 AI 助手描述你想要什么，然后以最少的审查接受其输出的实践——在不到两年的时间里从新奇事物变成了主流工作流程。GitHub Copilot、Cursor、Claude Code 和其他十几个工具现在介入了 2025 年编写的大量代码。生产力提升是真实且可测量的。安全影响也是真实的，但几乎完全未被测量。',
+    'a.2': '根本问题不在于 AI 生成的代码很差。它通常很好。问题在于 AI 助手针对功能正确性进行优化——代码是否做了被要求的事？——而对安全正确性的把握系统性地更弱——代码是否只做了被要求的事，没有攻击者可以利用的副作用？这是不同的问题，主要在"能运行的代码"而非"经过加固的代码"上训练的 AI 模型倾向于产生能运行的代码。',
+    'a.h1': '研究显示了什么',
+    'a.3': '斯坦福大学 2023 年的一项研究发现，使用 GitHub Copilot 的开发者引入安全漏洞的可能性明显高于没有辅助的开发者——而且他们对自己代码安全性的自信也明显更高。这种自信差距是危险的部分。Vibe coding 产生的代码看起来完整，读起来像是经过深思熟虑的，并且通过了随意的检查。审查它的开发者假设 AI 已经审查了它。AI 假设开发者已经审查了它。两种假设都是无效的。',
+    'a.4': '在 AI 生成代码中最频繁出现的漏洞模式是可预测的：字符串连接查询导致的 SQL 注入、未经消毒的文件路径导致的路径遍历、不安全的反序列化、生成配置示例中的硬编码凭据，以及——最常见的——缺少授权检查。生成"获取用户数据"函数的 AI 会生成一个获取用户数据的函数。它是否还应该验证请求用户有权查看该数据，是模型回答不一致的问题，因为授权逻辑高度依赖上下文，而生成函数体则不然。',
+    'a.q': '「AI 写了代码，开发者发布了代码，没有人审查代码。这是 vibe coding 安全模型目前的形式。」',
+    'a.h2': '负责任的 Vibe Coding 是什么样的',
+    'a.5': '解决方案不是停止使用 AI 编码工具。生产力提升太大，无法单方面放弃。解决方案是以对待才华横溢但从未在生产环境发布过的初级开发者的方式对待 AI 生成的代码：假设它能运行，假设它是不安全的，并建立专门针对 AI 最可靠生成的安全漏洞的审查流程。',
+    'a.6': '实践中，这意味着：在合并之前通过 SAST 工具运行 AI 生成的代码，在提示中明确提出授权和输入验证，而不是假设模型会添加它们，并将安全审查视为与功能审查不同的独立阶段，而不是将它们合并。那些能够在利用 AI 编码速度的同时补充 vibe coding 跳过的安全卫生的组织将拥有显著优势。那些只是发布 vibes 的组织最终会面临账单。',
+  },
+  ja: {
+    'a.cat': 'AIセキュリティ',
+    'a.title': 'バイブコーディングの隠れたセキュリティ請求書',
+    'a.lead': 'AIコーディングアシスタントを使う開発者はかつてないほど速く機能を出荷している。同時に、かつてないほど速く脆弱性も出荷している。バイブコーディングのセキュリティ負債は現実であり、蓄積されており、露見するまでほぼ見えない。',
+    'a.1': '「バイブコーディング」——AIアシスタントに欲しいものを説明し、最小限のレビューでその出力を受け入れる実践——は2年足らずで目新しさから主流のワークフローへと移行した。GitHub Copilot、Cursor、Claude Code、その他十数のツールが今や2025年に書かれるコードのかなりの割合を介在している。生産性の向上は現実で測定可能だ。セキュリティへの影響も現実だが、ほぼ完全に未測定だ。',
+    'a.2': '根本的な問題はAI生成コードが悪いということではない。しばしば良い。問題はAIアシスタントが機能的正確性に最適化していること——コードは求められたことをするか？——そしてセキュリティ上の正確性への把握が体系的に弱いこと——コードは攻撃者が悪用できる副作用なしに、求められたことだけをするか？これらは異なる質問であり、主に「動くコード」ではなく「堅牢化されたコード」でトレーニングされたAIモデルは動くコードを生成する傾向がある。',
+    'a.h1': '研究が示すもの',
+    'a.3': 'スタンフォードの2023年の研究は、GitHub Copilotを使った開発者はアシストなしでコードを書いた開発者より著しくセキュリティ脆弱性を導入しやすく——また、自分のコードが安全だという自信も著しく高いことを発見した。この自信のギャップが危険な部分だ。バイブコーディングは完成して見え、意図的に読め、カジュアルな検査をパスするコードを生む。レビューした開発者はAIがレビューしたと仮定する。AIは開発者がレビューしたと仮定する。どちらの仮定も有効ではない。',
+    'a.4': 'AI生成コードに最も頻繁に現れる脆弱性パターンは予測可能だ：文字列結合クエリからのSQLインジェクション、サニタイズされていないファイルパスからのパストラバーサル、安全でないデシリアライゼーション、生成された設定例のハードコードされた認証情報、そして——最も一般的に——欠落した認可チェック。「ユーザーデータを取得する」関数を生成するAIは、ユーザーデータを取得する関数を生成する。要求したユーザーがそのデータを見る認可があるかも確認すべきかどうかは、モデルが一貫して答えない質問だ。なぜなら認可ロジックは関数本体の生成とは異なり、文脈に高度に依存するからだ。',
+    'a.q': '「AIがコードを書く。開発者がコードを出荷する。誰もコードをレビューしなかった。これが現在の形のバイブコーディングセキュリティモデルだ。」',
+    'a.h2': '責任あるバイブコーディングの形',
+    'a.5': '解決策はAIコーディングツールの使用を止めることではない。生産性の向上は一方的に諦めるには大きすぎる。解決策は、AI生成コードを才能はあるが本番環境に出荷したことがないジュニア開発者のコードとして扱うことだ：動くと仮定し、安全ではないと仮定し、AIが最も確実に生成するセキュリティギャップを特に対象にするレビュープロセスを構築する。',
+    'a.6': '実践的には、これはマージ前にAI生成コードをSASTツールに通すこと、モデルが追加することを仮定するのではなくプロンプトで認可と入力バリデーションを明示的にすること、セキュリティレビューを機能レビューと組み合わせるのではなく別フェーズとして扱うことを意味する。AIコーディングのスピードを活かしながら、バイブコーディングが飛ばすセキュリティ衛生を取り戻す方法を見つけた組織は大きなアドバンテージを持つ。ただバイブを出荷するだけの組織は最終的に請求書に直面する。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

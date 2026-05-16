@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP: The New Attack Surface Nobody Saw Coming — vsike</title>
+  <meta name="description" content="Anthropic's Model Context Protocol gives AI agents persistent access to tools and data sources. It also gives attackers a new vector that most security teams haven't modeled yet.">
+  <meta name="keywords" content="MCP security, Model Context Protocol attack, MCP vulnerability, AI agent security, MCP prompt injection">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    <article>
+      <header class="article-header">
+        <div class="article-cat-row">
+          <span class="article-cat" data-i18n="a.cat">AI Security</span>
+          <span class="article-date-label">May 2025</span>
+        </div>
+        <h1 class="article-title" data-i18n="a.title">MCP: The New Attack Surface Nobody Saw Coming</h1>
+        <p class="article-lead" data-i18n="a.lead">Anthropic's Model Context Protocol gives AI agents persistent, structured access to tools and data sources. It also gives attackers a new vector that most security teams haven't modeled yet — and the window to get ahead of it is closing.</p>
+      </header>
+      <div class="article-body">
+        <p data-i18n="a.1">Model Context Protocol (MCP) is Anthropic's open standard for connecting AI assistants to external tools — file systems, databases, APIs, development environments. Announced in late 2024 and rapidly adopted by Claude, Cursor, and a growing ecosystem of development tools, MCP is becoming the plumbing layer of agentic AI. Where a vanilla LLM reads text and produces text, an MCP-equipped agent reads text, takes actions, reads the results, and takes more actions. It's a fundamentally different threat model.</p>
+        <p data-i18n="a.2">The security properties of MCP deserve scrutiny that has so far largely been absent from the adoption conversation. An MCP server exposes capabilities to an AI agent — and the agent decides which capabilities to invoke based on its current context, which is shaped by everything it has read. The attack surface is the union of everything the agent reads (prompt injection) and everything the MCP server can do (blast radius of a compromised agent).</p>
+        <h2 data-i18n="a.h1">The Tool Poisoning Problem</h2>
+        <p data-i18n="a.3">Security researchers have demonstrated what they're calling "tool poisoning" attacks against MCP: malicious MCP servers that, when connected, use their tool descriptions to inject instructions into the agent's context. The tool description — meant to explain what a tool does — becomes a vector for adversarial instructions. A compromised or malicious MCP server doesn't need to break any cryptography. It just needs to be in the agent's tool list and craft its description carefully.</p>
+        <p data-i18n="a.4">The supply chain risk here is real. The MCP ecosystem is growing rapidly, and most users connect third-party MCP servers without meaningful vetting of the server's code or its descriptions. An attacker who publishes a useful-looking MCP server — "GitHub integration," "Notion connector," "Slack tools" — can reach into every agent that installs it. This is the npm problem, replicated in a context where the blast radius includes file system access and API credentials.</p>
+        <blockquote data-i18n="a.q">"MCP is to AI agents what npm is to Node.js. The security community spent a decade learning to treat npm with appropriate suspicion. We don't have a decade this time."</blockquote>
+        <h2 data-i18n="a.h2">What Safe MCP Usage Looks Like</h2>
+        <p data-i18n="a.5">The principle of least privilege applies directly. An MCP server that needs read access to your documents should not be connected to an agent that also has write access to your email. Scoping tool access is the single most impactful mitigation: a compromised or injected agent can only do what its tools allow. Designing MCP configurations with explicit, minimal tool grants limits the blast radius without limiting legitimate capability.</p>
+        <p data-i18n="a.6">Treat third-party MCP servers as you would treat third-party code dependencies: with version pinning, source review, and a preference for servers whose code is auditable. The MCP spec itself is sound; the risk is in the ecosystem of servers built on top of it. The organizations that establish MCP governance now — a vetted server registry, tool access policies, agent capability audits — will be significantly better positioned than those that discover the need for governance after their first incident.</p>
+      </div>
+    </article>
+    <div class="article-footer-nav">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+      <a href="../contact.html" class="btn-ghost btn" data-i18n="nav.contact">Contact</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-left">vsike.com · mmxxv</div>
+  <div class="footer-right">
+    <a href="../about.html" data-i18n="nav.about">About</a> ·
+    <a href="../work.html" data-i18n="nav.work">Work</a> ·
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a> ·
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.cat': 'AI Security',
+    'a.title': "MCP: The New Attack Surface Nobody Saw Coming",
+    'a.lead': "Anthropic's Model Context Protocol gives AI agents persistent, structured access to tools and data sources. It also gives attackers a new vector that most security teams haven't modeled yet — and the window to get ahead of it is closing.",
+    'a.1': "Model Context Protocol (MCP) is Anthropic's open standard for connecting AI assistants to external tools — file systems, databases, APIs, development environments. Announced in late 2024 and rapidly adopted by Claude, Cursor, and a growing ecosystem of development tools, MCP is becoming the plumbing layer of agentic AI. Where a vanilla LLM reads text and produces text, an MCP-equipped agent reads text, takes actions, reads the results, and takes more actions. It's a fundamentally different threat model.",
+    'a.2': "The security properties of MCP deserve scrutiny that has so far largely been absent from the adoption conversation. An MCP server exposes capabilities to an AI agent — and the agent decides which capabilities to invoke based on its current context, which is shaped by everything it has read. The attack surface is the union of everything the agent reads (prompt injection) and everything the MCP server can do (blast radius of a compromised agent).",
+    'a.h1': 'The Tool Poisoning Problem',
+    'a.3': 'Security researchers have demonstrated what they\'re calling "tool poisoning" attacks against MCP: malicious MCP servers that, when connected, use their tool descriptions to inject instructions into the agent\'s context. The tool description — meant to explain what a tool does — becomes a vector for adversarial instructions. A compromised or malicious MCP server doesn\'t need to break any cryptography. It just needs to be in the agent\'s tool list and craft its description carefully.',
+    'a.4': 'The supply chain risk here is real. The MCP ecosystem is growing rapidly, and most users connect third-party MCP servers without meaningful vetting of the server\'s code or its descriptions. An attacker who publishes a useful-looking MCP server — "GitHub integration," "Notion connector," "Slack tools" — can reach into every agent that installs it. This is the npm problem, replicated in a context where the blast radius includes file system access and API credentials.',
+    'a.q': '"MCP is to AI agents what npm is to Node.js. The security community spent a decade learning to treat npm with appropriate suspicion. We don\'t have a decade this time."',
+    'a.h2': 'What Safe MCP Usage Looks Like',
+    'a.5': "The principle of least privilege applies directly. An MCP server that needs read access to your documents should not be connected to an agent that also has write access to your email. Scoping tool access is the single most impactful mitigation: a compromised or injected agent can only do what its tools allow. Designing MCP configurations with explicit, minimal tool grants limits the blast radius without limiting legitimate capability.",
+    'a.6': "Treat third-party MCP servers as you would treat third-party code dependencies: with version pinning, source review, and a preference for servers whose code is auditable. The MCP spec itself is sound; the risk is in the ecosystem of servers built on top of it. The organizations that establish MCP governance now — a vetted server registry, tool access policies, agent capability audits — will be significantly better positioned than those that discover the need for governance after their first incident.",
+  },
+  zh: {
+    'a.cat': 'AI 安全',
+    'a.title': 'MCP：没有人预见到的新攻击面',
+    'a.lead': 'Anthropic 的模型上下文协议（MCP）为 AI 智能体提供了对工具和数据源的持久化、结构化访问。它也给了攻击者一个大多数安全团队尚未建模的新向量——而且领先于它的窗口正在关闭。',
+    'a.1': '模型上下文协议（MCP）是 Anthropic 将 AI 助手连接到外部工具——文件系统、数据库、API、开发环境——的开放标准。在 2024 年底宣布并被 Claude、Cursor 和不断增长的开发工具生态系统快速采用，MCP 正在成为智能体 AI 的管道层。普通 LLM 读取文本并生成文本，而配备 MCP 的智能体读取文本、采取行动、读取结果，然后采取更多行动。这是一个根本不同的威胁模型。',
+    'a.2': 'MCP 的安全属性值得关注，但迄今在采用对话中基本缺席。MCP 服务器向 AI 智能体暴露能力——智能体根据其当前上下文决定调用哪些能力，而上下文由它读取的一切塑造。攻击面是智能体读取的一切（提示词注入）和 MCP 服务器能做的一切（被攻陷智能体的爆炸半径）的并集。',
+    'a.h1': '工具投毒问题',
+    'a.3': '安全研究人员已经证明了他们所谓的针对 MCP 的"工具投毒"攻击：连接时使用工具描述将指令注入智能体上下文的恶意 MCP 服务器。工具描述——本应解释工具的功能——成为对抗性指令的向量。被攻陷或恶意的 MCP 服务器不需要破解任何密码学。它只需要在智能体的工具列表中，并精心制作其描述。',
+    'a.4': '这里的供应链风险是真实的。MCP 生态系统正在快速增长，大多数用户连接第三方 MCP 服务器，而不对服务器的代码或描述进行有意义的审查。发布看起来有用的 MCP 服务器的攻击者——"GitHub 集成"、"Notion 连接器"、"Slack 工具"——可以深入每个安装它的智能体。这是 npm 问题，在爆炸半径包括文件系统访问和 API 凭据的上下文中复制。',
+    'a.q': '「MCP 对 AI 智能体的意义，就像 npm 对 Node.js 的意义。安全社区花了十年时间学习以适当的怀疑对待 npm。这次我们没有十年的时间。」',
+    'a.h2': '安全的 MCP 使用是什么样的',
+    'a.5': '最小权限原则直接适用。需要对文档进行读取访问的 MCP 服务器，不应该连接到同时对电子邮件具有写入访问权限的智能体。限定工具访问范围是单一最有影响力的缓解措施：被攻陷或注入的智能体只能做其工具允许的事情。设计具有明确、最小工具授权的 MCP 配置，在不限制合法能力的情况下限制爆炸半径。',
+    'a.6': '像对待第三方代码依赖一样对待第三方 MCP 服务器：使用版本固定、源码审查，以及偏好代码可审计的服务器。MCP 规范本身是合理的；风险在于构建在其上的服务器生态系统。现在建立 MCP 治理的组织——经过审查的服务器注册表、工具访问策略、智能体能力审计——将比那些在第一次事件后才发现治理需求的组织处于明显更好的位置。',
+  },
+  ja: {
+    'a.cat': 'AIセキュリティ',
+    'a.title': 'MCP：誰も予見しなかった新しい攻撃面',
+    'a.lead': 'AnthropicのModel Context ProtocolはAIエージェントにツールとデータソースへの持続的で構造化されたアクセスを与える。また、ほとんどのセキュリティチームがまだモデル化していない新しいベクターを攻撃者に与える——そして先手を打つ窓は閉じつつある。',
+    'a.1': 'Model Context Protocol（MCP）はAnthropicがAIアシスタントを外部ツール——ファイルシステム、データベース、API、開発環境——に接続するためのオープンスタンダードだ。2024年末に発表され、Claude、Cursor、そして成長する開発ツールエコシステムに急速に採用されたMCPは、エージェント的AIの配管層になりつつある。通常のLLMはテキストを読んでテキストを生成するが、MCP装備のエージェントはテキストを読み、アクションを取り、結果を読み、さらにアクションを取る。根本的に異なる脅威モデルだ。',
+    'a.2': 'MCPのセキュリティ特性は、採用の議論でほとんど欠如してきた精査に値する。MCPサーバーはAIエージェントに能力を公開する——そしてエージェントは読んだすべてによって形作られる現在のコンテキストに基づいて、どの能力を呼び出すかを決める。攻撃面はエージェントが読むすべて（プロンプトインジェクション）とMCPサーバーができるすべて（侵害されたエージェントの爆発半径）の和集合だ。',
+    'a.h1': 'ツールポイズニング問題',
+    'a.3': 'セキュリティ研究者たちはMCPに対する「ツールポイズニング」攻撃と呼ぶものを実証している：接続されると、ツールの説明を使ってエージェントのコンテキストに指示を注入する悪意あるMCPサーバー。ツールの説明——ツールが何をするかを説明するためのもの——が敵対的な指示のベクターになる。侵害または悪意あるMCPサーバーはいかなる暗号も破る必要はない。エージェントのツールリストに入り、その説明を注意深く作成するだけでいい。',
+    'a.4': 'ここでのサプライチェーンリスクは現実だ。MCPエコシステムは急速に成長しており、ほとんどのユーザーはサーバーのコードや説明に対する意味のある審査なしにサードパーティMCPサーバーを接続する。役に立ちそうなMCPサーバーを公開する攻撃者——「GitHubインテグレーション」、「Notionコネクター」、「Slackツール」——はそれをインストールするすべてのエージェントにアクセスできる。これはnpmの問題が、爆発半径がファイルシステムアクセスとAPI認証情報を含むコンテキストで複製されたものだ。',
+    'a.q': '「MCPはAIエージェントにとってNode.jsにとってのnpmのようなものだ。セキュリティコミュニティはnpmを適切な疑いで扱うことを学ぶのに10年かけた。今回は10年の余裕はない。」',
+    'a.h2': '安全なMCP使用の形',
+    'a.5': '最小権限の原則が直接適用される。ドキュメントへの読み取りアクセスが必要なMCPサーバーは、メールへの書き込みアクセスも持つエージェントに接続すべきではない。ツールアクセスのスコーピングは単一の最も効果的な緩和策だ：侵害または注入されたエージェントはそのツールが許可することしかできない。明示的で最小限のツール許可でMCP設定を設計することは、正当な能力を制限せずに爆発半径を制限する。',
+    'a.6': 'サードパーティMCPサーバーをサードパーティのコード依存関係と同様に扱う：バージョン固定、ソースレビュー、コードが監査可能なサーバーへの優先。MCP仕様自体は健全だ；リスクはその上に構築されたサーバーのエコシステムにある。今MCPガバナンスを確立する組織——審査済みサーバーレジストリ、ツールアクセスポリシー、エージェント能力監査——は、最初のインシデント後にガバナンスの必要性を発見する組織より大幅に良い位置にいる。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
