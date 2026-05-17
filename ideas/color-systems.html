@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Systems: Beyond the Palette — vsike</title>
+  <meta name="description" content="A palette is a collection of colors. A color system is a set of rules for how they relate and where they're used. Most products have a palette. Very few have a system. Here's the difference.">
+  <meta name="keywords" content="颜色系统设计, 设计令牌, 调色板设计, 深浅模式色彩, 语义颜色, color system design, design tokens, semantic colors, dark mode color, color palette, color theory">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/color-systems.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .color-row { display: flex; gap: 0.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .color-swatch { width: 48px; height: 48px; border-radius: 2px; position: relative; }
+    .color-swatch-label { font-size: 0.68rem; letter-spacing: 0.05em; color: var(--fg-dim); text-align: center; margin-top: 0.3rem; }
+    .token-table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.88rem; }
+    .token-table th { text-align: left; padding: 0.5rem 1rem; border-bottom: 1px solid var(--fg-dim); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); }
+    .token-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--fg-dim); font-family: monospace; vertical-align: top; }
+    .token-table td:first-child { font-size: 0.82rem; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.1rem, 2.5vw, 1.35rem); line-height: 1.5; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .mode-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 2rem 0; background: var(--fg-dim); }
+    .mode-panel { padding: 1.5rem; }
+    .mode-panel.dark { background: #0a0a0a; color: #e8e6e3; }
+    .mode-panel.light { background: #f5f4f2; color: #1a1917; }
+    .mode-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; margin-bottom: 0.8rem; }
+    @media (max-width: 540px) { .mode-demo { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="cs.category">Design</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="cs.title">Color Systems:<br>Beyond the Palette</h1>
+        <p class="article-lead reveal reveal-d2" data-i18n="cs.lead">A palette is a collection of colors. A color system is a set of rules for how they relate and where they're used. Most products have a palette. Very few have a system. Here's the difference — and why it matters at scale.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="cs.s1.title">The Palette vs. System Distinction</h2>
+        <p data-i18n="cs.s1.p1">A palette answers: what colors do we have? A system answers: which color is used for what purpose, in what context, and why? Without the system layer, a palette is a toolbox without instructions. Designers make locally correct decisions that create globally inconsistent results.</p>
+        <p data-i18n="cs.s1.p2">The practical symptom: a product with 40 slightly different grays in production, because each designer chose the one that "looked right" at the time. Or a dark mode that uses inverted palette colors and looks slightly wrong everywhere because the perceptual relationships weren't designed — only the raw values were flipped.</p>
+        <div class="pull-quote" data-i18n="cs.pull">A color system is a constraint system. Its value isn't in what it allows — it's in what it prevents.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="cs.s2.title">Three Layers of a Color System</h2>
+        <table class="token-table">
+          <thead>
+            <tr><th data-i18n="cs.table.layer">Layer</th><th data-i18n="cs.table.example">Example</th><th data-i18n="cs.table.purpose">Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="cs.t1.name">Primitive / Raw</td>
+              <td><code>gray-900: #1a1917</code><br><code>blue-500: #3b82f6</code></td>
+              <td data-i18n="cs.t1.purpose">The raw color values. Never used directly in components.</td>
+            </tr>
+            <tr>
+              <td data-i18n="cs.t2.name">Semantic / Alias</td>
+              <td><code>color-bg: gray-950</code><br><code>color-fg: gray-100</code><br><code>color-accent: blue-500</code></td>
+              <td data-i18n="cs.t2.purpose">Named by role, not by value. This is what components reference.</td>
+            </tr>
+            <tr>
+              <td data-i18n="cs.t3.name">Component</td>
+              <td><code>btn-bg: color-accent</code><br><code>btn-text: color-bg</code></td>
+              <td data-i18n="cs.t3.purpose">Component-specific mappings from semantic tokens. Enables theming.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p data-i18n="cs.s2.note">When dark mode is implemented at the semantic layer — <code>color-bg</code> maps to a different primitive in dark vs. light — every component automatically adapts without touching individual component styles.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="cs.s3.title">Dark Mode Is a Semantic Problem</h2>
+        <p data-i18n="cs.s3.p1">Dark mode done wrong inverts the palette. Dark mode done right redesigns the semantic layer. The colors in dark mode aren't simply flipped light-mode colors — the perceptual relationships, contrast ratios, and saturation behave differently on dark backgrounds.</p>
+        <div class="mode-demo">
+          <div class="mode-panel dark">
+            <div class="mode-label">Dark</div>
+            <p style="color: #e8e6e3; margin-bottom: 0.4rem; font-size: 0.95rem;">Primary text: full opacity warm white</p>
+            <p style="color: rgba(232,230,227,0.6); font-size: 0.85rem;">Secondary text: 60% opacity. Softer, not gray.</p>
+          </div>
+          <div class="mode-panel light">
+            <div class="mode-label">Light</div>
+            <p style="color: #1a1917; margin-bottom: 0.4rem; font-size: 0.95rem;">Primary text: near-black, not pure black</p>
+            <p style="color: rgba(26,25,23,0.55); font-size: 0.85rem;">Secondary text: 55% opacity. Different ratio than dark.</p>
+          </div>
+        </div>
+        <p data-i18n="cs.s3.p2">Notice the opacity values differ between modes. Dark mode uses 60% for secondary text; light mode uses 55%. These were tuned independently to achieve equivalent perceived contrast — they weren't derived from a single formula.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="cs.s4.title">Accent Color: One, Used Surgically</h2>
+        <p data-i18n="cs.s4.p1">The accent color is your system's single point of chromatic intensity. It exists to draw attention to one thing at a time — an active state, a CTA, a key label. When everything is accented, nothing is.</p>
+        <p data-i18n="cs.s4.p2">The discipline: audit your UI and count the accent instances. If there are more than 2–3 per screen, some are structural (borders, backgrounds) masquerading as emphasis. Move those to a neutral scale. Reserve the accent for true points of action or attention.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="cs.s5.title">The Neutral Scale Is the Real Work</h2>
+        <p data-i18n="cs.s5.p1">Brands obsess over their accent color. The neutral scale — the 8–12 steps of gray that make up 90% of the UI — receives almost no attention and causes almost all the inconsistency.</p>
+        <p data-i18n="cs.s5.p2">A well-designed neutral scale is perceptually uniform: the visual difference between step 1 and step 2 feels the same as between step 7 and step 8. This doesn't happen automatically with linear value steps — it requires HSL or LCH tuning, or a tool like Radix UI's color scale methodology.</p>
+        <p data-i18n="cs.s5.p3">With a consistent neutral scale, the typography hierarchy and spacing system finally click into place. The UI looks considered rather than assembled.</p>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="../about.html" data-i18n="nav.about">About</a>
+        <a href="../work.html" data-i18n="nav.work">Work</a>
+        <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+        <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'cs.category': 'Design',
+    'cs.title': 'Color Systems:<br>Beyond the Palette',
+    'cs.lead': 'A palette is a collection of colors. A color system is a set of rules for how they relate and where they\'re used. Most products have a palette. Very few have a system. Here\'s the difference — and why it matters at scale.',
+    'cs.s1.title': 'The Palette vs. System Distinction',
+    'cs.s1.p1': 'A palette answers: what colors do we have? A system answers: which color is used for what purpose, in what context, and why? Without the system layer, a palette is a toolbox without instructions.',
+    'cs.s1.p2': 'The practical symptom: a product with 40 slightly different grays in production. Or a dark mode that uses inverted palette colors and looks slightly wrong everywhere because the perceptual relationships weren\'t designed.',
+    'cs.pull': 'A color system is a constraint system. Its value isn\'t in what it allows — it\'s in what it prevents.',
+    'cs.s2.title': 'Three Layers of a Color System',
+    'cs.table.layer': 'Layer', 'cs.table.example': 'Example', 'cs.table.purpose': 'Purpose',
+    'cs.t1.name': 'Primitive / Raw', 'cs.t1.purpose': 'The raw color values. Never used directly in components.',
+    'cs.t2.name': 'Semantic / Alias', 'cs.t2.purpose': 'Named by role, not by value. This is what components reference.',
+    'cs.t3.name': 'Component', 'cs.t3.purpose': 'Component-specific mappings from semantic tokens. Enables theming.',
+    'cs.s2.note': 'When dark mode is implemented at the semantic layer, every component automatically adapts without touching individual component styles.',
+    'cs.s3.title': 'Dark Mode Is a Semantic Problem',
+    'cs.s3.p1': 'Dark mode done wrong inverts the palette. Dark mode done right redesigns the semantic layer. The colors in dark mode aren\'t simply flipped light-mode colors — the perceptual relationships behave differently on dark backgrounds.',
+    'cs.s3.p2': 'Notice the opacity values differ between modes. These were tuned independently to achieve equivalent perceived contrast — not derived from a single formula.',
+    'cs.s4.title': 'Accent Color: One, Used Surgically',
+    'cs.s4.p1': 'The accent color is your system\'s single point of chromatic intensity. It exists to draw attention to one thing at a time. When everything is accented, nothing is.',
+    'cs.s4.p2': 'The discipline: audit your UI and count accent instances. If there are more than 2–3 per screen, some are structural masquerading as emphasis. Move those to a neutral scale.',
+    'cs.s5.title': 'The Neutral Scale Is the Real Work',
+    'cs.s5.p1': 'Brands obsess over their accent color. The neutral scale — the 8–12 steps of gray that make up 90% of the UI — receives almost no attention and causes almost all the inconsistency.',
+    'cs.s5.p2': 'A well-designed neutral scale is perceptually uniform: the visual difference between step 1 and step 2 feels the same as between step 7 and step 8. This requires HSL or LCH tuning, not linear value steps.',
+    'cs.s5.p3': 'With a consistent neutral scale, the typography hierarchy and spacing system finally click into place. The UI looks considered rather than assembled.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'cs.category': '设计',
+    'cs.title': '颜色系统：<br>超越调色板',
+    'cs.lead': '调色板是颜色的集合。颜色系统是关于它们如何关联以及在何处使用的规则集。大多数产品有调色板，很少有系统。这是区别所在——以及为何在规模上重要。',
+    'cs.s1.title': '调色板与系统的区别',
+    'cs.s1.p1': '调色板回答：我们有哪些颜色？系统回答：哪种颜色用于什么目的、在什么情境下、为什么？没有系统层，调色板只是没有说明书的工具箱。',
+    'cs.s1.p2': '实际症状：生产中有 40 种略有不同的灰色。或者深色模式使用了反转的调色板颜色，到处都感觉有点不对——因为视觉感知关系没有被设计，只是原始值被翻转了。',
+    'cs.pull': '颜色系统是一个约束系统。它的价值不在于它允许什么——而在于它阻止什么。',
+    'cs.s2.title': '颜色系统的三个层级',
+    'cs.table.layer': '层级', 'cs.table.example': '示例', 'cs.table.purpose': '用途',
+    'cs.t1.name': '原始值 / Raw', 'cs.t1.purpose': '原始颜色值。从不在组件中直接使用。',
+    'cs.t2.name': '语义 / 别名', 'cs.t2.purpose': '按角色而非值命名。这是组件引用的内容。',
+    'cs.t3.name': '组件级', 'cs.t3.purpose': '从语义令牌到组件的具体映射。支持主题化。',
+    'cs.s2.note': '当深色模式在语义层实现时——color-bg 在深色与浅色中映射到不同的原始值——每个组件无需触及单独的组件样式即可自动适应。',
+    'cs.s3.title': '深色模式是一个语义问题',
+    'cs.s3.p1': '做错的深色模式反转调色板。做对的深色模式重新设计语义层。深色模式中的颜色不只是浅色模式颜色的翻转——感知关系、对比度和饱和度在深色背景上行为不同。',
+    'cs.s3.p2': '注意两种模式的透明度值不同。这些是独立调整的，以达到等效的感知对比度——不是由单一公式推导出来的。',
+    'cs.s4.title': '强调色：一种，精准使用',
+    'cs.s4.p1': '强调色是你系统中单一的色彩强度点。它的存在是为了一次吸引对一件事的注意。当所有东西都被强调时，没有什么被强调。',
+    'cs.s4.p2': '纪律：审计你的 UI，计算强调实例。如果每屏超过 2–3 个，有些是伪装成强调的结构性元素。将那些移到中性色阶。',
+    'cs.s5.title': '中性色阶才是真正的工作',
+    'cs.s5.p1': '品牌痴迷于强调色。中性色阶——构成 90% UI 的 8–12 步灰色——几乎没有受到关注，却造成了几乎所有的不一致。',
+    'cs.s5.p2': '设计良好的中性色阶是感知均匀的：第 1 步和第 2 步之间的视觉差异与第 7 步和第 8 步之间的感觉相同。这需要 HSL 或 LCH 调整，而非线性值步骤。',
+    'cs.s5.p3': '有了一致的中性色阶，排版层级和间距系统终于恰到好处地配合。UI 看起来是经过深思熟虑的，而不是拼凑的。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'cs.category': 'デザイン',
+    'cs.title': 'カラーシステム：<br>パレットを超えて',
+    'cs.lead': 'パレットは色のコレクションだ。カラーシステムは、色がどう関連し、どこで使われるかについてのルールセットだ。ほとんどのプロダクトはパレットを持っている。システムを持つものはほとんどいない。',
+    'cs.s1.title': 'パレットとシステムの違い',
+    'cs.s1.p1': 'パレットは「どんな色を持っているか」に答える。システムは「どの色が何の目的で、どのコンテキストで、なぜ使われるか」に答える。システム層なしでは、パレットは説明書のないツールボックスだ。',
+    'cs.s1.p2': '実際の症状：本番環境に40種類のわずかに異なるグレーがある製品。または知覚的関係が設計されず単に値が反転されただけのため、どこでも少し間違って見えるダークモード。',
+    'cs.pull': 'カラーシステムは制約システムだ。その価値は何を許可するかではなく——何を防ぐかにある。',
+    'cs.s2.title': 'カラーシステムの3つの層',
+    'cs.table.layer': '層', 'cs.table.example': '例', 'cs.table.purpose': '目的',
+    'cs.t1.name': 'プリミティブ / Raw', 'cs.t1.purpose': '生の色値。コンポーネントで直接使用しない。',
+    'cs.t2.name': 'セマンティック / エイリアス', 'cs.t2.purpose': '値ではなく役割で命名。コンポーネントが参照するもの。',
+    'cs.t3.name': 'コンポーネント', 'cs.t3.purpose': 'セマンティックトークンからのコンポーネント固有マッピング。テーミングを可能にする。',
+    'cs.s2.note': 'ダークモードがセマンティック層で実装されると、個々のコンポーネントスタイルに触れることなく、すべてのコンポーネントが自動的に適応する。',
+    'cs.s3.title': 'ダークモードはセマンティックの問題',
+    'cs.s3.p1': '間違ったダークモードはパレットを反転する。正しいダークモードはセマンティック層を再設計する。ダークモードの色は単に反転したライトモードの色ではない——知覚的関係は暗い背景で異なる動作をする。',
+    'cs.s3.p2': '不透明度の値がモード間で異なることに注意。これらは等価な知覚コントラストを達成するために個別にチューニングされた——単一の数式から導出されたのではない。',
+    'cs.s4.title': 'アクセントカラー：1つ、外科的に使う',
+    'cs.s4.p1': 'アクセントカラーはシステムの単一の彩度強度ポイントだ。一度に1つのものに注意を引くために存在する。すべてがアクセントされると、何もアクセントされない。',
+    'cs.s4.p2': 'ディシプリン：UIを監査してアクセントインスタンスを数える。画面あたり2–3以上あれば、いくつかは強調に偽装した構造的なものだ。',
+    'cs.s5.title': 'ニュートラルスケールが本当の仕事',
+    'cs.s5.p1': 'ブランドはアクセントカラーに執着する。UIの90%を構成する8–12ステップのグレーのニュートラルスケールはほとんど注目されず、ほぼすべての不整合を引き起こす。',
+    'cs.s5.p2': 'よく設計されたニュートラルスケールは知覚的に均一だ：ステップ1と2の視覚的差異は、ステップ7と8の間と同じように感じる。これには線形値ステップではなくHSLまたはLCHチューニングが必要だ。',
+    'cs.s5.p3': '一貫したニュートラルスケールがあれば、タイポグラフィ階層とスペーシングシステムがようやくはまり込む。UIは組み立てられたのではなく、考慮されたように見える。',
+    'article.back': '← すべてのアイデア',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

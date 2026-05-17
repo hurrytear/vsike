@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error States: Designing for Failure — vsike</title>
+  <meta name="description" content="Most design systems are designed for success. Error states are afterthoughts — vague, blame-shifting, and unhelpful. The gap between a product that frustrates and one that earns trust often lives here.">
+  <meta name="keywords" content="错误状态设计, 空状态设计, 加载状态设计, UI错误信息, 用户体验设计, error state design, empty state, loading state, error UX, UI design, failure design, error message writing">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/error-states.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .error-demo { border: 1px solid var(--fg-dim); padding: 1.5rem 2rem; margin: 1.5rem 0; }
+    .error-demo-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 1rem; }
+    .error-bad { border-left: 3px solid #c0392b; padding: 0.8rem 1rem; background: rgba(192,57,43,0.06); margin-bottom: 1rem; font-size: 0.9rem; }
+    .error-good { border-left: 3px solid var(--accent); padding: 0.8rem 1rem; font-size: 0.9rem; }
+    .error-title-bad { font-size: 0.72rem; letter-spacing: 0.08em; color: #c0392b; text-transform: uppercase; margin-bottom: 0.4rem; }
+    .error-title-good { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .state-grid { grid-template-columns: 1fr; } }
+    .state-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .state-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="es.category">Design</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="es.title">Error States:<br>Designing for Failure</h1>
+        <p class="article-lead reveal reveal-d2" data-i18n="es.lead">Most design systems are designed for success. Error states are afterthoughts — vague, blame-shifting, and unhelpful. The gap between a product that frustrates and one that earns trust often lives precisely here.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="es.s1.title">The Three Failure States</h2>
+        <div class="state-grid">
+          <div class="state-card">
+            <h4 data-i18n="es.st1.label">Empty State</h4>
+            <p data-i18n="es.st1.p">No data yet — first visit, search returns nothing, filtered list is empty. The user isn't in an error; they're in a starting point. The design should orient, not apologize.</p>
+          </div>
+          <div class="state-card">
+            <h4 data-i18n="es.st2.label">Loading State</h4>
+            <p data-i18n="es.st2.p">Content is coming. The user needs to know the system is working and roughly how long to wait. Skeleton screens > spinners for content-heavy layouts.</p>
+          </div>
+          <div class="state-card">
+            <h4 data-i18n="es.st3.label">Error State</h4>
+            <p data-i18n="es.st3.p">Something went wrong. The user needs to know what, whether it's their fault or the system's, and what to do next. This is the hardest and most neglected.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="es.s2.title">The Anatomy of a Bad Error Message</h2>
+        <div class="error-demo">
+          <div class="error-demo-label" data-i18n="es.demo.label">Real examples from production UIs</div>
+          <div class="error-bad"><div class="error-title-bad">Bad</div>"An error occurred. Please try again."</div>
+          <div class="error-bad"><div class="error-title-bad">Bad</div>"Something went wrong (Error 500)"</div>
+          <div class="error-bad"><div class="error-title-bad">Bad</div>"Your session has expired. Please log in again." (with no login button)</div>
+          <div class="error-bad"><div class="error-title-bad">Bad</div>"Invalid input." (on a 12-field form, not indicating which field)</div>
+        </div>
+        <p data-i18n="es.s2.p1">The pattern in all these: the message describes the symptom from the system's perspective ("an error occurred") without giving the user any actionable information. It's the equivalent of a doctor saying "something is wrong with you" and leaving the room.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="es.s3.title">The Anatomy of a Good Error Message</h2>
+        <p data-i18n="es.s3.intro">A good error message answers three questions: what happened, whose fault is it (system or user), and what do I do now?</p>
+        <div class="error-demo">
+          <div class="error-good"><div class="error-title-good">Better</div>"We couldn't save your changes — the connection dropped. Your work is still here. <strong>Try saving again →</strong>"</div>
+          <div class="error-good" style="margin-top: 0.8rem;"><div class="error-title-good">Better</div>"Password must be at least 8 characters. You entered 6." (inline, next to the field)</div>
+          <div class="error-good" style="margin-top: 0.8rem;"><div class="error-title-good">Better</div>"Your session ended after 30 minutes of inactivity. <strong>Log in again →</strong>" (with the action immediately available)</div>
+        </div>
+        <div class="pull-quote" data-i18n="es.pull">Every error message is a conversation. If your product's half of that conversation is "something went wrong," you've abandoned the user at precisely the moment they need you most.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="es.s4.title">Blame Attribution Matters</h2>
+        <p data-i18n="es.s4.p1">The tone of an error message should reflect who is at fault. System errors (server down, API timeout, unexpected failure) should be apologetic and own the problem. User errors (wrong password, invalid email, missing required field) should be clear and neutral — not apologetic (which confuses), not accusatory (which offends).</p>
+        <p data-i18n="es.s4.p2">The worst pattern: blaming the user for a system error. "You've entered an invalid state" when the backend crashed. The user has done nothing wrong and now feels confused and at fault. This destroys trust disproportionately — the user remembers being blamed, not the specifics of what failed.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="es.s5.title">Empty States as Onboarding</h2>
+        <p data-i18n="es.s5.p1">The empty state is the most underused real estate in any product. When a user sees an empty list, empty dashboard, or empty search result, they are at maximum uncertainty about what to do next. This is not an edge case to minimize — it's often the first experience of a feature.</p>
+        <p data-i18n="es.s5.p2">An effective empty state: explains why it's empty, shows what it will look like when full (a ghost preview or illustration of the populated state), and provides a single clear action to fill it. The empty state should make starting feel trivial — not daunting.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="es.s6.title">The Recovery Action Is Non-Negotiable</h2>
+        <p data-i18n="es.s6.p1">Every error state must include a recovery path. "Retry," "Go back," "Contact support," "Try a different file" — the specific action depends on the error, but the principle is absolute: never leave the user in a dead end.</p>
+        <p data-i18n="es.s6.p2">In practice, this means error state components need a slot for a custom action, not just a static message. The action changes based on context: a network error gets "Retry," a permission error gets "Request access," a not-found error gets "Go home." One generic error component with a dynamic action slot handles all of these without duplication.</p>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="../about.html" data-i18n="nav.about">About</a>
+        <a href="../work.html" data-i18n="nav.work">Work</a>
+        <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+        <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'es.category': 'Design',
+    'es.title': 'Error States:<br>Designing for Failure',
+    'es.lead': 'Most design systems are designed for success. Error states are afterthoughts — vague, blame-shifting, and unhelpful. The gap between a product that frustrates and one that earns trust often lives precisely here.',
+    'es.s1.title': 'The Three Failure States',
+    'es.st1.label': 'Empty State', 'es.st1.p': 'No data yet — first visit, search returns nothing, filtered list is empty. The user isn\'t in an error; they\'re in a starting point. The design should orient, not apologize.',
+    'es.st2.label': 'Loading State', 'es.st2.p': 'Content is coming. The user needs to know the system is working and roughly how long to wait. Skeleton screens > spinners for content-heavy layouts.',
+    'es.st3.label': 'Error State', 'es.st3.p': 'Something went wrong. The user needs to know what, whether it\'s their fault or the system\'s, and what to do next.',
+    'es.s2.title': 'The Anatomy of a Bad Error Message',
+    'es.demo.label': 'Real examples from production UIs',
+    'es.s2.p1': 'The pattern in all these: the message describes the symptom from the system\'s perspective without giving the user any actionable information. It\'s the equivalent of a doctor saying "something is wrong with you" and leaving the room.',
+    'es.s3.title': 'The Anatomy of a Good Error Message',
+    'es.s3.intro': 'A good error message answers three questions: what happened, whose fault is it (system or user), and what do I do now?',
+    'es.pull': 'Every error message is a conversation. If your product\'s half of that conversation is "something went wrong," you\'ve abandoned the user at precisely the moment they need you most.',
+    'es.s4.title': 'Blame Attribution Matters',
+    'es.s4.p1': 'System errors should be apologetic and own the problem. User errors should be clear and neutral — not apologetic (which confuses), not accusatory (which offends).',
+    'es.s4.p2': 'The worst pattern: blaming the user for a system error. The user has done nothing wrong and now feels confused and at fault. This destroys trust disproportionately.',
+    'es.s5.title': 'Empty States as Onboarding',
+    'es.s5.p1': 'The empty state is the most underused real estate in any product. When a user sees an empty list or dashboard, they are at maximum uncertainty — this is often the first experience of a feature.',
+    'es.s5.p2': 'An effective empty state: explains why it\'s empty, shows what it will look like when full, and provides a single clear action to fill it.',
+    'es.s6.title': 'The Recovery Action Is Non-Negotiable',
+    'es.s6.p1': 'Every error state must include a recovery path. "Retry," "Go back," "Contact support" — the specific action depends on the error, but the principle is absolute: never leave the user in a dead end.',
+    'es.s6.p2': 'Error state components need a slot for a custom action, not just a static message. The action changes based on context: a network error gets "Retry," a permission error gets "Request access," a not-found error gets "Go home."',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'es.category': '设计',
+    'es.title': '错误状态：<br>为失败而设计',
+    'es.lead': '大多数设计系统为成功而设计。错误状态是事后想到的——模糊、推卸责任、毫无帮助。令人沮丧的产品和赢得信任的产品之间的差距，往往恰好在这里。',
+    'es.s1.title': '三种失败状态',
+    'es.st1.label': '空状态', 'es.st1.p': '还没有数据——首次访问、搜索无结果、过滤列表为空。用户不是在错误中；他们在起点。设计应该引导，而不是道歉。',
+    'es.st2.label': '加载状态', 'es.st2.p': '内容即将到来。用户需要知道系统正在运行，大概需要等待多久。对于内容密集的布局，骨架屏优于旋转加载图标。',
+    'es.st3.label': '错误状态', 'es.st3.p': '出了问题。用户需要知道是什么、是他们的错还是系统的错，以及下一步该做什么。这是最难也最被忽视的。',
+    'es.s2.title': '糟糕错误信息的解剖',
+    'es.demo.label': '来自生产 UI 的真实案例',
+    'es.s2.p1': '所有这些的共同模式：消息从系统的角度描述症状，没有给用户任何可操作的信息。相当于医生说"你有点问题"然后离开房间。',
+    'es.s3.title': '好错误信息的解剖',
+    'es.s3.intro': '好的错误信息回答三个问题：发生了什么、是谁的错（系统还是用户），以及我现在该做什么？',
+    'es.pull': '每条错误信息都是一次对话。如果你产品这半边的对话是"出了问题"，你就在用户最需要你的时候抛弃了他们。',
+    'es.s4.title': '责任归属很重要',
+    'es.s4.p1': '系统错误应该道歉并承认问题。用户错误应该清晰中立——不道歉（会造成混乱），不指责（会让人反感）。',
+    'es.s4.p2': '最糟糕的模式：将系统错误归咎于用户。用户什么都没做错，现在感到困惑并觉得是自己的错。这会不成比例地破坏信任。',
+    'es.s5.title': '空状态作为引导',
+    'es.s5.p1': '空状态是任何产品中最未被充分利用的空间。当用户看到空列表或空仪表盘时，他们处于最大的不确定性中——这通常是某功能的第一次体验。',
+    'es.s5.p2': '有效的空状态：解释为什么为空，展示填充后的样子，并提供单一清晰的行动来填充它。',
+    'es.s6.title': '恢复操作不可或缺',
+    'es.s6.p1': '每个错误状态都必须包含一条恢复路径。"重试"、"返回"、"联系支持"——具体操作取决于错误，但原则是绝对的：永远不要将用户置于死胡同。',
+    'es.s6.p2': '错误状态组件需要一个自定义操作的插槽，而不只是静态消息。操作根据上下文变化：网络错误得到"重试"，权限错误得到"申请访问"，未找到错误得到"回到首页"。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'es.category': 'デザイン',
+    'es.title': 'エラーステート：<br>失敗のためのデザイン',
+    'es.lead': 'ほとんどのデザインシステムは成功のために設計されている。エラーステートは後付け——曖昧で、責任転嫁し、役に立たない。フラストレーションを与えるプロダクトと信頼を勝ち取るプロダクトの差は、ここにあることが多い。',
+    'es.s1.title': '3つの失敗ステート',
+    'es.st1.label': '空のステート', 'es.st1.p': 'まだデータがない——初回訪問、検索結果なし、フィルタリングされたリストが空。ユーザーはエラーではなくスタート地点にいる。デザインはガイドすべきで、謝罪すべきでない。',
+    'es.st2.label': 'ローディングステート', 'es.st2.p': 'コンテンツが来る。ユーザーはシステムが動いていて、どのくらい待つかを知る必要がある。コンテンツ重視のレイアウトではスピナーよりスケルトンスクリーン。',
+    'es.st3.label': 'エラーステート', 'es.st3.p': '何か問題が起きた。ユーザーは何が、誰のせいで、次に何をすべきかを知る必要がある。',
+    'es.s2.title': '悪いエラーメッセージの解剖',
+    'es.demo.label': '本番UIからの実例',
+    'es.s2.p1': 'すべてに共通するパターン：メッセージはシステムの視点から症状を説明し、ユーザーに実行可能な情報を与えない。医者が「何かおかしい」と言って部屋を出るのと同じだ。',
+    'es.s3.title': '良いエラーメッセージの解剖',
+    'es.s3.intro': '良いエラーメッセージは3つの質問に答える：何が起きたか、誰のせいか（システムかユーザーか）、今何をすべきか？',
+    'es.pull': 'すべてのエラーメッセージは会話だ。プロダクトの半分の会話が「何か問題が起きた」なら、ユーザーが最も必要としている瞬間に見捨てている。',
+    'es.s4.title': '責任帰属は重要',
+    'es.s4.p1': 'システムエラーは謝罪的で問題を認めるべきだ。ユーザーエラーは明確でニュートラルであるべき——謝罪的（混乱を招く）でも非難的（不快感を与える）でもなく。',
+    'es.s4.p2': '最悪のパターン：システムエラーをユーザーのせいにすること。ユーザーは何も悪いことをしておらず、困惑し自分のせいだと感じる。これは不釣り合いに信頼を破壊する。',
+    'es.s5.title': 'オンボーディングとしての空のステート',
+    'es.s5.p1': '空のステートはどのプロダクトでも最も活用されていない不動産だ。ユーザーが空のリストやダッシュボードを見ると、最大の不確実性にある——これはしばしば機能の最初の体験だ。',
+    'es.s5.p2': '効果的な空のステート：なぜ空なのかを説明し、入力されたときの見た目を示し、入力するための単一の明確なアクションを提供する。',
+    'es.s6.title': 'リカバリーアクションは必須',
+    'es.s6.p1': 'すべてのエラーステートにはリカバリーパスが必要だ。「再試行」「戻る」「サポートに連絡」——具体的なアクションはエラーによるが、原則は絶対：ユーザーを行き止まりに置かない。',
+    'es.s6.p2': 'エラーステートコンポーネントには静的メッセージだけでなく、カスタムアクションのスロットが必要だ。アクションはコンテキストに基づいて変わる：ネットワークエラーは「再試行」、権限エラーは「アクセスを申請」。',
+    'article.back': '← すべてのアイデア',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typography Hierarchy: How Visual Weight Guides the Eye — vsike</title>
+  <meta name="description" content="Hierarchy is the typographer's grammar. Without it, a page is a crowd. With it, the eye knows exactly where to go and in what order. Here's how to build it deliberately.">
+  <meta name="keywords" content="排版层级, 字体层级设计, 视觉权重, 网页排版, 字体大小设计, typography hierarchy, visual weight, typographic scale, web typography, font design, reading flow">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/typography-hierarchy.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .type-demo { border: 1px solid var(--fg-dim); padding: 2rem; margin: 2rem 0; }
+    .type-row { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--fg-dim); padding-bottom: 1rem; }
+    .type-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .type-meta { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--fg-dim); min-width: 100px; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.1rem, 2.5vw, 1.4rem); line-height: 1.5; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; color: var(--fg); }
+    .contrast-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 2rem 0; background: var(--fg-dim); }
+    .contrast-panel { background: var(--bg); padding: 1.5rem; }
+    .contrast-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 1rem; }
+    @media (max-width: 540px) { .contrast-demo { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="th.category">Design</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="th.title">Typography Hierarchy:<br>How Visual Weight Guides the Eye</h1>
+        <p class="article-lead reveal reveal-d2" data-i18n="th.lead">Hierarchy is the typographer's grammar. Without it, a page is a crowd. With it, the eye knows exactly where to go and in what order — without the reader needing to think about it at all.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="th.s1.title">What Hierarchy Actually Is</h2>
+        <p data-i18n="th.s1.p1">Typography hierarchy is the system of visual relationships that tells a reader: this matters more than that. It's communicated through size, weight, spacing, color, case, and style — not any one of these in isolation, but their combination and contrast.</p>
+        <p data-i18n="th.s1.p2">A beginner's mistake is thinking hierarchy means "make the important things bigger." That's part of it. But hierarchy is really about contrast — and contrast requires a controlled range. When everything is large, nothing is important. When everything is the same weight, the eye wanders.</p>
+        <div class="pull-quote" data-i18n="th.pull">The eye follows contrast. Build your hierarchy by controlling what contrasts with what, not by maximizing emphasis everywhere.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="th.s2.title">The Typographic Scale</h2>
+        <p data-i18n="th.s2.p1">A type scale is a set of predetermined sizes that relate to each other mathematically. Common ratios: 1.25 (Major Third), 1.333 (Perfect Fourth), 1.5 (Perfect Fifth). The ratio determines how dramatically sizes step up — a larger ratio gives bolder hierarchy, a smaller one gives subtle elegance.</p>
+        <div class="type-demo">
+          <div class="type-row">
+            <span class="type-meta">72px / 4.5rem</span>
+            <span style="font-size: clamp(2rem, 5vw, 4.5rem); line-height: 1;">Display</span>
+          </div>
+          <div class="type-row">
+            <span class="type-meta">48px / 3rem</span>
+            <span style="font-size: clamp(1.5rem, 3.5vw, 3rem); line-height: 1.1;">Heading 1</span>
+          </div>
+          <div class="type-row">
+            <span class="type-meta">32px / 2rem</span>
+            <span style="font-size: clamp(1.25rem, 2.5vw, 2rem); line-height: 1.2;">Heading 2</span>
+          </div>
+          <div class="type-row">
+            <span class="type-meta">20px / 1.25rem</span>
+            <span style="font-size: 1.25rem; line-height: 1.4;">Subheading / Lead</span>
+          </div>
+          <div class="type-row">
+            <span class="type-meta">16px / 1rem</span>
+            <span style="font-size: 1rem; line-height: 1.6;">Body text. The most-read size. Optimized for long reading. Comfortable line length 60–75 characters.</span>
+          </div>
+          <div class="type-row">
+            <span class="type-meta">12px / 0.75rem</span>
+            <span style="font-size: 0.75rem; letter-spacing: 0.08em; line-height: 1.5; text-transform: uppercase;">LABEL / METADATA / CAPTION</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="th.s3.title">Weight Is Underused</h2>
+        <p data-i18n="th.s3.p1">Most designers reach for size first. Weight is the more subtle and often more powerful lever. A body-sized but bold text draws the eye before a large but light heading. This is how pull quotes, callouts, and key terms work — not by being bigger, but by being heavier.</p>
+        <div class="contrast-demo">
+          <div class="contrast-panel">
+            <div class="contrast-label" data-i18n="th.demo.bad">Size only — weak hierarchy</div>
+            <p style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 0.5rem;">This is a heading</p>
+            <p style="font-size: 1.1rem; font-weight: 300; line-height: 1.6;">This is body text. The difference is minimal. The eye doesn't know where to start and doesn't feel a strong pull toward the heading.</p>
+          </div>
+          <div class="contrast-panel">
+            <div class="contrast-label" data-i18n="th.demo.good">Size + weight — clear hierarchy</div>
+            <p style="font-size: 1.4rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem;">This is a heading</p>
+            <p style="font-size: 1rem; font-weight: 400; line-height: 1.6;">This is body text. The contrast between bold heading and regular body creates an immediate, clear reading order. The eye is guided.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="th.s4.title">Spacing as Hierarchy Signal</h2>
+        <p data-i18n="th.s4.p1">Space around an element signals its importance. More space = more breathing room = more visual weight. The heading that has 3rem of space above it reads as more significant than one with 1rem, even at the same size and weight.</p>
+        <p data-i18n="th.s4.p2">The practical rule: space above a heading should be roughly twice the space below it. This visually connects the heading to the content that follows it, rather than floating it between two sections with equal ambiguity.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="th.s5.title">Color in Hierarchy</h2>
+        <p data-i18n="th.s5.p1">Color adds a third dimension to hierarchy without changing size or weight. In a dark-mode palette, full-opacity white reads as primary, 70% opacity as secondary, 40% as tertiary metadata. This creates a hierarchy of visibility that parallels the size hierarchy.</p>
+        <p data-i18n="th.s5.p2">Accent color — used sparingly — functions as a visual interrupt. A single accent-colored label or category tag draws the eye before the heading, establishing context before the reader enters the content. Use it once per section maximum.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="th.s6.title">The Test</h2>
+        <p data-i18n="th.s6.p1">Squint at your layout. Blur your vision until you can't read the text. What you see is the hierarchy as pure shape and value. Can you still tell which element is most important? Can you trace a clear reading order from the shapes alone?</p>
+        <p data-i18n="th.s6.p2">If yes, your hierarchy is structural and will survive any context — small screens, fast scanning, translation. If no, you're relying on content to create hierarchy that the design should be providing. Content meaning and visual weight are separate systems. Both need to work independently.</p>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="../about.html" data-i18n="nav.about">About</a>
+        <a href="../work.html" data-i18n="nav.work">Work</a>
+        <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+        <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'th.category': 'Design',
+    'th.title': 'Typography Hierarchy:<br>How Visual Weight Guides the Eye',
+    'th.lead': 'Hierarchy is the typographer\'s grammar. Without it, a page is a crowd. With it, the eye knows exactly where to go and in what order — without the reader needing to think about it at all.',
+    'th.s1.title': 'What Hierarchy Actually Is',
+    'th.s1.p1': 'Typography hierarchy is the system of visual relationships that tells a reader: this matters more than that. It\'s communicated through size, weight, spacing, color, case, and style — their combination and contrast.',
+    'th.s1.p2': 'A beginner\'s mistake is thinking hierarchy means "make the important things bigger." But hierarchy is really about contrast. When everything is large, nothing is important. When everything is the same weight, the eye wanders.',
+    'th.pull': 'The eye follows contrast. Build your hierarchy by controlling what contrasts with what, not by maximizing emphasis everywhere.',
+    'th.s2.title': 'The Typographic Scale',
+    'th.s2.p1': 'A type scale is a set of predetermined sizes that relate to each other mathematically. Common ratios: 1.25 (Major Third), 1.333 (Perfect Fourth), 1.5 (Perfect Fifth). The ratio determines how dramatically sizes step up.',
+    'th.demo.bad': 'Size only — weak hierarchy',
+    'th.demo.good': 'Size + weight — clear hierarchy',
+    'th.s3.title': 'Weight Is Underused',
+    'th.s3.p1': 'Most designers reach for size first. Weight is the more subtle and often more powerful lever. A body-sized but bold text draws the eye before a large but light heading. This is how pull quotes and callouts work — not by being bigger, but by being heavier.',
+    'th.s4.title': 'Spacing as Hierarchy Signal',
+    'th.s4.p1': 'Space around an element signals its importance. More space = more breathing room = more visual weight. The heading with 3rem above it reads as more significant than one with 1rem, at the same size and weight.',
+    'th.s4.p2': 'The practical rule: space above a heading should be roughly twice the space below it. This visually connects the heading to the content that follows it.',
+    'th.s5.title': 'Color in Hierarchy',
+    'th.s5.p1': 'Color adds a third dimension to hierarchy without changing size or weight. In a dark-mode palette, full-opacity white reads as primary, 70% as secondary, 40% as tertiary metadata.',
+    'th.s5.p2': 'Accent color — used sparingly — functions as a visual interrupt. A single accent-colored label draws the eye before the heading, establishing context before the reader enters the content.',
+    'th.s6.title': 'The Test',
+    'th.s6.p1': 'Squint at your layout until you can\'t read the text. What you see is the hierarchy as pure shape and value. Can you still tell which element is most important? Can you trace a clear reading order from shapes alone?',
+    'th.s6.p2': 'If yes, your hierarchy is structural and will survive any context. If no, you\'re relying on content to create hierarchy that the design should be providing. Content meaning and visual weight are separate systems — both need to work independently.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'th.category': '设计',
+    'th.title': '排版层级：<br>视觉权重如何引导眼睛',
+    'th.lead': '层级是排版师的语法。没有它，页面是一片喧嚣。有了它，眼睛知道该去哪里，以什么顺序——读者完全无需思考。',
+    'th.s1.title': '层级究竟是什么',
+    'th.s1.p1': '排版层级是一套视觉关系系统，告诉读者：这个比那个更重要。它通过字号、字重、间距、颜色、字母大小写和风格传达——不是单独任何一种，而是它们的组合与对比。',
+    'th.s1.p2': '初学者的错误是认为层级意味着"让重要的东西更大"。但层级实际上是关于对比的。当所有东西都很大时，没有什么是重要的。当所有东西重量相同时，眼睛会漫无目的地游荡。',
+    'th.pull': '眼睛追随对比。通过控制什么与什么形成对比来建立层级，而不是到处最大化强调。',
+    'th.s2.title': '字体比例尺',
+    'th.s2.p1': '字体比例尺是一组按数学关系相互关联的预定义尺寸。常见比例：1.25（大三度）、1.333（纯四度）、1.5（纯五度）。比例决定了字号跨越的戏剧性程度。',
+    'th.demo.bad': '仅字号——层级薄弱',
+    'th.demo.good': '字号 + 字重——层级清晰',
+    'th.s3.title': '字重被低估了',
+    'th.s3.p1': '大多数设计师首先想到字号。字重是更微妙、往往更强大的杠杆。正文大小但加粗的文本比大字号但细体的标题更能吸引眼睛。这就是引用块和标注的工作原理——不是通过更大，而是通过更重。',
+    'th.s4.title': '间距作为层级信号',
+    'th.s4.p1': '元素周围的空间传达其重要性。更多空间 = 更多呼吸空间 = 更多视觉权重。在相同字号和字重下，上方有 3rem 空间的标题比有 1rem 的读起来更重要。',
+    'th.s4.p2': '实用规则：标题上方的间距应约为下方间距的两倍。这在视觉上将标题与随后的内容联系起来。',
+    'th.s5.title': '颜色在层级中的作用',
+    'th.s5.p1': '颜色在不改变字号或字重的情况下为层级添加第三维度。在深色模式调色板中，完全不透明的白色读为主要，70% 透明度为次要，40% 为第三级元数据。',
+    'th.s5.p2': '强调色——谨慎使用——充当视觉中断。单个强调色标签在读者进入内容之前吸引眼睛，建立上下文。每个部分最多使用一次。',
+    'th.s6.title': '测试方法',
+    'th.s6.p1': '眯起眼睛看你的布局，直到无法阅读文字。你所看到的是纯粹作为形状和明度的层级。仅凭形状，你还能判断哪个元素最重要吗？能追踪清晰的阅读顺序吗？',
+    'th.s6.p2': '如果可以，你的层级是结构性的，在任何情境下都能成立。如果不能，你依赖内容来创建设计本应提供的层级。内容含义和视觉权重是独立的系统——两者都需要独立运作。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'th.category': 'デザイン',
+    'th.title': 'タイポグラフィ階層：<br>視覚的重みが目を導く方法',
+    'th.lead': '階層はタイポグラファーの文法だ。それなしでは、ページは群衆だ。それがあれば、目はどこへ行くべきか、どの順序でかを正確に知る——読者がまったく考える必要なく。',
+    'th.s1.title': '階層とは実際に何か',
+    'th.s1.p1': 'タイポグラフィ階層は、読者に「これはあれよりも重要だ」と伝える視覚的関係のシステムだ。サイズ、ウェイト、スペーシング、色、ケース、スタイルを通じて伝えられる——それぞれ単独ではなく、組み合わせとコントラストで。',
+    'th.s1.p2': '初心者の間違いは、階層が「重要なものを大きくする」ことを意味すると思うことだ。しかし階層は本当はコントラストについてだ。すべてが大きければ、何も重要ではない。',
+    'th.pull': '目はコントラストを追う。どこでも強調を最大化するのではなく、何と何がコントラストするかを制御することで階層を構築する。',
+    'th.s2.title': 'タイポグラフィックスケール',
+    'th.s2.p1': 'タイプスケールは数学的に互いに関連する所定のサイズのセットだ。一般的な比率：1.25（長三度）、1.333（完全四度）、1.5（完全五度）。比率はサイズがどれほど劇的にステップアップするかを決める。',
+    'th.demo.bad': 'サイズのみ——弱い階層',
+    'th.demo.good': 'サイズ+ウェイト——明確な階層',
+    'th.s3.title': 'ウェイトは過小評価されている',
+    'th.s3.p1': 'ほとんどのデザイナーはまずサイズに頼る。ウェイトはより微妙で、しばしばより強力なレバーだ。本文サイズでも太字のテキストは、大きくても細い見出しより先に目を引く。',
+    'th.s4.title': '階層シグナルとしてのスペーシング',
+    'th.s4.p1': '要素の周りのスペースはその重要性を示す。より多くのスペース = より多くの余白 = より多くの視覚的重み。同じサイズとウェイトでも、上に3remのスペースがある見出しは1remのものより重要に読める。',
+    'th.s4.p2': '実践的なルール：見出しの上のスペースは下のスペースの約2倍であるべきだ。これにより見出しが後続のコンテンツと視覚的につながる。',
+    'th.s5.title': '階層における色',
+    'th.s5.p1': 'ダークモードパレットでは、完全不透明の白がプライマリ、70%がセカンダリ、40%がサードメタデータとして読まれる。色はサイズやウェイトを変えずに階層に三次元を加える。',
+    'th.s5.p2': 'アクセントカラーは——控えめに使うと——視覚的な中断として機能する。単一のアクセントカラーラベルは、読者がコンテンツに入る前に目を引き、コンテキストを確立する。',
+    'th.s6.title': 'テスト',
+    'th.s6.p1': 'テキストが読めなくなるまでレイアウトを細目で見る。見えるのは純粋な形と値としての階層だ。形だけで最も重要な要素がわかるか？明確な読み順を追えるか？',
+    'th.s6.p2': 'そうなら、階層は構造的でどんなコンテキストでも機能する。そうでなければ、デザインが提供すべき階層をコンテンツに頼っている。コンテンツの意味と視覚的重みは別々のシステムだ——両方が独立して機能する必要がある。',
+    'article.back': '← すべてのアイデア',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
