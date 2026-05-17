@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>White Space Is Not Empty — vsike</title>
+  <meta name="description" content="The blank areas in a design aren't the absence of design — they're the most active part of it. A case for negative space as the primary tool of visual hierarchy, emphasis, and meaning.">
+  <meta name="keywords" content="white space design, negative space UI, interface design philosophy, visual hierarchy, design craft, typography spacing, breathing room design">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .demo-row { display: flex; gap: 1px; background: var(--fg-dim); margin: 2rem 0; }
+    .demo-cell { flex: 1; background: var(--bg); padding: 1.5rem; }
+    .demo-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; }
+    .demo-tight { line-height: 1.2; letter-spacing: -.01em; }
+    .demo-tight p { margin: 0; font-size: var(--fs-sm); }
+    .demo-open { line-height: 1.9; letter-spacing: .01em; }
+    .demo-open p { margin: 0; font-size: var(--fs-sm); color: var(--fg-muted); }
+    .pull-quote { font-family: var(--serif); font-size: var(--fs-xl); letter-spacing: -.025em; line-height: 1.45; color: var(--fg-muted); max-width: 600px; margin: 3rem 0; padding-left: 2rem; border-left: 2px solid var(--accent); }
+    @media (max-width: 600px) { .demo-row { flex-direction: column; } }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="ws.cat">Design</span>
+        <span class="article-date" data-i18n="ws.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="ws.title">White Space<br>Is Not Empty</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="ws.lead">The blank areas in a design aren't the absence of design — they are its most active ingredient. Negative space controls what you see first, what feels important, and how long something holds your attention. You can't remove it without removing meaning.</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="ws.s1.h">The Beginner's Mistake</h2>
+      <p data-i18n="ws.s1.p1">Every designer who has ever shown work to a non-designer has heard some version of the same note: "Can we fill in that space? It feels a bit empty." The instinct makes sense. Empty feels unfinished. Unused real estate looks like a mistake. Value, in most contexts, is measured by density — more features, more content, more signal.</p>
+      <p data-i18n="ws.s1.p2">But a page or a screen isn't real estate. It's a field of attention. And attention, unlike physical space, doesn't divide evenly between everything present — it clusters, hierarchizes, and exhausts. When everything is present, nothing is emphasized. When nothing is rested, nothing can be read.</p>
+      <p data-i18n="ws.s1.p3">The blank areas aren't where the design stops. They're where the design works silently, doing the things that only absence can do: separating, grouping, elevating, and resting the eye. Remove the space and you don't get a denser design — you get noise.</p>
+
+      <h2 data-i18n="ws.s2.h">Space Does Four Jobs</h2>
+      <p data-i18n="ws.s2.p1">It's worth naming what white space actually accomplishes, because "it looks cleaner" is too vague to defend and too subjective to teach. Negative space performs specific, measurable functions in any visual composition.</p>
+      <p data-i18n="ws.s2.p2"><strong data-i18n="ws.s2.job1.label">Separation.</strong> <span data-i18n="ws.s2.job1.text">Space between elements tells the eye they are distinct. Increase the gap between two items and the visual system reads them as separate categories. This is more reliable than borders, dividers, or background fills — which add visual noise while achieving the same cognitive effect.</span></p>
+      <p data-i18n="ws.s2.p3"><strong data-i18n="ws.s2.job2.label">Grouping.</strong> <span data-i18n="ws.s2.job2.text">The same principle inverted. Less space between items signals they belong together. This is Gestalt's law of proximity in action: proximity creates relationship without any explicit connector. A label and its field, a heading and its paragraph, a price and its product — all bound by closeness alone.</span></p>
+      <p data-i18n="ws.s2.p4"><strong data-i18n="ws.s2.job3.label">Emphasis.</strong> <span data-i18n="ws.s2.job3.text">Space around an element amplifies it. A single sentence surrounded by whitespace commands more attention than a bold headline in a crowded layout. This is why luxury brands use so much space — the space is the signal. It says: this thing matters enough to stand alone.</span></p>
+      <p data-i18n="ws.s2.p5"><strong data-i18n="ws.s2.job4.label">Rhythm.</strong> <span data-i18n="ws.s2.job4.text">Consistent spacing creates a cadence — the visual equivalent of a beat. When paragraph margins, section gaps, and component spacing follow a proportional system, the page feels composed. When they're arbitrary, the page feels anxious. Rhythm is what makes a long-form layout readable rather than exhausting.</span></p>
+
+      <div class="demo-row">
+        <div class="demo-cell">
+          <div class="demo-label" data-i18n="ws.demo.tight">Compressed</div>
+          <div class="demo-tight">
+            <p data-i18n="ws.demo.tight.text">The interface demands attention. Every surface is occupied. Navigation, calls to action, notifications, and content compete in the same visual field at the same weight. The eye doesn't know where to start so it starts everywhere and finishes nothing.</p>
+          </div>
+        </div>
+        <div class="demo-cell">
+          <div class="demo-label" data-i18n="ws.demo.open">Breathing</div>
+          <div class="demo-open">
+            <p data-i18n="ws.demo.open.text">The interface offers space to land. Content arrives at its own pace. The eye finds hierarchy naturally — this comes first, then that. The white between elements isn't wasted; it's doing the work of directing attention without shouting.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 data-i18n="ws.s3.h">Macro vs Micro Space</h2>
+      <p data-i18n="ws.s3.p1">White space operates at two scales that require separate attention. Macro space is the large structural breathing room: margins, section gaps, the padding around major content blocks. It determines the overall pace and tone of a layout. Generous macro space reads as confident and considered. Cramped macro space reads as anxious or uncertain — like a presentation where the speaker has left no pauses.</p>
+      <p data-i18n="ws.s3.p2">Micro space is the space between letters, between lines, between a label and its value, between a button's text and its edge. It's easy to overlook because it operates below the threshold of conscious notice — until it's wrong. Tight letter-spacing makes text feel aggressive. Insufficient line height makes paragraphs feel like walls. A button with too little padding feels like it's apologizing for taking up space.</p>
+      <p data-i18n="ws.s3.p3">The two scales must be considered together. A layout can have generous macro space and uncomfortable micro space — wide margins around a block of text with 1.3 line height — and the result feels inconsistent, like a well-dressed person wearing tight shoes. Both scales need to breathe proportionally.</p>
+
+      <div class="pull-quote">
+        <span data-i18n="ws.quote">"A button with too little padding feels like it's apologizing for taking up space."</span>
+      </div>
+
+      <h2 data-i18n="ws.s4.h">The Spacing System Problem</h2>
+      <p data-i18n="ws.s4.p1">The most common source of visual inconsistency in production interfaces isn't wrong colors or mismatched fonts — it's arbitrary spacing. When each developer picks a pixel value that looks about right to them, the result is a layout that vibrates with low-level disorder. Nothing is explicitly wrong, but nothing feels quite intentional either.</p>
+      <p data-i18n="ws.s4.p2">A spacing scale solves this by making the available spacing values a deliberate, limited set. The most robust approach is a base-4 or base-8 system: 4, 8, 12, 16, 24, 32, 48, 64. Every gap in the layout comes from this set. The constraint isn't limiting — it's enabling, because it eliminates the cognitive overhead of deciding and creates visual coherence without effort.</p>
+      <p data-i18n="ws.s4.p3">CSS custom properties make this trivial to implement and easy to maintain. Name the values semantically (--space-xs, --space-sm, --space-md, --space-lg, --space-xl) and the scale becomes self-documenting. A component that uses --space-lg between its sections and --space-sm between its label and its input is legible to any developer who reads it later.</p>
+
+      <h2 data-i18n="ws.s5.h">When to Break the Space</h2>
+      <p data-i18n="ws.s5.p1">The case for white space is not a case for uniformity. A layout where everything has equal breathing room is as monotonous as one where nothing does. The point of generous space is contrast — so that when something is dense, tight, or urgent, it reads that way against the openness around it.</p>
+      <p data-i18n="ws.s5.p2">A code block that sits flush against a dark background, without the surrounding margins of the prose, creates productive tension. A data table that is necessarily compact is legible precisely because the text around it is not. A call to action that breaks the column to span the full width works because the structure it breaks was established by consistent spacing.</p>
+      <p data-i18n="ws.s5.p3">The rule isn't "always use more space." The rule is "use space with intention, so that its presence and absence both mean something." That distinction is the difference between a layout that was designed and one that was assembled.</p>
+
+      <h2 data-i18n="ws.s6.h">Space as Confidence</h2>
+      <p data-i18n="ws.s6.p1">There is a cultural dimension to white space that's worth naming directly: it requires confidence to deploy. Adding space means trusting that what's there is enough — that the content doesn't need to be surrounded by more content to justify itself. That the silence between elements doesn't mean nothing is happening; it means what's happening doesn't need noise to validate it.</p>
+      <p data-i18n="ws.s6.p2">The pressure to fill space usually comes from insecurity — a product that doesn't trust its own value proposition crams features onto its homepage. A brand that isn't sure of its positioning fills its materials with copy. An interface that doesn't believe in its own clarity adds tooltips, labels, and helper text until nothing is clear at all.</p>
+      <p data-i18n="ws.s6.p3">White space, at its best, is an argument. It says: this thing is worth your undivided attention for a moment. Everything around it has been moved aside so you can see it clearly. That argument is only available to designers who have decided what actually matters — and had the confidence to show it alone.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'ws.cat': 'Design',
+    'ws.date': 'May 2026',
+    'ws.title': 'White Space<br>Is Not Empty',
+    'ws.lead': 'The blank areas in a design aren\'t the absence of design — they are its most active ingredient. Negative space controls what you see first, what feels important, and how long something holds your attention. You can\'t remove it without removing meaning.',
+    'ws.s1.h': 'The Beginner\'s Mistake',
+    'ws.s1.p1': 'Every designer who has ever shown work to a non-designer has heard some version of the same note: "Can we fill in that space? It feels a bit empty." The instinct makes sense. Empty feels unfinished. Unused real estate looks like a mistake. Value, in most contexts, is measured by density — more features, more content, more signal.',
+    'ws.s1.p2': 'But a page or a screen isn\'t real estate. It\'s a field of attention. And attention, unlike physical space, doesn\'t divide evenly between everything present — it clusters, hierarchizes, and exhausts. When everything is present, nothing is emphasized. When nothing is rested, nothing can be read.',
+    'ws.s1.p3': 'The blank areas aren\'t where the design stops. They\'re where the design works silently, doing the things that only absence can do: separating, grouping, elevating, and resting the eye. Remove the space and you don\'t get a denser design — you get noise.',
+    'ws.s2.h': 'Space Does Four Jobs',
+    'ws.s2.p1': 'It\'s worth naming what white space actually accomplishes, because "it looks cleaner" is too vague to defend and too subjective to teach. Negative space performs specific, measurable functions in any visual composition.',
+    'ws.s2.p2': '',
+    'ws.s2.job1.label': 'Separation.',
+    'ws.s2.job1.text': 'Space between elements tells the eye they are distinct. Increase the gap between two items and the visual system reads them as separate categories. This is more reliable than borders, dividers, or background fills — which add visual noise while achieving the same cognitive effect.',
+    'ws.s2.p3': '',
+    'ws.s2.job2.label': 'Grouping.',
+    'ws.s2.job2.text': 'The same principle inverted. Less space between items signals they belong together. This is Gestalt\'s law of proximity in action: proximity creates relationship without any explicit connector. A label and its field, a heading and its paragraph, a price and its product — all bound by closeness alone.',
+    'ws.s2.p4': '',
+    'ws.s2.job3.label': 'Emphasis.',
+    'ws.s2.job3.text': 'Space around an element amplifies it. A single sentence surrounded by whitespace commands more attention than a bold headline in a crowded layout. This is why luxury brands use so much space — the space is the signal. It says: this thing matters enough to stand alone.',
+    'ws.s2.p5': '',
+    'ws.s2.job4.label': 'Rhythm.',
+    'ws.s2.job4.text': 'Consistent spacing creates a cadence — the visual equivalent of a beat. When paragraph margins, section gaps, and component spacing follow a proportional system, the page feels composed. When they\'re arbitrary, the page feels anxious. Rhythm is what makes a long-form layout readable rather than exhausting.',
+    'ws.demo.tight': 'Compressed',
+    'ws.demo.tight.text': 'The interface demands attention. Every surface is occupied. Navigation, calls to action, notifications, and content compete in the same visual field at the same weight. The eye doesn\'t know where to start so it starts everywhere and finishes nothing.',
+    'ws.demo.open': 'Breathing',
+    'ws.demo.open.text': 'The interface offers space to land. Content arrives at its own pace. The eye finds hierarchy naturally — this comes first, then that. The white between elements isn\'t wasted; it\'s doing the work of directing attention without shouting.',
+    'ws.s3.h': 'Macro vs Micro Space',
+    'ws.s3.p1': 'White space operates at two scales that require separate attention. Macro space is the large structural breathing room: margins, section gaps, the padding around major content blocks. It determines the overall pace and tone of a layout. Generous macro space reads as confident and considered. Cramped macro space reads as anxious or uncertain — like a presentation where the speaker has left no pauses.',
+    'ws.s3.p2': 'Micro space is the space between letters, between lines, between a label and its value, between a button\'s text and its edge. It\'s easy to overlook because it operates below the threshold of conscious notice — until it\'s wrong. Tight letter-spacing makes text feel aggressive. Insufficient line height makes paragraphs feel like walls. A button with too little padding feels like it\'s apologizing for taking up space.',
+    'ws.s3.p3': 'The two scales must be considered together. A layout can have generous macro space and uncomfortable micro space — wide margins around a block of text with 1.3 line height — and the result feels inconsistent, like a well-dressed person wearing tight shoes. Both scales need to breathe proportionally.',
+    'ws.quote': '"A button with too little padding feels like it\'s apologizing for taking up space."',
+    'ws.s4.h': 'The Spacing System Problem',
+    'ws.s4.p1': 'The most common source of visual inconsistency in production interfaces isn\'t wrong colors or mismatched fonts — it\'s arbitrary spacing. When each developer picks a pixel value that looks about right to them, the result is a layout that vibrates with low-level disorder. Nothing is explicitly wrong, but nothing feels quite intentional either.',
+    'ws.s4.p2': 'A spacing scale solves this by making the available spacing values a deliberate, limited set. The most robust approach is a base-4 or base-8 system: 4, 8, 12, 16, 24, 32, 48, 64. Every gap in the layout comes from this set. The constraint isn\'t limiting — it\'s enabling, because it eliminates the cognitive overhead of deciding and creates visual coherence without effort.',
+    'ws.s4.p3': 'CSS custom properties make this trivial to implement and easy to maintain. Name the values semantically (--space-xs, --space-sm, --space-md, --space-lg, --space-xl) and the scale becomes self-documenting. A component that uses --space-lg between its sections and --space-sm between its label and its input is legible to any developer who reads it later.',
+    'ws.s5.h': 'When to Break the Space',
+    'ws.s5.p1': 'The case for white space is not a case for uniformity. A layout where everything has equal breathing room is as monotonous as one where nothing does. The point of generous space is contrast — so that when something is dense, tight, or urgent, it reads that way against the openness around it.',
+    'ws.s5.p2': 'A code block that sits flush against a dark background, without the surrounding margins of the prose, creates productive tension. A data table that is necessarily compact is legible precisely because the text around it is not. A call to action that breaks the column to span the full width works because the structure it breaks was established by consistent spacing.',
+    'ws.s5.p3': 'The rule isn\'t "always use more space." The rule is "use space with intention, so that its presence and absence both mean something." That distinction is the difference between a layout that was designed and one that was assembled.',
+    'ws.s6.h': 'Space as Confidence',
+    'ws.s6.p1': 'There is a cultural dimension to white space that\'s worth naming directly: it requires confidence to deploy. Adding space means trusting that what\'s there is enough — that the content doesn\'t need to be surrounded by more content to justify itself. That the silence between elements doesn\'t mean nothing is happening; it means what\'s happening doesn\'t need noise to validate it.',
+    'ws.s6.p2': 'The pressure to fill space usually comes from insecurity — a product that doesn\'t trust its own value proposition crams features onto its homepage. A brand that isn\'t sure of its positioning fills its materials with copy. An interface that doesn\'t believe in its own clarity adds tooltips, labels, and helper text until nothing is clear at all.',
+    'ws.s6.p3': 'White space, at its best, is an argument. It says: this thing is worth your undivided attention for a moment. Everything around it has been moved aside so you can see it clearly. That argument is only available to designers who have decided what actually matters — and had the confidence to show it alone.',
+  },
+  zh: {
+    'ws.cat': '设计',
+    'ws.date': '2026年5月',
+    'ws.title': '留白<br>并非空白',
+    'ws.lead': '设计中的空白区域不是设计的缺席——它是设计最活跃的成分。负空间控制着你首先看到什么、什么感觉重要，以及某样东西能抓住你注意力多久。移除它，就是移除意义。',
+    'ws.s1.h': '初学者的错误',
+    'ws.s1.p1': '每一位曾向非设计师展示作品的设计师都听过同一种意见的某个版本："能不能填满那片空间？感觉有点空。"这种直觉说得通。空旷感觉未完成。未被利用的空间看起来像一个错误。在大多数情况下，价值用密度来衡量——更多功能、更多内容、更多信号。',
+    'ws.s1.p2': '但页面或屏幕不是房地产。它是一个注意力场域。而注意力，不像物理空间，不会在所有在场事物之间均匀分配——它会聚集、分层、并耗尽。当所有事物都存在时，没有任何事物被强调。当没有任何事物得到休息时，没有任何事物可以被阅读。',
+    'ws.s1.p3': '空白区域不是设计停止的地方。它们是设计无声运作的地方，做着只有缺席才能做的事：分隔、归组、提升，以及让眼睛休息。移除空间，你得到的不是更密集的设计——而是噪音。',
+    'ws.s2.h': '空间的四项工作',
+    'ws.s2.p1': '明确留白实际上完成了什么是值得的，因为"它看起来更整洁"太模糊而难以捍卫，也太主观而难以教授。负空间在任何视觉构图中执行具体的、可衡量的功能。',
+    'ws.s2.p2': '',
+    'ws.s2.job1.label': '分隔。',
+    'ws.s2.job1.text': '元素之间的空间告诉眼睛它们是不同的。增加两个项目之间的间距，视觉系统就会将它们读为不同的类别。这比边框、分割线或背景填充更可靠——后者在实现相同认知效果的同时增加了视觉噪音。',
+    'ws.s2.p3': '',
+    'ws.s2.job2.label': '归组。',
+    'ws.s2.job2.text': '同一原理的反面。项目之间较少的空间表明它们属于一起。这是格式塔邻近法则的实际应用：邻近性无需任何明确的连接器就能创建关系。标签与其字段、标题与其段落、价格与其产品——都仅通过接近性联系在一起。',
+    'ws.s2.p4': '',
+    'ws.s2.job3.label': '强调。',
+    'ws.s2.job3.text': '元素周围的空间会放大它。被空白包围的单句话比拥挤布局中的粗体标题更能吸引注意力。这就是奢侈品牌使用如此多空间的原因——空间就是信号。它说：这件事重要到足以独立存在。',
+    'ws.s2.p5': '',
+    'ws.s2.job4.label': '节奏。',
+    'ws.s2.job4.text': '一致的间距创造韵律——视觉上等同于节拍。当段落间距、章节间隔和组件间距遵循比例系统时，页面感觉有章可循。当它们是任意的，页面感觉焦虑。节奏是使长篇布局可读而非令人疲惫的原因。',
+    'ws.demo.tight': '压缩',
+    'ws.demo.tight.text': '界面索取注意力。每个表面都被占用。导航、行动号召、通知和内容在同一视觉场域中以同等权重竞争。眼睛不知道从哪里开始，所以它从所有地方开始，什么都没完成。',
+    'ws.demo.open': '呼吸',
+    'ws.demo.open.text': '界面提供落脚的空间。内容以自己的节奏到来。眼睛自然地找到层次——这个先来，然后是那个。元素之间的白色不是浪费；它在不大声喊叫的情况下引导注意力。',
+    'ws.s3.h': '宏观 vs 微观空间',
+    'ws.s3.p1': '留白在两个需要分别关注的尺度上运作。宏观空间是大型结构性呼吸空间：边距、章节间隔、主要内容块周围的内边距。它决定布局的整体节奏和基调。慷慨的宏观空间读起来自信而深思熟虑。局促的宏观空间读起来焦虑或不确定——像一个演讲者没有留下任何停顿的演示。',
+    'ws.s3.p2': '微观空间是字母之间、行与行之间、标签与其值之间、按钮文字与其边缘之间的空间。它很容易被忽视，因为它在有意识注意的阈值以下运作——直到它出错。紧密的字母间距使文本感觉咄咄逼人。不足的行高使段落感觉像墙。内边距太小的按钮感觉像在为占用空间而道歉。',
+    'ws.s3.p3': '这两个尺度必须一起考虑。一个布局可以有慷慨的宏观空间和不舒适的微观空间——围绕行高为 1.3 的文字块的宽边距——结果感觉不一致，就像一个穿着体面但鞋子太紧的人。两个尺度都需要按比例呼吸。',
+    'ws.quote': '"内边距太小的按钮，感觉像在为占用空间而道歉。"',
+    'ws.s4.h': '间距系统问题',
+    'ws.s4.p1': '生产界面中视觉不一致最常见的来源不是错误的颜色或不匹配的字体——而是任意的间距。当每个开发者选择一个在他们看来差不多合适的像素值时，结果是一个带有低级混乱感的布局。没有任何明显的错误，但也没有任何感觉是有意为之的。',
+    'ws.s4.p2': '间距刻度通过将可用间距值设为一个刻意的、有限的集合来解决这个问题。最稳健的方法是基于 4 或基于 8 的系统：4、8、12、16、24、32、48、64。布局中的每个间隙都来自这个集合。约束不是限制性的——它是赋能的，因为它消除了决策的认知开销，并毫不费力地创造视觉连贯性。',
+    'ws.s4.p3': 'CSS 自定义属性使这变得易于实现和维护。语义命名这些值（--space-xs、--space-sm、--space-md、--space-lg、--space-xl），刻度就变得自文档化。一个在其章节之间使用 --space-lg、在标签和输入之间使用 --space-sm 的组件，对于之后阅读它的任何开发者都是清晰可读的。',
+    'ws.s5.h': '何时打破空间',
+    'ws.s5.p1': '为留白辩护的论点不是为统一性辩护。所有事物都有相等呼吸空间的布局与任何事物都没有的布局一样单调。慷慨空间的意义在于对比——所以当某物是密集的、紧张的或紧迫的时，它就在周围的开放性中被读作那样。',
+    'ws.s5.p2': '紧贴深色背景、没有散文周围边距的代码块，创造了富有成效的张力。必然紧凑的数据表格之所以清晰可读，恰恰是因为其周围的文字不是这样。跨越完整宽度打破列的行动号召之所以有效，是因为它所打破的结构是由一致的间距建立的。',
+    'ws.s5.p3': '规则不是"总是使用更多空间"。规则是"有意地使用空间，使其存在和缺席都有意义"。这个区别是经过设计的布局与被拼凑出来的布局之间的差异。',
+    'ws.s6.h': '空间即自信',
+    'ws.s6.p1': '留白有一个值得直接点名的文化维度：使用它需要自信。增加空间意味着相信现有的东西已经足够——内容不需要被更多内容包围来证明自己的价值。元素之间的沉默不意味着什么都没有发生；它意味着正在发生的事情不需要噪音来验证。',
+    'ws.s6.p2': '填满空间的压力通常来自不安全感——一个不信任自己价值主张的产品在首页堆满功能。一个不确定自身定位的品牌用文案填满其材料。一个不相信自身清晰度的界面添加工具提示、标签和帮助文本，直到什么都不清晰为止。',
+    'ws.s6.p3': '留白在最佳状态下是一个论点。它说：这件事值得你片刻的专注。它周围的一切都被移开了，所以你可以清晰地看到它。这个论点只对那些已经决定什么真正重要、并且有勇气单独展示它的设计师可用。',
+  },
+  ja: {
+    'ws.cat': 'デザイン',
+    'ws.date': '2026年5月',
+    'ws.title': '余白は<br>空ではない',
+    'ws.lead': 'デザインの空白部分はデザインの不在ではなく、最も活発な要素だ。ネガティブスペースは何を最初に見るか、何が重要に感じるか、何がどれだけ長く注意を引き付けるかを制御する。それを取り除くことは意味を取り除くことだ。',
+    'ws.s1.h': '初心者の間違い',
+    'ws.s1.p1': 'デザイナーなら誰でも、非デザイナーに作品を見せた経験があれば、同じようなコメントを聞いたことがあるはずだ：「あのスペース、埋められないですか？少し空っぽに見えて。」この直感は理解できる。空っぽは未完成に見える。使われていないスペースはミスのように見える。ほとんどの文脈では、価値は密度で測られる——より多くの機能、より多くのコンテンツ、より多くのシグナル。',
+    'ws.s1.p2': 'しかし、ページやスクリーンは不動産ではない。それは注意力の場だ。そして注意力は、物理的空間と違い、存在するすべてのものの間に均等に分配されない——クラスター化し、階層化し、疲弊する。すべてが存在するとき、何も強調されない。何も休まないとき、何も読めない。',
+    'ws.s1.p3': '空白部分はデザインが止まる場所ではない。それはデザインが静かに機能する場所であり、不在だけができることをする：分離し、グループ化し、引き立て、目を休ませる。スペースを取り除くと、より密度の高いデザインが得られるのではなく——ノイズが得られる。',
+    'ws.s2.h': 'スペースの4つの仕事',
+    'ws.s2.p1': '余白が実際に何を達成するかを明確にする価値がある。なぜなら「よりクリーンに見える」は擁護するには曖昧すぎ、教えるには主観的すぎるからだ。ネガティブスペースはあらゆる視覚構成において具体的で測定可能な機能を果たす。',
+    'ws.s2.p2': '',
+    'ws.s2.job1.label': '分離。',
+    'ws.s2.job1.text': '要素間のスペースは、それらが別々であることを目に伝える。2つのアイテム間のギャップを増やすと、視覚システムはそれらを別々のカテゴリとして読み取る。これは境界線、区切り線、背景塗りよりも信頼性が高い——後者は同じ認知効果を達成しながら視覚的ノイズを追加する。',
+    'ws.s2.p3': '',
+    'ws.s2.job2.label': 'グループ化。',
+    'ws.s2.job2.text': '同じ原理の逆。アイテム間のスペースが少ないことは、それらが一緒に属することを示す。これはゲシュタルトの近接の法則の実践だ：近接性は明示的なコネクタなしに関係を作り出す。ラベルとそのフィールド、見出しとその段落、価格とその製品——すべて近さだけで結びついている。',
+    'ws.s2.p4': '',
+    'ws.s2.job3.label': '強調。',
+    'ws.s2.job3.text': '要素の周りのスペースはそれを増幅する。余白に囲まれた一つの文は、混雑したレイアウトの太字の見出しよりも多くの注意を引き付ける。これがラグジュアリーブランドがこれほど多くのスペースを使う理由だ——スペースがシグナルだ。それは言う：これは単独で立つのに十分重要だ、と。',
+    'ws.s2.p5': '',
+    'ws.s2.job4.label': 'リズム。',
+    'ws.s2.job4.text': '一貫したスペースはリズムを生み出す——ビジュアルにおけるビートの等価物。段落マージン、セクションギャップ、コンポーネントスペースが比例システムに従うと、ページは構成されたように感じる。それらが任意のとき、ページは不安に感じる。リズムは長文レイアウトを消耗するのではなく読みやすくするものだ。',
+    'ws.demo.tight': '圧縮',
+    'ws.demo.tight.text': 'インターフェースは注意を要求する。すべての表面が占有されている。ナビゲーション、行動の呼びかけ、通知、コンテンツが同じ視覚フィールドで同じ重みで競争する。目はどこから始めるかわからないので、あちこちから始め、何も終わらない。',
+    'ws.demo.open': '呼吸',
+    'ws.demo.open.text': 'インターフェースは着地するスペースを提供する。コンテンツは自分のペースで届く。目は自然に階層を見つける——これが先で、次はそれ。要素間の白は無駄ではなく、叫ばずに注意を誘導する仕事をしている。',
+    'ws.s3.h': 'マクロ vs マイクロスペース',
+    'ws.s3.p1': '余白は別々に注意が必要な2つのスケールで機能する。マクロスペースは大きな構造的呼吸空間だ：マージン、セクションギャップ、主要コンテンツブロックのパディング。それはレイアウトの全体的なペースとトーンを決める。寛大なマクロスペースは自信があり、考え抜かれているように読める。窮屈なマクロスペースは不安または不確かに読める——話者がポーズを置かないプレゼンテーションのように。',
+    'ws.s3.p2': 'マイクロスペースは、文字間、行間、ラベルとその値の間、ボタンのテキストとその端の間のスペースだ。意識的な気づきの閾値以下で機能するため、気づきにくい——間違っているまで。タイトなレタースペーシングはテキストを攻撃的に感じさせる。不十分なラインハイトは段落を壁のように感じさせる。パディングが少なすぎるボタンはスペースを取ることを詫びているように感じる。',
+    'ws.s3.p3': '2つのスケースは一緒に考えなければならない。レイアウトは寛大なマクロスペースと不快なマイクロスペースを持てる——行高1.3のテキストブロックの周りの広いマージン——その結果は、きれいに着飾っているが靴がきつい人のように、一貫性がないように感じる。両方のスケースが比例して呼吸する必要がある。',
+    'ws.quote': '"パディングが少なすぎるボタンは、スペースを取ることを詫びているように感じる。"',
+    'ws.s4.h': 'スペーシングシステム問題',
+    'ws.s4.p1': '本番インターフェースでの視覚的不一致の最も一般的なソースは、間違った色やミスマッチなフォントではなく——任意のスペーシングだ。各開発者が自分には適切に見えるピクセル値を選ぶと、結果は低レベルの無秩序で振動するレイアウトになる。明確に間違っているものは何もないが、意図的に感じられるものも何もない。',
+    'ws.s4.p2': 'スペーシングスケールは、利用可能なスペーシング値を意図的な、限られたセットにすることでこれを解決する。最も堅牢なアプローチは4または8ベースのシステムだ：4、8、12、16、24、32、48、64。レイアウトのすべてのギャップはこのセットから来る。制約は制限的ではなく——それは可能にする。なぜなら決定の認知的オーバーヘッドを排除し、努力なしに視覚的一貫性を作り出すからだ。',
+    'ws.s4.p3': 'CSSカスタムプロパティはこれを実装するのを簡単にし、維持するのを容易にする。値に意味論的に名前をつけると（--space-xs、--space-sm、--space-md、--space-lg、--space-xl）、スケールは自己文書化になる。セクション間に--space-lgを使い、ラベルと入力の間に--space-smを使うコンポーネントは、後でそれを読む開発者にとっても明確に読める。',
+    'ws.s5.h': 'スペースを破るとき',
+    'ws.s5.p1': '余白のための論拠は均一性のための論拠ではない。すべてのものが均等な呼吸空間を持つレイアウトは、何も持たないものと同様に単調だ。寛大なスペースの意味はコントラストにある——何かが密度が高く、タイトで、緊急のとき、それが周囲の開放性と対比して、そのように読めるように。',
+    'ws.s5.p2': '散文の周囲のマージンなしに暗い背景にぴったりと座るコードブロックは、生産的な緊張を生み出す。必然的にコンパクトなデータテーブルは、その周囲のテキストがそうでないからこそ読みやすい。列を破って全幅にまたがる行動の呼びかけは、それが破った構造が一貫したスペーシングによって確立されていたから機能する。',
+    'ws.s5.p3': 'ルールは「常により多くのスペースを使え」ではない。ルールは「意図を持ってスペースを使い、その存在と不在の両方が何かを意味するようにせよ」だ。その区別がデザインされたレイアウトと組み立てられたレイアウトの違いだ。',
+    'ws.s6.h': 'スペースは自信',
+    'ws.s6.p1': '余白には直接名前を挙げる価値のある文化的側面がある：それを使うには自信が必要だ。スペースを追加することは、そこにあるものが十分だと信頼することを意味する——コンテンツがそれ自体を正当化するために、より多くのコンテンツに囲まれる必要がないということ。要素間の沈黙は何も起きていないことを意味するのではなく、起きていることを検証するためにノイズが必要ないことを意味する。',
+    'ws.s6.p2': 'スペースを埋める圧力は通常、不安感から来る——自分の価値提案を信頼しない製品はホームページに機能を詰め込む。自分のポジショニングに確信がないブランドは材料をコピーで埋める。自分の明確さを信じないインターフェースは、ツールチップ、ラベル、ヘルパーテキストを追加して、何も明確でなくなるまで続ける。',
+    'ws.s6.p3': '余白は最高の状態では論拠だ。それは言う：これは片刻のあなたの全注意に値する。その周りのすべてが脇に寄せられたので、あなたはそれを明確に見ることができる。その論拠は何が本当に重要かを決め、そしてそれを単独で見せる勇気を持ったデザイナーにだけ利用可能だ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
