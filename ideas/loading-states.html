@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading States Are Interface Communication — vsike</title>
+  <meta name="description" content="A spinner is not a design decision — it's a surrender. Every loading state is an opportunity to tell the user something true about what's happening. Most interfaces waste it.">
+  <meta name="keywords" content="加载状态设计, 骨架屏, 乐观UI, loading states design, skeleton screens, optimistic UI, UX design 2026, perceived performance, progressive loading">
+  <link rel="canonical" href="https://www.vsike.com/ideas/loading-states.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pull-quote { font-size: var(--fs-lg); line-height: 1.5; font-weight: 600; letter-spacing: -.02em; border-left: 3px solid var(--accent); padding: 1rem 0 1rem 2rem; margin: 2.5rem 0; color: var(--fg); }
+    .demo-row { display: flex; gap: 1.5rem; margin: 2rem 0; flex-wrap: wrap; }
+    .demo-cell { flex: 1; min-width: 220px; border: 1px solid var(--border); padding: 1.5rem; border-radius: 4px; background: var(--bg); }
+    .demo-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--fg-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
+    .skeleton-line { height: 12px; border-radius: 6px; background: color-mix(in srgb, var(--fg) 12%, var(--bg)); margin-bottom: 10px; animation: shimmer 1.5s infinite; }
+    .skeleton-line.short { width: 60%; }
+    .skeleton-line.medium { width: 80%; }
+    .skeleton-line.long { width: 95%; }
+    .skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; background: color-mix(in srgb, var(--fg) 12%, var(--bg)); margin-bottom: 12px; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0%,100% { opacity: .7; } 50% { opacity: .3; } }
+    .spinner-demo { display: flex; justify-content: center; align-items: center; height: 80px; }
+    .spinner { width: 28px; height: 28px; border: 2px solid color-mix(in srgb, var(--fg) 15%, var(--bg)); border-top-color: var(--fg-muted); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .demo-good { border-color: var(--accent); }
+    .demo-bad { border-color: #c0392b; }
+    .demo-badge { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; font-weight: 700; text-transform: uppercase; margin-bottom: .75rem; }
+    .demo-badge.good { color: var(--accent); }
+    .demo-badge.bad { color: #c0392b; }
+    .progress-bar-wrap { background: color-mix(in srgb, var(--fg) 10%, var(--bg)); border-radius: 4px; height: 6px; margin: .75rem 0; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 4px; background: var(--accent); width: 65%; transition: width .3s; }
+    .loading-copy-example { font-size: var(--fs-sm); color: var(--fg-muted); margin: .5rem 0; font-family: var(--mono); }
+    .loading-copy-example.better { color: var(--fg); }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="ls.cat">Design</span>
+        <span class="article-date" data-i18n="ls.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n="ls.title">Loading States Are Interface Communication</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="ls.lead">A spinner is not a design decision — it's a surrender. Every loading state is an opportunity to tell the user something true about what's happening. Most interfaces waste it.</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="ls.s1.h">The Information Hierarchy of Waiting</h2>
+      <p data-i18n="ls.s1.p1">Human perception of time is not linear. A 200-millisecond delay feels instantaneous; a 2-second delay feels like the interface broke. The threshold between "I didn't notice a delay" and "something is wrong" is surprisingly low — around 100ms for the feeling of immediate response, 1 second for the feeling of acknowledged input, and 10 seconds before users start considering abandoning the task. These thresholds are physiological, not cultural. They don't change across devices or demographics.</p>
+      <p data-i18n="ls.s1.p2">This means loading state design operates within a strict time-based hierarchy. Under 100ms: do nothing, the user doesn't perceive a delay. 100ms–1s: provide instant visual feedback that the action was received — a button press state, a cursor change, a micro-animation. 1s–3s: provide an acknowledgment with some indication that progress is happening. Over 3s: progress indication becomes mandatory; a bare spinner is the minimum acceptable signal, not the ideal one. Over 10s: time estimation becomes necessary — "this usually takes about 30 seconds" is dramatically better than an indefinite indicator.</p>
+      <p data-i18n="ls.s1.p3">The hierarchy matters because most teams design one loading state and apply it everywhere. A spinner that appears in 80ms communicates anxiety; the same spinner that appears after 1.5 seconds communicates acknowledgment. The state is identical; the communication is opposite. Loading state design requires asking not just "what visual do I show?" but "when does this visual appear, and what does its timing communicate to the user?"</p>
+
+      <div class="pull-quote" data-i18n="ls.quote1">The gap between "I didn't notice a delay" and "something is wrong" is 100 milliseconds. Design for that gap, not against it.</div>
+
+      <h2 data-i18n="ls.s2.h">Skeleton Screens vs Spinners</h2>
+      <p data-i18n="ls.s2.p1">The choice between skeleton screens and spinners is not aesthetic — it is semantic. Each communicates a different thing about the state of the interface, and using the wrong one sends false information to the user.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="ls.demo.skeleton.label">Skeleton Screen</div>
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="ls.demo.spinner.label">Generic Spinner</div>
+          <div class="spinner-demo"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <p data-i18n="ls.s2.p2">A skeleton screen communicates: I know what this content will look like, I know where it will go, and I'm fetching the data to fill it. It is content-aware. It tells the user the shape of the incoming information, which dramatically reduces perceived wait time — the brain begins to process the layout before the content arrives, so the content appears to load faster even if the actual latency is identical.</p>
+      <p data-i18n="ls.s2.p3">A spinner communicates: something is happening, I don't know what, I don't know how long. It is content-agnostic. It gives the user no information about what is loading, when it will be done, or what they will see when it finishes. In contexts where you genuinely don't know the shape of the incoming content, this is appropriate. In contexts where you do know — which is most contexts — using a spinner is wasting an opportunity to reduce perceived latency.</p>
+      <p data-i18n="ls.s2.p4">The rule of thumb: use skeleton screens when you know the content structure ahead of the data. Use spinners for truly unknown async operations — API calls that might return anything, long-running processes with unpredictable outcomes. If you find yourself using spinners for well-structured content, it's usually a signal that the content structure wasn't considered in the loading state design pass.</p>
+
+      <h2 data-i18n="ls.s3.h">Progressive Loading</h2>
+      <p data-i18n="ls.s3.p1">Progressive loading is the practice of displaying available content immediately while fetching the rest, rather than withholding all content until everything is ready. It is one of the most effective perceived performance improvements available to product designers, and one of the most commonly skipped.</p>
+      <p data-i18n="ls.s3.p2">The principle is straightforward: prioritize above-the-fold content, render what you have as soon as you have it, and let below-the-fold content load asynchronously as the user scrolls. A news article that shows the headline and first paragraph while the images and sidebar load feels dramatically faster than an article that shows nothing until every element is ready — even if the total time to full load is identical.</p>
+      <p data-i18n="ls.s3.p3">Progressive loading requires coordinating across engineering and design. Designers need to explicitly define the loading priority order: what should appear first, second, third? Engineers need to implement the data fetching in a way that honors that priority — which often means breaking a single "get everything" API call into multiple prioritized requests. This is more complex, but the user experience payoff is significant enough that it should be the default approach for any content-heavy interface, not an optimization to apply after launch.</p>
+
+      <h2 data-i18n="ls.s4.h">Optimistic UI</h2>
+      <p data-i18n="ls.s4.p1">Optimistic UI is the practice of updating the interface immediately when the user takes an action, before the server confirms the action succeeded, and then rolling back if it didn't. It's the most aggressive perceived performance optimization available — it makes latency effectively invisible for the common success case.</p>
+      <p data-i18n="ls.s4.p2">When to use it: optimistic UI is appropriate when the action has a very high success rate (>99%), when the failure case has a clear and recoverable rollback UI, and when the action is reversible (or the stakes of the irreversible case are low). Liking a post, sending a message, reordering a list — these are good optimistic UI candidates. Wire transfers, account deletions, destructive operations — do not use optimistic UI for these. The failure case is too consequential and the user needs to know the action's actual status before proceeding.</p>
+      <p data-i18n="ls.s4.p3">The failure rollback design is often neglected. Most teams implement optimistic UI for the success path but don't put equivalent effort into the failure path. A good rollback shows the user exactly what was undone, explains why, and provides a clear path to retry. A bad rollback silently reverts to the previous state without explanation, leaving the user confused about what happened. Design both paths with equal care.</p>
+
+      <h2 data-i18n="ls.s5.h">Error States Are Also Loading States</h2>
+      <p data-i18n="ls.s5.p1">The loading state sequence is: loading → success or loading → error. Most interfaces design the success case and treat error as an afterthought. Error states are not afterthoughts — they are the honest completion of the loading state design. Every loading state you design should have a corresponding error state that you have also designed.</p>
+      <p data-i18n="ls.s5.p2">Good error states do three things: they tell the user what happened in plain language ("We couldn't load your orders"), they explain what the user can do ("Try again, or check your connection"), and they preserve any user input so the user doesn't have to start over after fixing the underlying problem. This last point is consistently the most neglected — nothing destroys user trust faster than losing form input to a network error and being shown a generic "something went wrong" message with no recovery path.</p>
+      <p data-i18n="ls.s5.p3">The visual design of error states should be distinct from loading states but within the same visual language as the rest of the interface. An error state that looks like a system error page, not a designed product screen, communicates that this was unexpected — which communicates that the engineering team didn't plan for it — which communicates low product quality. Error states that are clearly designed tell the user: this was anticipated, the team built for it, you're in good hands.</p>
+
+      <h2 data-i18n="ls.s6.h">Writing Loading Copy</h2>
+      <p data-i18n="ls.s6.p1">Loading copy is often the last thing considered and the first thing users read. It is also the only communicative element visible during the loading state — when the content isn't there yet, the copy is all the user has to understand what's happening.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="ls.demo.copy.bad.label">Uninformative</div>
+          <div class="loading-copy-example">Loading...</div>
+          <div class="loading-copy-example">Please wait</div>
+          <div class="loading-copy-example">Fetching data</div>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="ls.demo.copy.good.label">Communicative</div>
+          <div class="loading-copy-example better">Fetching your orders (usually 2–3s)</div>
+          <div class="loading-copy-example better">Processing payment — almost done</div>
+          <div class="loading-copy-example better">Building your report…</div>
+        </div>
+      </div>
+
+      <div class="demo-row">
+        <div class="demo-cell" style="flex:1;">
+          <div class="demo-label" data-i18n="ls.demo.progress.label">Progress with Time Estimate</div>
+          <div class="loading-copy-example better">Generating your analysis — step 2 of 4</div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+          <div class="loading-copy-example" style="font-size:.7rem;">About 15 seconds remaining</div>
+        </div>
+      </div>
+
+      <p data-i18n="ls.s6.p2">The rule for loading copy: be specific about what is loading, not generic about the state of loading. "Fetching your orders" is better than "Loading." "Generating report — this usually takes about 30 seconds" is dramatically better than "Please wait." Time estimates reduce anxiety even when they're approximate — users tolerate known waits far better than unknown ones. If you don't know how long something will take, "this might take a moment" is better than silence, but a real time estimate is better still.</p>
+      <p data-i18n="ls.s6.p3">Progressive copy is a technique worth adopting for long operations: change the loading message at intervals to reflect actual progress through the operation. "Analyzing your data... Generating visualizations... Formatting your report..." This serves two purposes: it reassures the user that something is actually happening (the persistent question during any long wait), and it provides something new to read, which makes the wait feel shorter. The copy doesn't need to be technically accurate — it needs to be emotionally accurate. Users don't need to know about your microservice architecture; they need to know the system is working on their behalf.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'ls.cat': 'Design',
+    'ls.date': 'May 2026',
+    'ls.title': 'Loading States Are Interface Communication',
+    'ls.lead': 'A spinner is not a design decision — it\'s a surrender. Every loading state is an opportunity to tell the user something true about what\'s happening. Most interfaces waste it.',
+    'ls.s1.h': 'The Information Hierarchy of Waiting',
+    'ls.s1.p1': 'Human perception of time is not linear. A 200-millisecond delay feels instantaneous; a 2-second delay feels like the interface broke. The threshold between "I didn\'t notice a delay" and "something is wrong" is surprisingly low — around 100ms for the feeling of immediate response, 1 second for the feeling of acknowledged input, and 10 seconds before users start considering abandoning the task. These thresholds are physiological, not cultural. They don\'t change across devices or demographics.',
+    'ls.s1.p2': 'This means loading state design operates within a strict time-based hierarchy. Under 100ms: do nothing, the user doesn\'t perceive a delay. 100ms–1s: provide instant visual feedback that the action was received — a button press state, a cursor change, a micro-animation. 1s–3s: provide an acknowledgment with some indication that progress is happening. Over 3s: progress indication becomes mandatory; a bare spinner is the minimum acceptable signal, not the ideal one. Over 10s: time estimation becomes necessary — "this usually takes about 30 seconds" is dramatically better than an indefinite indicator.',
+    'ls.s1.p3': 'The hierarchy matters because most teams design one loading state and apply it everywhere. A spinner that appears in 80ms communicates anxiety; the same spinner that appears after 1.5 seconds communicates acknowledgment. The state is identical; the communication is opposite. Loading state design requires asking not just "what visual do I show?" but "when does this visual appear, and what does its timing communicate to the user?"',
+    'ls.quote1': 'The gap between "I didn\'t notice a delay" and "something is wrong" is 100 milliseconds. Design for that gap, not against it.',
+    'ls.s2.h': 'Skeleton Screens vs Spinners',
+    'ls.s2.p1': 'The choice between skeleton screens and spinners is not aesthetic — it is semantic. Each communicates a different thing about the state of the interface, and using the wrong one sends false information to the user.',
+    'ls.demo.skeleton.label': 'Skeleton Screen',
+    'ls.demo.spinner.label': 'Generic Spinner',
+    'ls.s2.p2': 'A skeleton screen communicates: I know what this content will look like, I know where it will go, and I\'m fetching the data to fill it. It is content-aware. It tells the user the shape of the incoming information, which dramatically reduces perceived wait time — the brain begins to process the layout before the content arrives, so the content appears to load faster even if the actual latency is identical.',
+    'ls.s2.p3': 'A spinner communicates: something is happening, I don\'t know what, I don\'t know how long. It is content-agnostic. It gives the user no information about what is loading, when it will be done, or what they will see when it finishes. In contexts where you genuinely don\'t know the shape of the incoming content, this is appropriate. In contexts where you do know — which is most contexts — using a spinner is wasting an opportunity to reduce perceived latency.',
+    'ls.s2.p4': 'The rule of thumb: use skeleton screens when you know the content structure ahead of the data. Use spinners for truly unknown async operations — API calls that might return anything, long-running processes with unpredictable outcomes. If you find yourself using spinners for well-structured content, it\'s usually a signal that the content structure wasn\'t considered in the loading state design pass.',
+    'ls.s3.h': 'Progressive Loading',
+    'ls.s3.p1': 'Progressive loading is the practice of displaying available content immediately while fetching the rest, rather than withholding all content until everything is ready. It is one of the most effective perceived performance improvements available to product designers, and one of the most commonly skipped.',
+    'ls.s3.p2': 'The principle is straightforward: prioritize above-the-fold content, render what you have as soon as you have it, and let below-the-fold content load asynchronously as the user scrolls. A news article that shows the headline and first paragraph while the images and sidebar load feels dramatically faster than an article that shows nothing until every element is ready — even if the total time to full load is identical.',
+    'ls.s3.p3': 'Progressive loading requires coordinating across engineering and design. Designers need to explicitly define the loading priority order: what should appear first, second, third? Engineers need to implement the data fetching in a way that honors that priority — which often means breaking a single "get everything" API call into multiple prioritized requests. This is more complex, but the user experience payoff is significant enough that it should be the default approach for any content-heavy interface, not an optimization to apply after launch.',
+    'ls.s4.h': 'Optimistic UI',
+    'ls.s4.p1': 'Optimistic UI is the practice of updating the interface immediately when the user takes an action, before the server confirms the action succeeded, and then rolling back if it didn\'t. It\'s the most aggressive perceived performance optimization available — it makes latency effectively invisible for the common success case.',
+    'ls.s4.p2': 'When to use it: optimistic UI is appropriate when the action has a very high success rate (>99%), when the failure case has a clear and recoverable rollback UI, and when the action is reversible (or the stakes of the irreversible case are low). Liking a post, sending a message, reordering a list — these are good optimistic UI candidates. Wire transfers, account deletions, destructive operations — do not use optimistic UI for these. The failure case is too consequential and the user needs to know the action\'s actual status before proceeding.',
+    'ls.s4.p3': 'The failure rollback design is often neglected. Most teams implement optimistic UI for the success path but don\'t put equivalent effort into the failure path. A good rollback shows the user exactly what was undone, explains why, and provides a clear path to retry. A bad rollback silently reverts to the previous state without explanation, leaving the user confused about what happened. Design both paths with equal care.',
+    'ls.s5.h': 'Error States Are Also Loading States',
+    'ls.s5.p1': 'The loading state sequence is: loading → success or loading → error. Most interfaces design the success case and treat error as an afterthought. Error states are not afterthoughts — they are the honest completion of the loading state design. Every loading state you design should have a corresponding error state that you have also designed.',
+    'ls.s5.p2': 'Good error states do three things: they tell the user what happened in plain language ("We couldn\'t load your orders"), they explain what the user can do ("Try again, or check your connection"), and they preserve any user input so the user doesn\'t have to start over after fixing the underlying problem. This last point is consistently the most neglected — nothing destroys user trust faster than losing form input to a network error and being shown a generic "something went wrong" message with no recovery path.',
+    'ls.s5.p3': 'The visual design of error states should be distinct from loading states but within the same visual language as the rest of the interface. An error state that looks like a system error page, not a designed product screen, communicates that this was unexpected — which communicates that the engineering team didn\'t plan for it — which communicates low product quality. Error states that are clearly designed tell the user: this was anticipated, the team built for it, you\'re in good hands.',
+    'ls.s6.h': 'Writing Loading Copy',
+    'ls.s6.p1': 'Loading copy is often the last thing considered and the first thing users read. It is also the only communicative element visible during the loading state — when the content isn\'t there yet, the copy is all the user has to understand what\'s happening.',
+    'ls.demo.copy.bad.label': 'Uninformative',
+    'ls.demo.copy.good.label': 'Communicative',
+    'ls.demo.progress.label': 'Progress with Time Estimate',
+    'ls.s6.p2': 'The rule for loading copy: be specific about what is loading, not generic about the state of loading. "Fetching your orders" is better than "Loading." "Generating report — this usually takes about 30 seconds" is dramatically better than "Please wait." Time estimates reduce anxiety even when they\'re approximate — users tolerate known waits far better than unknown ones. If you don\'t know how long something will take, "this might take a moment" is better than silence, but a real time estimate is better still.',
+    'ls.s6.p3': 'Progressive copy is a technique worth adopting for long operations: change the loading message at intervals to reflect actual progress through the operation. "Analyzing your data... Generating visualizations... Formatting your report..." This serves two purposes: it reassures the user that something is actually happening (the persistent question during any long wait), and it provides something new to read, which makes the wait feel shorter. The copy doesn\'t need to be technically accurate — it needs to be emotionally accurate. Users don\'t need to know about your microservice architecture; they need to know the system is working on their behalf.',
+  },
+  zh: {
+    'ls.cat': '设计',
+    'ls.date': '2026年5月',
+    'ls.title': '加载状态是界面通信',
+    'ls.lead': '旋转图标不是设计决策——它是一种投降。每个加载状态都是告诉用户正在发生什么的机会。大多数界面浪费了它。',
+    'ls.s1.h': '等待的信息层级',
+    'ls.s1.p1': '人类对时间的感知不是线性的。200毫秒的延迟感觉是瞬间的；2秒的延迟感觉界面出问题了。"我没注意到延迟"和"出了什么问题"之间的阈值低得令人惊讶——即时响应感约为100毫秒，确认输入感约为1秒，用户开始考虑放弃任务约为10秒。这些阈值是生理性的，不是文化性的。它们不会因设备或人口统计而变化。',
+    'ls.s1.p2': '这意味着加载状态设计在严格的基于时间的层级内运作。100毫秒以内：什么都不做，用户不会感知到延迟。100毫秒-1秒：提供即时视觉反馈表明动作已被接收——按钮按下状态、光标变化、微动画。1秒-3秒：提供确认并显示进度正在进行中。超过3秒：进度指示变为强制；裸露的旋转图标是最低可接受信号，而不是理想的。超过10秒：时间估计变为必要——"这通常需要大约30秒"比不确定指示器好得多。',
+    'ls.s1.p3': '这个层级很重要，因为大多数团队设计一个加载状态并将其应用到处。在80毫秒出现的旋转图标传达焦虑；在1.5秒后出现的相同旋转图标传达确认。状态是相同的；通信是相反的。加载状态设计不仅要问"我显示什么视觉效果？"还要问"这个视觉效果何时出现，它的时机向用户传达了什么？"',
+    'ls.quote1': '"我没注意到延迟"和"出了什么问题"之间的差距是100毫秒。为这个差距设计，而不是对抗它。',
+    'ls.s2.h': '骨架屏与旋转图标',
+    'ls.s2.p1': '骨架屏和旋转图标之间的选择不是审美上的——而是语义上的。每个都传达关于界面状态的不同内容，使用错误的一个会向用户发送错误信息。',
+    'ls.demo.skeleton.label': '骨架屏',
+    'ls.demo.spinner.label': '通用旋转图标',
+    'ls.s2.p2': '骨架屏传达：我知道这个内容会是什么样子，我知道它会在哪里，我正在获取数据来填充它。它是内容感知的。它告诉用户即将到来的信息的形状，这大大减少了感知等待时间——大脑在内容到来之前开始处理布局，所以即使实际延迟相同，内容看起来也加载得更快。',
+    'ls.s2.p3': '旋转图标传达：正在发生某些事情，我不知道是什么，我不知道多长时间。它是内容无关的。它不给用户任何关于正在加载什么、何时完成或完成后他们会看到什么的信息。在你真正不知道即将到来内容形状的情况下，这是适当的。在你知道的情况下——这是大多数情况——使用旋转图标是在浪费减少感知延迟的机会。',
+    'ls.s2.p4': '经验法则：当你在数据之前知道内容结构时，使用骨架屏。对真正未知的异步操作使用旋转图标——可能返回任何内容的API调用，结果不可预测的长时间运行进程。如果你发现自己为结构良好的内容使用旋转图标，这通常是内容结构在加载状态设计阶段没有被考虑的信号。',
+    'ls.s3.h': '渐进式加载',
+    'ls.s3.p1': '渐进式加载是立即显示可用内容同时获取其余内容的做法，而不是等到一切准备好后再显示所有内容。这是产品设计师可用的最有效的感知性能改进之一，也是最常被跳过的之一。',
+    'ls.s3.p2': '原则很简单：优先显示折叠线以上的内容，一有内容就立即渲染，让折叠线以下的内容在用户滚动时异步加载。在图像和侧边栏加载时显示标题和第一段的新闻文章，感觉比什么都不显示直到每个元素准备好的文章快得多——即使完整加载的总时间相同。',
+    'ls.s3.p3': '渐进式加载需要跨工程和设计协调。设计师需要明确定义加载优先顺序：什么应该首先出现，其次，第三？工程师需要以符合该优先级的方式实现数据获取——这通常意味着将单一的"获取所有内容"API调用分成多个优先请求。这更复杂，但用户体验的回报足够重大，以至于它应该是任何内容丰富界面的默认方法，而不是上线后应用的优化。',
+    'ls.s4.h': '乐观UI',
+    'ls.s4.p1': '乐观UI是在用户采取行动时立即更新界面，而不等待服务器确认行动成功，如果没有成功则回滚。这是可用的最积极的感知性能优化——对于常见的成功情况，它使延迟实际上不可见。',
+    'ls.s4.p2': '何时使用：当行动成功率非常高（>99%），失败情况有清晰且可恢复的回滚UI，以及行动是可逆的（或不可逆情况的风险较低）时，乐观UI是合适的。点赞帖子、发送消息、重新排序列表——这些是好的乐观UI候选者。电汇、账户删除、破坏性操作——不要对这些使用乐观UI。失败情况后果太严重，用户需要在继续之前知道行动的实际状态。',
+    'ls.s4.p3': '失败回滚设计经常被忽视。大多数团队为成功路径实现乐观UI，但不对失败路径投入同等努力。好的回滚向用户准确显示撤销了什么，解释原因，并提供清晰的重试路径。糟糕的回滚静默恢复到之前状态而不作解释，让用户对发生了什么感到困惑。以同等关心设计两条路径。',
+    'ls.s5.h': '错误状态也是加载状态',
+    'ls.s5.p1': '加载状态序列是：加载 → 成功 或 加载 → 错误。大多数界面设计成功情况并将错误视为事后考虑。错误状态不是事后考虑——它们是加载状态设计的诚实完成。你设计的每个加载状态都应该有你也设计过的相应错误状态。',
+    'ls.s5.p2': '好的错误状态做三件事：用简单语言告诉用户发生了什么（"我们无法加载您的订单"），解释用户可以做什么（"重试，或检查您的连接"），以及保留任何用户输入，这样用户在修复基本问题后不必重新开始。最后一点始终是最被忽视的——没有什么比将表单输入丢失到网络错误并显示没有恢复路径的通用"出了些问题"消息更快地破坏用户信任。',
+    'ls.s5.p3': '错误状态的视觉设计应该与加载状态不同，但在与界面其余部分相同的视觉语言范围内。看起来像系统错误页面而不是设计产品屏幕的错误状态，传达了这是意外的——传达了工程团队没有为此计划——传达了低产品质量。明显经过设计的错误状态告诉用户：这是预期到的，团队为此构建了，你处于良好之手。',
+    'ls.s6.h': '撰写加载文案',
+    'ls.s6.p1': '加载文案通常是最后考虑的，也是用户首先读到的。它也是加载状态期间可见的唯一通信元素——当内容还不在那里时，文案是用户理解正在发生什么的全部。',
+    'ls.demo.copy.bad.label': '无信息量',
+    'ls.demo.copy.good.label': '有交流性',
+    'ls.demo.progress.label': '带时间估计的进度',
+    'ls.s6.p2': '加载文案规则：具体说明什么在加载，而不是对加载状态进行泛泛而谈。"正在获取您的订单"比"加载中"好。"生成报告——通常需要约30秒"比"请稍候"好得多。时间估计即使是近似的也能减少焦虑——用户对已知等待的容忍度远高于未知等待。如果你不知道某事需要多长时间，"这可能需要片刻"比沉默好，但实际时间估计更好。',
+    'ls.s6.p3': '渐进式文案是值得采用的长操作技术：定期更改加载消息以反映操作的实际进度。"正在分析您的数据...生成可视化...格式化您的报告..."这有两个目的：它让用户放心某些事情确实在发生（任何长时间等待期间持续存在的问题），并提供新内容阅读，使等待感觉更短。文案不需要技术上准确——它需要在情感上准确。用户不需要了解你的微服务架构；他们需要知道系统正在为他们工作。',
+  },
+  ja: {
+    'ls.cat': 'デザイン',
+    'ls.date': '2026年5月',
+    'ls.title': 'ローディング状態はインターフェースのコミュニケーション',
+    'ls.lead': 'スピナーはデザインの決定ではない——それは降伏だ。すべてのローディング状態は、何が起きているかについてユーザーに真実を伝える機会だ。ほとんどのインターフェースはそれを無駄にする。',
+    'ls.s1.h': '待機の情報階層',
+    'ls.s1.p1': '時間に対する人間の知覚は線形ではない。200ミリ秒の遅延は瞬時に感じられる；2秒の遅延はインターフェースが壊れたように感じる。「遅延に気づかなかった」と「何かおかしい」の間の閾値は驚くほど低い——即時応答感は約100ms、入力が認識された感覚は1秒、ユーザーがタスクの放棄を検討し始めるのは10秒。これらの閾値は生理的であり、文化的ではない。デバイスや人口統計によって変わらない。',
+    'ls.s1.p2': 'これはローディング状態のデザインが厳格な時間ベースの階層内で機能することを意味する。100ms未満：何もしない、ユーザーは遅延を知覚しない。100ms–1s：アクションが受け取られたことの即座の視覚的フィードバックを提供する——ボタンの押下状態、カーソル変更、マイクロアニメーション。1s–3s：進行中であることの何らかの表示とともに確認を提供する。3s超：進行状況の表示が必須になる；裸のスピナーは最低限許容可能なシグナルであり、理想ではない。10s超：時間見積もりが必要になる——「通常約30秒かかります」は不確定なインジケーターよりはるかに良い。',
+    'ls.s1.p3': 'この階層が重要なのは、ほとんどのチームが一つのローディング状態をデザインしてどこにでも適用するからだ。80msで現れるスピナーは不安を伝える；1.5秒後に現れる同じスピナーは確認を伝える。状態は同一だ；コミュニケーションは反対だ。ローディング状態のデザインには「どんなビジュアルを表示するか？」だけでなく「このビジュアルはいつ現れるか、そのタイミングはユーザーに何を伝えるか？」を問う必要がある。',
+    'ls.quote1': '「遅延に気づかなかった」と「何かおかしい」の間のギャップは100ミリ秒。そのギャップのためにデザインしろ、それに逆らうのではなく。',
+    'ls.s2.h': 'スケルトンスクリーン vs スピナー',
+    'ls.s2.p1': 'スケルトンスクリーンとスピナーの選択は審美的ではない——意味的だ。それぞれがインターフェースの状態について異なることを伝え、間違った方を使うとユーザーに誤った情報を送る。',
+    'ls.demo.skeleton.label': 'スケルトンスクリーン',
+    'ls.demo.spinner.label': '汎用スピナー',
+    'ls.s2.p2': 'スケルトンスクリーンは伝える：このコンテンツがどのように見えるか知っている、どこに行くか知っている、それを埋めるデータを取得している。コンテンツ認識だ。ユーザーに来るべき情報の形を伝え、知覚待機時間を大幅に減らす——脳はコンテンツが届く前にレイアウトを処理し始めるので、実際のレイテンシが同一であってもコンテンツはより速く読み込まれるように見える。',
+    'ls.s2.p3': 'スピナーは伝える：何かが起きている、何か知らない、どのくらいかかるか知らない。コンテンツに依存しない。何がロードされているか、いつ終わるか、終わったら何を見るかについてユーザーに情報を与えない。来るべきコンテンツの形を本当に知らない文脈では、これは適切だ。知っている文脈では——それがほとんどの文脈だ——スピナーを使うことは知覚レイテンシを減らす機会を無駄にすることだ。',
+    'ls.s2.p4': '経験則：データより前にコンテンツ構造を知っているときにスケルトンスクリーンを使う。本当に未知の非同期操作にはスピナーを使う——何でも返す可能性のあるAPIコール、予測不可能な結果の長時間実行プロセス。構造化されたコンテンツにスピナーを使っている自分を見つけたなら、それはコンテンツ構造がローディング状態デザインパスで考慮されなかったというシグナルだ。',
+    'ls.s3.h': 'プログレッシブローディング',
+    'ls.s3.p1': 'プログレッシブローディングは、すべてが準備できるまでコンテンツを保留するのではなく、残りを取得しながら利用可能なコンテンツを即座に表示する慣行だ。プロダクトデザイナーが利用できる最も効果的な知覚パフォーマンス改善の一つであり、最もよくスキップされる一つだ。',
+    'ls.s3.p2': '原則は単純だ：折り畳み上のコンテンツを優先し、持っているものをすぐにレンダリングし、ユーザーがスクロールするにつれて折り畳み下のコンテンツを非同期でロードさせる。画像とサイドバーがロードしている間に見出しと最初の段落を表示するニュース記事は、すべての要素が準備できるまで何も表示しない記事よりはるかに速く感じる——完全ロードの合計時間が同一であっても。',
+    'ls.s3.p3': 'プログレッシブローディングはエンジニアリングとデザインをまたいだ調整を必要とする。デザイナーはローディングの優先順位を明示的に定義する必要がある：何が最初、2番目、3番目に現れるべきか？エンジニアはその優先順位を尊重する方法でデータ取得を実装する必要がある——それはしばしば単一の「すべてを取得する」APIコールを複数の優先リクエストに分割することを意味する。これはより複雑だが、ユーザー体験の見返りは、コンテンツの重いインターフェースのデフォルトアプローチであるべきで、ローンチ後に適用する最適化ではない。',
+    'ls.s4.h': 'オプティミスティックUI',
+    'ls.s4.p1': 'オプティミスティックUIはサーバーがアクションの成功を確認する前に、ユーザーがアクションを取ったときに即座にインターフェースを更新し、失敗した場合はロールバックする慣行だ。利用可能な最も積極的な知覚パフォーマンス最適化だ——一般的な成功ケースではレイテンシを事実上不可視にする。',
+    'ls.s4.p2': 'いつ使うか：オプティミスティックUIは、アクションの成功率が非常に高い（>99%）、失敗ケースに明確で回復可能なロールバックUIがある、アクションが可逆である（または不可逆ケースのリスクが低い）ときに適切だ。投稿にいいねをする、メッセージを送る、リストを並べ替える——これらは良いオプティミスティックUI候補だ。電信送金、アカウント削除、破壊的操作——これらにはオプティミスティックUIを使わない。失敗ケースは結果が重すぎ、ユーザーは続行する前にアクションの実際のステータスを知る必要がある。',
+    'ls.s4.p3': '失敗のロールバックデザインはしばしば軽視される。ほとんどのチームは成功パスのオプティミスティックUIを実装するが、失敗パスに同等の努力を払わない。良いロールバックはユーザーに何が元に戻されたかを正確に示し、なぜかを説明し、再試行への明確なパスを提供する。悪いロールバックは説明なしに静かに前の状態に戻り、ユーザーに何が起きたか困惑させる。両方のパスを同等の注意でデザインする。',
+    'ls.s5.h': 'エラー状態もローディング状態だ',
+    'ls.s5.p1': 'ローディング状態のシーケンスは：ローディング → 成功 または ローディング → エラー。ほとんどのインターフェースは成功ケースをデザインし、エラーを後付けとして扱う。エラー状態は後付けではない——ローディング状態デザインの誠実な完成だ。デザインするすべてのローディング状態には、同様にデザインした対応するエラー状態があるべきだ。',
+    'ls.s5.p2': '良いエラー状態は三つのことをする：平易な言語でユーザーに何が起きたかを伝える（「注文を読み込めませんでした」）、ユーザーが何をできるかを説明する（「もう一度試すか、接続を確認してください」）、基本的な問題を修正した後にユーザーが最初からやり直す必要がないようにユーザー入力を保持する。この最後の点は一貫して最も軽視される——ネットワークエラーでフォーム入力を失い、回復パスのない汎用の「何かがおかしい」メッセージを表示されることほど早くユーザーの信頼を破壊するものはない。',
+    'ls.s5.p3': 'エラー状態の視覚デザインはローディング状態とは異なるべきだが、インターフェースの残りと同じ視覚言語内であるべきだ。デザインされた製品画面ではなくシステムエラーページのように見えるエラー状態は、これが予期せぬことだったと伝える——エンジニアリングチームがそれを計画しなかったと伝える——低い製品品質を伝える。明らかにデザインされたエラー状態はユーザーに伝える：これは予期されていた、チームはそのために構築した、あなたは良い手に委ねられている。',
+    'ls.s6.h': 'ローディングコピーの書き方',
+    'ls.s6.p1': 'ローディングコピーはしばしば最後に考慮されるが、ユーザーが最初に読むものだ。ローディング状態中に見えるのはこれだけのコミュニケーション要素でもある——コンテンツがまだそこにないとき、コピーは何が起きているかを理解するためにユーザーが持つすべてだ。',
+    'ls.demo.copy.bad.label': '情報がない',
+    'ls.demo.copy.good.label': 'コミュニケーティブ',
+    'ls.demo.progress.label': '時間見積もり付き進行状況',
+    'ls.s6.p2': 'ローディングコピーのルール：ローディングの状態について一般的ではなく、何がロードされているかについて具体的であること。「注文を取得中」は「読み込み中」より良い。「レポートを生成中——通常約30秒かかります」は「お待ちください」よりはるかに良い。時間見積もりは近似であっても不安を減らす——ユーザーは未知の待機よりも既知の待機をはるかに良く許容する。どのくらいかかるか知らない場合、「少し時間がかかるかもしれません」は沈黙より良いが、実際の時間見積もりはさらに良い。',
+    'ls.s6.p3': 'プログレッシブコピーは長い操作に採用する価値のあるテクニックだ：操作の実際の進行を反映するために定期的にローディングメッセージを変更する。「データを分析中...ビジュアライゼーションを生成中...レポートをフォーマット中...」これは二つの目的に役立つ：何かが実際に起きているとユーザーを安心させる（長い待機中の持続的な疑問）、そして読む新しいものを提供し、待ちをより短く感じさせる。コピーは技術的に正確である必要はない——感情的に正確である必要がある。ユーザーはマイクロサービスアーキテクチャについて知る必要はない；システムが自分のために作業しているということを知る必要がある。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

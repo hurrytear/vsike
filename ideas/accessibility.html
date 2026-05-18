@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Is Not an Afterthought — vsike</title>
+  <meta name="description" content="Designing for the edges of human capability doesn't produce a restricted interface — it produces a better one. Every accessibility constraint that forces you to be clearer, simpler, and more explicit improves the experience for everyone.">
+  <meta name="keywords" content="无障碍设计, WCAG, POUR原则, accessibility design, WCAG, POUR principles, inclusive design, screen readers, keyboard navigation, UX design 2026">
+  <link rel="canonical" href="https://www.vsike.com/ideas/accessibility.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pull-quote { font-size: var(--fs-lg); line-height: 1.5; font-weight: 600; letter-spacing: -.02em; border-left: 3px solid var(--accent); padding: 1rem 0 1rem 2rem; margin: 2.5rem 0; color: var(--fg); }
+    .demo-row { display: flex; gap: 1.5rem; margin: 2rem 0; flex-wrap: wrap; }
+    .demo-cell { flex: 1; min-width: 220px; border: 1px solid var(--border); padding: 1.5rem; border-radius: 4px; background: var(--bg); }
+    .demo-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--fg-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
+    .demo-good { border-color: var(--accent); }
+    .demo-bad { border-color: #c0392b; }
+    .demo-badge { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; font-weight: 700; text-transform: uppercase; margin-bottom: .75rem; }
+    .demo-badge.good { color: var(--accent); }
+    .demo-badge.bad { color: #c0392b; }
+    .contrast-demo { display: flex; gap: 1rem; margin: 1rem 0; }
+    .contrast-swatch { padding: .75rem 1rem; border-radius: 3px; font-size: var(--fs-sm); font-weight: 600; flex: 1; text-align: center; }
+    .contrast-fail { background: #aaa; color: #bbb; }
+    .contrast-pass { background: #1a1a1a; color: #f5f5f5; }
+    .focus-demo-btn { display: inline-block; padding: .5rem 1.25rem; border: 2px solid transparent; border-radius: 3px; font-size: var(--fs-sm); cursor: pointer; margin: .25rem; background: var(--fg); color: var(--bg); }
+    .focus-demo-btn.no-focus:focus { outline: none; }
+    .focus-demo-btn.good-focus:focus { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .touch-target-demo { display: flex; align-items: center; gap: 1.5rem; margin: .75rem 0; flex-wrap: wrap; }
+    .touch-small { width: 20px; height: 20px; background: #c0392b; border-radius: 50%; }
+    .touch-good { width: 44px; height: 44px; background: var(--accent); border-radius: 50%; }
+    .touch-label { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .pour-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .pour-card { border: 1px solid var(--border); padding: 1.25rem; border-radius: 4px; }
+    .pour-letter { font-family: var(--mono); font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: .5rem; }
+    .pour-word { font-weight: 700; font-size: var(--fs-sm); margin-bottom: .4rem; }
+    .pour-desc { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.6; }
+    @media (max-width: 600px) { .pour-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="acc.cat">Design</span>
+        <span class="article-date" data-i18n="acc.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n="acc.title">Accessibility Is Not an Afterthought</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="acc.lead">Designing for the edges of human capability doesn't produce a restricted interface — it produces a better one. Every accessibility constraint that forces you to be clearer, simpler, and more explicit improves the experience for everyone.</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="acc.s1.h">The Curb Cut Effect</h2>
+      <p data-i18n="acc.s1.p1">When curb cuts — the ramped edges of sidewalks — were first mandated in Berkeley, California in the 1970s, they were explicitly designed for wheelchair users. The city engineers who opposed them argued they would be unnecessary for the general public, expensive, and would clutter sidewalks with features most people didn't need. The engineers were wrong. Curb cuts turned out to be used constantly by people pushing strollers, delivery workers with hand trucks, cyclists, and anyone carrying heavy bags. The accommodation for one specific group produced infrastructure that improved movement for everyone.</p>
+      <p data-i18n="acc.s1.p2">This is the curb cut effect, and it applies directly to interface design. Captions designed for deaf users help people watching videos in noisy environments, non-native speakers following along in a second language, and anyone who wants to search video content by text. Keyboard navigation designed for motor-impaired users enables power users to work faster without leaving the keyboard, and makes interfaces scriptable. High-contrast modes designed for low-vision users improve readability in bright sunlight for everyone. Large touch targets designed for users with tremors are easier for anyone to tap on a moving train.</p>
+      <p data-i18n="acc.s1.p3">The framing of accessibility as "for disabled users" is not just ethically limiting — it is strategically wrong. Accessibility improvements reliably improve usability for everyone. Teams that treat accessibility as a compliance checkbox, squeezed in at the end of the design process, are not just failing their disabled users; they are producing worse products for their entire user base.</p>
+
+      <div class="pull-quote" data-i18n="acc.quote1">Every accessibility constraint that forces you to be clearer, simpler, and more explicit improves the experience for everyone. Accessibility is not a constraint on design — it is a constraint that produces better design.</div>
+
+      <h2 data-i18n="acc.s2.h">The Four Principles: POUR</h2>
+      <p data-i18n="acc.s2.p1">WCAG (Web Content Accessibility Guidelines) organizes accessibility requirements around four core principles, abbreviated as POUR. Understanding these principles is more valuable than memorizing any specific technical requirement, because they provide the reasoning behind the requirements — which enables you to make good accessibility decisions in situations the guidelines don't explicitly cover.</p>
+
+      <div class="pour-grid">
+        <div class="pour-card">
+          <div class="pour-letter">P</div>
+          <div class="pour-word" data-i18n="acc.pour.p.word">Perceivable</div>
+          <div class="pour-desc" data-i18n="acc.pour.p.desc">All information must be presentable in ways users can perceive. Nothing should be invisible to all of a user's senses. Text alternatives for images, captions for video, audio descriptions for visual content.</div>
+        </div>
+        <div class="pour-card">
+          <div class="pour-letter">O</div>
+          <div class="pour-word" data-i18n="acc.pour.o.word">Operable</div>
+          <div class="pour-desc" data-i18n="acc.pour.o.desc">All interface components must be operable. Users must be able to navigate and interact using any input method — keyboard, switch device, voice control. No interaction should require a specific physical capability.</div>
+        </div>
+        <div class="pour-card">
+          <div class="pour-letter">U</div>
+          <div class="pour-word" data-i18n="acc.pour.u.word">Understandable</div>
+          <div class="pour-desc" data-i18n="acc.pour.u.desc">Content and operation must be understandable. Language should be clear and readable. Behavior should be predictable. Error messages should be specific and recovery paths should be clear.</div>
+        </div>
+        <div class="pour-card">
+          <div class="pour-letter">R</div>
+          <div class="pour-word" data-i18n="acc.pour.r.word">Robust</div>
+          <div class="pour-desc" data-i18n="acc.pour.r.desc">Content must be robust enough to be interpreted by assistive technologies. This means using standard HTML semantics, not custom components that look like buttons but aren't, and keeping up with evolving AT standards.</div>
+        </div>
+      </div>
+
+      <h2 data-i18n="acc.s3.h">Color and Contrast</h2>
+      <p data-i18n="acc.s3.p1">Color is one of the most commonly misused design elements from an accessibility standpoint. There are two distinct problems: insufficient contrast (text that's hard to read against its background) and using color alone to convey meaning (links that are only distinguished from body text by color, error states that are only indicated by red).</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="acc.demo.contrast.fail.label">Fails WCAG 2.1 AA</div>
+          <div class="contrast-demo">
+            <div class="contrast-swatch contrast-fail" data-i18n="acc.demo.contrast.fail.text">Sample text — low contrast ratio 1.8:1</div>
+          </div>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="acc.demo.contrast.pass.label">Passes WCAG 2.1 AA</div>
+          <div class="contrast-demo">
+            <div class="contrast-swatch contrast-pass" data-i18n="acc.demo.contrast.pass.text">Sample text — passes at 16:1 ratio</div>
+          </div>
+        </div>
+      </div>
+
+      <p data-i18n="acc.s3.p2">WCAG 2.1 AA requires a minimum contrast ratio of 4.5:1 for normal text (under 18pt) and 3:1 for large text (18pt or larger, or 14pt bold). AAA compliance requires 7:1 for normal text. These ratios are not arbitrary — they are derived from research on the actual contrast sensitivity thresholds for users with low vision conditions like cataracts, glaucoma, and age-related macular degeneration. A ratio that passes visually for you may fail entirely for 8% of your male users who have some form of color vision deficiency.</p>
+      <p data-i18n="acc.s3.p3">The "color alone" problem is subtler. An error state indicated only by red text fails users with protanopia or deuteranopia (red-green color blindness) — they see the same text as normal users, just in a different hue. The fix is to pair color with a secondary signal: an icon, a label, a border, a changed position in the layout. Test your interfaces in grayscale periodically; anything that stops communicating its meaning in grayscale is relying too heavily on color alone.</p>
+
+      <h2 data-i18n="acc.s4.h">Focus Management and Keyboard Navigation</h2>
+      <p data-i18n="acc.s4.p1">Keyboard navigation is the accessibility requirement most frequently broken by modern JavaScript-heavy interfaces. Single-page applications that use custom routing, modals that appear and disappear, components that manage their own interaction state — all of these have the potential to trap keyboard focus, lose it entirely, or produce a tab order that doesn't reflect the visual layout of the page.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="acc.demo.focus.bad.label">No Focus Indicator (Tab to test)</div>
+          <button class="focus-demo-btn no-focus" data-i18n="acc.demo.focus.btn">Button</button>
+          <button class="focus-demo-btn no-focus" data-i18n="acc.demo.focus.btn2">Another Button</button>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="acc.demo.focus.good.label">Visible Focus Indicator (Tab to test)</div>
+          <button class="focus-demo-btn good-focus" data-i18n="acc.demo.focus.btn">Button</button>
+          <button class="focus-demo-btn good-focus" data-i18n="acc.demo.focus.btn2">Another Button</button>
+        </div>
+      </div>
+
+      <p data-i18n="acc.s4.p2">Visible focus indicators are not optional — they are a WCAG 2.1 AA requirement (Success Criterion 2.4.7) and a WCAG 2.2 AA requirement (Success Criterion 2.4.11 with enhanced requirements). Removing the browser default outline with <code>outline: none</code> without providing an equivalent custom indicator is one of the most common accessibility failures on the web. The "it looks bad" argument is a design failure, not a reason to fail keyboard users. Design a focus indicator that works within your visual language.</p>
+      <p data-i18n="acc.s4.p3">Modal focus trapping is a nuanced requirement: when a modal opens, keyboard focus should move to it and be trapped within it (users should not be able to tab to content behind the modal) until the modal is closed, at which point focus should return to the element that triggered the modal. Getting this right requires careful JavaScript implementation, but it is essential — a modal that doesn't trap focus effectively makes its content inaccessible to keyboard users, and a modal that doesn't restore focus on close disrupts the navigation flow completely. Skip links ("Skip to main content") should be present on every page to let keyboard users bypass repeated navigation.</p>
+
+      <h2 data-i18n="acc.s5.h">Screen Reader Semantics</h2>
+      <p data-i18n="acc.s5.p1">Screen readers convert the visual interface into audio or braille output, navigating the DOM structure of the page. They depend entirely on the HTML being semantically correct — using the right elements for the right purposes, with the right ARIA attributes where native HTML semantics are insufficient.</p>
+      <p data-i18n="acc.s5.p2">Alt text for images is the most widely known requirement, but it's frequently misimplemented. Alt text should describe the purpose of the image in context, not its visual appearance. A photo of a person on an About page should say "Sarah Chen, Senior Engineer" not "woman with dark hair wearing a blue sweater in front of a blurred background." An decorative divider image should have an empty alt attribute (<code>alt=""</code>) so screen readers skip it, not a description of the decoration. A chart should have alt text that conveys the insight the chart communicates, not a description of the visual elements.</p>
+      <p data-i18n="acc.s5.p3">ARIA live regions are essential for dynamic content. When content updates without a page reload — a toast notification, a status update, a new message — screen reader users don't automatically know the update occurred. Using <code>aria-live="polite"</code> or <code>aria-live="assertive"</code> on a container element tells the screen reader to announce updates to its contents. Use "assertive" sparingly — it interrupts whatever the user is currently doing to make the announcement. "Polite" queues the announcement for the next natural pause. Landmark regions (<code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;aside&gt;</code>) help screen reader users navigate page structure quickly.</p>
+
+      <h2 data-i18n="acc.s6.h">What "Accessible by Default" Looks Like</h2>
+      <p data-i18n="acc.s6.p1">The most sustainable accessibility approach is to make accessible choices the default at the component and pattern library level, rather than auditing finished designs for accessibility compliance. This means every button component has visible focus styles; every image placeholder requires alt text; every form field has a visible label (not just a placeholder); every color decision is run through a contrast checker before it becomes a token in the design system.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell">
+          <div class="demo-label" data-i18n="acc.demo.touch.label">Touch Target Size</div>
+          <div class="touch-target-demo">
+            <div>
+              <div class="touch-small"></div>
+              <div class="touch-label" data-i18n="acc.demo.touch.small">20×20 px — fails</div>
+            </div>
+            <div>
+              <div class="touch-good"></div>
+              <div class="touch-label" data-i18n="acc.demo.touch.good">44×44 px — passes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p data-i18n="acc.s6.p2">Touch targets deserve special attention. Apple's Human Interface Guidelines recommend a minimum tappable area of 44×44 points; Google's Material Design recommends 48×48dp. The 44px minimum is not a WCAG hard requirement (WCAG 2.5.5 is AAA, not AA) but it is a practical requirement for users with motor impairments, tremors, or large fingers, and for anyone using a phone on a bumpy commute. Components that are visually smaller can still meet the requirement by having an invisible hit area that extends to the minimum size. This is a small engineering investment with a large usability return.</p>
+      <p data-i18n="acc.s6.p3">Plain language is the accessibility requirement most frequently overlooked by designers and engineers — perhaps because it feels more like editorial than design. But reading level is a real accessibility dimension. Complex sentence structures, unexplained jargon, ambiguous error messages — these create barriers for users with cognitive disabilities, low literacy, or non-native language proficiency. The plain language principle — use the simplest language that accurately conveys the meaning — is not a dumbing-down of content. It is a clarity constraint that produces better communication for all users, including highly literate ones who appreciate directness.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'acc.cat': 'Design',
+    'acc.date': 'May 2026',
+    'acc.title': 'Accessibility Is Not an Afterthought',
+    'acc.lead': 'Designing for the edges of human capability doesn\'t produce a restricted interface — it produces a better one. Every accessibility constraint that forces you to be clearer, simpler, and more explicit improves the experience for everyone.',
+    'acc.s1.h': 'The Curb Cut Effect',
+    'acc.s1.p1': 'When curb cuts — the ramped edges of sidewalks — were first mandated in Berkeley, California in the 1970s, they were explicitly designed for wheelchair users. The city engineers who opposed them argued they would be unnecessary for the general public, expensive, and would clutter sidewalks with features most people didn\'t need. The engineers were wrong. Curb cuts turned out to be used constantly by people pushing strollers, delivery workers with hand trucks, cyclists, and anyone carrying heavy bags. The accommodation for one specific group produced infrastructure that improved movement for everyone.',
+    'acc.s1.p2': 'This is the curb cut effect, and it applies directly to interface design. Captions designed for deaf users help people watching videos in noisy environments, non-native speakers following along in a second language, and anyone who wants to search video content by text. Keyboard navigation designed for motor-impaired users enables power users to work faster without leaving the keyboard, and makes interfaces scriptable. High-contrast modes designed for low-vision users improve readability in bright sunlight for everyone. Large touch targets designed for users with tremors are easier for anyone to tap on a moving train.',
+    'acc.s1.p3': 'The framing of accessibility as "for disabled users" is not just ethically limiting — it is strategically wrong. Accessibility improvements reliably improve usability for everyone. Teams that treat accessibility as a compliance checkbox, squeezed in at the end of the design process, are not just failing their disabled users; they are producing worse products for their entire user base.',
+    'acc.quote1': 'Every accessibility constraint that forces you to be clearer, simpler, and more explicit improves the experience for everyone. Accessibility is not a constraint on design — it is a constraint that produces better design.',
+    'acc.s2.h': 'The Four Principles: POUR',
+    'acc.s2.p1': 'WCAG (Web Content Accessibility Guidelines) organizes accessibility requirements around four core principles, abbreviated as POUR. Understanding these principles is more valuable than memorizing any specific technical requirement, because they provide the reasoning behind the requirements — which enables you to make good accessibility decisions in situations the guidelines don\'t explicitly cover.',
+    'acc.pour.p.word': 'Perceivable',
+    'acc.pour.p.desc': 'All information must be presentable in ways users can perceive. Nothing should be invisible to all of a user\'s senses. Text alternatives for images, captions for video, audio descriptions for visual content.',
+    'acc.pour.o.word': 'Operable',
+    'acc.pour.o.desc': 'All interface components must be operable. Users must be able to navigate and interact using any input method — keyboard, switch device, voice control. No interaction should require a specific physical capability.',
+    'acc.pour.u.word': 'Understandable',
+    'acc.pour.u.desc': 'Content and operation must be understandable. Language should be clear and readable. Behavior should be predictable. Error messages should be specific and recovery paths should be clear.',
+    'acc.pour.r.word': 'Robust',
+    'acc.pour.r.desc': 'Content must be robust enough to be interpreted by assistive technologies. This means using standard HTML semantics, not custom components that look like buttons but aren\'t, and keeping up with evolving AT standards.',
+    'acc.s3.h': 'Color and Contrast',
+    'acc.s3.p1': 'Color is one of the most commonly misused design elements from an accessibility standpoint. There are two distinct problems: insufficient contrast (text that\'s hard to read against its background) and using color alone to convey meaning (links that are only distinguished from body text by color, error states that are only indicated by red).',
+    'acc.demo.contrast.fail.label': 'Fails WCAG 2.1 AA',
+    'acc.demo.contrast.fail.text': 'Sample text — low contrast ratio 1.8:1',
+    'acc.demo.contrast.pass.label': 'Passes WCAG 2.1 AA',
+    'acc.demo.contrast.pass.text': 'Sample text — passes at 16:1 ratio',
+    'acc.s3.p2': 'WCAG 2.1 AA requires a minimum contrast ratio of 4.5:1 for normal text (under 18pt) and 3:1 for large text (18pt or larger, or 14pt bold). AAA compliance requires 7:1 for normal text. These ratios are not arbitrary — they are derived from research on the actual contrast sensitivity thresholds for users with low vision conditions like cataracts, glaucoma, and age-related macular degeneration. A ratio that passes visually for you may fail entirely for 8% of your male users who have some form of color vision deficiency.',
+    'acc.s3.p3': 'The "color alone" problem is subtler. An error state indicated only by red text fails users with protanopia or deuteranopia (red-green color blindness) — they see the same text as normal users, just in a different hue. The fix is to pair color with a secondary signal: an icon, a label, a border, a changed position in the layout. Test your interfaces in grayscale periodically; anything that stops communicating its meaning in grayscale is relying too heavily on color alone.',
+    'acc.s4.h': 'Focus Management and Keyboard Navigation',
+    'acc.s4.p1': 'Keyboard navigation is the accessibility requirement most frequently broken by modern JavaScript-heavy interfaces. Single-page applications that use custom routing, modals that appear and disappear, components that manage their own interaction state — all of these have the potential to trap keyboard focus, lose it entirely, or produce a tab order that doesn\'t reflect the visual layout of the page.',
+    'acc.demo.focus.bad.label': 'No Focus Indicator (Tab to test)',
+    'acc.demo.focus.good.label': 'Visible Focus Indicator (Tab to test)',
+    'acc.demo.focus.btn': 'Button',
+    'acc.demo.focus.btn2': 'Another Button',
+    'acc.s4.p2': 'Visible focus indicators are not optional — they are a WCAG 2.1 AA requirement (Success Criterion 2.4.7) and a WCAG 2.2 AA requirement (Success Criterion 2.4.11 with enhanced requirements). Removing the browser default outline with outline: none without providing an equivalent custom indicator is one of the most common accessibility failures on the web. The "it looks bad" argument is a design failure, not a reason to fail keyboard users. Design a focus indicator that works within your visual language.',
+    'acc.s4.p3': 'Modal focus trapping is a nuanced requirement: when a modal opens, keyboard focus should move to it and be trapped within it (users should not be able to tab to content behind the modal) until the modal is closed, at which point focus should return to the element that triggered the modal. Getting this right requires careful JavaScript implementation, but it is essential — a modal that doesn\'t trap focus effectively makes its content inaccessible to keyboard users, and a modal that doesn\'t restore focus on close disrupts the navigation flow completely. Skip links ("Skip to main content") should be present on every page to let keyboard users bypass repeated navigation.',
+    'acc.s5.h': 'Screen Reader Semantics',
+    'acc.s5.p1': 'Screen readers convert the visual interface into audio or braille output, navigating the DOM structure of the page. They depend entirely on the HTML being semantically correct — using the right elements for the right purposes, with the right ARIA attributes where native HTML semantics are insufficient.',
+    'acc.s5.p2': 'Alt text for images is the most widely known requirement, but it\'s frequently misimplemented. Alt text should describe the purpose of the image in context, not its visual appearance. A photo of a person on an About page should say "Sarah Chen, Senior Engineer" not "woman with dark hair wearing a blue sweater in front of a blurred background." A decorative divider image should have an empty alt attribute (alt="") so screen readers skip it, not a description of the decoration. A chart should have alt text that conveys the insight the chart communicates, not a description of the visual elements.',
+    'acc.s5.p3': 'ARIA live regions are essential for dynamic content. When content updates without a page reload — a toast notification, a status update, a new message — screen reader users don\'t automatically know the update occurred. Using aria-live="polite" or aria-live="assertive" on a container element tells the screen reader to announce updates to its contents. Use "assertive" sparingly — it interrupts whatever the user is currently doing to make the announcement. "Polite" queues the announcement for the next natural pause. Landmark regions (<main>, <nav>, <header>, <footer>, <aside>) help screen reader users navigate page structure quickly.',
+    'acc.s6.h': 'What "Accessible by Default" Looks Like',
+    'acc.s6.p1': 'The most sustainable accessibility approach is to make accessible choices the default at the component and pattern library level, rather than auditing finished designs for accessibility compliance. This means every button component has visible focus styles; every image placeholder requires alt text; every form field has a visible label (not just a placeholder); every color decision is run through a contrast checker before it becomes a token in the design system.',
+    'acc.demo.touch.label': 'Touch Target Size',
+    'acc.demo.touch.small': '20×20 px — fails',
+    'acc.demo.touch.good': '44×44 px — passes',
+    'acc.s6.p2': 'Touch targets deserve special attention. Apple\'s Human Interface Guidelines recommend a minimum tappable area of 44×44 points; Google\'s Material Design recommends 48×48dp. The 44px minimum is not a WCAG hard requirement (WCAG 2.5.5 is AAA, not AA) but it is a practical requirement for users with motor impairments, tremors, or large fingers, and for anyone using a phone on a bumpy commute. Components that are visually smaller can still meet the requirement by having an invisible hit area that extends to the minimum size. This is a small engineering investment with a large usability return.',
+    'acc.s6.p3': 'Plain language is the accessibility requirement most frequently overlooked by designers and engineers — perhaps because it feels more like editorial than design. But reading level is a real accessibility dimension. Complex sentence structures, unexplained jargon, ambiguous error messages — these create barriers for users with cognitive disabilities, low literacy, or non-native language proficiency. The plain language principle — use the simplest language that accurately conveys the meaning — is not a dumbing-down of content. It is a clarity constraint that produces better communication for all users, including highly literate ones who appreciate directness.',
+  },
+  zh: {
+    'acc.cat': '设计',
+    'acc.date': '2026年5月',
+    'acc.title': '无障碍不是事后考虑',
+    'acc.lead': '为人类能力的边界进行设计不会产生受限的界面——它会产生更好的界面。每一个迫使你更清晰、更简单、更明确的无障碍约束都会改善每个人的体验。',
+    'acc.s1.h': '路缘切割效应',
+    'acc.s1.p1': '当路缘切割——人行道的坡道边缘——在1970年代首次在加利福尼亚州伯克利被强制规定时，它们明确是为轮椅使用者设计的。反对它们的市政工程师认为它们对普通公众来说是不必要的，昂贵的，并且会用大多数人不需要的特征使人行道变得杂乱。工程师们错了。事实证明，路缘切割被推婴儿车的人、使用手推车的快递员、骑自行车的人以及任何携带重物包的人不断使用。对一个特定群体的便利产生了改善所有人行动的基础设施。',
+    'acc.s1.p2': '这就是路缘切割效应，它直接适用于界面设计。为聋人用户设计的字幕帮助在嘈杂环境中看视频的人、用第二语言跟读的非母语者以及任何想按文字搜索视频内容的人。为运动障碍用户设计的键盘导航使高级用户能够在不离开键盘的情况下更快地工作，并使界面可脚本化。为低视力用户设计的高对比度模式改善了所有人在明亮阳光下的可读性。为有震颤用户设计的大触控目标对在移动的火车上的任何人来说都更容易点击。',
+    'acc.s1.p3': '将无障碍性框架为"为残疾用户设计"不仅在道德上是有限的——在战略上也是错误的。无障碍改进可靠地改善所有人的可用性。将无障碍性视为合规复选框、挤在设计流程末尾的团队，不仅在对残疾用户失败；他们也在为整个用户群体生产更差的产品。',
+    'acc.quote1': '每一个迫使你更清晰、更简单、更明确的无障碍约束都会改善每个人的体验。无障碍性不是对设计的约束——它是产生更好设计的约束。',
+    'acc.s2.h': '四个原则：POUR',
+    'acc.s2.p1': 'WCAG（网络内容无障碍指南）围绕四个核心原则组织无障碍要求，缩写为POUR。理解这些原则比记忆任何具体的技术要求更有价值，因为它们提供了要求背后的推理——这使你能够在指南没有明确涵盖的情况下做出良好的无障碍决策。',
+    'acc.pour.p.word': '可感知',
+    'acc.pour.p.desc': '所有信息必须以用户能感知的方式呈现。任何内容都不应该对用户的所有感官不可见。图像的文字替代，视频的字幕，视觉内容的音频描述。',
+    'acc.pour.o.word': '可操作',
+    'acc.pour.o.desc': '所有界面组件必须是可操作的。用户必须能够使用任何输入方法进行导航和交互——键盘、开关设备、语音控制。没有任何交互应该需要特定的身体能力。',
+    'acc.pour.u.word': '可理解',
+    'acc.pour.u.desc': '内容和操作必须是可理解的。语言应该清晰可读。行为应该是可预测的。错误消息应该具体，恢复路径应该清晰。',
+    'acc.pour.r.word': '稳健',
+    'acc.pour.r.desc': '内容必须足够稳健，以便辅助技术可以解释。这意味着使用标准HTML语义，而不是看起来像按钮但实际上不是的自定义组件，并跟上不断发展的辅助技术标准。',
+    'acc.s3.h': '颜色和对比度',
+    'acc.s3.p1': '从无障碍的角度来看，颜色是最常被误用的设计元素之一。有两个明显的问题：对比度不足（难以与背景区分的文本）以及仅使用颜色传达意义（只通过颜色与正文区分的链接，仅由红色指示的错误状态）。',
+    'acc.demo.contrast.fail.label': '未通过 WCAG 2.1 AA',
+    'acc.demo.contrast.fail.text': '示例文本——低对比度比 1.8:1',
+    'acc.demo.contrast.pass.label': '通过 WCAG 2.1 AA',
+    'acc.demo.contrast.pass.text': '示例文本——以 16:1 比例通过',
+    'acc.s3.p2': 'WCAG 2.1 AA要求正常文本（18pt以下）的最低对比度为4.5:1，大文本（18pt或更大，或14pt粗体）为3:1。AAA合规要求正常文本为7:1。这些比例不是任意的——它们源于对白内障、青光眼和年龄相关性黄斑变性等低视力状况用户的实际对比度敏感性阈值的研究。对你来说视觉上通过的比例可能对8%有某种形式色觉缺陷的男性用户完全失败。',
+    'acc.s3.p3': '"仅颜色"问题更微妙。仅用红色文本指示的错误状态对有红绿色盲的用户失败——他们看到与普通用户相同的文本，只是色调不同。解决方法是将颜色与次要信号配对：图标、标签、边框、布局中的位置变化。定期以灰度测试你的界面；任何在灰度下停止传达其含义的内容都过度依赖颜色。',
+    'acc.s4.h': '焦点管理和键盘导航',
+    'acc.s4.p1': '键盘导航是现代重度JavaScript界面最常违反的无障碍要求。使用自定义路由的单页应用、出现和消失的模态框、管理自己交互状态的组件——所有这些都有可能困住键盘焦点、完全丢失焦点，或产生不反映页面视觉布局的Tab顺序。',
+    'acc.demo.focus.bad.label': '无焦点指示器（按Tab测试）',
+    'acc.demo.focus.good.label': '可见焦点指示器（按Tab测试）',
+    'acc.demo.focus.btn': '按钮',
+    'acc.demo.focus.btn2': '另一个按钮',
+    'acc.s4.p2': '可见焦点指示器不是可选的——它们是WCAG 2.1 AA要求（成功标准2.4.7）和WCAG 2.2 AA要求（成功标准2.4.11，要求增强）。使用outline: none删除浏览器默认轮廓而不提供等效自定义指示器是网络上最常见的无障碍失败之一。"看起来不好看"的论点是设计失败，不是对键盘用户失败的理由。设计在你的视觉语言范围内工作的焦点指示器。',
+    'acc.s4.p3': '模态框焦点捕获是一个细微的要求：当模态框打开时，键盘焦点应该移到它并被困在其中（用户不应该能够Tab到模态框后面的内容），直到模态框关闭，此时焦点应该返回到触发模态框的元素。正确实现这一点需要仔细的JavaScript实现，但这是必不可少的——不能有效捕获焦点的模态框使其内容对键盘用户无法访问，而关闭时不恢复焦点的模态框完全扰乱了导航流程。每个页面都应该有跳过链接（"跳到主要内容"），让键盘用户绕过重复导航。',
+    'acc.s5.h': '屏幕阅读器语义',
+    'acc.s5.p1': '屏幕阅读器将视觉界面转换为音频或盲文输出，导航页面的DOM结构。它们完全依赖于HTML在语义上的正确性——为正确目的使用正确的元素，在原生HTML语义不足的地方使用正确的ARIA属性。',
+    'acc.s5.p2': '图像的Alt文本是最广为人知的要求，但经常被错误实现。Alt文本应该描述图像在上下文中的目的，而不是其视觉外观。关于页面上一个人的照片应该说"陈莎拉，高级工程师"而不是"穿蓝色毛衣、深色头发的女性在模糊背景前"。装饰性分隔线图像应该有一个空的alt属性（alt=""）这样屏幕阅读器会跳过它，而不是对装饰的描述。图表应该有传达图表所传达见解的alt文本，而不是对视觉元素的描述。',
+    'acc.s5.p3': 'ARIA实时区域对动态内容至关重要。当内容在不重新加载页面的情况下更新时——一个提示通知、一个状态更新、一条新消息——屏幕阅读器用户不会自动知道更新发生了。在容器元素上使用aria-live="polite"或aria-live="assertive"告诉屏幕阅读器宣布其内容的更新。谨慎使用"assertive"——它会中断用户当前正在做的事情来进行宣布。"polite"将宣布排队到下一个自然暂停。地标区域（<main>、<nav>、<header>、<footer>、<aside>）帮助屏幕阅读器用户快速导航页面结构。',
+    'acc.s6.h': '"默认无障碍"是什么样的',
+    'acc.s6.p1': '最可持续的无障碍方法是在组件和模式库级别将无障碍选择设为默认值，而不是审计完成的设计以进行无障碍合规。这意味着每个按钮组件都有可见的焦点样式；每个图像占位符都需要alt文本；每个表单字段都有可见标签（不仅仅是占位符）；每个颜色决定在成为设计系统中的令牌之前都通过对比度检查器。',
+    'acc.demo.touch.label': '触控目标大小',
+    'acc.demo.touch.small': '20×20 px — 不达标',
+    'acc.demo.touch.good': '44×44 px — 达标',
+    'acc.s6.p2': '触控目标值得特别关注。苹果的人机交互指南建议最小可点击区域为44×44点；谷歌的Material Design建议48×48dp。44px最小值不是WCAG硬性要求（WCAG 2.5.5是AAA，而不是AA），但对于有运动障碍、震颤或大手指的用户，以及任何在颠簸的通勤途中使用手机的人来说，这是实际要求。视觉上更小的组件仍然可以通过拥有扩展到最小尺寸的不可见点击区域来满足要求。这是小的工程投入，却有大的可用性回报。',
+    'acc.s6.p3': '简明语言是设计师和工程师最常忽视的无障碍要求——也许因为它感觉更像编辑而不是设计。但阅读水平是一个真实的无障碍维度。复杂的句子结构、未解释的术语、含糊的错误消息——这些为认知障碍、低识字率或非母语用户创造了障碍。简明语言原则——使用最简单的语言准确传达含义——不是对内容的简化。它是一个清晰度约束，为所有用户产生更好的沟通，包括欣赏直接性的高识字率用户。',
+  },
+  ja: {
+    'acc.cat': 'デザイン',
+    'acc.date': '2026年5月',
+    'acc.title': 'アクセシビリティは後付けではない',
+    'acc.lead': '人間の能力の端でデザインすることは制限されたインターフェースを生み出さない——より良いものを生み出す。より明確で、よりシンプルで、より明示的であることを強制するすべてのアクセシビリティの制約は、すべての人の体験を向上させる。',
+    'acc.s1.h': '縁石カット効果',
+    'acc.s1.p1': '縁石カット——歩道の傾斜した端——が1970年代にカリフォルニア州バークレーで最初に義務付けられたとき、それらは明示的に車椅子ユーザーのために設計されていた。それらに反対した市の技術者は、一般公衆には不要で、高価で、ほとんどの人が必要としない機能で歩道を散らかすと主張した。技術者は間違っていた。縁石カットは、ベビーカーを押す人、手押し車を持つ配達員、サイクリスト、重い荷物を持つ誰でも常に使用されることが判明した。特定のグループへの配慮が、すべての人の移動を改善するインフラを生み出した。',
+    'acc.s1.p2': 'これが縁石カット効果であり、インターフェースデザインに直接当てはまる。聴覚障害ユーザーのために設計されたキャプションは、騒がしい環境でビデオを見る人、第二言語で追いかける非母語話者、テキストでビデオコンテンツを検索したい誰でもを助ける。運動障害ユーザーのために設計されたキーボードナビゲーションは、キーボードから離れずに速く作業するパワーユーザーを可能にし、インターフェースをスクリプト可能にする。低視力ユーザーのために設計されたハイコントラストモードは、明るい日光での読みやすさをすべての人に改善する。震えのあるユーザーのために設計された大きなタッチターゲットは、動いている電車の上での誰にでもタップしやすい。',
+    'acc.s1.p3': 'アクセシビリティを「障害のあるユーザーのため」としてフレーミングすることは倫理的に限られているだけでなく——戦略的に間違っている。アクセシビリティの改善はすべての人のユーザビリティを確実に向上させる。デザインプロセスの最後に詰め込まれたコンプライアンスチェックボックスとしてアクセシビリティを扱うチームは、障害のあるユーザーに失敗しているだけでなく；ユーザーベース全体のためにより悪い製品を生産している。',
+    'acc.quote1': 'より明確で、よりシンプルで、より明示的であることを強制するすべてのアクセシビリティの制約は、すべての人の体験を向上させる。アクセシビリティはデザインへの制約ではない——より良いデザインを生み出す制約だ。',
+    'acc.s2.h': '四つの原則：POUR',
+    'acc.s2.p1': 'WCAG（ウェブコンテンツアクセシビリティガイドライン）はPOURと略される四つの核心原則の周りにアクセシビリティ要件を整理している。これらの原則を理解することは、特定の技術的要件を暗記するより価値がある。なぜならガイドラインが明示的に扱っていない状況でも良いアクセシビリティの決定を下せる要件の背後にある推論を提供するからだ。',
+    'acc.pour.p.word': '知覚可能',
+    'acc.pour.p.desc': 'すべての情報はユーザーが知覚できる方法で提示可能でなければならない。何もユーザーのすべての感覚に見えないべきではない。画像のテキスト代替、ビデオのキャプション、視覚コンテンツの音声説明。',
+    'acc.pour.o.word': '操作可能',
+    'acc.pour.o.desc': 'すべてのインターフェースコンポーネントは操作可能でなければならない。ユーザーはどんな入力方法——キーボード、スイッチデバイス、音声コントロール——を使ってもナビゲートしてインタラクトできなければならない。どんなインタラクションも特定の身体的能力を必要とすべきではない。',
+    'acc.pour.u.word': '理解可能',
+    'acc.pour.u.desc': 'コンテンツと操作は理解可能でなければならない。言語は明確で読みやすくあるべきだ。動作は予測可能であるべきだ。エラーメッセージは具体的で、回復パスは明確であるべきだ。',
+    'acc.pour.r.word': '堅牢',
+    'acc.pour.r.desc': 'コンテンツは支援技術が解釈できるほど堅牢でなければならない。これは標準のHTMLセマンティクスを使用すること、ボタンのように見えるが実際はそうでないカスタムコンポーネントを避けること、進化するAT標準に追いつくことを意味する。',
+    'acc.s3.h': '色とコントラスト',
+    'acc.s3.p1': '色はアクセシビリティの観点から最も頻繁に誤用されるデザイン要素の一つだ。二つの異なる問題がある：不十分なコントラスト（背景に対して読みにくいテキスト）と意味を伝えるために色だけを使用すること（色だけで本文テキストと区別されるリンク、赤だけで示されるエラー状態）。',
+    'acc.demo.contrast.fail.label': 'WCAG 2.1 AA 不合格',
+    'acc.demo.contrast.fail.text': 'サンプルテキスト——低コントラスト比 1.8:1',
+    'acc.demo.contrast.pass.label': 'WCAG 2.1 AA 合格',
+    'acc.demo.contrast.pass.text': 'サンプルテキスト——16:1比率で合格',
+    'acc.s3.p2': 'WCAG 2.1 AAは通常テキスト（18pt未満）に4.5:1の最低コントラスト比、大きなテキスト（18pt以上、または14pt太字）に3:1を要求する。AAAコンプライアンスは通常テキストに7:1を要求する。これらの比率は任意ではない——白内障、緑内障、加齢性黄斑変性などの低視力状態を持つユーザーの実際のコントラスト感度閾値に関する研究から導き出されている。あなたにとって視覚的に通過する比率は、何らかの色覚異常を持つ男性ユーザーの8%にとって完全に失敗する可能性がある。',
+    'acc.s3.p3': '「色だけ」の問題はより微妙だ。赤いテキストだけで示されるエラー状態は、第一色盲または第二色盲（赤緑色盲）のユーザーに失敗する——彼らは普通のユーザーと同じテキストを見るが、異なる色合いで。解決策は色を二次的なシグナルと組み合わせることだ：アイコン、ラベル、ボーダー、レイアウトの位置変更。定期的にインターフェースをグレースケールでテストする；グレースケールで意味を伝えることを止めるものはすべて色に頼りすぎている。',
+    'acc.s4.h': 'フォーカス管理とキーボードナビゲーション',
+    'acc.s4.p1': 'キーボードナビゲーションは現代のJavaScript重量級インターフェースによって最も頻繁に破られるアクセシビリティ要件だ。カスタムルーティングを使用するシングルページアプリケーション、現れては消えるモーダル、自分のインタラクション状態を管理するコンポーネント——これらすべてはキーボードフォーカスを捕捉したり、完全に失ったり、ページの視覚的レイアウトを反映しないタブ順序を生成する可能性を持つ。',
+    'acc.demo.focus.bad.label': 'フォーカスインジケーターなし（Tabでテスト）',
+    'acc.demo.focus.good.label': '可視フォーカスインジケーター（Tabでテスト）',
+    'acc.demo.focus.btn': 'ボタン',
+    'acc.demo.focus.btn2': '別のボタン',
+    'acc.s4.p2': '可視フォーカスインジケーターはオプションではない——WCAG 2.1 AAの要件（達成基準2.4.7）とWCAG 2.2 AAの要件（強化された要件を含む達成基準2.4.11）だ。同等のカスタムインジケーターを提供せずにoutline: noneでブラウザのデフォルトアウトラインを削除することは、ウェブ上で最も一般的なアクセシビリティの失敗の一つだ。「見た目が悪い」という議論はデザインの失敗であり、キーボードユーザーに失敗する理由ではない。視覚的言語の中で機能するフォーカスインジケーターをデザインしろ。',
+    'acc.s4.p3': 'モーダルのフォーカストラッピングは微妙な要件だ：モーダルが開くとき、キーボードフォーカスはそこに移動してその中に捕捉されるべきだ（ユーザーはモーダルの背後のコンテンツにタブできないようにすべきだ）モーダルが閉じるまで、その時点でフォーカスはモーダルをトリガーした要素に戻るべきだ。これを正しく行うには注意深いJavaScript実装が必要だが、それは必須だ——フォーカスを効果的にトラップしないモーダルはそのコンテンツをキーボードユーザーにアクセス不可にし、閉じるときにフォーカスを復元しないモーダルはナビゲーションフロー全体を乱す。スキップリンク（「メインコンテンツへスキップ」）は、キーボードユーザーが繰り返しのナビゲーションをバイパスできるようにすべてのページに存在すべきだ。',
+    'acc.s5.h': 'スクリーンリーダーのセマンティクス',
+    'acc.s5.p1': 'スクリーンリーダーは視覚インターフェースを音声またはブライユ出力に変換し、ページのDOM構造をナビゲートする。それらは完全にHTMLが意味的に正確であることに依存している——正しい目的のために正しい要素を使用し、ネイティブのHTMLセマンティクスが不十分な場合は正しいARIA属性を使用する。',
+    'acc.s5.p2': '画像のAltテキストは最も広く知られている要件だが、頻繁に誤って実装される。Altテキストは視覚的外観ではなく、コンテキスト内での画像の目的を説明すべきだ。AboutページのPersonの写真は「ブルーのセーターを着た黒髪の女性がぼかされた背景の前で」ではなく「Sarah Chen、シニアエンジニア」と言うべきだ。装飾的な区切り線画像は、装飾の説明ではなくスクリーンリーダーがスキップするように空のalt属性（alt=""）を持つべきだ。チャートは視覚要素の説明ではなく、チャートが伝えるインサイトを伝えるAltテキストを持つべきだ。',
+    'acc.s5.p3': 'ARIAライブリージョンは動的コンテンツに不可欠だ。コンテンツがページのリロードなしに更新されるとき——トースト通知、ステータス更新、新しいメッセージ——スクリーンリーダーユーザーは自動的に更新が発生したことを知らない。コンテナ要素にaria-live="polite"またはaria-live="assertive"を使用するとスクリーンリーダーにその内容の更新をアナウンスするよう伝える。「assertive」は慎重に使う——アナウンスをするためにユーザーが現在していることを中断する。「polite」は次の自然な一時停止にアナウンスをキューに入れる。ランドマークリージョン（<main>、<nav>、<header>、<footer>、<aside>）はスクリーンリーダーユーザーがページ構造を素早くナビゲートするのを助ける。',
+    'acc.s6.h': '「デフォルトでアクセシブル」がどのように見えるか',
+    'acc.s6.p1': '最も持続可能なアクセシビリティアプローチは、完成したデザインをアクセシビリティコンプライアンスのために監査するのではなく、コンポーネントとパターンライブラリレベルでアクセシブルな選択をデフォルトにすることだ。これは、すべてのボタンコンポーネントに可視フォーカススタイルがあること；すべての画像プレースホルダーがAltテキストを必要とすること；すべてのフォームフィールドに可視ラベルがあること（プレースホルダーだけでなく）；すべての色の決定がデザインシステムのトークンになる前にコントラストチェッカーを通ることを意味する。',
+    'acc.demo.touch.label': 'タッチターゲットサイズ',
+    'acc.demo.touch.small': '20×20 px — 不合格',
+    'acc.demo.touch.good': '44×44 px — 合格',
+    'acc.s6.p2': 'タッチターゲットは特別な注意に値する。AppleのHuman Interface Guidelinesは最小タップ可能エリアとして44×44ポイントを推奨；GoogleのMaterial Designは48×48dpを推奨。44pxの最低値はWCAGのハード要件ではない（WCAG 2.5.5はAAA、AAではない）が、運動障害、震え、または大きな指を持つユーザー、および凸凹した通勤中に電話を使用する誰にとっても実際の要件だ。視覚的により小さいコンポーネントは、最小サイズまで拡張する見えないヒット領域を持つことで要件を満たすことができる。これは大きなユーザビリティの見返りを持つ小さなエンジニアリング投資だ。',
+    'acc.s6.p3': '平易な言語は、デザイナーとエンジニアが最も頻繁に見落とすアクセシビリティ要件だ——おそらくそれがデザインよりも編集に近く感じるからかもしれない。しかし読書レベルは本物のアクセシビリティの次元だ。複雑な文章構造、説明されていない専門用語、曖昧なエラーメッセージ——これらは認知障害、低識字率、または非母語の熟練度を持つユーザーへの障壁を作る。平易な言語の原則——意味を正確に伝える最もシンプルな言語を使用する——はコンテンツの単純化ではない。それは直接性を評価する高識字率のユーザーを含むすべてのユーザーに対してより良いコミュニケーションを生み出す明確さの制約だ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

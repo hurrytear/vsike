@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Powered Phishing: LLMs as Social Engineering Tools at Scale — vsike</title>
+  <meta name="description" content="Phishing used to be detectable by bad grammar and generic salutations. LLMs have eliminated both of those signals — and now enable personalized, contextually aware social engineering attacks at scale.">
+  <meta name="keywords" content="AI钓鱼攻击, LLM社会工程学, 深度伪造, AI-powered phishing, LLM social engineering, AI spear phishing, voice cloning phishing, AI security 2026">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-phishing.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="aph.cat">AI Security</span>
+        <span class="article-date" data-i18n="aph.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="aph.title">AI-Powered Phishing:<br>LLMs as Social Engineering Tools at Scale</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="aph.lead">Phishing used to be detectable by bad grammar and generic salutations. LLMs have eliminated both of those signals — and now enable personalized, contextually aware social engineering attacks at scale that no human could produce manually.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="aph.pub">Published: 2026-05-18 14:19 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="aph.s1.h">What Changed</h2>
+      <p data-i18n="aph.s1.p1">For decades, phishing detection relied on a simple heuristic: real communications from real organizations are professionally written. Phishing attempts, largely produced by non-native English speakers with limited resources, were riddled with grammatical errors, awkward phrasing, and generic greetings like "Dear Valued Customer." Security training emphasized these signals. Users learned to be suspicious of bad writing.</p>
+      <p data-i18n="aph.s1.p2">LLMs made this heuristic obsolete overnight. Any LLM available since 2023 writes grammatically perfect English — and perfect French, Spanish, Japanese, and every other language — indistinguishable from native speaker prose. The "bad grammar = phishing" signal is gone, and it will not return. This is not a temporary capability gap that will be closed by better detection — it is a permanent shift in what attackers can produce at zero marginal cost.</p>
+      <p data-i18n="aph.s1.p3">The second shift is personalization at scale. Before LLMs, there were two categories of phishing: mass phishing (high volume, zero personalization — "Dear Customer, your account has been suspended") and spear phishing (low volume, high personalization — targeting specific individuals with tailored content). The cost structure meant you could have one or the other, not both. LLMs break this tradeoff. An attacker can now generate thousands of highly personalized messages per hour, each tailored to a specific target using scraped LinkedIn profiles, corporate websites, and social media data.</p>
+
+      <h2 data-i18n="aph.s2.h">The Spear Phishing Pipeline</h2>
+      <p data-i18n="aph.s2.p1">Modern AI-powered spear phishing is not a single tool — it's a pipeline that combines several AI capabilities with traditional data scraping. Understanding the pipeline is necessary for building defenses against it.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Attack Pipeline — AI Spear Phishing</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aph.atk1">Stage 1 — Target profiling: scrape LinkedIn for role, tenure, connections, recent activity; scrape company website for org chart, projects, press releases; scrape personal social media for interests, relationships, communication style. Stage 2 — Context synthesis: feed profile to an LLM with prompt "write a spear phishing email targeting this person that references their specific situation and appears to come from [spoofed colleague/vendor/executive]." Stage 3 — Infrastructure: register a lookalike domain (acme-corp.com → acme-c0rp.com), configure DKIM-spoofing, set up credential harvest page. Stage 4 — Send at scale: the entire pipeline can be automated to generate and send hundreds of highly personalized attacks per day.</p>
+      </div>
+
+      <div class="attack-block">
+        <div class="attack-label">Example — Synthetic Spear Phishing Email</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aph.atk2">From: sarah.chen@acme-c0rp.com (spoofed)<br>Subject: Re: Q2 budget review — approval needed before EOD<br><br>"Hi David,<br>Following up on the Q2 planning session last Tuesday — I know you had questions about the infrastructure line items. I've updated the shared doc with the breakdown you asked for. Could you review and provide signoff before our 3pm board prep call? Just click the link below to access the finance portal and authenticate.<br><br>[credential harvest link]<br><br>Thanks,<br>Sarah"<br><br>Note: the name, role reference, timing detail, and context are all synthesized from scraped data. No human wrote this — an LLM generated it in under a second.</p>
+      </div>
+
+      <h2 data-i18n="aph.s3.h">Voice Cloning + LLM = Vishing at Scale</h2>
+      <p data-i18n="aph.s3.p1">The text-based phishing problem is compounded by voice-based attacks. Voice cloning technology can now produce convincing replicas of a target's voice from as little as three seconds of audio — available from public recordings, voicemails, or social media videos. Combine cloned voice with an LLM-driven real-time conversation engine, and you have a fully automated vishing (voice phishing) system that sounds like a colleague, family member, or executive.</p>
+      <p data-i18n="aph.s3.p2">The attack flow: the system calls the target using a spoofed caller ID matching a trusted contact. The call is handled by a real-time LLM agent speaking in the cloned voice of that contact, trained on scraped context about the target's relationship with that contact. The agent handles unexpected questions, maintains conversational context, and guides the target toward the attacker's objective — authorizing a wire transfer, revealing credentials, clicking a link.</p>
+      <p data-i18n="aph.s3.p3">Several high-profile financial fraud cases have already been publicly attributed to AI voice cloning attacks. The technology is available, the attack pipeline exists, and the cost-per-attack is declining rapidly. Teams that haven't updated their social engineering defenses for the voice cloning threat are operating with out-of-date playbooks.</p>
+
+      <h2 data-i18n="aph.s4.h">Detecting AI-Generated Phishing</h2>
+      <p data-i18n="aph.s4.p1">Detection of AI-generated phishing is significantly harder than detection of traditional phishing. The grammar-based heuristics that most email security tools rely on are useless against LLM-generated content. Several alternative detection approaches show partial promise:</p>
+      <p data-i18n="aph.s4.p2">Perplexity-based detection: AI detectors analyze the statistical distribution of token sequences. AI-generated text tends to have lower perplexity than human text — it is "too smooth," too consistently fluent. This signal is real but unreliable at the individual email level. False positive rates are high enough that perplexity-based detection cannot be used as a standalone control for phishing detection without significant human review overhead.</p>
+      <p data-i18n="aph.s4.p3">Behavioral signals: AI-generated phishing often has subtle behavioral tells that reflect the attack pipeline rather than genuine human communication. Emails that reference very recent events (scraped from the target's public activity) but contain generic emotional framing; messages that use the correct names and roles but miss subtle cultural/organizational context that only insiders would know; communications that arrive at unusual times for the claimed sender's timezone. These signals require domain expertise to evaluate and are not automatable at scale.</p>
+      <p data-i18n="aph.s4.p4">Context inconsistencies: the most reliable AI phishing signal is when the fabricated context doesn't quite match reality. The "Q2 budget meeting" that didn't happen, the "project" that uses an incorrect code name, the "colleague" who was actually out of office that week. Catching these inconsistencies requires the recipient to have ground truth about the claimed context — which is exactly why attackers invest in scraping accurate contextual data before launching attacks.</p>
+
+      <h2 data-i18n="aph.s5.h">Defense: Technical Controls</h2>
+
+      <div class="defend-block">
+        <div class="defend-label">Control 1 — DMARC/DKIM Enforcement</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aph.def1">DMARC (Domain-based Message Authentication, Reporting, and Conformance) with a reject policy is the single most effective technical control against email-based phishing. It prevents spoofing of your domain as a sender — attackers cannot send emails that appear to come from yourcompany.com without legitimate credentials. Critically, DMARC only protects your outbound identity; it does not prevent attackers from using lookalike domains or other organizations' email infrastructure. Enforce DMARC on all your domains, and monitor DMARC reports for spoofing attempts against your domain.</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Control 2 — Anti-Phishing AI and URL Sandboxing</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aph.def2">Modern email security platforms use LLMs specifically trained for phishing detection — the same technology that makes phishing harder to detect also makes it possible to build better detectors. Look for platforms that do behavioral analysis (does this email match the sender's normal writing style?), relationship analysis (has this sender ever emailed this recipient before?), and URL sandboxing (follow every link in a sandboxed environment and analyze the destination page before delivering the email). No detector catches everything, but layered technical controls significantly raise the cost of a successful attack.</p>
+      </div>
+
+      <h2 data-i18n="aph.s6.h">Defense: Organizational Controls</h2>
+
+      <div class="defend-block">
+        <div class="defend-label">Control 3 — Verification Protocols for Sensitive Requests</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aph.def3">Technical controls cannot catch every phishing attempt. The human layer matters enormously. Establish clear verification protocols for high-risk actions: any wire transfer over a threshold, any credential reset request, any software installation request. The protocol should require out-of-band verification — calling the requester on a known phone number, not replying to the email or calling numbers provided in the email. This should be a formal policy, not a cultural expectation, with defined consequences for bypassing it.</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Control 4 — Culture of Skepticism</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aph.def4">The most underinvested defense is cultural: building an organization where it is normal and expected to verify unusual requests, regardless of who the claimed sender is. AI-powered phishing creates urgency and authority to suppress the natural human instinct to verify. Train employees explicitly for this manipulation pattern: any request that creates urgency, invokes authority, or pressures quick action is a red flag — even if it comes from a known name and arrives in professionally written prose. The goal is not to make employees paranoid but to shift the default from "assume it's real" to "verify before acting."</p>
+      </div>
+
+      <p data-i18n="aph.s6.p3">The uncomfortable truth about AI-powered phishing is that it shifts the security challenge from a technical problem to a human problem at the margins. Technical controls can catch a large fraction of AI-generated phishing. But the most sophisticated attacks — targeted, contextually accurate, leveraging voice cloning and real-time conversation — will get through technical filters. The final line of defense is people who have been trained, repeatedly and specifically, to recognize manipulation attempts even when they are flawlessly executed. That training needs to be updated for the AI threat landscape, not the threat landscape of five years ago.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'aph.cat': 'AI Security',
+    'aph.date': 'May 2026',
+    'aph.title': 'AI-Powered Phishing:<br>LLMs as Social Engineering Tools at Scale',
+    'aph.lead': 'Phishing used to be detectable by bad grammar and generic salutations. LLMs have eliminated both of those signals — and now enable personalized, contextually aware social engineering attacks at scale that no human could produce manually.',
+    'aph.pub': 'Published: 2026-05-18 14:19 PDT (Oregon)',
+    'aph.s1.h': 'What Changed',
+    'aph.s1.p1': 'For decades, phishing detection relied on a simple heuristic: real communications from real organizations are professionally written. Phishing attempts, largely produced by non-native English speakers with limited resources, were riddled with grammatical errors, awkward phrasing, and generic greetings like "Dear Valued Customer." Security training emphasized these signals. Users learned to be suspicious of bad writing.',
+    'aph.s1.p2': 'LLMs made this heuristic obsolete overnight. Any LLM available since 2023 writes grammatically perfect English — and perfect French, Spanish, Japanese, and every other language — indistinguishable from native speaker prose. The "bad grammar = phishing" signal is gone, and it will not return. This is not a temporary capability gap that will be closed by better detection — it is a permanent shift in what attackers can produce at zero marginal cost.',
+    'aph.s1.p3': 'The second shift is personalization at scale. Before LLMs, there were two categories of phishing: mass phishing (high volume, zero personalization — "Dear Customer, your account has been suspended") and spear phishing (low volume, high personalization — targeting specific individuals with tailored content). The cost structure meant you could have one or the other, not both. LLMs break this tradeoff. An attacker can now generate thousands of highly personalized messages per hour, each tailored to a specific target using scraped LinkedIn profiles, corporate websites, and social media data.',
+    'aph.s2.h': 'The Spear Phishing Pipeline',
+    'aph.s2.p1': 'Modern AI-powered spear phishing is not a single tool — it\'s a pipeline that combines several AI capabilities with traditional data scraping. Understanding the pipeline is necessary for building defenses against it.',
+    'aph.atk1': 'Stage 1 — Target profiling: scrape LinkedIn for role, tenure, connections, recent activity; scrape company website for org chart, projects, press releases; scrape personal social media for interests, relationships, communication style. Stage 2 — Context synthesis: feed profile to an LLM with prompt "write a spear phishing email targeting this person that references their specific situation and appears to come from [spoofed colleague/vendor/executive]." Stage 3 — Infrastructure: register a lookalike domain (acme-corp.com → acme-c0rp.com), configure DKIM-spoofing, set up credential harvest page. Stage 4 — Send at scale: the entire pipeline can be automated to generate and send hundreds of highly personalized attacks per day.',
+    'aph.atk2': 'From: sarah.chen@acme-c0rp.com (spoofed)<br>Subject: Re: Q2 budget review — approval needed before EOD<br><br>"Hi David,<br>Following up on the Q2 planning session last Tuesday — I know you had questions about the infrastructure line items. I\'ve updated the shared doc with the breakdown you asked for. Could you review and provide signoff before our 3pm board prep call? Just click the link below to access the finance portal and authenticate.<br><br>[credential harvest link]<br><br>Thanks,<br>Sarah"<br><br>Note: the name, role reference, timing detail, and context are all synthesized from scraped data. No human wrote this — an LLM generated it in under a second.',
+    'aph.s3.h': 'Voice Cloning + LLM = Vishing at Scale',
+    'aph.s3.p1': 'The text-based phishing problem is compounded by voice-based attacks. Voice cloning technology can now produce convincing replicas of a target\'s voice from as little as three seconds of audio — available from public recordings, voicemails, or social media videos. Combine cloned voice with an LLM-driven real-time conversation engine, and you have a fully automated vishing (voice phishing) system that sounds like a colleague, family member, or executive.',
+    'aph.s3.p2': 'The attack flow: the system calls the target using a spoofed caller ID matching a trusted contact. The call is handled by a real-time LLM agent speaking in the cloned voice of that contact, trained on scraped context about the target\'s relationship with that contact. The agent handles unexpected questions, maintains conversational context, and guides the target toward the attacker\'s objective — authorizing a wire transfer, revealing credentials, clicking a link.',
+    'aph.s3.p3': 'Several high-profile financial fraud cases have already been publicly attributed to AI voice cloning attacks. The technology is available, the attack pipeline exists, and the cost-per-attack is declining rapidly. Teams that haven\'t updated their social engineering defenses for the voice cloning threat are operating with out-of-date playbooks.',
+    'aph.s4.h': 'Detecting AI-Generated Phishing',
+    'aph.s4.p1': 'Detection of AI-generated phishing is significantly harder than detection of traditional phishing. The grammar-based heuristics that most email security tools rely on are useless against LLM-generated content. Several alternative detection approaches show partial promise:',
+    'aph.s4.p2': 'Perplexity-based detection: AI detectors analyze the statistical distribution of token sequences. AI-generated text tends to have lower perplexity than human text — it is "too smooth," too consistently fluent. This signal is real but unreliable at the individual email level. False positive rates are high enough that perplexity-based detection cannot be used as a standalone control for phishing detection without significant human review overhead.',
+    'aph.s4.p3': 'Behavioral signals: AI-generated phishing often has subtle behavioral tells that reflect the attack pipeline rather than genuine human communication. Emails that reference very recent events (scraped from the target\'s public activity) but contain generic emotional framing; messages that use the correct names and roles but miss subtle cultural/organizational context that only insiders would know; communications that arrive at unusual times for the claimed sender\'s timezone. These signals require domain expertise to evaluate and are not automatable at scale.',
+    'aph.s4.p4': 'Context inconsistencies: the most reliable AI phishing signal is when the fabricated context doesn\'t quite match reality. The "Q2 budget meeting" that didn\'t happen, the "project" that uses an incorrect code name, the "colleague" who was actually out of office that week. Catching these inconsistencies requires the recipient to have ground truth about the claimed context — which is exactly why attackers invest in scraping accurate contextual data before launching attacks.',
+    'aph.s5.h': 'Defense: Technical Controls',
+    'aph.def1': 'DMARC (Domain-based Message Authentication, Reporting, and Conformance) with a reject policy is the single most effective technical control against email-based phishing. It prevents spoofing of your domain as a sender — attackers cannot send emails that appear to come from yourcompany.com without legitimate credentials. Critically, DMARC only protects your outbound identity; it does not prevent attackers from using lookalike domains or other organizations\' email infrastructure. Enforce DMARC on all your domains, and monitor DMARC reports for spoofing attempts against your domain.',
+    'aph.def2': 'Modern email security platforms use LLMs specifically trained for phishing detection — the same technology that makes phishing harder to detect also makes it possible to build better detectors. Look for platforms that do behavioral analysis (does this email match the sender\'s normal writing style?), relationship analysis (has this sender ever emailed this recipient before?), and URL sandboxing (follow every link in a sandboxed environment and analyze the destination page before delivering the email). No detector catches everything, but layered technical controls significantly raise the cost of a successful attack.',
+    'aph.s6.h': 'Defense: Organizational Controls',
+    'aph.def3': 'Technical controls cannot catch every phishing attempt. The human layer matters enormously. Establish clear verification protocols for high-risk actions: any wire transfer over a threshold, any credential reset request, any software installation request. The protocol should require out-of-band verification — calling the requester on a known phone number, not replying to the email or calling numbers provided in the email. This should be a formal policy, not a cultural expectation, with defined consequences for bypassing it.',
+    'aph.def4': 'The most underinvested defense is cultural: building an organization where it is normal and expected to verify unusual requests, regardless of who the claimed sender is. AI-powered phishing creates urgency and authority to suppress the natural human instinct to verify. Train employees explicitly for this manipulation pattern: any request that creates urgency, invokes authority, or pressures quick action is a red flag — even if it comes from a known name and arrives in professionally written prose. The goal is not to make employees paranoid but to shift the default from "assume it\'s real" to "verify before acting."',
+    'aph.s6.p3': 'The uncomfortable truth about AI-powered phishing is that it shifts the security challenge from a technical problem to a human problem at the margins. Technical controls can catch a large fraction of AI-generated phishing. But the most sophisticated attacks — targeted, contextually accurate, leveraging voice cloning and real-time conversation — will get through technical filters. The final line of defense is people who have been trained, repeatedly and specifically, to recognize manipulation attempts even when they are flawlessly executed. That training needs to be updated for the AI threat landscape, not the threat landscape of five years ago.',
+  },
+  zh: {
+    'aph.cat': 'AI 安全',
+    'aph.date': '2026年5月',
+    'aph.title': 'AI 驱动的钓鱼攻击：<br>LLM 作为规模化社会工程工具',
+    'aph.lead': '钓鱼攻击曾经可以通过糟糕的语法和通用的称呼来识别。LLM 消除了这两个信号——现在使个性化、情境感知的社会工程攻击得以规模化，这是任何人工都无法手动产生的。',
+    'aph.pub': '发布时间：2026-05-18 14:19 PDT（俄勒冈）',
+    'aph.s1.h': '发生了什么变化',
+    'aph.s1.p1': '几十年来，钓鱼检测依赖于一个简单的启发式原则：来自真实组织的真实通信是专业写作的。钓鱼尝试，主要由资源有限的非英语母语者制作，充满语法错误、尴尬的措辞和通用的问候语如"尊敬的客户"。安全培训强调这些信号。用户学会了对糟糕的写作保持怀疑。',
+    'aph.s1.p2': 'LLM 使这个启发式原则一夜之间过时了。自 2023 年以来的任何 LLM 都能写出语法完美的英语——以及完美的法语、西班牙语、日语和其他每种语言——与母语者的散文无从区别。"语法差=钓鱼"的信号消失了，而且不会回来。这不是会通过更好的检测来弥合的临时能力差距——这是攻击者能以零边际成本产生什么的永久性转变。',
+    'aph.s1.p3': '第二个转变是规模化个性化。在 LLM 之前，钓鱼有两类：大规模钓鱼（高量，零个性化——"亲爱的客户，您的账户已被暂停"）和鱼叉式钓鱼（低量，高个性化——针对特定个人的定制内容）。成本结构意味着你只能选择其中之一，而不能两者兼得。LLM 打破了这种权衡。攻击者现在每小时可以生成数千条高度个性化的消息，每条消息都使用抓取的 LinkedIn 资料、公司网站和社交媒体数据针对特定目标定制。',
+    'aph.s2.h': '鱼叉式钓鱼流水线',
+    'aph.s2.p1': '现代 AI 驱动的鱼叉式钓鱼不是单一工具——它是将几种 AI 能力与传统数据抓取结合的流水线。理解这条流水线是构建针对它的防御所必需的。',
+    'aph.atk1': '阶段1——目标分析：从 LinkedIn 抓取角色、任期、联系人、最近活动；从公司网站抓取组织结构图、项目、新闻稿；从个人社交媒体抓取兴趣、关系、沟通风格。阶段2——上下文合成：将资料传给 LLM，提示"写一封针对这个人的鱼叉式钓鱼电子邮件，引用他们的特定情况并看起来来自[伪造的同事/供应商/高管]"。阶段3——基础设施：注册相似域名（acme-corp.com → acme-c0rp.com），配置 DKIM 欺骗，设置凭证收集页面。阶段4——规模发送：整个流水线可以自动化，每天生成和发送数百个高度个性化的攻击。',
+    'aph.atk2': '发件人：sarah.chen@acme-c0rp.com（伪造）<br>主题：回复：Q2 预算审查——需要在今天下班前批准<br><br>"David 你好，<br>跟进上周二的 Q2 规划会议——我知道你对基础设施项目有疑问。我已经用你要求的细目更新了共享文档。能在我们下午3点的董事会准备电话前审查并签字吗？只需点击下面的链接访问财务门户并进行身份验证。<br><br>[凭证收集链接]<br><br>谢谢，<br>Sarah"<br><br>注意：姓名、角色引用、时间细节和上下文都是从抓取的数据合成的。没有人工写作——LLM 在不到一秒内生成了它。',
+    'aph.s3.h': '语音克隆 + LLM = 规模化语音钓鱼',
+    'aph.s3.p1': '基于文本的钓鱼问题因基于语音的攻击而更加复杂。语音克隆技术现在可以从低至三秒的音频中生成令人信服的目标语音复制品——这些音频可以从公共录音、语音邮件或社交媒体视频中获得。将克隆声音与 LLM 驱动的实时对话引擎结合，你就拥有了一个听起来像同事、家庭成员或高管的完全自动化语音钓鱼系统。',
+    'aph.s3.p2': '攻击流程：系统使用与受信联系人匹配的伪造来电显示致电目标。通话由说着该联系人克隆声音的实时 LLM 代理处理，该代理基于目标与该联系人关系的抓取背景进行训练。代理处理意外问题，维护对话上下文，并引导目标达到攻击者的目标——授权电汇、透露凭证、点击链接。',
+    'aph.s3.p3': '几起高知名度的金融欺诈案件已经公开归因于 AI 语音克隆攻击。技术是可用的，攻击流水线存在，每次攻击的成本正在迅速下降。没有针对语音克隆威胁更新社会工程防御的团队正在使用过时的手册运营。',
+    'aph.s4.h': '检测 AI 生成的钓鱼',
+    'aph.s4.p1': '检测 AI 生成的钓鱼比检测传统钓鱼难得多。大多数电子邮件安全工具依赖的基于语法的启发式方法对 LLM 生成的内容毫无用处。几种替代检测方法显示出部分希望：',
+    'aph.s4.p2': '基于困惑度的检测：AI 检测器分析令牌序列的统计分布。AI 生成的文本往往比人类文本困惑度更低——它"太平滑"，太一致地流畅。这个信号是真实的，但在单封电子邮件层面是不可靠的。误报率高到基于困惑度的检测无法在没有大量人工审查开销的情况下作为钓鱼检测的独立控制使用。',
+    'aph.s4.p3': '行为信号：AI 生成的钓鱼通常有反映攻击流水线而非真正人类通信的微妙行为特征。引用非常近期事件（从目标的公开活动抓取）但包含通用情感框架的电子邮件；使用正确姓名和职位但遗漏只有内部人员才知道的微妙文化/组织背景的消息；在声称的发件人时区的异常时间到达的通信。这些信号需要领域专业知识来评估，无法在规模上自动化。',
+    'aph.s4.p4': '上下文不一致：最可靠的 AI 钓鱼信号是当捏造的上下文与现实不完全匹配时。没有发生的"Q2 预算会议"，使用错误代号的"项目"，那周实际上不在办公室的"同事"。捕捉这些不一致需要收件人拥有关于声称上下文的真实情况——这正是攻击者在发动攻击前投资于抓取准确上下文数据的原因。',
+    'aph.s5.h': '防御：技术控制',
+    'aph.def1': '带有拒绝策略的 DMARC（基于域的消息身份验证、报告和一致性）是针对基于电子邮件的钓鱼最有效的单一技术控制。它防止将你的域名作为发件人进行欺骗——攻击者无法发送看起来来自 yourcompany.com 的电子邮件而没有合法凭证。关键是，DMARC 只保护你的出站身份；它不能防止攻击者使用相似域名或其他组织的电子邮件基础设施。在所有域名上执行 DMARC，并监控 DMARC 报告以发现针对你域名的欺骗尝试。',
+    'aph.def2': '现代电子邮件安全平台使用专门针对钓鱼检测训练的 LLM——使钓鱼更难检测的同一技术也使构建更好的检测器成为可能。寻找做行为分析（这封电子邮件是否与发件人的正常写作风格匹配？）、关系分析（该发件人以前曾向该收件人发送过电子邮件吗？）和 URL 沙盒（在沙盒环境中跟踪电子邮件中的每个链接，并在传递电子邮件之前分析目标页面）的平台。没有检测器能捕获所有内容，但分层技术控制显著提高了成功攻击的成本。',
+    'aph.s6.h': '防御：组织控制',
+    'aph.def3': '技术控制无法捕获每个钓鱼尝试。人的层面至关重要。为高风险行动建立明确的验证协议：任何超过阈值的电汇、任何凭证重置请求、任何软件安装请求。协议应要求带外验证——用已知电话号码致电请求者，而不是回复电子邮件或拨打电子邮件中提供的号码。这应该是正式政策，而不是文化期望，并为绕过它定义了后果。',
+    'aph.def4': '投资最不足的防御是文化的：构建一个无论声称的发件人是谁都正常且期望验证不寻常请求的组织。AI 驱动的钓鱼创造紧迫感和权威感来压制人类自然的验证本能。明确为这种操控模式训练员工：任何创造紧迫感、援引权威或施压快速行动的请求都是红旗——即使它来自已知名称并以专业散文呈现。目标不是让员工偏执，而是将默认值从"假设它是真实的"转变为"采取行动前验证"。',
+    'aph.s6.p3': '关于 AI 驱动钓鱼令人不安的真相是，它将安全挑战从技术问题转变为人的问题。技术控制可以捕获大部分 AI 生成的钓鱼。但最复杂的攻击——有针对性的、情境准确的、利用语音克隆和实时对话——会通过技术过滤器。最终的防线是那些被反复专门训练为识别操控尝试的人，即使这些尝试执行得无懈可击。这种培训需要针对 AI 威胁格局进行更新，而不是五年前的威胁格局。',
+  },
+  ja: {
+    'aph.cat': 'AIセキュリティ',
+    'aph.date': '2026年5月',
+    'aph.title': 'AI駆動のフィッシング：<br>スケールでのソーシャルエンジニアリングツールとしてのLLM',
+    'aph.lead': 'フィッシングはかつて悪い文法と一般的な挨拶で検出可能だった。LLMはその両方のシグナルを排除した——そして今、どんな人間も手動では生産できない規模でのパーソナライズされた、文脈認識のあるソーシャルエンジニアリング攻撃を可能にする。',
+    'aph.pub': '公開日時：2026-05-18 14:19 PDT（オレゴン）',
+    'aph.s1.h': '何が変わったか',
+    'aph.s1.p1': '数十年間、フィッシング検知は単純なヒューリスティックに頼っていた：本物の組織からの本物の通信はプロフェッショナルに書かれている。フィッシングの試みは主に限られたリソースを持つ非英語ネイティブスピーカーによって生産され、文法的なエラー、ぎこちないフレーズ、「お客様各位」のような一般的な挨拶に満ちていた。セキュリティトレーニングはこれらのシグナルを強調した。ユーザーは悪い文章を疑うことを学んだ。',
+    'aph.s1.p2': 'LLMはこのヒューリスティックを一夜にして時代遅れにした。2023年以降の任意のLLMは文法的に完璧な英語を書く——そして完璧なフランス語、スペイン語、日本語、その他のすべての言語——ネイティブスピーカーの散文と区別できない。「文法が悪い＝フィッシング」のシグナルは消えた、そして戻らないだろう。これはより良い検知で埋められる一時的な能力差ではない——攻撃者がゼロの限界コストで何を生産できるかの永続的な転換だ。',
+    'aph.s1.p3': '第二の転換はスケールでのパーソナライゼーションだ。LLM以前には、フィッシングには二つのカテゴリーがあった：マスフィッシング（大量、ゼロのパーソナライゼーション——「お客様、アカウントが停止されました」）とスピアフィッシング（少量、高いパーソナライゼーション——カスタマイズされたコンテンツで特定の個人を標的にする）。コスト構造はどちらか一方を選ぶことを意味し、両方ではなかった。LLMはこのトレードオフを破る。攻撃者は今、スクレイピングされたLinkedInプロフィール、企業ウェブサイト、ソーシャルメディアデータを使って特定のターゲットにそれぞれ合わせた、毎時何千もの高度にパーソナライズされたメッセージを生成できる。',
+    'aph.s2.h': 'スピアフィッシングパイプライン',
+    'aph.s2.p1': '現代のAI駆動のスピアフィッシングは単一のツールではない——従来のデータスクレイピングといくつかのAI能力を組み合わせたパイプラインだ。パイプラインを理解することは、それに対する防御を構築するために必要だ。',
+    'aph.atk1': 'ステージ1——ターゲットプロファイリング：LinkedInからロール、在籍期間、連絡先、最近の活動をスクレイプ；企業ウェブサイトから組織図、プロジェクト、プレスリリースをスクレイプ；個人のソーシャルメディアから興味、関係、コミュニケーションスタイルをスクレイプ。ステージ2——コンテキスト合成：プロフィールをLLMに入力し「この人を標的にしたスピアフィッシングメールを書いてください、彼らの特定の状況を参照し[なりすました同僚/ベンダー/幹部]から来たように見える」というプロンプト。ステージ3——インフラ：似たようなドメインを登録（acme-corp.com → acme-c0rp.com）、DKIMスプーフィングを設定、クレデンシャル収集ページをセットアップ。ステージ4——スケールで送信：パイプライン全体を自動化して、毎日何百もの高度にパーソナライズされた攻撃を生成・送信できる。',
+    'aph.atk2': '送信者：sarah.chen@acme-c0rp.com（なりすまし）<br>件名：返信：Q2予算レビュー——終業前に承認が必要<br><br>「David様、<br>先週火曜日のQ2計画セッションのフォローアップです——インフラの項目について質問があると知っています。要求された内訳で共有ドキュメントを更新しました。午後3時の取締役会準備コールの前に確認してサインオフしていただけますか？以下のリンクをクリックして財務ポータルにアクセスし認証してください。<br><br>[クレデンシャル収集リンク]<br><br>よろしくお願いします、<br>Sarah」<br><br>注記：名前、ロール参照、タイミングの詳細、コンテキストはすべてスクレイプされたデータから合成されている。人間は誰も書いていない——LLMが1秒以内に生成した。',
+    'aph.s3.h': '音声クローニング + LLM = スケールでのビッシング',
+    'aph.s3.p1': 'テキストベースのフィッシング問題は音声ベースの攻撃によって複雑化される。音声クローニング技術は今や、公開録音、ボイスメール、またはソーシャルメディアビデオから入手できる3秒という短い音声からターゲットの声の説得力ある複製を生成できる。クローンされた声とLLM駆動のリアルタイム会話エンジンを組み合わせると、同僚、家族、または幹部のように聞こえる完全自動化されたビッシング（音声フィッシング）システムができる。',
+    'aph.s3.p2': '攻撃フロー：システムは信頼されている連絡先に一致するなりすましの発信者IDを使用してターゲットに電話する。通話は、その連絡先のクローンされた声で話すリアルタイムLLMエージェントが処理し、ターゲットとその連絡先の関係についてのスクレイプされたコンテキストでトレーニングされている。エージェントは予期しない質問を処理し、会話のコンテキストを維持し、攻撃者の目的——電信送金の承認、クレデンシャルの開示、リンクのクリック——に向けてターゲットを誘導する。',
+    'aph.s3.p3': 'いくつかの高知名度の金融詐欺事件はすでにAI音声クローニング攻撃に公式に起因している。技術は利用可能で、攻撃パイプラインは存在し、攻撃あたりのコストは急速に低下している。音声クローニングの脅威のためにソーシャルエンジニアリング防御を更新していないチームは古いプレイブックで運営している。',
+    'aph.s4.h': 'AI生成フィッシングの検知',
+    'aph.s4.p1': 'AI生成フィッシングの検知は従来のフィッシングの検知よりはるかに難しい。ほとんどのメールセキュリティツールが頼る文法ベースのヒューリスティックはLLM生成コンテンツには役に立たない。いくつかの代替検知アプローチが部分的な可能性を示している：',
+    'aph.s4.p2': 'パープレキシティベースの検知：AI検知器はトークンシーケンスの統計的分布を分析する。AI生成テキストは人間のテキストよりも低いパープレキシティを持つ傾向がある——それは「滑らかすぎる」、一貫して流暢すぎる。このシグナルは実在するが個々のメールレベルでは信頼性がない。偽陽性率は、パープレキシティベースの検知が相当な人間のレビューオーバーヘッドなしにフィッシング検知のスタンドアロンコントロールとして使用できないほど高い。',
+    'aph.s4.p3': '行動的シグナル：AI生成フィッシングはしばしば、真の人間のコミュニケーションではなく攻撃パイプラインを反映する微妙な行動的サインを持っている。非常に最近のイベント（ターゲットの公開活動からスクレイプされた）を参照するが一般的な感情的フレームを含むメール；正しい名前とロールを使用するが内部者だけが知る微妙な文化的/組織的コンテキストを見落とすメッセージ；主張された送信者のタイムゾーンの異常な時間に届く通信。これらのシグナルは評価するためのドメイン専門知識を必要とし、スケールで自動化できない。',
+    'aph.s4.p4': 'コンテキストの不一致：最も信頼性の高いAIフィッシングシグナルは、捏造されたコンテキストが現実とぴったり合わないときだ。起こらなかった「Q2予算会議」、誤ったコードネームを使う「プロジェクト」、その週実際に外出中だった「同僚」。これらの不一致を捉えるには、受信者が主張されたコンテキストについての真実を知っている必要がある——これこそが攻撃者が攻撃を開始する前に正確なコンテキストデータのスクレイピングに投資する理由だ。',
+    'aph.s5.h': '防御：技術的コントロール',
+    'aph.def1': '拒否ポリシーを持つDMARC（ドメインベースのメッセージ認証、報告、および準拠）は、メールベースのフィッシングに対する最も効果的な単一の技術的コントロールだ。送信者としてのあなたのドメインのなりすましを防ぐ——攻撃者は正当なクレデンシャルなしにyourcompany.comから来るように見えるメールを送れない。重要なことに、DMARCはあなたの送信IDのみを保護する；攻撃者が似たようなドメインや他の組織のメールインフラを使用することを防がない。すべてのドメインにDMARCを適用し、あなたのドメインに対するなりすましの試みについてDMARCレポートを監視する。',
+    'aph.def2': '現代のメールセキュリティプラットフォームはフィッシング検知に特化してトレーニングされたLLMを使用する——フィッシングを検知しにくくする同じ技術がより良い検知器を構築することも可能にする。行動分析（このメールは送信者の通常の文体に一致するか？）、関係分析（この送信者は以前にこの受信者にメールしたことがあるか？）、URLサンドボックス（サンドボックス環境ですべてのリンクをフォローし、メールを配信する前に目的ページを分析する）を行うプラットフォームを探す。どの検知器もすべてを捕捉するわけではないが、階層化された技術的コントロールは成功した攻撃のコストを大幅に上げる。',
+    'aph.s6.h': '防御：組織的コントロール',
+    'aph.def3': '技術的コントロールはすべてのフィッシングの試みを捕捉できない。人間の層は非常に重要だ。高リスクアクションのための明確な検証プロトコルを確立する：閾値を超えた電信送金、クレデンシャルリセットリクエスト、ソフトウェアインストールリクエスト。プロトコルはアウトオブバンドの検証を必要とすべきだ——メールへの返信やメール内で提供された番号への電話ではなく、既知の電話番号でリクエスターに電話する。これは文化的な期待ではなく、それを回避することに対する定義された結果を持つ正式なポリシーであるべきだ。',
+    'aph.def4': '最も過小投資されている防御は文化的なものだ：主張された送信者が誰であるかに関わらず、異常なリクエストを確認することが正常で期待されている組織を構築すること。AI駆動のフィッシングは、検証する人間の自然な本能を抑制するために緊急性と権威を生み出す。従業員をこの操作パターンに対して明示的にトレーニングする：緊急性を生み出す、権威を呼び起こす、または迅速な行動を迫るリクエストはすべて危険信号だ——たとえそれが既知の名前から来て専門的な散文で届いても。目標は従業員を偏執的にすることではなく、デフォルトを「本物と仮定する」から「行動する前に検証する」にシフトすることだ。',
+    'aph.s6.p3': 'AI駆動のフィッシングについての不都合な真実は、それがセキュリティの課題を技術的な問題から周辺の人間の問題に移すことだ。技術的コントロールはAI生成フィッシングの大部分を捕捉できる。しかし最も洗練された攻撃——標的を絞り、文脈的に正確で、音声クローニングとリアルタイム会話を活用する——は技術的フィルターを通り抜ける。最終的な防衛ラインは、完璧に実行された場合でも操作の試みを認識するよう、繰り返し具体的にトレーニングされた人々だ。そのトレーニングは5年前の脅威の状況ではなく、AI脅威の状況に合わせて更新される必要がある。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

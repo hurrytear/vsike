@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Security Incident Response: When Your Model Gets Weaponized — vsike</title>
+  <meta name="description" content="Detecting a compromised AI system, containing the damage, and recovering without repeating the same mistake — a practical playbook for teams operating AI in production.">
+  <meta name="keywords" content="AI安全事件响应, 模型被武器化, AI安全运营, AI incident response, model weaponized, AI security operations, LLM compromise, agentic AI security 2026">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-incident-response.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="air.cat">AI Security</span>
+        <span class="article-date" data-i18n="air.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="air.title">AI Security Incident Response:<br>When Your Model Gets Weaponized</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="air.lead">Detecting a compromised AI system, containing the damage, and recovering without repeating the same mistake — a practical playbook for teams operating AI in production.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="air.pub">Published: 2026-05-18 10:31 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="air.s1.h">AI Incidents Are Different</h2>
+      <p data-i18n="air.s1.p1">Traditional security incidents have a discrete structure: a breach happens at a moment in time, a threshold is crossed, a payload executes. The before-state and after-state are distinguishable. The incident timeline has a beginning and an end. Detection is often about finding the signature of the intrusion — the malicious binary, the anomalous login, the exfiltrated file.</p>
+      <p data-i18n="air.s1.p2">AI security incidents don't work this way. There is rarely a clear "breach moment." Instead, there is behavioral drift — outputs that gradually shift toward unexpected territory, tool calls that occur slightly outside normal patterns, responses that comply with requests they should decline. The compromise is often a spectrum rather than a binary, and the cause is often invisible in any single interaction. It requires looking at patterns across many interactions over time.</p>
+      <p data-i18n="air.s1.p3">This structural difference has significant operational implications. Your incident response runbook, built for traditional security events, will not map cleanly onto an AI compromise. The concepts carry over — detection, containment, investigation, recovery, post-incident review — but the specific actions in each phase are fundamentally different. Teams that haven't thought through these differences before an incident will discover them under pressure, at the worst possible time.</p>
+
+      <h2 data-i18n="air.s2.h">Detection Signals</h2>
+      <p data-i18n="air.s2.p1">The goal of detection is not to find the attack — it's to notice that something is wrong before the damage becomes unrecoverable. For AI systems, that means instrumenting for behavioral deviations rather than signature matches.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Signal 1 — Output Anomalies</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.sig1">Outputs that don't match the application's expected behavior envelope: a customer service bot that starts giving financial advice, a summarization model that starts including extra instructions in its summaries, a coding assistant that starts recommending insecure patterns it previously avoided. Automated output quality checks with LLM-based evaluation can catch distributional shift before humans notice it.</p>
+      </div>
+
+      <div class="attack-block">
+        <div class="attack-label">Signal 2 — Unexpected Tool Calls</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.sig2">For agentic systems, unexpected tool usage is a primary signal. A model that starts calling the email tool during a read-only summarization task, or that begins querying unusual database tables, or that makes external HTTP requests to domains not in its expected call pattern — these are signs that the model's behavior is being influenced by something outside normal operation. Log every tool call with its triggering context.</p>
+      </div>
+
+      <div class="attack-block">
+        <div class="attack-label">Signal 3 — User Reports</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.sig3">Users are often the first to notice behavioral anomalies. "The bot told me to do something weird," "it asked me for information it never needed before," "it seems to be talking about something unrelated to my question." Build a lightweight feedback mechanism that routes these reports directly to your security team. User reports are noisy but high-value — they represent real behavioral deviations that made it to production.</p>
+      </div>
+
+      <div class="attack-block">
+        <div class="attack-label">Signal 4 — Benchmark Degradation</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.sig4">Run your model against a fixed set of behavioral benchmark prompts on a regular schedule — ideally after every deployment and at least daily in production. Include prompts specifically designed to test refusal behaviors, safety constraints, and task-relevant competency. Significant degradation on refusal benchmarks is an early warning sign of model compromise or prompt configuration drift.</p>
+      </div>
+
+      <h2 data-i18n="air.s3.h">Containment Steps</h2>
+      <p data-i18n="air.s3.p1">Once you suspect an AI system is behaving abnormally, the immediate priority is containing the blast radius — preventing the compromised behavior from affecting more users or taking more actions. Do not wait for full investigation before containing. Contain first, investigate second.</p>
+
+      <div class="defend-block">
+        <div class="defend-label">Containment Step 1 — Rate Limiting and Traffic Isolation</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.con1">Immediately reduce the number of users exposed to the potentially compromised model. Route new traffic to a known-good backup model or model version. If you don't have a backup, apply aggressive rate limiting to slow down exposure while you investigate. For agentic systems with tool access, consider disabling the highest-risk tools first — those that take irreversible external actions (email, file writes, API calls).</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Containment Step 2 — Disable High-Risk Tool Integrations</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.con2">For agentic deployments, the tools available to the model determine the blast radius of any compromise. When you suspect compromise, disable tools in order of potential impact: external communication tools first (email, messaging), then write tools (database writes, file system), then read tools (unless the reads are the attack vector). Leave only the minimum toolset needed to confirm the anomaly you're investigating.</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Containment Step 3 — Capture State Before Modification</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.con3">Before you make any changes to the system prompt, model version, or configuration — preserve the current state. Take a snapshot of the active system prompt, the deployed model version, the tool configuration, and a sample of recent inputs and outputs. You will need this for forensic investigation. Modifying the system without preserving state first is a common mistake that destroys investigation evidence.</p>
+      </div>
+
+      <h2 data-i18n="air.s4.h">Investigation Framework</h2>
+      <p data-i18n="air.s4.p1">Investigation means answering one central question: where did the unexpected behavior originate? For AI systems, there are five primary vectors to examine. Work through them systematically, as more than one may be involved simultaneously.</p>
+      <p data-i18n="air.s4.p2">Vector 1 — Prompt injection via user input: Did a user provide input that successfully overrode the system prompt? Review conversations leading up to the anomalous behavior. Look for attempts to use role-play framing, authority claims, or instruction override language. Check whether the anomalous behavior started after a specific user interaction.</p>
+      <p data-i18n="air.s4.p3">Vector 2 — Indirect injection via tool outputs: Did the model process data from an external source that contained adversarial instructions? If the model reads from any external data source — web pages, databases, files, API responses — audit recent tool outputs for instruction-like patterns. Cross-reference the timing of anomalous behavior with specific tool calls.</p>
+      <p data-i18n="air.s4.p4">Vector 3 — System prompt misconfiguration: Was the system prompt modified, corrupted, or incorrectly deployed? Compare the active system prompt against your version-controlled baseline. Even small unintended changes can have large behavioral effects. Check your deployment pipeline for unauthorized modifications.</p>
+      <p data-i18n="air.s4.p5">Vector 4 — Model version issues: Was a new model version deployed that behaves differently on your use case? Model providers update models frequently, and behavioral changes can be subtle. If anomalous behavior started after a model update, compare behavior across versions using your behavioral benchmarks.</p>
+      <p data-i18n="air.s4.p6">Vector 5 — Fine-tuning or training data compromise: For teams using fine-tuned models, was the training dataset poisoned? This is the hardest vector to detect and the slowest to manifest — the effects of training data poisoning may only become apparent under specific input conditions that trigger the backdoor.</p>
+
+      <h2 data-i18n="air.s5.h">Recovery and Hardening</h2>
+      <p data-i18n="air.s5.p1">Recovery is not complete when the anomalous behavior stops. Recovery is complete when you have established that the root cause has been addressed, verified that behavior has returned to the expected envelope, and hardened the system against the recurrence of the identified attack vector.</p>
+
+      <div class="defend-block">
+        <div class="defend-label">Recovery Step — Red Team Before Re-deployment</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.rec1">Before restoring full service, run a targeted red team exercise specifically against the attack vector you identified. If the incident was caused by prompt injection, attempt prompt injection against the remediated system. If it was caused by indirect injection, attempt to inject malicious instructions through the same data channel. Do not re-deploy without explicit confirmation that the identified vector has been closed.</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Recovery Step — Rollback Procedures</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="air.rec2">Have pre-staged rollback procedures for your model version, system prompt, and tool configuration. A rollback should be executable in under five minutes by a single on-call engineer without requiring coordination with external parties. If your current deployment process requires more than this, the gap between "incident detected" and "anomalous model contained" will be measured in tens of minutes — during which the compromised behavior continues.</p>
+      </div>
+
+      <h2 data-i18n="air.s6.h">Post-Incident Documentation</h2>
+      <p data-i18n="air.s6.p1">The post-incident review is not bureaucratic process — it is how your organization learns to detect and respond faster to the next incident. For AI incidents specifically, the review should produce four artifacts: a timeline of the incident from first detection to full recovery; a root cause analysis that goes beyond "the model was compromised" to identify the specific technical mechanism; a list of detection improvements that would have caught the anomaly sooner; and an architecture review that identifies structural changes that would reduce the impact of similar incidents.</p>
+      <p data-i18n="air.s6.p2">Consider sharing sanitized incident details with the broader AI security community. The community is still building its collective knowledge base for AI security incidents. Every published incident, even anonymized, helps other teams build better detection and response capabilities. The adversarial landscape for AI systems is evolving rapidly — the community benefits from shared intelligence in ways that traditional security incident sharing already recognizes but AI security is still developing the culture and channels for.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'air.cat': 'AI Security',
+    'air.date': 'May 2026',
+    'air.title': 'AI Security Incident Response:<br>When Your Model Gets Weaponized',
+    'air.lead': 'Detecting a compromised AI system, containing the damage, and recovering without repeating the same mistake — a practical playbook for teams operating AI in production.',
+    'air.pub': 'Published: 2026-05-18 10:31 PDT (Oregon)',
+    'air.s1.h': 'AI Incidents Are Different',
+    'air.s1.p1': 'Traditional security incidents have a discrete structure: a breach happens at a moment in time, a threshold is crossed, a payload executes. The before-state and after-state are distinguishable. The incident timeline has a beginning and an end. Detection is often about finding the signature of the intrusion — the malicious binary, the anomalous login, the exfiltrated file.',
+    'air.s1.p2': 'AI security incidents don\'t work this way. There is rarely a clear "breach moment." Instead, there is behavioral drift — outputs that gradually shift toward unexpected territory, tool calls that occur slightly outside normal patterns, responses that comply with requests they should decline. The compromise is often a spectrum rather than a binary, and the cause is often invisible in any single interaction. It requires looking at patterns across many interactions over time.',
+    'air.s1.p3': 'This structural difference has significant operational implications. Your incident response runbook, built for traditional security events, will not map cleanly onto an AI compromise. The concepts carry over — detection, containment, investigation, recovery, post-incident review — but the specific actions in each phase are fundamentally different. Teams that haven\'t thought through these differences before an incident will discover them under pressure, at the worst possible time.',
+    'air.s2.h': 'Detection Signals',
+    'air.s2.p1': 'The goal of detection is not to find the attack — it\'s to notice that something is wrong before the damage becomes unrecoverable. For AI systems, that means instrumenting for behavioral deviations rather than signature matches.',
+    'air.sig1': 'Outputs that don\'t match the application\'s expected behavior envelope: a customer service bot that starts giving financial advice, a summarization model that starts including extra instructions in its summaries, a coding assistant that starts recommending insecure patterns it previously avoided. Automated output quality checks with LLM-based evaluation can catch distributional shift before humans notice it.',
+    'air.sig2': 'For agentic systems, unexpected tool usage is a primary signal. A model that starts calling the email tool during a read-only summarization task, or that begins querying unusual database tables, or that makes external HTTP requests to domains not in its expected call pattern — these are signs that the model\'s behavior is being influenced by something outside normal operation. Log every tool call with its triggering context.',
+    'air.sig3': 'Users are often the first to notice behavioral anomalies. "The bot told me to do something weird," "it asked me for information it never needed before," "it seems to be talking about something unrelated to my question." Build a lightweight feedback mechanism that routes these reports directly to your security team. User reports are noisy but high-value — they represent real behavioral deviations that made it to production.',
+    'air.sig4': 'Run your model against a fixed set of behavioral benchmark prompts on a regular schedule — ideally after every deployment and at least daily in production. Include prompts specifically designed to test refusal behaviors, safety constraints, and task-relevant competency. Significant degradation on refusal benchmarks is an early warning sign of model compromise or prompt configuration drift.',
+    'air.s3.h': 'Containment Steps',
+    'air.s3.p1': 'Once you suspect an AI system is behaving abnormally, the immediate priority is containing the blast radius — preventing the compromised behavior from affecting more users or taking more actions. Do not wait for full investigation before containing. Contain first, investigate second.',
+    'air.con1': 'Immediately reduce the number of users exposed to the potentially compromised model. Route new traffic to a known-good backup model or model version. If you don\'t have a backup, apply aggressive rate limiting to slow down exposure while you investigate. For agentic systems with tool access, consider disabling the highest-risk tools first — those that take irreversible external actions (email, file writes, API calls).',
+    'air.con2': 'For agentic deployments, the tools available to the model determine the blast radius of any compromise. When you suspect compromise, disable tools in order of potential impact: external communication tools first (email, messaging), then write tools (database writes, file system), then read tools (unless the reads are the attack vector). Leave only the minimum toolset needed to confirm the anomaly you\'re investigating.',
+    'air.con3': 'Before you make any changes to the system prompt, model version, or configuration — preserve the current state. Take a snapshot of the active system prompt, the deployed model version, the tool configuration, and a sample of recent inputs and outputs. You will need this for forensic investigation. Modifying the system without preserving state first is a common mistake that destroys investigation evidence.',
+    'air.s4.h': 'Investigation Framework',
+    'air.s4.p1': 'Investigation means answering one central question: where did the unexpected behavior originate? For AI systems, there are five primary vectors to examine. Work through them systematically, as more than one may be involved simultaneously.',
+    'air.s4.p2': 'Vector 1 — Prompt injection via user input: Did a user provide input that successfully overrode the system prompt? Review conversations leading up to the anomalous behavior. Look for attempts to use role-play framing, authority claims, or instruction override language. Check whether the anomalous behavior started after a specific user interaction.',
+    'air.s4.p3': 'Vector 2 — Indirect injection via tool outputs: Did the model process data from an external source that contained adversarial instructions? If the model reads from any external data source — web pages, databases, files, API responses — audit recent tool outputs for instruction-like patterns. Cross-reference the timing of anomalous behavior with specific tool calls.',
+    'air.s4.p4': 'Vector 3 — System prompt misconfiguration: Was the system prompt modified, corrupted, or incorrectly deployed? Compare the active system prompt against your version-controlled baseline. Even small unintended changes can have large behavioral effects. Check your deployment pipeline for unauthorized modifications.',
+    'air.s4.p5': 'Vector 4 — Model version issues: Was a new model version deployed that behaves differently on your use case? Model providers update models frequently, and behavioral changes can be subtle. If anomalous behavior started after a model update, compare behavior across versions using your behavioral benchmarks.',
+    'air.s4.p6': 'Vector 5 — Fine-tuning or training data compromise: For teams using fine-tuned models, was the training dataset poisoned? This is the hardest vector to detect and the slowest to manifest — the effects of training data poisoning may only become apparent under specific input conditions that trigger the backdoor.',
+    'air.s5.h': 'Recovery and Hardening',
+    'air.s5.p1': 'Recovery is not complete when the anomalous behavior stops. Recovery is complete when you have established that the root cause has been addressed, verified that behavior has returned to the expected envelope, and hardened the system against the recurrence of the identified attack vector.',
+    'air.rec1': 'Before restoring full service, run a targeted red team exercise specifically against the attack vector you identified. If the incident was caused by prompt injection, attempt prompt injection against the remediated system. If it was caused by indirect injection, attempt to inject malicious instructions through the same data channel. Do not re-deploy without explicit confirmation that the identified vector has been closed.',
+    'air.rec2': 'Have pre-staged rollback procedures for your model version, system prompt, and tool configuration. A rollback should be executable in under five minutes by a single on-call engineer without requiring coordination with external parties. If your current deployment process requires more than this, the gap between "incident detected" and "anomalous model contained" will be measured in tens of minutes — during which the compromised behavior continues.',
+    'air.s6.h': 'Post-Incident Documentation',
+    'air.s6.p1': 'The post-incident review is not bureaucratic process — it is how your organization learns to detect and respond faster to the next incident. For AI incidents specifically, the review should produce four artifacts: a timeline of the incident from first detection to full recovery; a root cause analysis that goes beyond "the model was compromised" to identify the specific technical mechanism; a list of detection improvements that would have caught the anomaly sooner; and an architecture review that identifies structural changes that would reduce the impact of similar incidents.',
+    'air.s6.p2': 'Consider sharing sanitized incident details with the broader AI security community. The community is still building its collective knowledge base for AI security incidents. Every published incident, even anonymized, helps other teams build better detection and response capabilities. The adversarial landscape for AI systems is evolving rapidly — the community benefits from shared intelligence in ways that traditional security incident sharing already recognizes but AI security is still developing the culture and channels for.',
+  },
+  zh: {
+    'air.cat': 'AI 安全',
+    'air.date': '2026年5月',
+    'air.title': 'AI 安全事件响应：<br>当你的模型被武器化',
+    'air.lead': '检测被入侵的 AI 系统、控制损害范围，并在不重蹈覆辙的情况下恢复——这是为在生产环境中运营 AI 的团队准备的实用手册。',
+    'air.pub': '发布时间：2026-05-18 10:31 PDT（俄勒冈）',
+    'air.s1.h': 'AI 事件与众不同',
+    'air.s1.p1': '传统安全事件具有离散结构：入侵在某个时刻发生，越过一个阈值，有效载荷执行。事前状态和事后状态是可区分的。事件时间线有开始和结束。检测通常是关于找到入侵的签名——恶意二进制文件、异常登录、泄露的文件。',
+    'air.s1.p2': 'AI 安全事件不是这样运作的。很少有明确的"入侵时刻"。相反，存在行为漂移——输出逐渐向意外领域转移，工具调用略微超出正常模式，响应遵从本应拒绝的请求。入侵通常是一个连续体而非二进制，原因在任何单一交互中往往是不可见的。它需要在一段时间内跨越许多交互来观察模式。',
+    'air.s1.p3': '这种结构差异具有重要的运营意义。你为传统安全事件构建的事件响应手册不会干净地映射到 AI 入侵上。概念是一致的——检测、控制、调查、恢复、事后审查——但每个阶段的具体行动从根本上是不同的。在事件发生之前没有思考过这些差异的团队将在压力下、在最糟糕的时刻发现它们。',
+    'air.s2.h': '检测信号',
+    'air.s2.p1': '检测的目标不是找到攻击——而是在损害变得不可恢复之前注意到出了什么问题。对于 AI 系统，这意味着检测行为偏差而不是签名匹配。',
+    'air.sig1': '不符合应用预期行为范围的输出：开始给出财务建议的客服机器人，开始在摘要中包含额外指令的摘要模型，开始推荐它之前避免的不安全模式的编码助手。基于 LLM 评估的自动输出质量检查可以在人类注意到之前捕获分布偏移。',
+    'air.sig2': '对于智能体系统，意外的工具使用是主要信号。在只读摘要任务中开始调用邮件工具的模型，或开始查询不寻常数据库表的模型，或向不在预期调用模式中的域名发出外部 HTTP 请求——这些都是模型行为被正常操作之外的某些因素影响的迹象。记录每次工具调用及其触发上下文。',
+    'air.sig3': '用户通常是第一个注意到行为异常的人。"机器人告诉我做一些奇怪的事"，"它询问了以前从未需要的信息"，"它似乎在讨论与我的问题无关的事情"。建立一个将这些报告直接路由到安全团队的轻量级反馈机制。用户报告是嘈杂的，但价值很高——它们代表了进入生产环境的真实行为偏差。',
+    'air.sig4': '定期对一组固定的行为基准提示运行你的模型——理想情况下在每次部署后以及在生产中至少每天一次。包括专门设计用于测试拒绝行为、安全约束和任务相关能力的提示。拒绝基准上的显著退化是模型入侵或提示配置漂移的早期预警信号。',
+    'air.s3.h': '控制步骤',
+    'air.s3.p1': '一旦你怀疑 AI 系统行为异常，首要优先事项是控制爆炸半径——防止被入侵的行为影响更多用户或采取更多行动。在完成调查之前不要等待。先控制，后调查。',
+    'air.con1': '立即减少暴露于可能被入侵的模型的用户数量。将新流量路由到已知良好的备份模型或模型版本。如果没有备份，在调查期间应用激进的速率限制以减缓暴露。对于具有工具访问权限的智能体系统，考虑首先禁用最高风险工具——那些采取不可逆外部行动的工具（邮件、文件写入、API 调用）。',
+    'air.con2': '对于智能体部署，模型可用的工具决定了任何入侵的爆炸半径。当怀疑入侵时，按潜在影响顺序禁用工具：首先是外部通信工具（邮件、消息传递），然后是写入工具（数据库写入、文件系统），然后是读取工具（除非读取是攻击向量）。只留下确认你正在调查的异常所需的最小工具集。',
+    'air.con3': '在对系统提示、模型版本或配置进行任何更改之前——保留当前状态。对活动系统提示、已部署的模型版本、工具配置以及最近输入和输出的样本进行快照。你将需要这些进行取证调查。在不首先保留状态的情况下修改系统是一个破坏调查证据的常见错误。',
+    'air.s4.h': '调查框架',
+    'air.s4.p1': '调查意味着回答一个核心问题：意外行为源自哪里？对于 AI 系统，有五个主要向量需要检查。系统地逐一处理，因为可能同时涉及多个向量。',
+    'air.s4.p2': '向量1——通过用户输入的提示注入：用户是否提供了成功覆盖系统提示的输入？审查导致异常行为的对话。寻找使用角色扮演框架、权威主张或指令覆盖语言的尝试。检查异常行为是否在特定用户交互后开始。',
+    'air.s4.p3': '向量2——通过工具输出的间接注入：模型是否处理了来自包含对抗性指令的外部来源的数据？如果模型从任何外部数据源读取——网页、数据库、文件、API 响应——审计最近的工具输出是否存在类似指令的模式。将异常行为的时间与特定工具调用进行交叉参考。',
+    'air.s4.p4': '向量3——系统提示错误配置：系统提示是否被修改、损坏或错误部署？将活动系统提示与你的版本控制基线进行比较。即使是小的意外更改也可能产生大的行为影响。检查你的部署管道是否有未经授权的修改。',
+    'air.s4.p5': '向量4——模型版本问题：是否部署了在你的用例上行为不同的新模型版本？模型提供商频繁更新模型，行为变化可能是微妙的。如果异常行为在模型更新后开始，使用你的行为基准比较各版本的行为。',
+    'air.s4.p6': '向量5——微调或训练数据入侵：对于使用微调模型的团队，训练数据集是否被污染？这是最难检测且表现最慢的向量——训练数据污染的影响可能只有在触发后门的特定输入条件下才会变得明显。',
+    'air.s5.h': '恢复与加固',
+    'air.s5.p1': '恢复不是在异常行为停止时完成的。恢复是在你确认根本原因已解决、验证行为已恢复到预期范围、并针对已识别攻击向量的再次发生对系统进行了加固之后才完成的。',
+    'air.rec1': '在恢复完整服务之前，专门针对你识别的攻击向量运行有针对性的红队演习。如果事件是由提示注入引起的，对修复后的系统尝试提示注入。如果是由间接注入引起的，尝试通过相同的数据渠道注入恶意指令。在没有明确确认已识别的向量已被关闭之前，不要重新部署。',
+    'air.rec2': '为你的模型版本、系统提示和工具配置准备预先准备好的回滚程序。回滚应该能够由单个值班工程师在五分钟内执行，无需与外部方协调。如果你当前的部署流程需要更多时间，"检测到事件"和"异常模型被控制"之间的时间间隔将以数十分钟计算——在此期间被入侵的行为仍在继续。',
+    'air.s6.h': '事后文档',
+    'air.s6.p1': '事后审查不是官僚程序——它是你的组织学习如何更快地检测和响应下一个事件的方式。具体到 AI 事件，审查应产生四个产出：从首次检测到完全恢复的事件时间线；超越"模型被入侵"去识别具体技术机制的根本原因分析；能够更早捕获异常的检测改进列表；以及识别能够减少类似事件影响的结构性变化的架构审查。',
+    'air.s6.p2': '考虑与更广泛的 AI 安全社区分享脱敏的事件详情。该社区仍在构建 AI 安全事件的集体知识库。每个发布的事件，即使是匿名的，也能帮助其他团队构建更好的检测和响应能力。AI 系统的对抗性格局正在快速演变——社区从共享情报中受益，这是传统安全事件共享已经认识到但 AI 安全仍在发展文化和渠道的方式。',
+  },
+  ja: {
+    'air.cat': 'AIセキュリティ',
+    'air.date': '2026年5月',
+    'air.title': 'AIセキュリティインシデント対応：<br>モデルが武器化されたとき',
+    'air.lead': '侵害されたAIシステムの検知、ダメージの封じ込め、同じ過ちを繰り返さない回復——本番でAIを運用するチームのための実践的プレイブック。',
+    'air.pub': '公開日時：2026-05-18 10:31 PDT（オレゴン）',
+    'air.s1.h': 'AIインシデントは異なる',
+    'air.s1.p1': '従来のセキュリティインシデントには離散的な構造がある：侵害はある時点で起こり、閾値が超えられ、ペイロードが実行される。事前状態と事後状態は区別可能だ。インシデントのタイムラインには始まりと終わりがある。検知はしばしば侵入のシグネチャを見つけることだ——悪意のあるバイナリ、異常なログイン、流出したファイル。',
+    'air.s1.p2': 'AIセキュリティインシデントはこのように機能しない。明確な「侵害の瞬間」はほとんどない。代わりに行動ドリフトがある——予期しない領域に向かって徐々にシフトする出力、通常のパターンからわずかに外れたツールコール、断るべきリクエストに従うレスポンス。侵害はしばしば二値ではなくスペクトルであり、原因は単一のインタラクションでは見えないことが多い。それは時間をかけて多くのインタラクションにわたってパターンを見ることを必要とする。',
+    'air.s1.p3': 'この構造的な違いは重要な運用上の意味を持つ。従来のセキュリティイベント用に構築されたインシデント対応ランブックは、AI侵害にはきれいにマッピングされない。コンセプトは引き継がれる——検知、封じ込め、調査、回復、事後レビュー——しかし各フェーズの具体的なアクションは根本的に異なる。インシデント前にこれらの違いを考え抜いていないチームは、最悪のタイミングでプレッシャー下でそれらを発見するだろう。',
+    'air.s2.h': '検知シグナル',
+    'air.s2.p1': '検知の目標は攻撃を見つけることではない——ダメージが回復不能になる前に何かがおかしいことに気づくことだ。AIシステムにとって、それはシグネチャマッチングではなく行動的な偏差を計測することを意味する。',
+    'air.sig1': 'アプリケーションの期待される行動エンベロープに一致しない出力：財務アドバイスを与え始めるカスタマーサービスボット、要約に余分な指示を含め始める要約モデル、以前は避けていた安全でないパターンを推奨し始めるコーディングアシスタント。LLMベースの評価による自動出力品質チェックは、人間が気づく前に分布シフトを捕捉できる。',
+    'air.sig2': 'エージェンティックシステムでは、予期しないツール使用が主要なシグナルだ。読み取り専用の要約タスク中にメールツールを呼び出し始めるモデル、または異常なデータベーステーブルのクエリを始めるモデル、または期待されるコールパターンにないドメインへの外部HTTPリクエストを行うモデル——これらはモデルの動作が正常な運用の外の何かに影響されているサインだ。すべてのツールコールをトリガーコンテキストとともにログに記録する。',
+    'air.sig3': 'ユーザーはしばしば行動の異常に最初に気づく。「ボットが奇妙なことをするよう言った」「以前は必要としなかった情報を尋ねてきた」「質問に関係ないことを話しているようだ」。これらのレポートをセキュリティチームに直接ルーティングする軽量なフィードバックメカニズムを構築する。ユーザーレポートはノイズが多いが価値が高い——本番環境に到達した実際の行動偏差を表している。',
+    'air.sig4': '定期的なスケジュールで固定された行動ベンチマークプロンプトのセットに対してモデルを実行する——理想的にはすべてのデプロイ後に、少なくとも本番では毎日。拒否動作、安全制約、タスク関連の能力を特にテストするように設計されたプロンプトを含める。拒否ベンチマークの大幅な劣化はモデル侵害またはプロンプト設定ドリフトの早期警告サインだ。',
+    'air.s3.h': '封じ込めステップ',
+    'air.s3.p1': 'AIシステムが異常に動作していると疑われたら、即座の優先事項は爆発半径を封じ込めること——侵害された動作がより多くのユーザーに影響を与えたり、より多くのアクションを取ったりすることを防ぐことだ。完全な調査を待たずに封じ込める。まず封じ込め、次に調査する。',
+    'air.con1': '潜在的に侵害されたモデルにさらされているユーザーの数を即座に減らす。新しいトラフィックを既知の良好なバックアップモデルまたはモデルバージョンにルーティングする。バックアップがない場合は、調査中に積極的なレート制限を適用して露出を遅らせる。ツールアクセスを持つエージェンティックシステムでは、最初に最もリスクの高いツールを無効にすることを検討する——不可逆な外部アクションを取るもの（メール、ファイル書き込み、APIコール）。',
+    'air.con2': 'エージェンティックデプロイメントでは、モデルが利用できるツールが侵害の爆発半径を決定する。侵害が疑われる場合は、潜在的な影響の順序でツールを無効にする：まず外部通信ツール（メール、メッセージング）、次に書き込みツール（データベース書き込み、ファイルシステム）、次に読み取りツール（読み取りが攻撃ベクターでない限り）。調査している異常を確認するために必要な最小ツールセットだけを残す。',
+    'air.con3': 'システムプロンプト、モデルバージョン、または設定に変更を加える前に——現在の状態を保存する。アクティブなシステムプロンプト、デプロイされたモデルバージョン、ツール設定、および最近の入力と出力のサンプルのスナップショットを取る。これは法医学的調査に必要だ。最初に状態を保存せずにシステムを変更することは、調査証拠を破壊する一般的な間違いだ。',
+    'air.s4.h': '調査フレームワーク',
+    'air.s4.p1': '調査とは一つの中心的な質問に答えることを意味する：予期しない動作はどこから来たのか？AIシステムには五つの主要なベクターを調べる必要がある。複数が同時に関与している可能性があるので、系統的に作業する。',
+    'air.s4.p2': 'ベクター1——ユーザー入力経由のプロンプトインジェクション：ユーザーがシステムプロンプトを正常に上書きする入力を提供したか？異常な動作につながる会話を確認する。ロールプレイフレーミング、権限主張、または指示上書き言語の使用の試みを探す。異常な動作が特定のユーザーインタラクションの後に始まったかどうかを確認する。',
+    'air.s4.p3': 'ベクター2——ツール出力経由の間接インジェクション：モデルが敵対的な指示を含む外部ソースからのデータを処理したか？モデルが外部データソース——ウェブページ、データベース、ファイル、APIレスポンス——から読み取る場合は、指示のようなパターンがないか最近のツール出力を監査する。異常な動作のタイミングを特定のツールコールと相互参照する。',
+    'air.s4.p4': 'ベクター3——システムプロンプトの誤設定：システムプロンプトが変更、破損、または誤ってデプロイされたか？アクティブなシステムプロンプトをバージョン管理されたベースラインと比較する。小さな意図しない変更でも大きな行動上の影響を持つ可能性がある。デプロイメントパイプラインの不正な変更を確認する。',
+    'air.s4.p5': 'ベクター4——モデルバージョンの問題：ユースケースで異なる動作をする新しいモデルバージョンがデプロイされたか？モデルプロバイダーは頻繁にモデルを更新し、行動の変化は微妙かもしれない。異常な動作がモデル更新後に始まった場合は、行動ベンチマークを使用してバージョン間の動作を比較する。',
+    'air.s4.p6': 'ベクター5——ファインチューニングまたはトレーニングデータの侵害：ファインチューニングされたモデルを使用するチームでは、トレーニングデータセットが汚染されたか？これは検知が最も難しく、発現が最も遅いベクターだ——トレーニングデータ汚染の影響は、バックドアをトリガーする特定の入力条件下でのみ明らかになる可能性がある。',
+    'air.s5.h': '回復と強化',
+    'air.s5.p1': '回復は異常な動作が停止したときに完了ではない。回復は根本原因が対処されたことを確認し、動作が期待されるエンベロープに戻ったことを検証し、識別された攻撃ベクターの再発に対してシステムを強化したときに完了する。',
+    'air.rec1': '完全なサービスを復元する前に、特定した攻撃ベクターに対して特定のレッドチーム演習を実行する。インシデントがプロンプトインジェクションによって引き起こされた場合は、修復されたシステムに対してプロンプトインジェクションを試みる。間接インジェクションによって引き起こされた場合は、同じデータチャネルを通じて悪意ある指示を注入しようとする。識別されたベクターが閉じられたという明示的な確認なしに再デプロイしない。',
+    'air.rec2': 'モデルバージョン、システムプロンプト、およびツール設定のロールバック手順を事前に準備する。ロールバックは、外部の当事者との調整を必要とせず、単一のオンコールエンジニアによって5分以内に実行可能であるべきだ。現在のデプロイメントプロセスがこれ以上を必要とする場合、「インシデント検知」と「異常モデルの封じ込め」の間のギャップは数十分で測定される——その間も侵害された動作が続く。',
+    'air.s6.h': '事後ドキュメント',
+    'air.s6.p1': '事後レビューは官僚的なプロセスではない——それは組織が次のインシデントをより速く検知して対応することを学ぶ方法だ。AIインシデントに特定して、レビューは四つの成果物を生み出すべきだ：最初の検知から完全な回復までのインシデントのタイムライン；「モデルが侵害された」を超えて具体的な技術的メカニズムを特定する根本原因分析；異常をより早く捉えていたはずの検知改善のリスト；類似インシデントの影響を減らす構造的変更を特定するアーキテクチャレビュー。',
+    'air.s6.p2': 'より広いAIセキュリティコミュニティと脱感作されたインシデント詳細を共有することを検討する。コミュニティはまだAIセキュリティインシデントの集合的な知識ベースを構築している。公開されたすべてのインシデント（匿名化されていても）は他のチームがより良い検知と対応能力を構築するのを助ける。AIシステムの敵対的な環境は急速に進化している——コミュニティは共有インテリジェンスから恩恵を受けるが、これは従来のセキュリティインシデント共有がすでに認識しているがAIセキュリティはまだ文化とチャネルを発展させている方法だ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

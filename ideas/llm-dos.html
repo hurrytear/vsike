@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Denial-of-Service: Token Flooding, Sponge Examples, and Resource Exhaustion — vsike</title>
+  <meta name="description" content="LLMs are uniquely vulnerable to resource exhaustion attacks. Unlike traditional DoS, LLM DoS can be triggered with a single carefully crafted prompt — and the attacker pays almost nothing while the defender pays per token.">
+  <meta name="keywords" content="LLM拒绝服务攻击, 令牌泛洪, 海绵样本, 资源耗尽, LLM DoS, token flooding, sponge examples, resource exhaustion, AI security 2026, LLM cost attack">
+  <link rel="canonical" href="https://www.vsike.com/ideas/llm-dos.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .code-block .good { color: #a8d8a8; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="dos.cat">AI Security</span>
+        <span class="article-date" data-i18n="dos.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="dos.title">LLM Denial-of-Service:<br>Token Flooding, Sponge Examples, and Resource Exhaustion</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="dos.lead">LLMs are uniquely vulnerable to resource exhaustion attacks. Unlike traditional DoS, LLM DoS can be triggered with a single carefully crafted prompt — and the attacker pays almost nothing while the defender pays per token.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="dos.pub">Published: 2026-05-18 11:48 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="dos.s1.h">The Economics of LLM DoS</h2>
+      <p data-i18n="dos.s1.p1">Every time an LLM generates a token, the operator pays. Inference costs are not flat — they scale with input length, output length, and computational complexity. A model processing a 100,000-token context window costs dramatically more than one processing 1,000 tokens. A model forced to generate 4,000 tokens of output costs dramatically more than one generating 50. This pricing structure creates a fundamental asymmetry that attackers can exploit.</p>
+      <p data-i18n="dos.s1.p2">Traditional denial-of-service attacks are expensive for the attacker too — you need significant bandwidth or a botnet to overwhelm most modern services. LLM DoS is different: a single request, typed by a single person with a free-tier API account, can trigger tens of thousands of tokens of computation. The cost ratio between attacker and defender can be 1:1000 or more. This asymmetry is not a bug in any particular LLM deployment — it is a structural feature of how these systems work.</p>
+      <p data-i18n="dos.s1.p3">The consequences of unmitigated LLM DoS range from financial (unexpected bills that can reach thousands of dollars per hour under attack) to availability (rate limits hit, legitimate users blocked) to performance (queue saturation, latency spikes for all users). Unlike data breaches, these attacks can be run without any technical sophistication — a curious teenager can accidentally trigger them while exploring what prompts produce the longest outputs.</p>
+
+      <h2 data-i18n="dos.s2.h">Attack Type 1 — Token Flooding</h2>
+      <p data-i18n="dos.s2.p1">Token flooding is the most straightforward LLM DoS variant: craft prompts that force maximum-length outputs. "Write me a 10,000-word essay on..." "Generate a complete novel with..." "List every possible combination of..." "Explain in exhaustive detail, including every edge case and exception..." These prompts are designed to maximize output token count, which directly maximizes inference cost and latency.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Token Flooding — Example Attack Patterns</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="dos.atk1">High-yield token flooding prompts: "Write a complete encyclopedia entry for every country in the world, in alphabetical order, covering history, geography, culture, economy, and politics in at least 500 words each." Or: "Generate a fictional legal contract with all possible clauses, sub-clauses, and addenda, with exhaustive explanations of every legal term used." Or simply: "Continue writing 'the quick brown fox jumps over the lazy dog' for as long as possible." The attacker doesn't care about the content — only the token count.</p>
+      </div>
+
+      <h2 data-i18n="dos.s3.h">Attack Type 2 — Sponge Examples</h2>
+      <p data-i18n="dos.s3.p1">Sponge examples are a more sophisticated variant discovered by academic researchers: adversarially crafted inputs that maximize compute at inference time without necessarily maximizing output length. These exploit the internal mechanics of transformer models — specifically, inputs that force maximum attention head activations, cause maximum KV cache utilization, or trigger expensive reasoning chains.</p>
+      <p data-i18n="dos.s3.p2">What makes sponge examples particularly dangerous is that they are non-obvious. A sponge example may look like a normal question — "What is 2+2?" can be made into a sponge example with specific adversarial token modifications that look innocuous but force expensive internal processing. The output may be short and normal-looking while the compute cost is extreme. Standard output-length limits don't help here because the cost is in the forward pass, not the output generation.</p>
+      <p data-i18n="dos.s3.p3">Detecting sponge examples at the application layer is currently very difficult. The most practical mitigation is compute time budgets — hard limits on how long any single request can use the GPU before it is killed, regardless of where it is in generation. This changes the problem from "the attacker forces expensive computation" to "the attacker gets expensive computation killed early."</p>
+
+      <h2 data-i18n="dos.s4.h">Attack Type 3 — Recursive Expansion Attacks</h2>
+      <p data-i18n="dos.s4.p1">Recursive expansion attacks leverage the model's ability to follow multi-step instructions to create exponential output growth. The pattern: ask the model to produce some content, then ask it to expand every element of that content, then expand every element of the expansion. Each round multiplies the token count by a factor of N.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Recursive Expansion — Attack Pattern</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="dos.atk2">Step 1: "List 10 topics in computer science." (20 tokens output). Step 2: "For each topic you listed, provide a 200-word explanation." (2,000 tokens). Step 3: "For each explanation you wrote, expand every technical term you used into a full paragraph." (20,000+ tokens). Step 4: "For each technical term explanation, list 5 related concepts and define them." (catastrophic token count). In an agentic system with conversation memory, a single user interaction can trigger this cascade if the agent is designed to be helpful and thorough.</p>
+      </div>
+
+      <h2 data-i18n="dos.s5.h">Attack Type 4 — Context Window Stuffing</h2>
+      <p data-i18n="dos.s5.p1">Context window stuffing targets input processing rather than output generation. Modern LLMs can process contexts of 128K, 200K, or even 1M tokens. Processing a near-maximum context window is extremely expensive — quadratic attention complexity means doubling the context roughly quadruples the compute. An attacker who can control what goes into the context (via direct input, tool output injection, or document upload) can deliberately fill the context to degrade performance for all users sharing the same inference infrastructure.</p>
+      <p data-i18n="dos.s5.p2">Context stuffing also degrades output quality — the "lost in the middle" problem means models attending to very long contexts often fail to process content in the middle accurately. An attacker can exploit this both as a DoS and as a quality degradation attack: stuff the context with junk to make the model lose track of critical information from earlier in the conversation, then ask questions that require that information. The model answers incorrectly, users get degraded experience, but the attack looks like a quality issue rather than a security event.</p>
+
+      <h2 data-i18n="dos.s6.h">Mitigations</h2>
+      <p data-i18n="dos.s6.p1">No single mitigation addresses all LLM DoS variants. Defense requires a layered approach operating at the token level, the request level, and the infrastructure level simultaneously.</p>
+
+      <div class="defend-block">
+        <div class="defend-label">Mitigation 1 — Hard Output Token Limits</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="dos.def1">Set a hard maximum output token limit for every endpoint. This is different from asking the model to "keep responses brief" — that's a soft instruction the model can ignore or be manipulated around. A hard token limit at the API or SDK level truncates output regardless of model behavior. Set limits appropriate to your use case: a chatbot rarely needs more than 1,000 tokens; a code generation endpoint might legitimately need 4,000. Do not set limits at the theoretical maximum "just to be safe."</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Mitigation 2 — Input Length Validation</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="dos.def2">Validate and limit input length before the request reaches the model. This blocks context stuffing attacks and reduces the attack surface for sponge examples. Be conservative: if your application is a customer support chatbot, user inputs longer than 2,000 tokens are almost certainly anomalous. Reject them with a clear error rather than processing them. For document-processing applications with legitimate long inputs, apply per-request compute budgets instead.</p>
+      </div>
+
+      <pre class="code-block"><span class="comment"># Rate limiting and token cap configuration (example)</span>
+
+<span class="kw">const</span> requestLimiter = rateLimit({
+  windowMs: 60 * 1000,       <span class="comment">// 1 minute window</span>
+  max: 20,                    <span class="comment">// max 20 requests per window per IP</span>
+  skipSuccessfulRequests: <span class="str">false</span>,
+});
+
+<span class="kw">const</span> tokenBudget = {
+  maxInputTokens: 4096,       <span class="comment">// hard input cap</span>
+  maxOutputTokens: 1024,      <span class="comment">// hard output cap</span>
+  maxTotalCostPerUser: 0.50,  <span class="comment">// $0.50 daily budget per user</span>
+  circuitBreakerThreshold: 5, <span class="comment">// 5 expensive requests → throttle</span>
+};
+
+<span class="kw">async function</span> handleLLMRequest(req, userId) {
+  <span class="kw">const</span> inputLen = countTokens(req.messages);
+  <span class="kw">if</span> (inputLen > tokenBudget.maxInputTokens) {
+    <span class="danger">throw new Error("Input exceeds maximum allowed length");</span>
+  }
+  <span class="kw">const</span> dailyCost = <span class="kw">await</span> getUserDailyCost(userId);
+  <span class="kw">if</span> (dailyCost > tokenBudget.maxTotalCostPerUser) {
+    <span class="danger">throw new Error("Daily budget exceeded");</span>
+  }
+  <span class="kw">return</span> llmClient.complete({
+    ...req,
+    max_tokens: tokenBudget.maxOutputTokens,  <span class="comment">// hard cap</span>
+  });
+}
+</pre>
+
+      <div class="defend-block">
+        <div class="defend-label">Mitigation 3 — Per-User Cost Budgets with Circuit Breakers</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="dos.def3">Track inference cost per user (or per session, per API key) and implement circuit breakers that throttle or block users who exceed normal cost patterns. A user who generates 10x the normal token count in one session should be automatically throttled — either they are attacking you or they have an edge case that deserves human review. Cost-based circuit breakers are particularly effective against sustained attacks that stay just under rate limits.</p>
+      </div>
+
+      <div class="defend-block">
+        <div class="defend-label">Mitigation 4 — Request Queuing with Priority</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="dos.def4">Queue requests and prioritize them by user trust level, request cost estimate, and time-in-queue. Expensive requests from unknown users go to the back of the queue; cheap requests from authenticated, trusted users get priority. This doesn't prevent the attack from consuming resources, but it ensures that legitimate users are not blocked while the attack is processed. Combine with timeouts that kill queued requests that have waited too long.</p>
+      </div>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'dos.cat': 'AI Security',
+    'dos.date': 'May 2026',
+    'dos.title': 'LLM Denial-of-Service:<br>Token Flooding, Sponge Examples, and Resource Exhaustion',
+    'dos.lead': 'LLMs are uniquely vulnerable to resource exhaustion attacks. Unlike traditional DoS, LLM DoS can be triggered with a single carefully crafted prompt — and the attacker pays almost nothing while the defender pays per token.',
+    'dos.pub': 'Published: 2026-05-18 11:48 PDT (Oregon)',
+    'dos.s1.h': 'The Economics of LLM DoS',
+    'dos.s1.p1': 'Every time an LLM generates a token, the operator pays. Inference costs are not flat — they scale with input length, output length, and computational complexity. A model processing a 100,000-token context window costs dramatically more than one processing 1,000 tokens. A model forced to generate 4,000 tokens of output costs dramatically more than one generating 50. This pricing structure creates a fundamental asymmetry that attackers can exploit.',
+    'dos.s1.p2': 'Traditional denial-of-service attacks are expensive for the attacker too — you need significant bandwidth or a botnet to overwhelm most modern services. LLM DoS is different: a single request, typed by a single person with a free-tier API account, can trigger tens of thousands of tokens of computation. The cost ratio between attacker and defender can be 1:1000 or more. This asymmetry is not a bug in any particular LLM deployment — it is a structural feature of how these systems work.',
+    'dos.s1.p3': 'The consequences of unmitigated LLM DoS range from financial (unexpected bills that can reach thousands of dollars per hour under attack) to availability (rate limits hit, legitimate users blocked) to performance (queue saturation, latency spikes for all users). Unlike data breaches, these attacks can be run without any technical sophistication — a curious teenager can accidentally trigger them while exploring what prompts produce the longest outputs.',
+    'dos.s2.h': 'Attack Type 1 — Token Flooding',
+    'dos.s2.p1': 'Token flooding is the most straightforward LLM DoS variant: craft prompts that force maximum-length outputs. "Write me a 10,000-word essay on..." "Generate a complete novel with..." "List every possible combination of..." "Explain in exhaustive detail, including every edge case and exception..." These prompts are designed to maximize output token count, which directly maximizes inference cost and latency.',
+    'dos.atk1': 'High-yield token flooding prompts: "Write a complete encyclopedia entry for every country in the world, in alphabetical order, covering history, geography, culture, economy, and politics in at least 500 words each." Or: "Generate a fictional legal contract with all possible clauses, sub-clauses, and addenda, with exhaustive explanations of every legal term used." Or simply: "Continue writing \'the quick brown fox jumps over the lazy dog\' for as long as possible." The attacker doesn\'t care about the content — only the token count.',
+    'dos.s3.h': 'Attack Type 2 — Sponge Examples',
+    'dos.s3.p1': 'Sponge examples are a more sophisticated variant discovered by academic researchers: adversarially crafted inputs that maximize compute at inference time without necessarily maximizing output length. These exploit the internal mechanics of transformer models — specifically, inputs that force maximum attention head activations, cause maximum KV cache utilization, or trigger expensive reasoning chains.',
+    'dos.s3.p2': 'What makes sponge examples particularly dangerous is that they are non-obvious. A sponge example may look like a normal question — "What is 2+2?" can be made into a sponge example with specific adversarial token modifications that look innocuous but force expensive internal processing. The output may be short and normal-looking while the compute cost is extreme. Standard output-length limits don\'t help here because the cost is in the forward pass, not the output generation.',
+    'dos.s3.p3': 'Detecting sponge examples at the application layer is currently very difficult. The most practical mitigation is compute time budgets — hard limits on how long any single request can use the GPU before it is killed, regardless of where it is in generation. This changes the problem from "the attacker forces expensive computation" to "the attacker gets expensive computation killed early."',
+    'dos.s4.h': 'Attack Type 3 — Recursive Expansion Attacks',
+    'dos.s4.p1': 'Recursive expansion attacks leverage the model\'s ability to follow multi-step instructions to create exponential output growth. The pattern: ask the model to produce some content, then ask it to expand every element of that content, then expand every element of the expansion. Each round multiplies the token count by a factor of N.',
+    'dos.atk2': 'Step 1: "List 10 topics in computer science." (20 tokens output). Step 2: "For each topic you listed, provide a 200-word explanation." (2,000 tokens). Step 3: "For each explanation you wrote, expand every technical term you used into a full paragraph." (20,000+ tokens). Step 4: "For each technical term explanation, list 5 related concepts and define them." (catastrophic token count). In an agentic system with conversation memory, a single user interaction can trigger this cascade if the agent is designed to be helpful and thorough.',
+    'dos.s5.h': 'Attack Type 4 — Context Window Stuffing',
+    'dos.s5.p1': 'Context window stuffing targets input processing rather than output generation. Modern LLMs can process contexts of 128K, 200K, or even 1M tokens. Processing a near-maximum context window is extremely expensive — quadratic attention complexity means doubling the context roughly quadruples the compute. An attacker who can control what goes into the context (via direct input, tool output injection, or document upload) can deliberately fill the context to degrade performance for all users sharing the same inference infrastructure.',
+    'dos.s5.p2': 'Context stuffing also degrades output quality — the "lost in the middle" problem means models attending to very long contexts often fail to process content in the middle accurately. An attacker can exploit this both as a DoS and as a quality degradation attack: stuff the context with junk to make the model lose track of critical information from earlier in the conversation, then ask questions that require that information. The model answers incorrectly, users get degraded experience, but the attack looks like a quality issue rather than a security event.',
+    'dos.s6.h': 'Mitigations',
+    'dos.s6.p1': 'No single mitigation addresses all LLM DoS variants. Defense requires a layered approach operating at the token level, the request level, and the infrastructure level simultaneously.',
+    'dos.def1': 'Set a hard maximum output token limit for every endpoint. This is different from asking the model to "keep responses brief" — that\'s a soft instruction the model can ignore or be manipulated around. A hard token limit at the API or SDK level truncates output regardless of model behavior. Set limits appropriate to your use case: a chatbot rarely needs more than 1,000 tokens; a code generation endpoint might legitimately need 4,000. Do not set limits at the theoretical maximum "just to be safe."',
+    'dos.def2': 'Validate and limit input length before the request reaches the model. This blocks context stuffing attacks and reduces the attack surface for sponge examples. Be conservative: if your application is a customer support chatbot, user inputs longer than 2,000 tokens are almost certainly anomalous. Reject them with a clear error rather than processing them. For document-processing applications with legitimate long inputs, apply per-request compute budgets instead.',
+    'dos.def3': 'Track inference cost per user (or per session, per API key) and implement circuit breakers that throttle or block users who exceed normal cost patterns. A user who generates 10x the normal token count in one session should be automatically throttled — either they are attacking you or they have an edge case that deserves human review. Cost-based circuit breakers are particularly effective against sustained attacks that stay just under rate limits.',
+    'dos.def4': 'Queue requests and prioritize them by user trust level, request cost estimate, and time-in-queue. Expensive requests from unknown users go to the back of the queue; cheap requests from authenticated, trusted users get priority. This doesn\'t prevent the attack from consuming resources, but it ensures that legitimate users are not blocked while the attack is processed. Combine with timeouts that kill queued requests that have waited too long.',
+  },
+  zh: {
+    'dos.cat': 'AI 安全',
+    'dos.date': '2026年5月',
+    'dos.title': 'LLM 拒绝服务攻击：<br>令牌泛洪、海绵样本与资源耗尽',
+    'dos.lead': 'LLM 对资源耗尽攻击具有独特的脆弱性。与传统 DoS 不同，LLM DoS 可以用一个精心设计的提示触发——攻击者几乎什么都不花，而防御者按令牌付费。',
+    'dos.pub': '发布时间：2026-05-18 11:48 PDT（俄勒冈）',
+    'dos.s1.h': 'LLM DoS 的经济学',
+    'dos.s1.p1': '每次 LLM 生成一个令牌，运营者就要付费。推理成本不是固定的——它随输入长度、输出长度和计算复杂度而扩展。处理 100,000 个令牌上下文窗口的模型比处理 1,000 个令牌的模型成本高得多。被迫生成 4,000 个令牌输出的模型比生成 50 个的成本高得多。这种定价结构创造了攻击者可以利用的基本不对称性。',
+    'dos.s1.p2': '传统的拒绝服务攻击对攻击者来说也很昂贵——你需要大量带宽或僵尸网络才能压垮大多数现代服务。LLM DoS 不同：一个拥有免费层 API 账户的人发出的单个请求，可以触发数万个令牌的计算。攻击者与防御者之间的成本比可以达到 1:1000 或更多。这种不对称性不是任何特定 LLM 部署中的错误——它是这些系统工作方式的结构性特征。',
+    'dos.s1.p3': '未缓解的 LLM DoS 的后果从财务（在攻击下每小时可达数千美元的意外账单）到可用性（达到速率限制，合法用户被封锁）到性能（队列饱和，所有用户的延迟激增）不等。与数据泄露不同，这些攻击不需要任何技术复杂性——一个好奇的青少年在探索哪些提示产生最长输出时可能会意外触发它们。',
+    'dos.s2.h': '攻击类型 1 — 令牌泛洪',
+    'dos.s2.p1': '令牌泛洪是最直接的 LLM DoS 变体：构造强制最大长度输出的提示。"给我写一篇关于...的10,000字文章"，"生成一部完整的小说..."，"列出所有可能的组合..."，"详尽解释，包括每个边缘情况和例外..."这些提示旨在最大化输出令牌数量，直接最大化推理成本和延迟。',
+    'dos.atk1': '高产出令牌泛洪提示："按字母顺序为世界上每个国家写一个完整的百科全书条目，每个条目包含历史、地理、文化、经济和政治，至少500字。"或："生成一个包含所有可能条款、子条款和附录的虚构法律合同，并对使用的每个法律术语进行详尽解释。"或者简单地："尽可能长时间地继续写\'the quick brown fox jumps over the lazy dog\'"。攻击者不关心内容——只关心令牌数量。',
+    'dos.s3.h': '攻击类型 2 — 海绵样本',
+    'dos.s3.p1': '海绵样本是学术研究人员发现的更复杂的变体：对抗性构造的输入，在推理时最大化计算量，不一定最大化输出长度。这些利用 transformer 模型的内部机制——具体来说，是强制最大注意力头激活、导致最大 KV 缓存利用率或触发昂贵推理链的输入。',
+    'dos.s3.p2': '使海绵样本特别危险的是它们不明显。海绵样本可能看起来像一个普通问题——"2+2等于几？"可以通过特定的对抗性令牌修改变成海绵样本，这些修改看起来无害但强制进行昂贵的内部处理。输出可能短而看起来正常，而计算成本极高。标准输出长度限制在这里没有帮助，因为成本在前向传播中，而不是输出生成中。',
+    'dos.s3.p3': '在应用层检测海绵样本目前非常困难。最实用的缓解是计算时间预算——对任何单个请求在被终止之前可以使用 GPU 多长时间的硬性限制，无论它在生成的哪个阶段。这将问题从"攻击者强制昂贵计算"变为"攻击者的昂贵计算被提前终止"。',
+    'dos.s4.h': '攻击类型 3 — 递归扩展攻击',
+    'dos.s4.p1': '递归扩展攻击利用模型遵循多步骤指令的能力来创建指数级输出增长。模式：要求模型产生一些内容，然后要求它扩展该内容的每个元素，然后扩展扩展的每个元素。每一轮将令牌数量乘以 N 倍。',
+    'dos.atk2': '步骤1："列举计算机科学中的10个主题。"（输出20个令牌）。步骤2："对于你列出的每个主题，提供200字的解释。"（2,000个令牌）。步骤3："对于你写的每个解释，将你使用的每个技术术语展开成一个完整的段落。"（20,000+个令牌）。步骤4："对于每个技术术语解释，列出5个相关概念并定义它们。"（灾难性的令牌数量）。在具有对话记忆的智能体系统中，如果智能体被设计为有帮助和彻底的，单个用户交互可能触发这个级联。',
+    'dos.s5.h': '攻击类型 4 — 上下文窗口填充',
+    'dos.s5.p1': '上下文窗口填充针对输入处理而非输出生成。现代 LLM 可以处理 128K、200K 甚至 1M 个令牌的上下文。处理接近最大上下文窗口的成本极高——二次方注意力复杂度意味着将上下文加倍大约会使计算量翻四倍。能够控制进入上下文内容的攻击者（通过直接输入、工具输出注入或文档上传）可以故意填充上下文，以降低共享同一推理基础设施的所有用户的性能。',
+    'dos.s5.p2': '上下文填充还会降低输出质量——"迷失在中间"问题意味着关注非常长上下文的模型通常无法准确处理中间的内容。攻击者可以将其作为 DoS 和质量降级攻击来利用：用垃圾填充上下文，使模型失去对对话早期关键信息的追踪，然后提问需要该信息的问题。模型回答错误，用户体验降级，但攻击看起来像质量问题而不是安全事件。',
+    'dos.s6.h': '缓解措施',
+    'dos.s6.p1': '没有单一缓解措施能解决所有 LLM DoS 变体。防御需要同时在令牌级别、请求级别和基础设施级别运作的分层方法。',
+    'dos.def1': '为每个端点设置硬性最大输出令牌限制。这与要求模型"保持响应简短"不同——那是模型可以忽略或被操纵绕过的软指令。API 或 SDK 级别的硬性令牌限制无论模型行为如何都会截断输出。设置适合你用例的限制：聊天机器人很少需要超过1,000个令牌；代码生成端点可能合法地需要4,000个。不要"为了安全"将限制设置为理论最大值。',
+    'dos.def2': '在请求到达模型之前验证并限制输入长度。这阻止了上下文填充攻击并减少了海绵样本的攻击面。要保守：如果你的应用是客户支持聊天机器人，超过2,000个令牌的用户输入几乎肯定是异常的。用明确的错误拒绝它们，而不是处理它们。对于具有合法长输入的文档处理应用，改为应用每请求计算预算。',
+    'dos.def3': '跟踪每个用户（或每个会话、每个 API 密钥）的推理成本，并实现对超过正常成本模式的用户进行限流或封锁的断路器。在一个会话中生成正常令牌数量10倍的用户应该被自动限流——他们要么在攻击你，要么有一个值得人工审查的边缘情况。基于成本的断路器对保持在速率限制以下的持续攻击特别有效。',
+    'dos.def4': '将请求排队并按用户信任级别、请求成本估计和队列中的时间对其进行优先排序。来自未知用户的昂贵请求排在队列后面；来自经过身份验证的受信任用户的廉价请求获得优先权。这不能防止攻击消耗资源，但确保合法用户在攻击被处理时不会被封锁。与超时结合，终止等待时间过长的排队请求。',
+  },
+  ja: {
+    'dos.cat': 'AIセキュリティ',
+    'dos.date': '2026年5月',
+    'dos.title': 'LLMサービス拒否攻撃：<br>トークンフラッディング、スポンジ例、リソース枯渇',
+    'dos.lead': 'LLMはリソース枯渇攻撃に独特に脆弱だ。従来のDoSとは異なり、LLM DoSは一つの慎重に作られたプロンプトで引き起こすことができる——攻撃者はほとんど何も払わないが、防御者はトークンごとに払う。',
+    'dos.pub': '公開日時：2026-05-18 11:48 PDT（オレゴン）',
+    'dos.s1.h': 'LLM DoSの経済学',
+    'dos.s1.p1': 'LLMがトークンを生成するたびに、オペレーターが支払う。推論コストはフラットではない——入力長、出力長、計算複雑度でスケールする。100,000トークンのコンテキストウィンドウを処理するモデルは、1,000トークンを処理するものよりはるかにコストが高い。4,000トークンの出力を生成させられるモデルは、50を生成するものよりはるかにコストが高い。この価格構造は攻撃者が悪用できる根本的な非対称性を生み出す。',
+    'dos.s1.p2': '従来のサービス拒否攻撃は攻撃者にとっても高価だ——ほとんどの現代サービスを圧倒するには相当の帯域幅またはボットネットが必要だ。LLM DoSは異なる：無料tierのAPIアカウントを持つ一人が入力した単一のリクエストが、数万トークンの計算をトリガーできる。攻撃者と防御者のコスト比は1:1000以上になりうる。この非対称性は特定のLLMデプロイメントのバグではない——これらのシステムがどのように機能するかの構造的な特性だ。',
+    'dos.s1.p3': '緩和されていないLLM DoSの結果は、財務的（攻撃下で毎時数千ドルに達しうる予期しない請求）から可用性（レート制限到達、正当なユーザーがブロックされる）からパフォーマンス（キュー飽和、全ユーザーのレイテンシスパイク）まで及ぶ。データ侵害とは異なり、これらの攻撃は技術的な洗練なしに実行できる——好奇心旺盛な10代が最も長い出力を生み出すプロンプトを探索しながら偶然それらをトリガーできる。',
+    'dos.s2.h': '攻撃タイプ1 — トークンフラッディング',
+    'dos.s2.p1': 'トークンフラッディングは最も単純なLLM DoSの変種だ：最大長の出力を強制するプロンプトを作る。「...について10,000語のエッセイを書いてください」「完全な小説を生成してください...」「すべての可能な組み合わせをリストアップしてください...」「すべてのエッジケースと例外を含めて詳細に説明してください...」これらのプロンプトは出力トークン数を最大化するように設計されており、推論コストとレイテンシを直接最大化する。',
+    'dos.atk1': '高収量トークンフラッディングプロンプト：「世界のすべての国について、アルファベット順に、歴史、地理、文化、経済、政治を各500語以上でカバーする完全な百科事典エントリを書いてください。」または：「使用されたすべての法律用語の詳細な説明とともに、すべての可能な条項、サブ条項、付録を含む架空の法的契約を生成してください。」または単純に：「「the quick brown fox jumps over the lazy dog」をできる限り長く書き続けてください。」攻撃者はコンテンツを気にしない——トークン数だけを気にする。',
+    'dos.s3.h': '攻撃タイプ2 — スポンジ例',
+    'dos.s3.p1': 'スポンジ例は学術研究者によって発見されたより洗練された変種だ：出力長を最大化せずに推論時の計算を最大化する敵対的に作られた入力。これらはトランスフォーマーモデルの内部メカニズムを悪用する——具体的には、最大のアテンションヘッド活性化を強制したり、最大のKVキャッシュ使用率を引き起こしたり、高価な推論チェーンをトリガーする入力。',
+    'dos.s3.p2': 'スポンジ例を特に危険にするのは、それらが明らかではないことだ。スポンジ例は普通の質問のように見えるかもしれない——「2+2は？」は無害に見えるが高価な内部処理を強制する特定の敵対的トークン修正でスポンジ例にできる。出力は短くて普通に見えるかもしれないが、計算コストは極端に高い。ここでは標準的な出力長制限は役に立たない。なぜならコストは出力生成ではなく前向きパスにあるからだ。',
+    'dos.s3.p3': 'アプリケーション層でスポンジ例を検出することは現在非常に難しい。最も実用的な緩和は計算時間バジェットだ——生成のどの段階にいるかに関わらず、単一のリクエストが殺される前にGPUを使用できる時間のハードリミット。これで問題は「攻撃者が高価な計算を強制する」から「攻撃者の高価な計算が早期に殺される」に変わる。',
+    'dos.s4.h': '攻撃タイプ3 — 再帰的拡張攻撃',
+    'dos.s4.p1': '再帰的拡張攻撃は、指数的な出力増加を作り出すためにモデルのマルチステップ指示に従う能力を活用する。パターン：モデルにコンテンツを生成させ、次にそのコンテンツのすべての要素を拡張させ、次に拡張のすべての要素を拡張させる。各ラウンドでトークン数がN倍になる。',
+    'dos.atk2': 'ステップ1：「コンピューターサイエンスの10のトピックをリストアップしてください。」（出力20トークン）。ステップ2：「リストアップした各トピックについて、200語の説明を提供してください。」（2,000トークン）。ステップ3：「書いた各説明について、使用した各技術用語を完全な段落に展開してください。」（20,000+トークン）。ステップ4：「各技術用語の説明について、5つの関連概念をリストアップして定義してください。」（壊滅的なトークン数）。会話メモリを持つエージェンティックシステムでは、エージェントが親切で徹底的になるよう設計されている場合、単一のユーザーインタラクションがこのカスケードをトリガーできる。',
+    'dos.s5.h': '攻撃タイプ4 — コンテキストウィンドウスタッフィング',
+    'dos.s5.p1': 'コンテキストウィンドウスタッフィングは出力生成ではなく入力処理を標的にする。現代のLLMは128K、200K、またはさらには1Mトークンのコンテキストを処理できる。最大に近いコンテキストウィンドウを処理することは非常に高価だ——二次のアテンション複雑度はコンテキストを倍にすると計算量が大体4倍になることを意味する。コンテキストに何が入るかを制御できる攻撃者（直接入力、ツール出力インジェクション、またはドキュメントアップロードを通じて）は、同じ推論インフラを共有するすべてのユーザーのパフォーマンスを低下させるために意図的にコンテキストを埋めることができる。',
+    'dos.s5.p2': 'コンテキストスタッフィングは出力品質も低下させる——「中間で迷子になる」問題は非常に長いコンテキストに注意を払うモデルが中間のコンテンツを正確に処理することに失敗することが多いことを意味する。攻撃者はこれをDoSと品質低下攻撃の両方として悪用できる：コンテキストをジャンクで詰めてモデルが会話の早い段階の重要な情報の追跡を失わせ、その情報を必要とする質問をする。モデルは誤って答え、ユーザーは低下した体験を得るが、攻撃はセキュリティイベントではなく品質問題のように見える。',
+    'dos.s6.h': '緩和策',
+    'dos.s6.p1': 'すべてのLLM DoSの変種に対処する単一の緩和策はない。防御はトークンレベル、リクエストレベル、インフラレベルで同時に動作する階層的なアプローチを必要とする。',
+    'dos.def1': 'すべてのエンドポイントに対してハードな最大出力トークン制限を設定する。これはモデルに「レスポンスを簡潔に保て」と頼むこととは異なる——それはモデルが無視または回避するよう操作できるソフトな指示だ。APIまたはSDKレベルのハードトークン制限はモデルの動作に関係なく出力を切り詰める。ユースケースに適した制限を設定する：チャットボットは1,000トークン以上を必要とすることはほとんどない；コード生成エンドポイントは正当に4,000を必要とするかもしれない。「安全のために」理論的最大値に制限を設定してはならない。',
+    'dos.def2': 'リクエストがモデルに到達する前に入力長を検証して制限する。これはコンテキストスタッフィング攻撃をブロックし、スポンジ例の攻撃面を減らす。保守的であれ：アプリケーションがカスタマーサポートのチャットボットの場合、2,000トークンより長いユーザー入力はほぼ確実に異常だ。それらを処理するのではなく、明確なエラーで拒否する。正当な長い入力を持つドキュメント処理アプリケーションでは、代わりにリクエストごとの計算バジェットを適用する。',
+    'dos.def3': 'ユーザーごと（またはセッションごと、APIキーごと）の推論コストを追跡し、通常のコストパターンを超えるユーザーをスロットルまたはブロックする回路ブレーカーを実装する。1セッションで通常のトークン数の10倍を生成するユーザーは自動的にスロットルされるべきだ——彼らは攻撃しているか、人間のレビューに値するエッジケースを持っている。コストベースの回路ブレーカーはレート制限をわずかに下回って続く持続的な攻撃に特に効果的だ。',
+    'dos.def4': 'リクエストをキューに入れ、ユーザーの信頼レベル、リクエストコスト見積もり、キュー内の時間でそれらを優先順位付けする。未知のユーザーからの高価なリクエストはキューの後ろに行く；認証された信頼されたユーザーからの安価なリクエストが優先される。これは攻撃がリソースを消費することを防がないが、攻撃が処理されている間に正当なユーザーがブロックされないことを確認する。待ち時間が長すぎるキューに入ったリクエストを終了するタイムアウトと組み合わせる。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

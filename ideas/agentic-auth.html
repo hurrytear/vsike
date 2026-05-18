@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic AI Authorization: The Permission Problem in Autonomous Systems — vsike</title>
+  <meta name="description" content="When an AI agent asks to read your files, send your email, or execute code — how does the system decide if it should? Most agentic systems get this wrong in ways that are easy to exploit and hard to audit.">
+  <meta name="keywords" content="AI智能体授权, 权限问题, 自主系统安全, agentic AI authorization, permission problem, autonomous systems security, least privilege AI, capability tokens, MCP authorization 2026">
+  <link rel="canonical" href="https://www.vsike.com/ideas/agentic-auth.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .code-block .good { color: #a8d8a8; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="aa.cat">AI Security</span>
+        <span class="article-date" data-i18n="aa.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="aa.title">Agentic AI Authorization:<br>The Permission Problem in Autonomous Systems</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="aa.lead">When an AI agent asks to read your files, send your email, or execute code — how does the system decide if it should? Most agentic systems get this wrong in ways that are easy to exploit and hard to audit.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="aa.pub">Published: 2026-05-18 13:02 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="aa.s1.h">The Permission Problem</h2>
+      <p data-i18n="aa.s1.p1">When you deploy an AI agent, you make authorization decisions upfront: what data can it read, what services can it call, what actions can it take? Most teams make these decisions at deployment time, for the entire lifetime of the agent deployment. They grant broad access because it's convenient, and because agents are designed to be general-purpose — you don't always know in advance exactly what they'll need to do.</p>
+      <p data-i18n="aa.s1.p2">This creates the confused deputy problem at scale. The agent holds permissions not because it currently needs them, but because it might need them at some point. When that agent is compromised via prompt injection, behavioral manipulation, or an unexpected interaction with a malicious data source, the attacker gains all the permissions the agent holds — not just the permissions needed for the specific task the agent was doing when it was compromised.</p>
+      <p data-i18n="aa.s1.p3">The permission problem has two dimensions: scope (what can the agent do) and duration (how long can it do it). Both are typically over-provisioned. An agent given permanent read/write access to a user's file system for a task that required reading two documents has been over-provisioned in both dimensions. The right access would have been: read access to two specific documents, for the duration of one task. The difference between these two permission profiles is enormous from a security standpoint.</p>
+
+      <h2 data-i18n="aa.s2.h">Current State: Everything Is Over-Permissioned</h2>
+      <p data-i18n="aa.s2.p1">The current state of agentic authorization is largely a reflection of developer convenience. Configuring fine-grained per-task permissions is hard work. It requires knowing in advance what the agent will need, designing permission request flows, building UX for users to review and approve permissions, and implementing revocation. Most teams skip this and grant broad access instead.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">The Blast Radius of Over-Permissioning</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aa.atk1">An agent deployed to help a user with scheduling was given access to: the user's calendar (read/write), their email (read/write), their Slack (read/write), and a set of internal databases (read). Intended use: find a meeting time and send an invite. Actual attack surface: any successful prompt injection against this agent can now read all the user's emails, exfiltrate database contents to an external address via email, post any content to Slack, and corrupt calendar entries. The over-permissioning transformed a scheduling assistant into a surveillance platform.</p>
+      </div>
+
+      <p data-i18n="aa.s2.p2">The convenience argument — "we need broad access because we don't know what the agent will need" — is a symptom of building agentic systems without designing their authorization model. The solution is not to accept over-permissioning as inevitable, but to architect agents so they request permissions at the point of use, not at deployment time.</p>
+
+      <h2 data-i18n="aa.s3.h">Principle of Least Privilege for Agents</h2>
+      <p data-i18n="aa.s3.p1">Least privilege for agentic systems means: an agent should hold exactly the permissions it needs for the specific action it is about to take, for no longer than it needs them. This is a different framing than traditional least privilege, which is typically applied to service accounts and APIs. For agents, it has to be applied dynamically — because an agent performing a multi-step task may need different permissions at different points in that task.</p>
+      <p data-i18n="aa.s3.p2">Concretely, this means separating three categories of permission: read-only permissions for reconnaissance and planning phases; write permissions that are explicitly requested and approved for specific actions; and elevated permissions (admin, external communication) that require explicit human confirmation before execution. The agent should never hold write permissions during phases where it is only reading, and should never hold permissions for resources it has already finished using.</p>
+
+      <div class="defend-block">
+        <div class="defend-label">Least Privilege Pattern — Task-Scoped Permissions</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aa.def1">Instead of deploying an agent with permanent access to all resources, issue task-specific capability tokens at task start. The token specifies exactly which resources can be accessed, what operations are permitted (read/write/delete), and a TTL after which the token expires. The agent presents this token to each tool/service it calls. When the task completes, revoke the token immediately. Leaked tokens are bounded in scope and time; they cannot be used to access resources outside the token specification.</p>
+      </div>
+
+      <h2 data-i18n="aa.s4.h">Dynamic Permission Requests</h2>
+      <p data-i18n="aa.s4.p1">The most important architectural shift for agentic authorization is moving permission requests from deployment time to action time. Rather than configuring permissions when the agent is deployed, the agent requests permissions at the moment it decides it needs them — and the user sees and approves exactly what the agent is about to do.</p>
+      <p data-i18n="aa.s4.p2">This model requires investment in UX that most teams haven't built yet. When an agent wants to send an email, it should present the user with: the exact email it intends to send (to, subject, body), the specific permission it is requesting (one-time access to the email send API), and a clear approve/deny UI. This is not a generic "grant email access" permission request — it is a specific, reviewable, one-time action approval.</p>
+
+      <pre class="code-block"><span class="comment"># Dynamic permission request — action-time pattern</span>
+
+<span class="comment"># At task execution, agent requests specific capability</span>
+<span class="kw">const</span> permission = <span class="kw">await</span> requestUserPermission({
+  action: <span class="str">"send_email"</span>,
+  scope: {
+    to: <span class="str">"team@company.com"</span>,
+    subject: <span class="str">"Meeting notes from today"</span>,
+    body: emailDraft,          <span class="comment">// user sees exact content</span>
+  },
+  ttl: <span class="str">"once"</span>,               <span class="comment">// single use, not persistent</span>
+  context: <span class="str">"User asked me to send meeting summary"</span>,
+});
+
+<span class="kw">if</span> (permission.approved) {
+  <span class="good">await emailTool.send(permission.capability);</span>
+} <span class="kw">else</span> {
+  <span class="comment">// log denial, abort action, continue task differently</span>
+}
+
+<span class="comment"># Compare to over-permissioned deployment-time grant:</span>
+<span class="danger">// agent.permissions = ["email:*", "files:*", "slack:*"]
+// granted forever, no per-action review, no audit trail</span>
+</pre>
+
+      <h2 data-i18n="aa.s5.h">Authorization Patterns</h2>
+      <p data-i18n="aa.s5.p1">Several architectural patterns from existing authorization infrastructure can be adapted for agentic systems. None are perfect fits — agentic authorization requirements are genuinely novel — but they provide useful building blocks.</p>
+      <p data-i18n="aa.s5.p2">PKCE-style flows for agents: adapt the OAuth PKCE flow for agent authorization. The agent generates a code challenge, the user approves specific scoped permissions in an out-of-band review step, and the agent receives a short-lived access token scoped to exactly the approved actions. The code verifier prevents the token from being useful if intercepted, and the short TTL limits the window for misuse.</p>
+      <p data-i18n="aa.s5.p3">Capability tokens: rather than issuing broad OAuth scopes ("email:send"), issue capability tokens that encode the specific action parameters. The token is cryptographically bound to the exact action: "send email to X with subject Y with body Z, valid for 5 minutes." An agent that presents this token to the email service can only send that exact email — it cannot be reused, cannot be redirected, and cannot be escalated to broader access.</p>
+      <p data-i18n="aa.s5.p4">The MCP authorization spec is an emerging standard that addresses some of these requirements for tool-calling agents specifically. It defines flows for agents to request and receive scoped access to MCP servers, with user-facing approval UI baked into the protocol. Teams building on MCP should treat the authorization spec as a minimum baseline, not an optional feature.</p>
+
+      <h2 data-i18n="aa.s6.h">The Audit Trail Requirement</h2>
+      <p data-i18n="aa.s6.p1">Authorization decisions are only as good as your ability to reconstruct them after the fact. Every permission use by an agent must be logged with sufficient context to answer: why did the agent request this permission, what task was it performing, what data did it access, and what did it do with that access? Without this audit trail, you cannot investigate anomalous behavior, cannot reconstruct attack timelines, and cannot comply with data access regulations that require demonstrating data minimization.</p>
+      <p data-i18n="aa.s6.p2">The audit log entry for each agent action should include: the task identifier and description, the permission requested and the resource accessed, the timestamp and duration of access, the output of the action (or a hash of it), and the user identity under whose authority the action was taken. This log should be append-only and tamper-evident — if an attacker successfully compromises an agent, one of their objectives will often be covering their tracks by modifying or deleting audit logs.</p>
+      <p data-i18n="aa.s6.p3">Audit trails also enable a capability that most teams don't exploit: anomaly detection over permission usage patterns. An agent that normally uses read permissions on three specific tables but suddenly reads twenty tables, or that has never used an email permission before and suddenly sends ten emails in one task, is exhibiting behavior worth investigating. Correlating permission usage patterns across tasks over time turns your audit trail from a forensic record into a real-time detection capability.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'aa.cat': 'AI Security',
+    'aa.date': 'May 2026',
+    'aa.title': 'Agentic AI Authorization:<br>The Permission Problem in Autonomous Systems',
+    'aa.lead': 'When an AI agent asks to read your files, send your email, or execute code — how does the system decide if it should? Most agentic systems get this wrong in ways that are easy to exploit and hard to audit.',
+    'aa.pub': 'Published: 2026-05-18 13:02 PDT (Oregon)',
+    'aa.s1.h': 'The Permission Problem',
+    'aa.s1.p1': 'When you deploy an AI agent, you make authorization decisions upfront: what data can it read, what services can it call, what actions can it take? Most teams make these decisions at deployment time, for the entire lifetime of the agent deployment. They grant broad access because it\'s convenient, and because agents are designed to be general-purpose — you don\'t always know in advance exactly what they\'ll need to do.',
+    'aa.s1.p2': 'This creates the confused deputy problem at scale. The agent holds permissions not because it currently needs them, but because it might need them at some point. When that agent is compromised via prompt injection, behavioral manipulation, or an unexpected interaction with a malicious data source, the attacker gains all the permissions the agent holds — not just the permissions needed for the specific task the agent was doing when it was compromised.',
+    'aa.s1.p3': 'The permission problem has two dimensions: scope (what can the agent do) and duration (how long can it do it). Both are typically over-provisioned. An agent given permanent read/write access to a user\'s file system for a task that required reading two documents has been over-provisioned in both dimensions. The right access would have been: read access to two specific documents, for the duration of one task. The difference between these two permission profiles is enormous from a security standpoint.',
+    'aa.s2.h': 'Current State: Everything Is Over-Permissioned',
+    'aa.s2.p1': 'The current state of agentic authorization is largely a reflection of developer convenience. Configuring fine-grained per-task permissions is hard work. It requires knowing in advance what the agent will need, designing permission request flows, building UX for users to review and approve permissions, and implementing revocation. Most teams skip this and grant broad access instead.',
+    'aa.atk1': 'An agent deployed to help a user with scheduling was given access to: the user\'s calendar (read/write), their email (read/write), their Slack (read/write), and a set of internal databases (read). Intended use: find a meeting time and send an invite. Actual attack surface: any successful prompt injection against this agent can now read all the user\'s emails, exfiltrate database contents to an external address via email, post any content to Slack, and corrupt calendar entries. The over-permissioning transformed a scheduling assistant into a surveillance platform.',
+    'aa.s2.p2': 'The convenience argument — "we need broad access because we don\'t know what the agent will need" — is a symptom of building agentic systems without designing their authorization model. The solution is not to accept over-permissioning as inevitable, but to architect agents so they request permissions at the point of use, not at deployment time.',
+    'aa.s3.h': 'Principle of Least Privilege for Agents',
+    'aa.s3.p1': 'Least privilege for agentic systems means: an agent should hold exactly the permissions it needs for the specific action it is about to take, for no longer than it needs them. This is a different framing than traditional least privilege, which is typically applied to service accounts and APIs. For agents, it has to be applied dynamically — because an agent performing a multi-step task may need different permissions at different points in that task.',
+    'aa.s3.p2': 'Concretely, this means separating three categories of permission: read-only permissions for reconnaissance and planning phases; write permissions that are explicitly requested and approved for specific actions; and elevated permissions (admin, external communication) that require explicit human confirmation before execution. The agent should never hold write permissions during phases where it is only reading, and should never hold permissions for resources it has already finished using.',
+    'aa.def1': 'Instead of deploying an agent with permanent access to all resources, issue task-specific capability tokens at task start. The token specifies exactly which resources can be accessed, what operations are permitted (read/write/delete), and a TTL after which the token expires. The agent presents this token to each tool/service it calls. When the task completes, revoke the token immediately. Leaked tokens are bounded in scope and time; they cannot be used to access resources outside the token specification.',
+    'aa.s4.h': 'Dynamic Permission Requests',
+    'aa.s4.p1': 'The most important architectural shift for agentic authorization is moving permission requests from deployment time to action time. Rather than configuring permissions when the agent is deployed, the agent requests permissions at the moment it decides it needs them — and the user sees and approves exactly what the agent is about to do.',
+    'aa.s4.p2': 'This model requires investment in UX that most teams haven\'t built yet. When an agent wants to send an email, it should present the user with: the exact email it intends to send (to, subject, body), the specific permission it is requesting (one-time access to the email send API), and a clear approve/deny UI. This is not a generic "grant email access" permission request — it is a specific, reviewable, one-time action approval.',
+    'aa.s5.h': 'Authorization Patterns',
+    'aa.s5.p1': 'Several architectural patterns from existing authorization infrastructure can be adapted for agentic systems. None are perfect fits — agentic authorization requirements are genuinely novel — but they provide useful building blocks.',
+    'aa.s5.p2': 'PKCE-style flows for agents: adapt the OAuth PKCE flow for agent authorization. The agent generates a code challenge, the user approves specific scoped permissions in an out-of-band review step, and the agent receives a short-lived access token scoped to exactly the approved actions. The code verifier prevents the token from being useful if intercepted, and the short TTL limits the window for misuse.',
+    'aa.s5.p3': 'Capability tokens: rather than issuing broad OAuth scopes ("email:send"), issue capability tokens that encode the specific action parameters. The token is cryptographically bound to the exact action: "send email to X with subject Y with body Z, valid for 5 minutes." An agent that presents this token to the email service can only send that exact email — it cannot be reused, cannot be redirected, and cannot be escalated to broader access.',
+    'aa.s5.p4': 'The MCP authorization spec is an emerging standard that addresses some of these requirements for tool-calling agents specifically. It defines flows for agents to request and receive scoped access to MCP servers, with user-facing approval UI baked into the protocol. Teams building on MCP should treat the authorization spec as a minimum baseline, not an optional feature.',
+    'aa.s6.h': 'The Audit Trail Requirement',
+    'aa.s6.p1': 'Authorization decisions are only as good as your ability to reconstruct them after the fact. Every permission use by an agent must be logged with sufficient context to answer: why did the agent request this permission, what task was it performing, what data did it access, and what did it do with that access? Without this audit trail, you cannot investigate anomalous behavior, cannot reconstruct attack timelines, and cannot comply with data access regulations that require demonstrating data minimization.',
+    'aa.s6.p2': 'The audit log entry for each agent action should include: the task identifier and description, the permission requested and the resource accessed, the timestamp and duration of access, the output of the action (or a hash of it), and the user identity under whose authority the action was taken. This log should be append-only and tamper-evident — if an attacker successfully compromises an agent, one of their objectives will often be covering their tracks by modifying or deleting audit logs.',
+    'aa.s6.p3': 'Audit trails also enable a capability that most teams don\'t exploit: anomaly detection over permission usage patterns. An agent that normally uses read permissions on three specific tables but suddenly reads twenty tables, or that has never used an email permission before and suddenly sends ten emails in one task, is exhibiting behavior worth investigating. Correlating permission usage patterns across tasks over time turns your audit trail from a forensic record into a real-time detection capability.',
+  },
+  zh: {
+    'aa.cat': 'AI 安全',
+    'aa.date': '2026年5月',
+    'aa.title': 'AI 智能体授权：<br>自主系统中的权限问题',
+    'aa.lead': '当 AI 智能体要求读取你的文件、发送你的邮件或执行代码时——系统如何决定是否应该允许？大多数智能体系统在这方面犯了容易被利用且难以审计的错误。',
+    'aa.pub': '发布时间：2026-05-18 13:02 PDT（俄勒冈）',
+    'aa.s1.h': '权限问题',
+    'aa.s1.p1': '当你部署 AI 智能体时，你预先做出授权决策：它可以读取什么数据、可以调用什么服务、可以采取什么行动？大多数团队在部署时为整个智能体部署的生命周期做出这些决策。他们授予广泛的访问权限，因为这很方便，也因为智能体被设计为通用的——你并不总是能事先知道它们确切需要做什么。',
+    'aa.s1.p2': '这在规模上创造了"困惑代理"问题。智能体持有权限不是因为它当前需要它们，而是因为它可能在某个时刻需要它们。当该智能体通过提示注入、行为操控或与恶意数据源的意外交互而受到攻击时，攻击者获得了智能体持有的所有权限——不仅仅是智能体在被攻击时正在执行的特定任务所需的权限。',
+    'aa.s1.p3': '权限问题有两个维度：范围（智能体可以做什么）和持续时间（它可以做多长时间）。两者通常都被过度配置。一个为只需要读取两个文档的任务被授予用户文件系统永久读/写访问权限的智能体，在两个维度上都被过度配置了。正确的访问应该是：对两个特定文档的读取权限，仅在一个任务期间。从安全角度来看，这两种权限配置之间的差异是巨大的。',
+    'aa.s2.h': '当前状态：一切都过度配置',
+    'aa.s2.p1': '智能体授权的当前状态在很大程度上是开发者便利性的反映。配置细粒度的每任务权限是繁重的工作。它需要提前知道智能体将需要什么，设计权限请求流程，为用户构建审查和批准权限的 UX，以及实现撤销。大多数团队跳过这些，改为授予广泛的访问权限。',
+    'aa.atk1': '一个被部署来帮助用户安排日程的智能体获得了访问权限：用户的日历（读/写）、他们的电子邮件（读/写）、他们的 Slack（读/写）以及一组内部数据库（读）。预期用途：找到会议时间并发送邀请。实际攻击面：任何对这个智能体的成功提示注入现在都可以读取用户的所有电子邮件，通过电子邮件将数据库内容外泄到外部地址，在 Slack 上发布任何内容，以及破坏日历条目。过度配置将一个日程安排助手变成了监控平台。',
+    'aa.s2.p2': '便利性论点——"我们需要广泛访问，因为我们不知道智能体将需要什么"——是在没有设计授权模型的情况下构建智能体系统的症状。解决方案不是接受过度配置为不可避免，而是将智能体架构为在使用时请求权限，而不是在部署时请求。',
+    'aa.s3.h': '智能体的最小权限原则',
+    'aa.s3.p1': '智能体系统的最小权限意味着：智能体应该持有它即将采取的特定行动所需的确切权限，且不超过它需要这些权限的时间。这与传统最小权限的框架不同，传统最小权限通常应用于服务账户和 API。对于智能体，它必须动态应用——因为执行多步骤任务的智能体可能在该任务的不同点需要不同的权限。',
+    'aa.s3.p2': '具体来说，这意味着分离三类权限：侦察和规划阶段的只读权限；为特定行动明确请求和批准的写入权限；以及在执行前需要明确人工确认的提升权限（管理员、外部通信）。智能体在只读阶段永不持有写入权限，在已完成使用的资源上永不持有权限。',
+    'aa.def1': '不要部署对所有资源具有永久访问权的智能体，而是在任务开始时发出特定于任务的能力令牌。令牌精确指定可以访问哪些资源、允许哪些操作（读/写/删除）以及令牌过期后的 TTL。智能体向它调用的每个工具/服务出示此令牌。任务完成后，立即撤销令牌。泄露的令牌在范围和时间上受到限制；它们不能用于访问令牌规格之外的资源。',
+    'aa.s4.h': '动态权限请求',
+    'aa.s4.p1': '智能体授权最重要的架构转变是将权限请求从部署时移至行动时。智能体不是在部署时配置权限，而是在它决定需要权限的那一刻请求权限——用户看到并批准智能体即将做的确切事情。',
+    'aa.s4.p2': '这种模型需要大多数团队尚未构建的 UX 投资。当智能体想要发送电子邮件时，它应该向用户呈现：它打算发送的确切电子邮件（收件人、主题、正文）、它请求的具体权限（对电子邮件发送 API 的一次性访问）以及清晰的批准/拒绝 UI。这不是通用的"授予电子邮件访问权限"权限请求——它是特定的、可审查的、一次性行动批准。',
+    'aa.s5.h': '授权模式',
+    'aa.s5.p1': '现有授权基础设施的几种架构模式可以为智能体系统进行改编。没有一个完全合适——智能体授权要求确实是新颖的——但它们提供了有用的构建模块。',
+    'aa.s5.p2': '适用于智能体的 PKCE 风格流程：将 OAuth PKCE 流程改编用于智能体授权。智能体生成代码挑战，用户在带外审查步骤中批准特定范围的权限，智能体收到范围精确限定于批准行动的短期访问令牌。代码验证器防止令牌在被截获时有用，短 TTL 限制了滥用窗口。',
+    'aa.s5.p3': '能力令牌：不是发出广泛的 OAuth 范围（"email:send"），而是发出编码特定行动参数的能力令牌。令牌被密码学绑定到确切的行动："发送电子邮件给 X，主题 Y，正文 Z，有效期 5 分钟"。向电子邮件服务出示此令牌的智能体只能发送该确切的电子邮件——它不能被重用、不能被重定向、不能被升级为更广泛的访问。',
+    'aa.s5.p4': 'MCP 授权规范是一个新兴标准，专门解决工具调用智能体的这些要求。它定义了智能体请求和接收对 MCP 服务器的范围访问的流程，面向用户的批准 UI 内置于协议中。基于 MCP 构建的团队应将授权规范视为最低基线，而不是可选功能。',
+    'aa.s6.h': '审计追踪要求',
+    'aa.s6.p1': '授权决策的质量取决于你事后重建它们的能力。智能体的每次权限使用都必须记录足够的上下文来回答：为什么智能体请求这个权限、它在执行什么任务、它访问了什么数据，以及它用该访问做了什么？没有这个审计追踪，你无法调查异常行为，无法重建攻击时间线，也无法遵守要求证明数据最小化的数据访问法规。',
+    'aa.s6.p2': '每个智能体行动的审计日志条目应包括：任务标识符和描述、请求的权限和访问的资源、访问的时间戳和持续时间、行动的输出（或其哈希）以及执行行动所依据的用户身份。此日志应该是仅追加和防篡改的——如果攻击者成功入侵了智能体，他们的目标之一通常是通过修改或删除审计日志来掩盖踪迹。',
+    'aa.s6.p3': '审计追踪还启用了大多数团队没有利用的能力：对权限使用模式的异常检测。通常对三个特定表使用读取权限但突然读取二十个表的智能体，或之前从未使用过电子邮件权限但突然在一个任务中发送十封电子邮件的智能体，正在展示值得调查的行为。随时间跨任务关联权限使用模式，将你的审计追踪从取证记录转变为实时检测能力。',
+  },
+  ja: {
+    'aa.cat': 'AIセキュリティ',
+    'aa.date': '2026年5月',
+    'aa.title': 'エージェンティックAI認可：<br>自律システムの権限問題',
+    'aa.lead': 'AIエージェントがファイルの読み取り、メールの送信、またはコードの実行を求めるとき——システムはどのように許可すべきかを決定するか？ほとんどのエージェンティックシステムは、悪用しやすく監査しにくい方法でこれを間違える。',
+    'aa.pub': '公開日時：2026-05-18 13:02 PDT（オレゴン）',
+    'aa.s1.h': '権限問題',
+    'aa.s1.p1': 'AIエージェントをデプロイするとき、事前に認可の決定をする：どのデータを読み取れるか、どのサービスを呼び出せるか、どのアクションを取れるか？ほとんどのチームはデプロイ時にエージェントデプロイメント全体のライフタイムに対してこれらの決定をする。エージェントは汎用目的に設計されているので便利だから広いアクセスを許可する——常に事前にエージェントが何をする必要があるかを正確に知っているわけではない。',
+    'aa.s1.p2': 'これは規模でのConfused Deputy問題を生み出す。エージェントは現在それらを必要としているからではなく、ある時点でそれらを必要とするかもしれないから権限を持っている。そのエージェントがプロンプトインジェクション、行動操作、または悪意のあるデータソースとの予期しないインタラクションによって侵害されると、攻撃者はエージェントが保持するすべての権限を得る——侵害されたときにエージェントが実行していた特定のタスクに必要な権限だけでなく。',
+    'aa.s1.p3': '権限問題には二つの次元がある：スコープ（エージェントが何をできるか）と期間（どのくらいの期間できるか）。両方とも通常は過剰にプロビジョニングされている。二つのドキュメントを読むことを必要とするタスクのためにユーザーのファイルシステムへの永続的な読み書きアクセスを与えられたエージェントは、両方の次元で過剰にプロビジョニングされている。正しいアクセスは：一つのタスクの期間だけ二つの特定のドキュメントへの読み取りアクセスだったはずだ。これら二つの権限プロファイルの差はセキュリティの観点から見て非常に大きい。',
+    'aa.s2.h': '現状：すべてが過剰に権限付与されている',
+    'aa.s2.p1': 'エージェンティック認可の現状は、開発者の利便性を主に反映している。細かいタスクごとの権限を設定することは大変な作業だ。エージェントが何を必要とするかを事前に知り、権限リクエストフローを設計し、ユーザーが権限を確認して承認するためのUXを構築し、失効を実装する必要がある。ほとんどのチームはこれをスキップして代わりに広いアクセスを許可する。',
+    'aa.atk1': 'スケジューリングでユーザーを助けるためにデプロイされたエージェントには次のアクセスが与えられた：ユーザーのカレンダー（読み書き）、メール（読み書き）、Slack（読み書き）、内部データベースのセット（読み取り）。意図した用途：会議時間を見つけて招待を送る。実際の攻撃面：このエージェントへの成功したプロンプトインジェクションはすべてのユーザーのメールを読み取り、メールで外部アドレスにデータベースの内容を流出させ、Slackにコンテンツを投稿し、カレンダーエントリを破損させることができる。過剰な権限付与はスケジューリングアシスタントを監視プラットフォームに変えた。',
+    'aa.s2.p2': '便利さの主張——「エージェントが何を必要とするかわからないので広いアクセスが必要だ」——は認可モデルを設計せずにエージェンティックシステムを構築している症状だ。解決策は過剰な権限付与を避けられないものとして受け入れることではなく、エージェントがデプロイ時ではなく使用時に権限を要求するように設計することだ。',
+    'aa.s3.h': 'エージェントの最小権限の原則',
+    'aa.s3.p1': 'エージェンティックシステムの最小権限は意味する：エージェントは取ろうとしている特定のアクションに必要な権限だけを、それを必要とする期間だけ保持すべきだ。これはサービスアカウントとAPIに通常適用される従来の最小権限とは異なるフレームだ。エージェントの場合、動的に適用しなければならない——マルチステップタスクを実行するエージェントはタスクの異なるポイントで異なる権限を必要とする場合があるから。',
+    'aa.s3.p2': '具体的には、これは三つのカテゴリーの権限を分離することを意味する：偵察と計画フェーズのための読み取り専用権限；特定のアクションのために明示的に要求され承認される書き込み権限；実行前に明示的な人間の確認を必要とする昇格された権限（管理者、外部通信）。エージェントは読み取りのみのフェーズでは書き込み権限を保持してはならず、すでに使用を終えたリソースの権限を保持してはならない。',
+    'aa.def1': 'すべてのリソースへの永続的なアクセスを持つエージェントをデプロイする代わりに、タスク開始時にタスク固有の能力トークンを発行する。トークンはアクセスできるリソース、許可される操作（読み取り/書き込み/削除）、およびトークンが期限切れになるTTLを正確に指定する。エージェントはそれが呼び出す各ツール/サービスにこのトークンを提示する。タスクが完了したら、すぐにトークンを失効させる。漏洩したトークンはスコープと時間で制限されている；トークン仕様の外のリソースへのアクセスには使用できない。',
+    'aa.s4.h': '動的権限リクエスト',
+    'aa.s4.p1': 'エージェンティック認可の最も重要なアーキテクチャ上のシフトは、権限リクエストをデプロイ時からアクション時に移動させることだ。エージェントがデプロイされるときに権限を設定するのではなく、エージェントはそれが必要と判断した瞬間に権限をリクエストする——ユーザーはエージェントが何をしようとしているかを見て承認する。',
+    'aa.s4.p2': 'このモデルは、ほとんどのチームがまだ構築していないUXへの投資を必要とする。エージェントがメールを送信したいとき、ユーザーに提示すべきだ：送信しようとしている正確なメール（宛先、件名、本文）、リクエストしている特定の権限（メール送信APIへの一回限りのアクセス）、および明確な承認/拒否UI。これは一般的な「メールアクセスを許可する」権限リクエストではない——特定の、確認可能な、一回限りのアクション承認だ。',
+    'aa.s5.h': '認可パターン',
+    'aa.s5.p1': '既存の認可インフラからのいくつかのアーキテクチャパターンはエージェンティックシステムに適応させることができる。どれも完璧には合わない——エージェンティック認可要件は真に新規だ——しかし有用なビルディングブロックを提供する。',
+    'aa.s5.p2': 'エージェントのためのPKCEスタイルフロー：OAuth PKCEフローをエージェント認可に適応させる。エージェントはコードチャレンジを生成し、ユーザーはアウトオブバンドレビューステップで特定のスコープ付き権限を承認し、エージェントは承認されたアクションのみにスコープされた短命のアクセストークンを受け取る。コード検証者は傍受されたときにトークンが使えないようにし、短いTTLは悪用のウィンドウを制限する。',
+    'aa.s5.p3': '能力トークン：広いOAuthスコープ（「email:send」）を発行する代わりに、特定のアクションパラメータをエンコードする能力トークンを発行する。トークンは正確なアクションに暗号的にバインドされている：「件名YでボディZのXへのメールを送信、5分間有効。」このトークンをメールサービスに提示するエージェントは、その正確なメールのみを送信できる——再利用できず、リダイレクトできず、より広いアクセスにエスカレートできない。',
+    'aa.s5.p4': 'MCP認可仕様はツール呼び出しエージェントに特定のこれらの要件に対処する新興標準だ。プロトコルに組み込まれたユーザー向け承認UIで、エージェントがMCPサーバーへのスコープ付きアクセスをリクエストして受け取るフローを定義する。MCPの上に構築するチームは、認可仕様をオプション機能ではなく最低基準として扱うべきだ。',
+    'aa.s6.h': '監査証跡要件',
+    'aa.s6.p1': '認可決定の質は、事後にそれらを再構築する能力によって決まる。エージェントによるすべての権限使用は、なぜエージェントがこの権限をリクエストしたのか、何のタスクを実行していたのか、どのデータにアクセスしたのか、そしてそのアクセスで何をしたのかに答えるのに十分なコンテキストと共にログに記録しなければならない。この監査証跡がなければ、異常な動作を調査することができず、攻撃タイムラインを再構築できず、データ最小化の実証を要求するデータアクセス規制に準拠できない。',
+    'aa.s6.p2': '各エージェントアクションの監査ログエントリには含めるべきだ：タスク識別子と説明、リクエストされた権限とアクセスされたリソース、アクセスのタイムスタンプと期間、アクションの出力（またはそのハッシュ）、アクションが取られた権限の下のユーザーID。このログは追加専用で改ざん防止であるべきだ——攻撃者がエージェントの侵害に成功した場合、その目的の一つはしばしば監査ログを変更または削除して痕跡を隠すことだ。',
+    'aa.s6.p3': '監査証跡はまた、ほとんどのチームが活用していない能力を可能にする：権限使用パターンに対する異常検知。通常三つの特定のテーブルで読み取り権限を使用するが突然二十のテーブルを読み取るエージェント、または以前にメール権限を使用したことがなく突然一つのタスクで十通のメールを送るエージェントは、調査する価値のある動作を示している。時間をかけてタスクにわたって権限使用パターンを相関させることで、監査証跡を法医学的記録からリアルタイム検知能力に変える。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

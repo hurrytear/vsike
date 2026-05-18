@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Visualization as Communication — vsike</title>
+  <meta name="description" content="A chart that requires a legend to decode is a chart that failed. The best data visualizations make their argument without explanation — the data speaks, and the design gets out of the way.">
+  <meta name="keywords" content="数据可视化, 图表设计, 数据墨水比, data visualization, chart design, data-ink ratio, Tufte, annotation vs legend, honest visualization, design 2026">
+  <link rel="canonical" href="https://www.vsike.com/ideas/data-viz.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pull-quote { font-size: var(--fs-lg); line-height: 1.5; font-weight: 600; letter-spacing: -.02em; border-left: 3px solid var(--accent); padding: 1rem 0 1rem 2rem; margin: 2.5rem 0; color: var(--fg); }
+    .demo-row { display: flex; gap: 1.5rem; margin: 2rem 0; flex-wrap: wrap; }
+    .demo-cell { flex: 1; min-width: 240px; border: 1px solid var(--border); padding: 1.5rem; border-radius: 4px; background: var(--bg); }
+    .demo-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--fg-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
+    .demo-good { border-color: var(--accent); }
+    .demo-bad { border-color: #c0392b; }
+    .demo-badge { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; font-weight: 700; text-transform: uppercase; margin-bottom: .75rem; }
+    .demo-badge.good { color: var(--accent); }
+    .demo-badge.bad { color: #c0392b; }
+
+    /* Chart demos */
+    .chart-area { width: 100%; margin-top: .5rem; }
+    .bar-chart { display: flex; flex-direction: column; gap: .5rem; }
+    .bar-row { display: flex; align-items: center; gap: .75rem; font-size: var(--fs-xs); }
+    .bar-label { width: 60px; color: var(--fg-muted); text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 22px; background: color-mix(in srgb, var(--fg) 8%, var(--bg)); border-radius: 2px; position: relative; overflow: visible; }
+    .bar-fill { height: 100%; border-radius: 2px; background: var(--accent); position: relative; }
+    .bar-value { position: absolute; right: -2.5rem; top: 50%; transform: translateY(-50%); font-size: var(--fs-xs); color: var(--fg); white-space: nowrap; }
+    .bar-fill-bad { background: color-mix(in srgb, var(--fg) 40%, var(--bg)); }
+
+    /* Gridline comparison */
+    .line-chart-wrap { padding: .5rem 0; }
+    .gridlines-bad { border: 1px solid var(--border); padding: .75rem; border-radius: 3px; }
+    .gridlines-bad .gl { border-top: 1px solid var(--border); padding: 6px 0; font-size: var(--fs-xs); color: var(--fg-muted); }
+    .gridlines-bad .data-point { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--fg); margin: 0 4px; }
+    .gridlines-good { padding: .75rem 0; }
+    .gridlines-good .data-point { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin: 0 6px; }
+    .gridlines-good .data-label { font-size: var(--fs-xs); color: var(--fg); }
+
+    /* Color demos */
+    .color-swatches { display: flex; gap: .5rem; margin: .75rem 0; flex-wrap: wrap; }
+    .swatch { height: 28px; border-radius: 3px; flex: 1; min-width: 30px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: rgba(255,255,255,.85); }
+
+    /* Y-axis truncation demo */
+    .axis-demo { display: flex; gap: 1.5rem; margin: 1rem 0; align-items: flex-end; }
+    .axis-chart { flex: 1; }
+    .axis-bars { display: flex; gap: 6px; align-items: flex-end; height: 80px; }
+    .axis-bar { flex: 1; border-radius: 2px 2px 0 0; background: var(--accent); }
+    .axis-bar-bad { background: color-mix(in srgb, var(--accent) 60%, var(--bg)); }
+    .axis-label-row { display: flex; gap: 6px; margin-top: 4px; }
+    .axis-val { flex: 1; font-size: 10px; color: var(--fg-muted); text-align: center; }
+    .axis-title { font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 6px; text-align: center; }
+    .y-labels { display: flex; flex-direction: column; justify-content: space-between; height: 80px; padding-right: 6px; }
+    .y-val { font-size: 10px; color: var(--fg-muted); }
+
+    /* Annotation demo */
+    .annotated-chart { position: relative; padding: 1rem 0; }
+    .anno-bar-wrap { display: flex; align-items: center; gap: .75rem; margin: .4rem 0; }
+    .anno-bar-label { width: 55px; font-size: 11px; color: var(--fg-muted); text-align: right; }
+    .anno-bar-track { flex: 1; height: 20px; background: color-mix(in srgb, var(--fg) 8%, var(--bg)); border-radius: 2px; position: relative; }
+    .anno-bar-fill { height: 100%; border-radius: 2px; }
+    .anno-note { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 700; padding: 0 6px; white-space: nowrap; }
+
+    .legend-box { border: 1px solid var(--border); border-radius: 3px; padding: .5rem .75rem; margin-top: .75rem; font-size: 11px; }
+    .legend-item { display: flex; align-items: center; gap: .5rem; margin: .25rem 0; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="dv.cat">Design</span>
+        <span class="article-date" data-i18n="dv.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="dv.title">Data Visualization<br>as Communication</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="dv.lead">A chart that requires a legend to decode is a chart that failed. The best data visualizations make their argument without explanation — the data speaks, and the design gets out of the way.</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="dv.s1.h">Visualization Is Rhetoric</h2>
+      <p data-i18n="dv.s1.p1">Every chart makes an argument. This is not a metaphor — it is a literal description of what visualization does. You choose what data to show and what to omit. You choose what time range to display. You choose the scale, the baseline, the color. Every one of these choices either supports or undermines the argument the data is making. There is no neutral chart.</p>
+      <p data-i18n="dv.s1.p2">The designer's job is to make the right argument clearly. "Right" here means accurate — the argument the data actually supports, not the one that would look best in a quarterly review deck. "Clearly" means that the audience understands the point without needing to work for it. When those two requirements are in tension — when the accurate argument is nuanced and the clear argument would be an oversimplification — that tension is the design problem to solve.</p>
+      <p data-i18n="dv.s1.p3">Understanding visualization as rhetoric changes how you evaluate charts. The question is not "does this look professional?" It is "does the person reading this understand what the data is actually saying?" A chart that looks polished but leaves the reader confused has failed. A chart that looks rough but communicates its point instantly has succeeded. Aesthetics serve communication; they do not substitute for it.</p>
+      <p data-i18n="dv.s1.p4">This framing also clarifies what good data visualization practice looks like in practice. It means asking, before you open your charting tool: what is the one thing I want the reader to take away from this? If you cannot state that in a single sentence before you start building, you will end up with a chart that tries to say everything and communicates nothing. Start with the sentence. Build toward it.</p>
+
+      <p class="pull-quote" data-i18n="dv.pq1">The question is not "does this look professional?" It is "does the person reading this understand what the data is actually saying?"</p>
+
+      <h2 data-i18n="dv.s2.h">Chart Type as Semantic Choice</h2>
+      <p data-i18n="dv.s2.p1">Chart types are not interchangeable. Each encodes a specific semantic claim about the relationship between data points, and using the wrong type is not just aesthetically wrong — it communicates false information about what the data shows.</p>
+      <p data-i18n="dv.s2.p2">Bar charts encode magnitude for comparison across discrete categories. The visual principle is that bar height directly represents quantity — the eye compares heights across bars. This makes bars ideal for questions like "which category is largest?" or "how do these values rank?" They require a zero baseline because truncating the axis visually exaggerates differences between bars in a way that misrepresents the actual ratios.</p>
+      <p data-i18n="dv.s2.p3">Line charts encode change over continuous time. The line itself — the connection between points — makes a claim: that there is a meaningful progression from one measurement to the next, not just separate measurements at discrete times. This is why connecting scatter points with a line when the x-axis represents categories (not time) is misleading. The line implies continuity that doesn't exist in the data.</p>
+      <p data-i18n="dv.s2.p4">Scatter plots encode correlation — the relationship between two continuous variables. They are the correct chart for "do these two things move together?" They are not useful for comparison or ranking. Pie charts encode part-to-whole relationships, but only work when the number of categories is very small (three or fewer) and the differences between slices are large enough for the eye to perceive. For most real datasets, a sorted bar chart communicates the same information more accurately.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="dv.demo.bars.good.badge">Correct — bars for comparison</div>
+          <div class="demo-label" data-i18n="dv.demo.bars.label">Monthly revenue by channel</div>
+          <div class="bar-chart chart-area">
+            <div class="bar-row"><span class="bar-label">Direct</span><div class="bar-track"><div class="bar-fill" style="width:82%"><span class="bar-value">$82k</span></div></div></div>
+            <div class="bar-row"><span class="bar-label">Organic</span><div class="bar-track"><div class="bar-fill" style="width:61%"><span class="bar-value">$61k</span></div></div></div>
+            <div class="bar-row"><span class="bar-label">Paid</span><div class="bar-track"><div class="bar-fill" style="width:47%"><span class="bar-value">$47k</span></div></div></div>
+            <div class="bar-row"><span class="bar-label">Referral</span><div class="bar-track"><div class="bar-fill" style="width:28%"><span class="bar-value">$28k</span></div></div></div>
+          </div>
+        </div>
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="dv.demo.bars.bad.badge">Wrong — pie for comparison</div>
+          <div class="demo-label" data-i18n="dv.demo.bars.bad.label">Same data, harder to read</div>
+          <div style="margin-top:.75rem;">
+            <div style="width:100px;height:100px;border-radius:50%;background:conic-gradient(var(--accent) 0 37%, color-mix(in srgb,var(--accent) 55%,var(--bg)) 37% 65%, color-mix(in srgb,var(--accent) 30%,var(--bg)) 65% 86%, color-mix(in srgb,var(--fg) 25%,var(--bg)) 86% 100%);margin:0 auto .75rem;"></div>
+            <div class="legend-box">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span style="font-size:11px;">Direct — 37%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--accent) 55%,var(--bg))"></div><span style="font-size:11px;">Organic — 28%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--accent) 30%,var(--bg))"></div><span style="font-size:11px;">Paid — 21%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:color-mix(in srgb,var(--fg) 25%,var(--bg))"></div><span style="font-size:11px;">Referral — 13%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 data-i18n="dv.s3.h">The Data-Ink Ratio</h2>
+      <p data-i18n="dv.s3.p1">Edward Tufte introduced the data-ink ratio in The Visual Display of Quantitative Information: the proportion of a chart's ink that is directly encoding data versus ink that is decorative or structural overhead. The principle is to maximize the first and minimize the second. Every element that is present should earn its place by communicating information that would be lost without it.</p>
+      <p data-i18n="dv.s3.p2">In practice, this means systematically asking what each visual element is doing. Gridlines? Useful if they help the reader read off precise values; remove them or fade them to near-invisibility if the chart is about relative magnitude rather than exact numbers. Borders around charts? Almost never necessary — white space alone provides sufficient visual separation. Background colors on chart areas? Usually decorative, never informative, often distracting.</p>
+      <p data-i18n="dv.s3.p3">The legend is one of the highest-friction elements in most charts. It requires the reader to perform a cognitive round-trip: see a colored element, find the corresponding legend entry, read the label, return to the chart, re-interpret what they saw. Every round-trip costs attention. If you can label data series directly — annotating the line itself, labeling the bar directly — you have eliminated that cost. Direct labeling is almost always better than a legend.</p>
+      <p data-i18n="dv.s3.p4">The strongest version of high data-ink ratio is not minimalism for its own sake. It is the recognition that visual clutter competes with the data for the reader's attention. Every non-data element you add raises the threshold the data needs to exceed to be noticed. The goal is not a bare chart — it is a chart where every ink mark is working. A thoughtful axis label earns its place. A decorative shadow does not.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="dv.demo.ink.bad.badge">Low data-ink ratio</div>
+          <div class="demo-label" data-i18n="dv.demo.ink.bad.label">Gridlines, borders, legend overhead</div>
+          <div class="gridlines-bad line-chart-wrap">
+            <div class="gl">100 <span class="data-point"></span><span class="data-point"></span><span class="data-point"></span><span class="data-point"></span></div>
+            <div class="gl">75 <span class="data-point"></span><span class="data-point"></span><span class="data-point"></span><span class="data-point"></span></div>
+            <div class="gl">50 <span class="data-point"></span><span class="data-point"></span><span class="data-point"></span><span class="data-point"></span></div>
+          </div>
+          <div class="legend-box">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--fg)"></div><span style="font-size:11px;">Dataset A</span></div>
+          </div>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="dv.demo.ink.good.badge">High data-ink ratio</div>
+          <div class="demo-label" data-i18n="dv.demo.ink.good.label">Direct labels, no redundant structure</div>
+          <div class="gridlines-good line-chart-wrap">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+              <span class="data-point"></span><span class="data-point"></span><span class="data-point"></span><span class="data-point"></span>
+              <span class="data-label" style="font-size:11px;color:var(--accent);font-weight:600;">Revenue</span>
+            </div>
+            <div style="font-size:11px;color:var(--fg-muted);margin-top:.5rem;">Jan → Apr, trending +18%</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 data-i18n="dv.s4.h">Color as Information</h2>
+      <p data-i18n="dv.s4.p1">Color in data visualization should encode information, not decorate. When every bar in a bar chart is a different color, color carries no information — the colors are arbitrary. When a heat map uses a gradient from blue to red, those colors encode a continuous variable. The test is: if someone removed all the color from the chart, what information would be lost? If the answer is "nothing meaningful," the color was decoration.</p>
+      <p data-i18n="dv.s4.p2">Three types of color scales serve three types of data. Sequential scales — single hue from light to dark — encode ordered magnitude where all values are on one side of a meaningful reference point. Use these for density, count, or any variable where higher is meaningfully different from lower. Diverging scales — two hues meeting at a neutral midpoint — encode data that is bipolar: above and below zero, better and worse than average, gain and loss. The neutral center is semantically significant. Categorical scales — distinct hues — encode unordered categories that are meaningfully different from each other. Keep categorical scales to seven colors or fewer; the human perceptual system cannot reliably distinguish more than that.</p>
+      <p data-i18n="dv.s4.p3">Color accessibility matters practically, not just ethically. Approximately 8% of men and 0.5% of women have some form of color vision deficiency, most commonly red-green. A visualization that relies on red vs green to encode a meaningful distinction is inaccessible to a significant fraction of your audience. The fix is simple: use color as one channel among several, not the only channel. Pair color with position, shape, or direct label. A red bar that is also shorter than a green bar communicates the comparison even when the colors are indistinguishable.</p>
+      <p data-i18n="dv.s4.p4">Saturation and brightness carry meaning independent of hue. High saturation signals importance or emphasis. Low saturation signals secondary data or context. Using this systematically — saturated color for the series you want to highlight, desaturated color for comparison series — gives you a way to guide attention without adding text. The reader's eye goes to what is visually prominent. Make that the data that matters.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="dv.demo.color.bad.badge">Color as decoration</div>
+          <div class="demo-label" data-i18n="dv.demo.color.bad.label">Every bar a different color — carries no information</div>
+          <div class="bar-chart chart-area">
+            <div class="bar-row"><span class="bar-label">Q1</span><div class="bar-track"><div class="bar-fill" style="width:55%;background:#e87070;"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Q2</span><div class="bar-track"><div class="bar-fill" style="width:72%;background:#7ec8e3;"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Q3</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#a8d8a8;"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Q4</span><div class="bar-track"><div class="bar-fill" style="width:84%;background:#f5c842;"></div></div></div>
+          </div>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="dv.demo.color.good.badge">Color as signal</div>
+          <div class="demo-label" data-i18n="dv.demo.color.good.label">Accent on the data point that matters</div>
+          <div class="bar-chart chart-area">
+            <div class="bar-row"><span class="bar-label">Q1</span><div class="bar-track"><div class="bar-fill bar-fill-bad" style="width:55%;"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Q2</span><div class="bar-track"><div class="bar-fill bar-fill-bad" style="width:72%;"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Q3</span><div class="bar-track"><div class="bar-fill bar-fill-bad" style="width:68%;"></div></div></div>
+            <div class="bar-row"><span class="bar-label" style="color:var(--fg);font-weight:600;">Q4</span><div class="bar-track"><div class="bar-fill" style="width:84%;"><span class="bar-value" style="font-weight:700;">Best quarter</span></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 data-i18n="dv.s5.h">Annotation Over Legend</h2>
+      <p data-i18n="dv.s5.p1">The legend is a holdover from a time when printing constraints made it difficult to label elements directly on a chart. It is rarely the best solution. A legend asks the reader to hold a mapping in working memory — "the blue line means Product A, the dashed line means Product B" — and then re-apply that mapping every time they look at a data element. This is cognitive work that the designer has offloaded onto the reader. Direct annotation eliminates that work entirely.</p>
+      <p data-i18n="dv.s5.p2">Direct annotation means labeling data elements at the point of display. The line for Product A gets a label "Product A" next to its rightmost point. The peak in the trend gets a note: "Launch — March 14." The outlier gets a callout: "Hurricane impact — supply chain disrupted." Annotations turn a chart from a data display into a story. They direct attention. They provide context that would otherwise require the reader to go look up elsewhere.</p>
+      <p data-i18n="dv.s5.p3">The most powerful annotations are specific. "Revenue declined" is not an annotation — it is a label for what the reader can already see. "Revenue declined 31% following competitor price cut" is an annotation — it provides causal context that the data alone cannot convey. Good annotations are the equivalent of the spoken explanation you would give if you were presenting the chart in person. They answer the question the reader was about to ask.</p>
+      <p data-i18n="dv.s5.p4">When a legend is genuinely necessary — when there are too many series to annotate cleanly, or when the chart is too small — integrate it tightly. Place it adjacent to the data, not in a separate box. Order legend entries to match the visual order of the data (top-to-bottom for the rightmost values on a line chart, for example). Use the same visual encoding in the legend as in the chart — a color square, not a colored line, to represent a bar; a colored line segment to represent a line series.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="dv.demo.anno.bad.badge">Legend — cognitive round-trip</div>
+          <div class="demo-label" data-i18n="dv.demo.anno.bad.label">Reader must look up meaning of each color</div>
+          <div class="annotated-chart">
+            <div class="anno-bar-wrap"><span class="anno-bar-label">2023</span><div class="anno-bar-track"><div class="anno-bar-fill" style="width:60%;height:100%;background:var(--fg-muted);border-radius:2px;"></div></div></div>
+            <div class="anno-bar-wrap"><span class="anno-bar-label">2024</span><div class="anno-bar-track"><div class="anno-bar-fill" style="width:75%;height:100%;background:#7ec8e3;border-radius:2px;"></div></div></div>
+            <div class="anno-bar-wrap"><span class="anno-bar-label">2025</span><div class="anno-bar-track"><div class="anno-bar-fill" style="width:48%;height:100%;background:#e87070;border-radius:2px;"></div></div></div>
+          </div>
+          <div class="legend-box">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--fg-muted)"></div><span style="font-size:11px;">Baseline year</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7ec8e3"></div><span style="font-size:11px;">Growth year</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e87070"></div><span style="font-size:11px;">Contraction year</span></div>
+          </div>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="dv.demo.anno.good.badge">Annotation — meaning at the point of data</div>
+          <div class="demo-label" data-i18n="dv.demo.anno.good.label">No lookup needed</div>
+          <div class="annotated-chart">
+            <div class="anno-bar-wrap"><span class="anno-bar-label">2023</span><div class="anno-bar-track"><div class="anno-bar-fill" style="width:60%;height:100%;background:color-mix(in srgb,var(--fg) 25%,var(--bg));border-radius:2px;"></div><span style="position:absolute;left:calc(60% + 6px);top:50%;transform:translateY(-50%);font-size:10px;color:var(--fg-muted);">Baseline</span></div></div>
+            <div class="anno-bar-wrap"><span class="anno-bar-label">2024</span><div class="anno-bar-track"><div class="anno-bar-fill" style="width:75%;height:100%;background:var(--accent);border-radius:2px;"></div><span style="position:absolute;left:calc(75% + 6px);top:50%;transform:translateY(-50%);font-size:10px;color:var(--accent);font-weight:700;">+25% YoY</span></div></div>
+            <div class="anno-bar-wrap"><span class="anno-bar-label">2025</span><div class="anno-bar-track"><div class="anno-bar-fill" style="width:48%;height:100%;background:#e87070;border-radius:2px;"></div><span style="position:absolute;left:calc(48% + 6px);top:50%;transform:translateY(-50%);font-size:10px;color:#e87070;font-weight:700;">−36% downturn</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 data-i18n="dv.s6.h">Honest Visualization</h2>
+      <p data-i18n="dv.s6.p1">Data visualization can mislead without lying. The most common forms of dishonest visualization are not fabricated data — they are design choices that systematically distort how the data is perceived. Understanding them is necessary both for avoiding them in your own work and for identifying them in others'.</p>
+      <p data-i18n="dv.s6.p2">Truncated y-axes are the most prevalent form. A bar chart that starts at 94 instead of 0 can make a 2% difference between bars look like a 200% difference, because the visual comparison is between the visible portion of the bars, not their actual values. The rule is simple: bar charts must start at zero because the visual metaphor is bar height representing magnitude. Line charts and scatter plots have more flexibility — starting at a non-zero baseline can be appropriate when the variation within the range is the signal and the absolute magnitude is not.</p>
+      <p data-i18n="dv.s6.p3">Cherry-picked time ranges are subtler. A chart that shows stock performance starting from a trough will look more impressive than one starting from a peak. A chart that ends before a recent decline hides the decline. The question to ask is: is this time range defined by the data (a fiscal year, a product launch to now, a complete historical record) or by what the analyst wanted the chart to show? The second kind is misleading even if every data point is accurate.</p>
+      <p data-i18n="dv.s6.p4">Scale manipulation — using logarithmic scales without labeling them, using area to represent values that should be encoded as length — distorts perception in ways the reader cannot easily correct for. Dual y-axes are particularly dangerous: by choosing independent scales for two series, you can make any two datasets appear correlated or inversely correlated. The visual impression of a relationship is created by the scale choice, not by the data.</p>
+      <p data-i18n="dv.s6.p5">The practical cost of dishonest visualization is trust. Audiences that have been misled by charts — even once, even accidentally — apply skepticism to all subsequent charts from that source. The short-term gain of making numbers look better is paid for with long-term credibility loss. Honest visualization is not just an ethical commitment; it is a strategic one. Build the reputation that your charts mean what they show, and readers will give them weight. Destroy that reputation, and no chart you make will be taken at face value again.</p>
+
+      <div class="demo-row">
+        <div class="demo-cell demo-bad">
+          <div class="demo-badge bad" data-i18n="dv.demo.axis.bad.badge">Truncated y-axis — misleading</div>
+          <div class="demo-label" data-i18n="dv.demo.axis.bad.label">Starts at 94, exaggerates tiny differences</div>
+          <div class="axis-demo">
+            <div style="display:flex;flex-direction:column;justify-content:space-between;height:80px;padding-right:4px;">
+              <span class="y-val">98</span>
+              <span class="y-val">96</span>
+              <span class="y-val">94</span>
+            </div>
+            <div class="axis-chart">
+              <div class="axis-bars">
+                <div class="axis-bar" style="height:30%;background:#e87070;"></div>
+                <div class="axis-bar" style="height:60%;background:#e87070;"></div>
+                <div class="axis-bar" style="height:45%;background:#e87070;"></div>
+                <div class="axis-bar" style="height:100%;background:#e87070;"></div>
+              </div>
+              <div class="axis-label-row">
+                <span class="axis-val">Jan</span><span class="axis-val">Feb</span><span class="axis-val">Mar</span><span class="axis-val">Apr</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:#e87070;margin-top:.5rem;" data-i18n="dv.demo.axis.bad.note">Actual range: 94.1–97.8. Looks like massive swings.</div>
+        </div>
+        <div class="demo-cell demo-good">
+          <div class="demo-badge good" data-i18n="dv.demo.axis.good.badge">Zero baseline — honest</div>
+          <div class="demo-label" data-i18n="dv.demo.axis.good.label">Same data, accurate proportions</div>
+          <div class="axis-demo">
+            <div style="display:flex;flex-direction:column;justify-content:space-between;height:80px;padding-right:4px;">
+              <span class="y-val">100</span>
+              <span class="y-val">50</span>
+              <span class="y-val">0</span>
+            </div>
+            <div class="axis-chart">
+              <div class="axis-bars">
+                <div class="axis-bar" style="height:94.1%;background:var(--accent);"></div>
+                <div class="axis-bar" style="height:96.4%;background:var(--accent);"></div>
+                <div class="axis-bar" style="height:95.3%;background:var(--accent);"></div>
+                <div class="axis-bar" style="height:97.8%;background:var(--accent);"></div>
+              </div>
+              <div class="axis-label-row">
+                <span class="axis-val">Jan</span><span class="axis-val">Feb</span><span class="axis-val">Mar</span><span class="axis-val">Apr</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--fg-muted);margin-top:.5rem;" data-i18n="dv.demo.axis.good.note">Same data. Variation is real but modest — as it should appear.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'dv.cat': 'Design',
+    'dv.date': 'May 2026',
+    'dv.title': 'Data Visualization<br>as Communication',
+    'dv.lead': 'A chart that requires a legend to decode is a chart that failed. The best data visualizations make their argument without explanation — the data speaks, and the design gets out of the way.',
+    'dv.s1.h': 'Visualization Is Rhetoric',
+    'dv.s1.p1': 'Every chart makes an argument. This is not a metaphor — it is a literal description of what visualization does. You choose what data to show and what to omit. You choose what time range to display. You choose the scale, the baseline, the color. Every one of these choices either supports or undermines the argument the data is making. There is no neutral chart.',
+    'dv.s1.p2': 'The designer\'s job is to make the right argument clearly. "Right" here means accurate — the argument the data actually supports, not the one that would look best in a quarterly review deck. "Clearly" means that the audience understands the point without needing to work for it. When those two requirements are in tension — when the accurate argument is nuanced and the clear argument would be an oversimplification — that tension is the design problem to solve.',
+    'dv.s1.p3': 'Understanding visualization as rhetoric changes how you evaluate charts. The question is not "does this look professional?" It is "does the person reading this understand what the data is actually saying?" A chart that looks polished but leaves the reader confused has failed. A chart that looks rough but communicates its point instantly has succeeded. Aesthetics serve communication; they do not substitute for it.',
+    'dv.s1.p4': 'This framing also clarifies what good data visualization practice looks like in practice. It means asking, before you open your charting tool: what is the one thing I want the reader to take away from this? If you cannot state that in a single sentence before you start building, you will end up with a chart that tries to say everything and communicates nothing. Start with the sentence. Build toward it.',
+    'dv.pq1': 'The question is not "does this look professional?" It is "does the person reading this understand what the data is actually saying?"',
+    'dv.s2.h': 'Chart Type as Semantic Choice',
+    'dv.s2.p1': 'Chart types are not interchangeable. Each encodes a specific semantic claim about the relationship between data points, and using the wrong type is not just aesthetically wrong — it communicates false information about what the data shows.',
+    'dv.s2.p2': 'Bar charts encode magnitude for comparison across discrete categories. The visual principle is that bar height directly represents quantity — the eye compares heights across bars. This makes bars ideal for questions like "which category is largest?" or "how do these values rank?" They require a zero baseline because truncating the axis visually exaggerates differences between bars in a way that misrepresents the actual ratios.',
+    'dv.s2.p3': 'Line charts encode change over continuous time. The line itself — the connection between points — makes a claim: that there is a meaningful progression from one measurement to the next, not just separate measurements at discrete times. This is why connecting scatter points with a line when the x-axis represents categories (not time) is misleading. The line implies continuity that doesn\'t exist in the data.',
+    'dv.s2.p4': 'Scatter plots encode correlation — the relationship between two continuous variables. They are the correct chart for "do these two things move together?" They are not useful for comparison or ranking. Pie charts encode part-to-whole relationships, but only work when the number of categories is very small (three or fewer) and the differences between slices are large enough for the eye to perceive. For most real datasets, a sorted bar chart communicates the same information more accurately.',
+    'dv.demo.bars.good.badge': 'Correct — bars for comparison',
+    'dv.demo.bars.label': 'Monthly revenue by channel',
+    'dv.demo.bars.bad.badge': 'Wrong — pie for comparison',
+    'dv.demo.bars.bad.label': 'Same data, harder to read',
+    'dv.s3.h': 'The Data-Ink Ratio',
+    'dv.s3.p1': 'Edward Tufte introduced the data-ink ratio in The Visual Display of Quantitative Information: the proportion of a chart\'s ink that is directly encoding data versus ink that is decorative or structural overhead. The principle is to maximize the first and minimize the second. Every element that is present should earn its place by communicating information that would be lost without it.',
+    'dv.s3.p2': 'In practice, this means systematically asking what each visual element is doing. Gridlines? Useful if they help the reader read off precise values; remove them or fade them to near-invisibility if the chart is about relative magnitude rather than exact numbers. Borders around charts? Almost never necessary — white space alone provides sufficient visual separation. Background colors on chart areas? Usually decorative, never informative, often distracting.',
+    'dv.s3.p3': 'The legend is one of the highest-friction elements in most charts. It requires the reader to perform a cognitive round-trip: see a colored element, find the corresponding legend entry, read the label, return to the chart, re-interpret what they saw. Every round-trip costs attention. If you can label data series directly — annotating the line itself, labeling the bar directly — you have eliminated that cost. Direct labeling is almost always better than a legend.',
+    'dv.s3.p4': 'The strongest version of high data-ink ratio is not minimalism for its own sake. It is the recognition that visual clutter competes with the data for the reader\'s attention. Every non-data element you add raises the threshold the data needs to exceed to be noticed. The goal is not a bare chart — it is a chart where every ink mark is working. A thoughtful axis label earns its place. A decorative shadow does not.',
+    'dv.demo.ink.bad.badge': 'Low data-ink ratio',
+    'dv.demo.ink.bad.label': 'Gridlines, borders, legend overhead',
+    'dv.demo.ink.good.badge': 'High data-ink ratio',
+    'dv.demo.ink.good.label': 'Direct labels, no redundant structure',
+    'dv.s4.h': 'Color as Information',
+    'dv.s4.p1': 'Color in data visualization should encode information, not decorate. When every bar in a bar chart is a different color, color carries no information — the colors are arbitrary. When a heat map uses a gradient from blue to red, those colors encode a continuous variable. The test is: if someone removed all the color from the chart, what information would be lost? If the answer is "nothing meaningful," the color was decoration.',
+    'dv.s4.p2': 'Three types of color scales serve three types of data. Sequential scales — single hue from light to dark — encode ordered magnitude where all values are on one side of a meaningful reference point. Use these for density, count, or any variable where higher is meaningfully different from lower. Diverging scales — two hues meeting at a neutral midpoint — encode data that is bipolar: above and below zero, better and worse than average, gain and loss. The neutral center is semantically significant. Categorical scales — distinct hues — encode unordered categories that are meaningfully different from each other. Keep categorical scales to seven colors or fewer; the human perceptual system cannot reliably distinguish more than that.',
+    'dv.s4.p3': 'Color accessibility matters practically, not just ethically. Approximately 8% of men and 0.5% of women have some form of color vision deficiency, most commonly red-green. A visualization that relies on red vs green to encode a meaningful distinction is inaccessible to a significant fraction of your audience. The fix is simple: use color as one channel among several, not the only channel. Pair color with position, shape, or direct label. A red bar that is also shorter than a green bar communicates the comparison even when the colors are indistinguishable.',
+    'dv.s4.p4': 'Saturation and brightness carry meaning independent of hue. High saturation signals importance or emphasis. Low saturation signals secondary data or context. Using this systematically — saturated color for the series you want to highlight, desaturated color for comparison series — gives you a way to guide attention without adding text. The reader\'s eye goes to what is visually prominent. Make that the data that matters.',
+    'dv.demo.color.bad.badge': 'Color as decoration',
+    'dv.demo.color.bad.label': 'Every bar a different color — carries no information',
+    'dv.demo.color.good.badge': 'Color as signal',
+    'dv.demo.color.good.label': 'Accent on the data point that matters',
+    'dv.s5.h': 'Annotation Over Legend',
+    'dv.s5.p1': 'The legend is a holdover from a time when printing constraints made it difficult to label elements directly on a chart. It is rarely the best solution. A legend asks the reader to hold a mapping in working memory — "the blue line means Product A, the dashed line means Product B" — and then re-apply that mapping every time they look at a data element. This is cognitive work that the designer has offloaded onto the reader. Direct annotation eliminates that work entirely.',
+    'dv.s5.p2': 'Direct annotation means labeling data elements at the point of display. The line for Product A gets a label "Product A" next to its rightmost point. The peak in the trend gets a note: "Launch — March 14." The outlier gets a callout: "Hurricane impact — supply chain disrupted." Annotations turn a chart from a data display into a story. They direct attention. They provide context that would otherwise require the reader to go look up elsewhere.',
+    'dv.s5.p3': 'The most powerful annotations are specific. "Revenue declined" is not an annotation — it is a label for what the reader can already see. "Revenue declined 31% following competitor price cut" is an annotation — it provides causal context that the data alone cannot convey. Good annotations are the equivalent of the spoken explanation you would give if you were presenting the chart in person. They answer the question the reader was about to ask.',
+    'dv.s5.p4': 'When a legend is genuinely necessary — when there are too many series to annotate cleanly, or when the chart is too small — integrate it tightly. Place it adjacent to the data, not in a separate box. Order legend entries to match the visual order of the data (top-to-bottom for the rightmost values on a line chart, for example). Use the same visual encoding in the legend as in the chart — a color square, not a colored line, to represent a bar; a colored line segment to represent a line series.',
+    'dv.demo.anno.bad.badge': 'Legend — cognitive round-trip',
+    'dv.demo.anno.bad.label': 'Reader must look up meaning of each color',
+    'dv.demo.anno.good.badge': 'Annotation — meaning at the point of data',
+    'dv.demo.anno.good.label': 'No lookup needed',
+    'dv.s6.h': 'Honest Visualization',
+    'dv.s6.p1': 'Data visualization can mislead without lying. The most common forms of dishonest visualization are not fabricated data — they are design choices that systematically distort how the data is perceived. Understanding them is necessary both for avoiding them in your own work and for identifying them in others\'.',
+    'dv.s6.p2': 'Truncated y-axes are the most prevalent form. A bar chart that starts at 94 instead of 0 can make a 2% difference between bars look like a 200% difference, because the visual comparison is between the visible portion of the bars, not their actual values. The rule is simple: bar charts must start at zero because the visual metaphor is bar height representing magnitude. Line charts and scatter plots have more flexibility — starting at a non-zero baseline can be appropriate when the variation within the range is the signal and the absolute magnitude is not.',
+    'dv.s6.p3': 'Cherry-picked time ranges are subtler. A chart that shows stock performance starting from a trough will look more impressive than one starting from a peak. A chart that ends before a recent decline hides the decline. The question to ask is: is this time range defined by the data (a fiscal year, a product launch to now, a complete historical record) or by what the analyst wanted the chart to show? The second kind is misleading even if every data point is accurate.',
+    'dv.s6.p4': 'Scale manipulation — using logarithmic scales without labeling them, using area to represent values that should be encoded as length — distorts perception in ways the reader cannot easily correct for. Dual y-axes are particularly dangerous: by choosing independent scales for two series, you can make any two datasets appear correlated or inversely correlated. The visual impression of a relationship is created by the scale choice, not by the data.',
+    'dv.s6.p5': 'The practical cost of dishonest visualization is trust. Audiences that have been misled by charts — even once, even accidentally — apply skepticism to all subsequent charts from that source. The short-term gain of making numbers look better is paid for with long-term credibility loss. Honest visualization is not just an ethical commitment; it is a strategic one. Build the reputation that your charts mean what they show, and readers will give them weight. Destroy that reputation, and no chart you make will be taken at face value again.',
+    'dv.demo.axis.bad.badge': 'Truncated y-axis — misleading',
+    'dv.demo.axis.bad.label': 'Starts at 94, exaggerates tiny differences',
+    'dv.demo.axis.bad.note': 'Actual range: 94.1–97.8. Looks like massive swings.',
+    'dv.demo.axis.good.badge': 'Zero baseline — honest',
+    'dv.demo.axis.good.label': 'Same data, accurate proportions',
+    'dv.demo.axis.good.note': 'Same data. Variation is real but modest — as it should appear.',
+  },
+  zh: {
+    'dv.cat': '设计',
+    'dv.date': '2026年5月',
+    'dv.title': '数据可视化<br>即是沟通',
+    'dv.lead': '需要图例才能解读的图表就是失败的图表。最好的数据可视化无需解释就能表达其论点——数据自己说话，设计退居幕后。',
+    'dv.s1.h': '可视化即修辞',
+    'dv.s1.p1': '每张图表都在表达一个论点。这不是比喻——这是对可视化所做事情的字面描述。你选择展示哪些数据，省略哪些。你选择显示哪个时间范围。你选择比例尺、基准线、颜色。每一个选择都在支持或削弱数据所表达的论点。不存在中性的图表。',
+    'dv.s1.p2': '设计师的工作是清晰地表达正确的论点。"正确"在这里意味着准确——数据实际支持的论点，而不是在季度审查报告中看起来最好的那个。"清晰"意味着受众无需费力就能理解要点。当这两个要求存在张力时——当准确的论点是细致入微的，而清晰的论点会是过度简化的——这种张力就是需要解决的设计问题。',
+    'dv.s1.p3': '将可视化理解为修辞会改变你评估图表的方式。问题不是"这看起来专业吗？"而是"读这个图表的人理解数据实际在说什么吗？"看起来精美但让读者困惑的图表失败了。看起来粗糙但能即刻传达要点的图表成功了。美学服务于沟通；它不能替代沟通。',
+    'dv.s1.p4': '这个框架也阐明了良好的数据可视化实践在实践中是什么样的。这意味着在打开图表工具之前先问：我希望读者从中获得的一件事是什么？如果你在开始构建之前无法用一句话表达，你最终会得到一张试图说一切但什么都没说清楚的图表。从那句话开始，朝着它构建。',
+    'dv.pq1': '问题不是"这看起来专业吗？"而是"读这个图表的人理解数据实际在说什么吗？"',
+    'dv.s2.h': '图表类型作为语义选择',
+    'dv.s2.p1': '图表类型不可互换。每种类型都对数据点之间的关系进行特定的语义声明，使用错误的类型不仅在美学上是错误的——它传达了关于数据所显示内容的错误信息。',
+    'dv.s2.p2': '柱状图编码离散类别之间比较的量级。视觉原则是柱的高度直接代表数量——眼睛比较各柱之间的高度。这使柱状图非常适合"哪个类别最大？"或"这些值如何排名？"等问题。它们需要零基准线，因为截断坐标轴会以歪曲实际比率的方式视觉上夸大柱之间的差异。',
+    'dv.s2.p3': '折线图编码连续时间上的变化。线本身——点之间的连接——做出了一个声明：从一次测量到下一次测量有有意义的进展，而不仅仅是在离散时间点的单独测量。这就是为什么当x轴代表类别（而非时间）时用线连接散点是误导性的。线暗示了数据中不存在的连续性。',
+    'dv.s2.p4': '散点图编码相关性——两个连续变量之间的关系。它们是"这两件事是否一起变动？"的正确图表。它们对于比较或排名无用。饼图编码部分与整体的关系，但只有在类别数量非常少（三个或更少）且扇形之间的差异足够大到肉眼可以感知时才有效。对于大多数真实数据集，排序的柱状图能更准确地传达相同的信息。',
+    'dv.demo.bars.good.badge': '正确——柱状图用于比较',
+    'dv.demo.bars.label': '各渠道月收入',
+    'dv.demo.bars.bad.badge': '错误——饼图用于比较',
+    'dv.demo.bars.bad.label': '相同数据，更难阅读',
+    'dv.s3.h': '数据墨水比',
+    'dv.s3.p1': 'Edward Tufte 在《量化信息的视觉展示》中引入了数据墨水比：图表中直接编码数据的墨水比例与装饰性或结构性开销墨水之比。原则是最大化前者，最小化后者。每个存在的元素都应该通过传达没有它就会丢失的信息来赢得其位置。',
+    'dv.s3.p2': '在实践中，这意味着系统地询问每个视觉元素在做什么。网格线？如果它们帮助读者读取精确值，则有用；如果图表是关于相对量级而非精确数字，则将其删除或淡化到几乎不可见。图表周围的边框？几乎从不必要——仅白色空间就提供了足够的视觉分隔。图表区域的背景颜色？通常是装饰性的，从不提供信息，经常分散注意力。',
+    'dv.s3.p3': '图例是大多数图表中摩擦最高的元素之一。它要求读者执行认知往返：看到一个有颜色的元素，找到对应的图例条目，阅读标签，返回图表，重新解释所看到的内容。每次往返都消耗注意力。如果你能直接标记数据系列——在线本身上注释，直接标记柱——你已经消除了那个成本。直接标记几乎总是比图例更好。',
+    'dv.s3.p4': '高数据墨水比的最强版本不是为了自身目的的极简主义。它是对视觉杂乱与数据争夺读者注意力的认识。你添加的每个非数据元素都提高了数据被注意到所需超越的阈值。目标不是一张空洞的图表——而是每个墨水标记都在工作的图表。深思熟虑的坐标轴标签赢得了其位置。装饰性阴影则没有。',
+    'dv.demo.ink.bad.badge': '低数据墨水比',
+    'dv.demo.ink.bad.label': '网格线、边框、图例开销',
+    'dv.demo.ink.good.badge': '高数据墨水比',
+    'dv.demo.ink.good.label': '直接标签，无冗余结构',
+    'dv.s4.h': '颜色作为信息',
+    'dv.s4.p1': '数据可视化中的颜色应该编码信息，而不是装饰。当柱状图中的每根柱都是不同颜色时，颜色不携带任何信息——颜色是任意的。当热力图使用从蓝色到红色的渐变时，这些颜色编码了一个连续变量。测试是：如果有人从图表中去除所有颜色，会丢失什么信息？如果答案是"没有有意义的信息"，那么颜色就是装饰。',
+    'dv.s4.p2': '三种类型的颜色比例尺服务于三种类型的数据。顺序比例尺——单一色调从浅到深——编码所有值都在有意义参考点一侧的有序量级。用于密度、计数或任何"更高"与"更低"有意义差异的变量。发散比例尺——两种色调在中性中点相遇——编码双极数据：零上下、平均好坏、收益和损失。中性中心具有语义重要性。分类比例尺——不同色调——编码相互之间有意义差异的无序类别。将分类比例尺保持在七种颜色或更少；人类感知系统无法可靠地区分更多颜色。',
+    'dv.s4.p3': '颜色无障碍不仅在伦理上重要，在实践中也重要。大约 8% 的男性和 0.5% 的女性有某种形式的色觉缺陷，最常见的是红绿色盲。依赖红色与绿色来编码有意义区别的可视化对你的相当一部分受众是无障碍的。修复很简单：将颜色作为多个通道中的一个使用，而不是唯一通道。将颜色与位置、形状或直接标签配对。比绿色柱更短的红色柱，即使颜色难以区分，也能传达比较。',
+    'dv.s4.p4': '饱和度和亮度携带独立于色调的含义。高饱和度信号重要性或强调。低饱和度信号次要数据或上下文。系统地使用这一点——为你想要突出显示的系列使用饱和颜色，为比较系列使用去饱和颜色——给你一种无需添加文字就能引导注意力的方法。读者的眼睛会去向视觉上突出的地方。让那成为重要的数据。',
+    'dv.demo.color.bad.badge': '颜色作为装饰',
+    'dv.demo.color.bad.label': '每根柱不同颜色——不携带信息',
+    'dv.demo.color.good.badge': '颜色作为信号',
+    'dv.demo.color.good.label': '强调重要的数据点',
+    'dv.s5.h': '注释优于图例',
+    'dv.s5.p1': '图例是印刷限制使得直接在图表上标记元素困难时代的遗留物。它很少是最佳解决方案。图例要求读者在工作记忆中保持一个映射——"蓝线代表产品A，虚线代表产品B"——然后每次查看数据元素时重新应用该映射。这是设计师转嫁给读者的认知工作。直接注释完全消除了这项工作。',
+    'dv.s5.p2': '直接注释意味着在显示点标记数据元素。产品A的线在其最右边的点旁边获得标签"产品A"。趋势中的峰值获得注释："发布——3月14日"。异常值获得标注："飓风影响——供应链中断"。注释将图表从数据展示转变为故事。它们引导注意力。它们提供上下文，否则读者需要去其他地方查找。',
+    'dv.s5.p3': '最强大的注释是具体的。"收入下降"不是注释——它是读者已经能看到的东西的标签。"竞争对手降价后收入下降31%"是注释——它提供了数据单独无法传达的因果上下文。好的注释相当于你当面展示图表时会给出的口头解释。它们回答了读者即将提出的问题。',
+    'dv.s5.p4': '当图例确实必要时——当系列太多无法整洁地注释，或当图表太小时——要紧密整合它。将其放置在数据旁边，而不是单独的框中。按数据的视觉顺序排列图例条目（例如，折线图上最右边的值从上到下）。在图例中使用与图表中相同的视觉编码——用颜色方块而非彩色线条表示柱；用彩色线段表示折线系列。',
+    'dv.demo.anno.bad.badge': '图例——认知往返',
+    'dv.demo.anno.bad.label': '读者必须查找每种颜色的含义',
+    'dv.demo.anno.good.badge': '注释——在数据点处传达含义',
+    'dv.demo.anno.good.label': '无需查找',
+    'dv.s6.h': '诚实的可视化',
+    'dv.s6.p1': '数据可视化可以在不撒谎的情况下误导。最常见的不诚实可视化形式不是捏造的数据——而是系统性地扭曲数据被感知方式的设计选择。理解它们对于在自己的工作中避免它们以及在他人工作中识别它们都是必要的。',
+    'dv.s6.p2': '截断的Y轴是最普遍的形式。从94而不是0开始的柱状图可以使柱之间2%的差异看起来像200%的差异，因为视觉比较是柱的可见部分之间的比较，而不是它们的实际值。规则很简单：柱状图必须从零开始，因为视觉隐喻是柱高代表量级。折线图和散点图有更多灵活性——当范围内的变化是信号而绝对量级不是时，从非零基准线开始可能是合适的。',
+    'dv.s6.p3': '精心挑选的时间范围更加微妙。显示从低谷开始的股票表现的图表看起来比从峰值开始的图表更令人印象深刻。在近期下降之前结束的图表隐藏了下降。要问的问题是：这个时间范围是由数据定义的（财政年度、产品发布到现在、完整的历史记录）还是由分析师希望图表显示的内容定义的？即使每个数据点都是准确的，第二种也是误导性的。',
+    'dv.s6.p4': '比例尺操纵——不标记地使用对数比例尺、用面积表示应该编码为长度的值——以读者无法轻易纠正的方式扭曲感知。双Y轴特别危险：通过为两个系列选择独立的比例尺，你可以使任何两个数据集看起来相关或反相关。关系的视觉印象是由比例尺选择创建的，而不是由数据创建的。',
+    'dv.s6.p5': '不诚实可视化的实际代价是信任。被图表误导过的受众——即使只有一次，即使是意外——会对来自该来源的所有后续图表持怀疑态度。让数字看起来更好的短期收益是以长期信誉损失为代价的。诚实的可视化不仅仅是道德承诺；它是战略承诺。建立你的图表意味着它们所显示内容的声誉，读者将给予它们分量。破坏这一声誉，你制作的任何图表都不会再被表面接受。',
+    'dv.demo.axis.bad.badge': '截断的Y轴——具有误导性',
+    'dv.demo.axis.bad.label': '从94开始，夸大细微差异',
+    'dv.demo.axis.bad.note': '实际范围：94.1–97.8。看起来像巨大波动。',
+    'dv.demo.axis.good.badge': '零基准线——诚实',
+    'dv.demo.axis.good.label': '相同数据，准确的比例',
+    'dv.demo.axis.good.note': '相同数据。变化是真实的但适度——应该如此显示。',
+  },
+  ja: {
+    'dv.cat': 'デザイン',
+    'dv.date': '2026年5月',
+    'dv.title': 'コミュニケーションとしての<br>データ可視化',
+    'dv.lead': '凡例がないと解読できないチャートは失敗したチャートだ。最高のデータ可視化は説明なしに主張を伝える——データが語り、デザインは邪魔をしない。',
+    'dv.s1.h': '可視化は修辞である',
+    'dv.s1.p1': 'すべてのチャートは議論を行っている。これは比喩ではない——可視化が何をするかの文字通りの説明だ。何のデータを表示し、何を省略するかを選ぶ。表示する時間範囲を選ぶ。スケール、ベースライン、色を選ぶ。これらの選択の一つひとつが、データが行っている議論を支持するか弱めるかのどちらかだ。中立なチャートは存在しない。',
+    'dv.s1.p2': 'デザイナーの仕事は正しい議論を明確に行うことだ。ここで「正しい」とは正確であることを意味する——データが実際に支持する議論であり、四半期レビューデッキで最も良く見えるものではない。「明確に」とは聴衆が努力なしにポイントを理解することを意味する。その二つの要件が緊張関係にある時——正確な議論が微妙で、明確な議論は単純化になりすぎる時——その緊張こそが解決すべきデザイン問題だ。',
+    'dv.s1.p3': '可視化を修辞として理解することは、チャートをどのように評価するかを変える。問いは「これはプロフェッショナルに見えるか？」ではない。「これを読んでいる人はデータが実際に何を言っているか理解しているか？」だ。洗練されて見えるが読者を混乱させるチャートは失敗した。粗く見えるがそのポイントを即座に伝えるチャートは成功した。美学はコミュニケーションに奉仕する；それに取って代わるわけではない。',
+    'dv.s1.p4': 'このフレーミングは、優れたデータ可視化の実践が実際にどのように見えるかも明確にする。チャート作成ツールを開く前に問うことを意味する：読者にこれから何を持ち帰ってほしいか？構築を始める前にそれを一文で言えなければ、すべてを言おうとして何も伝えないチャートになる。その文から始めよ。それに向けて構築せよ。',
+    'dv.pq1': '問いは「これはプロフェッショナルに見えるか？」ではない。「これを読んでいる人はデータが実際に何を言っているか理解しているか？」だ。',
+    'dv.s2.h': '意味論的選択としてのチャートタイプ',
+    'dv.s2.p1': 'チャートタイプは互換的ではない。それぞれがデータポイント間の関係について特定の意味論的主張をエンコードし、間違ったタイプを使用することは美学的に間違っているだけでなく——データが示すものについて誤った情報を伝える。',
+    'dv.s2.p2': '棒グラフは離散カテゴリー間の比較のための大きさをエンコードする。視覚的原則は棒の高さが数量を直接表す——目は棒間の高さを比較する。これにより棒グラフは「どのカテゴリーが最大か？」や「これらの値はどのようにランク付けされるか？」などの質問に理想的だ。軸を切り詰めることは実際の比率を誤って表す方法で棒間の差を視覚的に誇張するため、ゼロベースラインが必要だ。',
+    'dv.s2.p3': '折れ線グラフは連続した時間にわたる変化をエンコードする。線そのもの——点間の接続——は主張をする：離散時間での個別の測定ではなく、一つの測定から次の測定への意味ある進行があることを。これが、x軸が（時間ではなく）カテゴリーを表す時に散布点を線で接続するのが誤解を招く理由だ。線はデータに存在しない連続性を意味する。',
+    'dv.s2.p4': '散布図は相関——二つの連続変数間の関係——をエンコードする。「これら二つのものは一緒に動くか？」の正しいチャートだ。比較やランク付けには有用でない。円グラフは部分と全体の関係をエンコードするが、カテゴリーの数が非常に少ない（三つ以下）場合と、スライス間の差が目で知覚できるほど大きい場合にのみ機能する。ほとんどの実際のデータセットでは、ソートされた棒グラフが同じ情報をより正確に伝える。',
+    'dv.demo.bars.good.badge': '正しい——比較のための棒グラフ',
+    'dv.demo.bars.label': 'チャネル別月次収益',
+    'dv.demo.bars.bad.badge': '間違い——比較のための円グラフ',
+    'dv.demo.bars.bad.label': '同じデータ、読みにくい',
+    'dv.s3.h': 'データインク比',
+    'dv.s3.p1': 'Edward Tufteは『量的情報の視覚的表示』でデータインク比を紹介した：チャートのインクのうち直接データをエンコードする割合と、装飾的または構造的なオーバーヘッドのインクの割合。原則は前者を最大化し、後者を最小化することだ。存在するすべての要素は、それなしでは失われる情報を伝えることでその場所を勝ち取るべきだ。',
+    'dv.s3.p2': '実践的には、各視覚要素が何をしているかを系統的に問うことを意味する。グリッドライン？読者が正確な値を読み取るのを助けるなら有用；チャートが正確な数値ではなく相対的な大きさについてなら削除するかほぼ見えないほど薄くする。チャートの周囲の枠線？ほとんど必要ない——空白スペースだけで十分な視覚的分離を提供する。チャート領域の背景色？通常は装飰的で、情報を与えることは決してなく、しばしば気を散らす。',
+    'dv.s3.p3': '凡例はほとんどのチャートで最も摩擦の高い要素の一つだ。読者は認知的往復を実行することを要求される：色のついた要素を見て、対応する凡例エントリを見つけ、ラベルを読み、チャートに戻り、見たものを再解釈する。すべての往復が注意力を消費する。データシリーズに直接ラベルを付けられるなら——線自体に注釈を付け、棒に直接ラベルを付ける——そのコストを排除した。直接ラベリングはほとんど常に凡例より優れている。',
+    'dv.s3.p4': '高いデータインク比の最強バージョンは自己目的のためのミニマリズムではない。視覚的な雑然さがデータと読者の注意力を競争するという認識だ。追加するすべての非データ要素は、データが気づかれるために超えなければならない閾値を上げる。目標は剥き出しのチャートではない——すべてのインクの印が機能しているチャートだ。思慮深い軸ラベルはその場所を勝ち取る。装飾的な影はそうでない。',
+    'dv.demo.ink.bad.badge': '低いデータインク比',
+    'dv.demo.ink.bad.label': 'グリッドライン、枠線、凡例オーバーヘッド',
+    'dv.demo.ink.good.badge': '高いデータインク比',
+    'dv.demo.ink.good.label': '直接ラベル、冗長な構造なし',
+    'dv.s4.h': '情報としての色',
+    'dv.s4.p1': 'データ可視化の色は情報をエンコードすべきであり、装飾すべきではない。棒グラフのすべての棒が異なる色の時、色は情報を持たない——色は任意だ。ヒートマップが青から赤へのグラデーションを使う時、それらの色は連続変数をエンコードする。テストは：誰かがチャートからすべての色を取り除いたとしたら、どんな情報が失われるか？答えが「意味のあるものは何もない」なら、色は装飾だった。',
+    'dv.s4.p2': '三つのタイプの色スケールが三つのタイプのデータに対応する。順次スケール——単一の色相で明から暗——すべての値が意味のある参照点の一方の側にある順序付けられた大きさをエンコードする。密度、カウント、または「より高い」が「より低い」と意味的に異なるあらゆる変数に使用する。発散スケール——中立の中点で出会う二つの色相——双極データをエンコードする：ゼロの上下、平均より良いか悪いか、利益と損失。中立の中心は意味論的に重要だ。カテゴリカルスケール——明確な色相——相互に意味的に異なる無順序カテゴリーをエンコードする。カテゴリカルスケールを七色以下に抑える；人間の知覚システムはそれ以上を確実に区別できない。',
+    'dv.s4.p3': '色のアクセシビリティは倫理的だけでなく実際的にも重要だ。約8%の男性と0.5%の女性が何らかの色覚異常を持ち、最も一般的なのは赤緑色盲だ。意味のある区別をエンコードするために赤と緑に依存する可視化は、聴衆のかなりの部分にとってアクセスできない。修正は単純だ：色を唯一のチャネルとしてではなく、複数のチャネルの一つとして使用する。色を位置、形、または直接ラベルと組み合わせる。緑の棒より短い赤い棒は、色が区別できない時でも比較を伝える。',
+    'dv.s4.p4': '彩度と明度は色相から独立した意味を持つ。高い彩度は重要性または強調を示す。低い彩度は二次データまたはコンテキストを示す。これを体系的に使用すること——強調したいシリーズに飽和した色、比較シリーズに非飽和の色——テキストを追加せずに注意を導く方法を与えてくれる。読者の目は視覚的に目立つものに向かう。それを重要なデータにせよ。',
+    'dv.demo.color.bad.badge': '装飾としての色',
+    'dv.demo.color.bad.label': '各棒が異なる色——情報を持たない',
+    'dv.demo.color.good.badge': 'シグナルとしての色',
+    'dv.demo.color.good.label': '重要なデータポイントにアクセント',
+    'dv.s5.h': '凡例より注釈',
+    'dv.s5.p1': '凡例は印刷上の制約によってチャートの要素に直接ラベルを付けることが困難だった時代の名残だ。それが最善の解決策であることはめったにない。凡例は読者に作業記憶でマッピングを保持することを求める——「青い線は製品A、破線は製品Bを意味する」——そして、データ要素を見るたびにそのマッピングを再適用する。これはデザイナーが読者に下請けに出した認知作業だ。直接注釈はその作業を完全に排除する。',
+    'dv.s5.p2': '直接注釈とは、表示の点でデータ要素にラベルを付けることを意味する。製品Aの線は最も右の点の隣に「製品A」というラベルを得る。トレンドのピークはメモを得る：「ローンチ——3月14日」。外れ値はコールアウトを得る：「ハリケーンの影響——サプライチェーン混乱」。注釈はチャートをデータ表示からストーリーに変える。注意を向ける。そうでなければ読者が他の場所で調べる必要があるコンテキストを提供する。',
+    'dv.s5.p3': '最も強力な注釈は具体的だ。「収益が減少した」は注釈ではない——読者がすでに見えているものへのラベルだ。「競合他社の値下げ後に収益が31%減少した」は注釈だ——データだけでは伝えられない因果関係のコンテキストを提供する。良い注釈は、チャートを直接発表する場合に提供するであろう口頭の説明に相当する。読者がまさに尋ねようとしていた質問に答える。',
+    'dv.s5.p4': '凡例が真に必要な時——シリーズが多すぎてきれいに注釈できない場合、またはチャートが小さすぎる場合——緊密に統合する。別のボックスではなく、データに隣接して配置する。データの視覚的順序に合わせて凡例エントリを並べる（例えば、折れ線グラフの最も右の値に対して上から下へ）。凡例でチャートと同じ視覚的エンコーディングを使用する——棒を表すには色の四角、線を表すには色の線分。',
+    'dv.demo.anno.bad.badge': '凡例——認知的往復',
+    'dv.demo.anno.bad.label': '読者が各色の意味を調べる必要がある',
+    'dv.demo.anno.good.badge': '注釈——データの点での意味',
+    'dv.demo.anno.good.label': '調べる必要なし',
+    'dv.s6.h': '誠実な可視化',
+    'dv.s6.p1': 'データ可視化は嘘をつかずに誤解を招くことができる。不誠実な可視化の最も一般的な形式はでっち上げたデータではない——データがどのように知覚されるかを系統的に歪める設計上の選択だ。それらを理解することは、自分の作業でそれらを避けるためにも、他者の作業でそれらを特定するためにも必要だ。',
+    'dv.s6.p2': '切り詰められたY軸が最も普及した形式だ。0ではなく94から始まる棒グラフは、棒間の2%の差が200%の差のように見えることがある。なぜなら視覚的な比較は棒の実際の値ではなく、見える部分の間にあるからだ。規則は単純だ：棒グラフは視覚的な比喩が棒の高さが大きさを表すものであるため、ゼロから始まらなければならない。折れ線グラフと散布図にはより多くの柔軟性がある——範囲内の変動がシグナルであり絶対的な大きさがそうでない場合、非ゼロのベースラインから始めることが適切かもしれない。',
+    'dv.s6.p3': '意図的に選ばれた時間範囲はより微妙だ。谷から始まる株式パフォーマンスを示すチャートは、頂点から始まるものより印象的に見える。最近の下落前に終わるチャートはその下落を隠す。尋ねる質問は：この時間範囲はデータによって定義されているか（会計年度、製品ローンチから今まで、完全な歴史的記録）、それともアナリストがチャートに示したかったことによって定義されているか？すべてのデータポイントが正確であっても、後者の種類は誤解を招く。',
+    'dv.s6.p4': 'スケール操作——ラベルなしで対数スケールを使用すること、長さとしてエンコードされるべき値を面積で表すこと——読者が簡単に修正できない方法で知覚を歪める。デュアルY軸は特に危険だ：二つのシリーズに独立したスケールを選ぶことで、どんな二つのデータセットでも相関または逆相関しているように見せることができる。関係の視覚的印象はスケールの選択によって作られており、データによってではない。',
+    'dv.s6.p5': '不誠実な可視化の実際のコストは信頼だ。チャートによって誤解された聴衆——たとえ一度でも、たとえ偶然であっても——そのソースからのすべての後続チャートに懐疑論を適用する。数字をより良く見せる短期的な利益は、長期的な信頼性の損失によって支払われる。誠実な可視化は倫理的なコミットメントだけではない；それは戦略的なものでもある。あなたのチャートが示すものを意味するという評判を築けば、読者はそれに重みを与えるだろう。その評判を壊せば、あなたが作るどのチャートも額面通りに受け取られることはない。',
+    'dv.demo.axis.bad.badge': '切り詰められたY軸——誤解を招く',
+    'dv.demo.axis.bad.label': '94から始まり、小さな差を誇張',
+    'dv.demo.axis.bad.note': '実際の範囲：94.1–97.8。大きな変動のように見える。',
+    'dv.demo.axis.good.badge': 'ゼロベースライン——誠実',
+    'dv.demo.axis.good.label': '同じデータ、正確な比率',
+    'dv.demo.axis.good.note': '同じデータ。変動は実在するが控えめ——そのように見えるべきだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
