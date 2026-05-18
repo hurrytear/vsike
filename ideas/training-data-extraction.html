@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Data Extraction: Stealing Private Data from Public Models — vsike</title>
+  <meta name="description" content="Large language models memorize training data — and that memorized content can be extracted through carefully crafted queries. Personally identifiable information, copyrighted text, proprietary code, and API keys have all been extracted from production LLMs.">
+  <meta name="keywords" content="训练数据提取攻击, LLM记忆泄露, AI隐私攻击, 模型数据泄露, 大模型隐私安全, training data extraction, LLM memorization, model privacy attack, data leakage from AI, differential privacy LLM">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/training-data-extraction.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .factor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .factor-grid { grid-template-columns: 1fr; } }
+    .factor-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .factor-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .code-block { background: var(--bg-alt, #0a0a0a); border: 1px solid var(--fg-dim); padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-family: monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="tde.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="tde.title">Training Data Extraction:<br>Stealing Private Data from Public Models</h1>
+        <p class="pub-time">Published: 2026-05-17 22:59 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="tde.lead">Large language models memorize training data — and that memorized content can be extracted through carefully crafted queries. PII, copyrighted text, proprietary code, and live API keys have all been extracted from production LLMs. The model that knows your data is accessible to everyone with an API key.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="tde.s1.title">Memorization Is Not a Bug</h2>
+        <p data-i18n="tde.s1.p1">LLMs memorize training data because memorization is part of what makes them capable. A model that perfectly generalizes and remembers nothing verbatim would be less useful — the ability to complete code, quote documentation, and reproduce common patterns all rely on some degree of memorization. The security problem is not that models memorize, but that the memorized content includes data that was never intended to be reproduced: private emails, internal documents, medical records, and credentials that were part of web crawls.</p>
+        <p data-i18n="tde.s1.p2">The 2023 "extracting training data from ChatGPT" paper (Nasr et al.) demonstrated that production ChatGPT could be induced to reproduce training data verbatim by repeating a single word thousands of times. The model, pushed out of its normal generation mode by the unusual input, began outputting memorized content — including email addresses, phone numbers, and extended passages of copyrighted text.</p>
+        <div class="pull-quote" data-i18n="tde.pull">The training dataset is not air-gapped. It's encoded in the model weights, accessible to anyone who can query the API.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="tde.s2.title">What Gets Memorized</h2>
+        <div class="factor-grid">
+          <div class="factor-card">
+            <h4 data-i18n="tde.f1.label">High-repetition content</h4>
+            <p data-i18n="tde.f1.p">Content that appeared many times in the training corpus is memorized more strongly. Terms of service boilerplate, common code patterns, frequently referenced articles — highly duplicated text is significantly more extractable than rare content.</p>
+          </div>
+          <div class="factor-card">
+            <h4 data-i18n="tde.f2.label">Structured data with predictable patterns</h4>
+            <p data-i18n="tde.f2.p">Email addresses, phone numbers, API keys, and social security numbers have distinctive formats. A model that has seen "sk-proj-XXXX..." patterns in training will reproduce them when prompted appropriately — and API keys in GitHub repositories are common training data sources.</p>
+          </div>
+          <div class="factor-card">
+            <h4 data-i18n="tde.f3.label">Content near the end of training</h4>
+            <p data-i18n="tde.f3.p">Data seen later in training is more strongly memorized than early data — a recency effect analogous to human memory. For models continually updated with new data, recent additions are at higher extraction risk than older training content.</p>
+          </div>
+          <div class="factor-card">
+            <h4 data-i18n="tde.f4.label">Fine-tuning data</h4>
+            <p data-i18n="tde.f4.p">Fine-tuning concentrates learning on a smaller dataset, which increases memorization rates significantly. If you fine-tune on proprietary data, that data is more memorized — and therefore more extractable — than base training data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="tde.s3.title">Extraction Techniques</h2>
+        <div class="attack-block">
+          <strong data-i18n="tde.s3.t1">Divergence attack:</strong>
+          <p data-i18n="tde.s3.t1.p">Repeat a word or token thousands of times to push the model into an anomalous generation state. The repetition disrupts the model's normal probability distribution, causing it to fall back on memorized verbatim content rather than generated text. Effective against ChatGPT and demonstrated in peer-reviewed research.</p>
+        </div>
+        <div class="attack-block">
+          <strong data-i18n="tde.s3.t2">Completion-based extraction:</strong>
+          <p data-i18n="tde.s3.t2.p">Provide the beginning of a memorized passage and ask the model to complete it. If the model has seen a specific document, code file, or article in training, the right prefix causes the model to reproduce subsequent content verbatim. Requires knowing some fragment of the target content.</p>
+        </div>
+        <div class="attack-block">
+          <strong data-i18n="tde.s3.t3">Membership inference:</strong>
+          <p data-i18n="tde.s3.t3.p">Rather than extracting content, determine whether specific text was in the training set. The model's perplexity (confidence) on text it has seen is measurably lower than on novel text. Attackers can use this to verify whether a target document — a private email, a proprietary specification — was part of the training corpus.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="tde.s4.title">Implications for Organizations Using LLMs</h2>
+        <p data-i18n="tde.s4.p1">For organizations using commercial LLMs: the risk is primarily from training data that included data scraped from the public web, GitHub repositories, or other sources where your organization's data may have appeared. API keys committed to public repos, contact information on public websites, and published documents are all at risk.</p>
+        <p data-i18n="tde.s4.p2">For organizations fine-tuning models on proprietary data: the risk is significantly higher. Fine-tuned models memorize fine-tuning data at elevated rates. Any PII, trade secrets, or credentials in the fine-tuning dataset are at elevated extraction risk, and membership inference attacks can confirm the presence of specific documents with high accuracy.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="tde.s5.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="tde.s5.l1"><strong>Scrub PII and credentials before fine-tuning.</strong> Run PII detection (email, phone, SSN, API key patterns) against the fine-tuning corpus before training. Redact or remove identified content. This is the highest-leverage intervention for organizations building on top of LLMs.</li>
+            <li data-i18n="tde.s5.l2"><strong>Apply differential privacy during fine-tuning.</strong> Differentially private SGD (DP-SGD) provides formal mathematical guarantees that the model cannot reproduce specific training examples above a specified privacy budget. There is a accuracy-privacy tradeoff, but DP fine-tuning is production-ready for many use cases.</li>
+            <li data-i18n="tde.s5.l3"><strong>Rotate any credentials that may have appeared in training data.</strong> API keys, passwords, and tokens that appeared in any public repository or web content should be treated as compromised. Assume they are in training data for any model trained on web-scale data.</li>
+            <li data-i18n="tde.s5.l4"><strong>Use output filtering to catch extraction attempts.</strong> A post-generation filter that detects email addresses, phone numbers, and key patterns in model output can catch the most common extraction targets before they reach the user.</li>
+            <li data-i18n="tde.s5.l5"><strong>Audit fine-tuned models for memorization before deployment.</strong> Run an extraction test suite against your fine-tuned model: provide prefixes from your training data and measure how often the model reproduces exact matches. High verbatim reproduction rates indicate high extraction risk.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'tde.category': 'AI Security',
+    'tde.title': 'Training Data Extraction:<br>Stealing Private Data from Public Models',
+    'tde.lead': 'LLMs memorize training data — and that memorized content can be extracted through crafted queries. PII, copyrighted text, proprietary code, and live API keys have all been extracted from production LLMs. The model that knows your data is accessible to everyone with an API key.',
+    'tde.s1.title': 'Memorization Is Not a Bug',
+    'tde.s1.p1': 'LLMs memorize training data because memorization is part of what makes them capable. The security problem is not that models memorize, but that memorized content includes data never intended to be reproduced: private emails, medical records, and credentials from web crawls.',
+    'tde.s1.p2': 'The 2023 "extracting training data from ChatGPT" paper demonstrated that production ChatGPT could be induced to reproduce training data verbatim by repeating a single word thousands of times — including email addresses, phone numbers, and copyrighted text.',
+    'tde.pull': 'The training dataset is not air-gapped. It\'s encoded in the model weights, accessible to anyone who can query the API.',
+    'tde.s2.title': 'What Gets Memorized',
+    'tde.f1.label': 'High-repetition content', 'tde.f1.p': 'Content appearing many times in training is memorized more strongly. Terms of service boilerplate, common code patterns — highly duplicated text is significantly more extractable than rare content.',
+    'tde.f2.label': 'Structured data with predictable patterns', 'tde.f2.p': 'Email addresses, phone numbers, API keys have distinctive formats. A model that has seen "sk-proj-XXXX..." patterns will reproduce them when prompted — and API keys in GitHub repos are common training sources.',
+    'tde.f3.label': 'Content near the end of training', 'tde.f3.p': 'Data seen later in training is more strongly memorized. For models continually updated with new data, recent additions are at higher extraction risk.',
+    'tde.f4.label': 'Fine-tuning data', 'tde.f4.p': 'Fine-tuning on a smaller dataset increases memorization rates significantly. If you fine-tune on proprietary data, that data is more memorized — and therefore more extractable.',
+    'tde.s3.title': 'Extraction Techniques',
+    'tde.s3.t1': 'Divergence attack:', 'tde.s3.t1.p': 'Repeat a word thousands of times to push the model into an anomalous generation state. The repetition disrupts normal probability distribution, causing the model to output memorized verbatim content. Demonstrated against production ChatGPT.',
+    'tde.s3.t2': 'Completion-based extraction:', 'tde.s3.t2.p': 'Provide the beginning of a memorized passage and ask the model to complete it. If the model has seen a specific document in training, the right prefix causes verbatim reproduction of subsequent content.',
+    'tde.s3.t3': 'Membership inference:', 'tde.s3.t3.p': 'Determine whether specific text was in the training set. The model\'s perplexity on text it has seen is measurably lower than on novel text — attackers can verify whether a private document was in the training corpus.',
+    'tde.s4.title': 'Implications for Organizations',
+    'tde.s4.p1': 'For commercial LLM users: risk comes from training data scraped from public web, GitHub repos, or other sources where your data appeared. API keys in public repos, contact info on websites, and published documents are at risk.',
+    'tde.s4.p2': 'For organizations fine-tuning on proprietary data: risk is significantly higher. Fine-tuned models memorize fine-tuning data at elevated rates. Any PII, trade secrets, or credentials are at elevated extraction risk.',
+    'tde.s5.title': 'Mitigations',
+    'tde.s5.l1': '<strong>Scrub PII and credentials before fine-tuning.</strong> Run PII detection against the fine-tuning corpus. Redact or remove identified content. Highest-leverage intervention for organizations building on LLMs.',
+    'tde.s5.l2': '<strong>Apply differential privacy during fine-tuning.</strong> DP-SGD provides formal guarantees that the model cannot reproduce specific training examples. There is an accuracy-privacy tradeoff, but DP fine-tuning is production-ready for many use cases.',
+    'tde.s5.l3': '<strong>Rotate any credentials that may have appeared in training data.</strong> API keys in any public repository should be treated as compromised — assume they\'re in training data for any web-scale model.',
+    'tde.s5.l4': '<strong>Use output filtering to catch extraction attempts.</strong> Post-generation filters detecting email addresses, phone numbers, and key patterns can catch common extraction targets before they reach users.',
+    'tde.s5.l5': '<strong>Audit fine-tuned models for memorization before deployment.</strong> Provide prefixes from training data and measure verbatim reproduction rates. High rates indicate high extraction risk.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'tde.category': 'AI 安全',
+    'tde.title': '训练数据提取：<br>从公开模型中窃取私密数据',
+    'tde.lead': '大型语言模型会记忆训练数据——而这些被记忆的内容可以通过精心构造的查询提取出来。个人身份信息、受版权保护的文本、专有代码和有效的 API 密钥都已从生产环境 LLM 中被提取。知道你数据的模型对每个拥有 API 密钥的人都是可访问的。',
+    'tde.s1.title': '记忆不是漏洞',
+    'tde.s1.p1': 'LLM 记忆训练数据是因为记忆是使它们有能力的原因之一。安全问题不在于模型记忆，而在于被记忆的内容包含从未打算被复现的数据：私人邮件、医疗记录，以及来自网络爬取的凭证。',
+    'tde.s1.p2': '2023 年"从 ChatGPT 提取训练数据"论文（Nasr 等人）证明，通过将单个词重复数千次，可以诱导生产版 ChatGPT 逐字复现训练数据——包括电子邮件地址、电话号码和受版权保护的文本。',
+    'tde.pull': '训练数据集不是气隙隔离的。它被编码在模型权重中，对每个能查询 API 的人都是可访问的。',
+    'tde.s2.title': '什么会被记忆',
+    'tde.f1.label': '高重复内容', 'tde.f1.p': '在训练语料库中多次出现的内容被更强烈地记忆。服务条款样板、常见代码模式——高度重复的文本比罕见内容可提取性显著更高。',
+    'tde.f2.label': '具有可预测模式的结构化数据', 'tde.f2.p': '电子邮件地址、电话号码、API 密钥具有独特格式。见过"sk-proj-XXXX..."模式的模型在适当提示时会复现它们——GitHub 仓库中的 API 密钥是常见的训练数据来源。',
+    'tde.f3.label': '训练末期的内容', 'tde.f3.p': '训练后期看到的数据比早期数据记忆更强。对于持续更新新数据的模型，近期添加的内容比旧训练内容面临更高的提取风险。',
+    'tde.f4.label': '微调数据', 'tde.f4.p': '在较小数据集上进行微调会显著提高记忆率。如果你在专有数据上进行微调，这些数据被记忆的程度更高——因此更易被提取。',
+    'tde.s3.title': '提取技术',
+    'tde.s3.t1': '发散攻击：', 'tde.s3.t1.p': '将一个词重复数千次，将模型推入异常生成状态。重复破坏正常概率分布，导致模型输出逐字记忆的内容。已对生产版 ChatGPT 进行了演示。',
+    'tde.s3.t2': '基于补全的提取：', 'tde.s3.t2.p': '提供被记忆段落的开头并要求模型补全。如果模型在训练中见过特定文档，正确的前缀会导致其逐字复现后续内容。',
+    'tde.s3.t3': '成员推断：', 'tde.s3.t3.p': '确定特定文本是否在训练集中。模型对其见过的文本的困惑度可测量地低于新颖文本——攻击者可以验证私密文档是否在训练语料库中。',
+    'tde.s4.title': '对组织的影响',
+    'tde.s4.p1': '对于使用商业 LLM 的组织：风险主要来自从公开网络、GitHub 仓库或其他可能出现你组织数据的来源爬取的训练数据。公开仓库中的 API 密钥、网站上的联系信息和已发布的文档都面临风险。',
+    'tde.s4.p2': '对于在专有数据上进行微调的组织：风险显著更高。微调模型以更高速率记忆微调数据。任何 PII、商业秘密或凭证都面临更高的提取风险。',
+    'tde.s5.title': '缓解措施',
+    'tde.s5.l1': '<strong>微调前清除 PII 和凭证。</strong>对微调语料库运行 PII 检测。编辑或删除已识别的内容。这是在 LLM 上构建应用的组织可采取的最高杠杆干预措施。',
+    'tde.s5.l2': '<strong>微调期间应用差分隐私。</strong>DP-SGD 提供模型无法复现特定训练样本的形式数学保证。存在精度-隐私权衡，但 DP 微调在许多用例中已可用于生产。',
+    'tde.s5.l3': '<strong>轮换可能出现在训练数据中的任何凭证。</strong>任何公开仓库中的 API 密钥应被视为已泄露——假设它们已在任何网络规模模型的训练数据中。',
+    'tde.s5.l4': '<strong>使用输出过滤来捕获提取尝试。</strong>检测输出中电子邮件地址、电话号码和密钥模式的后生成过滤器，可以在最常见的提取目标到达用户之前拦截它们。',
+    'tde.s5.l5': '<strong>部署前审计微调模型的记忆情况。</strong>提供训练数据中的前缀并测量逐字复现率。高复现率表明高提取风险。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'tde.category': 'AIセキュリティ',
+    'tde.title': '訓練データ抽出：<br>公開モデルからプライベートデータを盗む',
+    'tde.lead': 'LLMは訓練データを記憶する——そしてその記憶されたコンテンツは、巧妙に作られたクエリで抽出できる。PII、著作権のあるテキスト、独自のコード、有効なAPIキーがすべて本番のLLMから抽出されている。あなたのデータを知っているモデルはAPIキーを持つすべての人がアクセスできる。',
+    'tde.s1.title': '記憶はバグではない',
+    'tde.s1.p1': 'LLMが訓練データを記憶するのは、記憶が能力の一部だからだ。セキュリティ問題は記憶そのものではなく、記憶されたコンテンツに再現されることを意図されていないデータが含まれることだ：プライベートメール、医療記録、ウェブクロールからの認証情報。',
+    'tde.s1.p2': '2023年の「ChatGPTからの訓練データ抽出」論文（Nasrら）は、単語を何千回も繰り返すことで本番ChatGPTに訓練データを逐語的に再現させられることを実証した——メールアドレス、電話番号、著作権のあるテキストを含む。',
+    'tde.pull': '訓練データセットはエアギャップで隔離されていない。モデルの重みにエンコードされ、APIにクエリできる人なら誰でもアクセスできる。',
+    'tde.s2.title': '何が記憶されるか',
+    'tde.f1.label': '高頻度コンテンツ', 'tde.f1.p': '訓練コーパスに何度も現れるコンテンツはより強く記憶される。利用規約の定型文、一般的なコードパターン——高度に重複したテキストは稀なコンテンツよりはるかに抽出しやすい。',
+    'tde.f2.label': '予測可能なパターンの構造化データ', 'tde.f2.p': 'メールアドレス、電話番号、APIキーには独特のフォーマットがある。「sk-proj-XXXX...」パターンを訓練で見たモデルは、適切にプロンプトされると再現する。GitHubリポジトリのAPIキーは一般的な訓練ソース。',
+    'tde.f3.label': '訓練後期のコンテンツ', 'tde.f3.p': '訓練の後期に見られたデータは早期データより強く記憶される。新しいデータで継続的に更新されるモデルでは、最近の追加は古い訓練コンテンツより高い抽出リスクを持つ。',
+    'tde.f4.label': 'ファインチューニングデータ', 'tde.f4.p': '小さなデータセットでのファインチューニングは記憶率を大幅に高める。独自データでファインチューニングすると、そのデータはより記憶され——したがってより抽出しやすくなる。',
+    'tde.s3.title': '抽出技術',
+    'tde.s3.t1': '発散攻撃：', 'tde.s3.t1.p': '単語を何千回も繰り返してモデルを異常な生成状態に追い込む。繰り返しが通常の確率分布を乱し、モデルが記憶した逐語的コンテンツを出力するようになる。本番ChatGPTで実証済み。',
+    'tde.s3.t2': '補完ベースの抽出：', 'tde.s3.t2.p': '記憶されたパッセージの冒頭を提供してモデルに補完を求める。モデルが特定の文書を訓練で見ていれば、適切なプレフィックスが後続コンテンツの逐語的再現を引き起こす。',
+    'tde.s3.t3': 'メンバーシップ推論：', 'tde.s3.t3.p': '特定のテキストが訓練セットにあったかを判定する。モデルが見たテキストへのパープレキシティは新しいテキストより測定可能なほど低い——攻撃者はプライベート文書が訓練コーパスにあったかを確認できる。',
+    'tde.s4.title': '組織への影響',
+    'tde.s4.p1': '商業LLMを使用する組織：リスクは主に公開ウェブ、GitHubリポジトリ、またはあなたの組織のデータが現れた可能性がある他のソースからスクレイプされた訓練データから来る。',
+    'tde.s4.p2': '独自データでファインチューニングする組織：リスクはかなり高い。ファインチューニングされたモデルはファインチューニングデータを高い割合で記憶する。PII、企業秘密、認証情報はすべて高い抽出リスクにさらされる。',
+    'tde.s5.title': '緩和策',
+    'tde.s5.l1': '<strong>ファインチューニング前にPIIと認証情報を除去する。</strong>ファインチューニングコーパスに対してPII検出を実行する。識別されたコンテンツを編集または削除する。LLMの上に構築する組織にとって最もレバレッジの高い介入。',
+    'tde.s5.l2': '<strong>ファインチューニング中に差分プライバシーを適用する。</strong>DP-SGDはモデルが特定の訓練例を再現できないことの形式的数学的保証を提供する。精度とプライバシーのトレードオフがあるが、多くのユースケースでDP ファインチューニングは本番対応済み。',
+    'tde.s5.l3': '<strong>訓練データに現れた可能性のある認証情報を回転させる。</strong>公開リポジトリのAPIキーは漏洩したものとして扱う——ウェブスケールデータで訓練されたモデルの訓練データに含まれていると仮定する。',
+    'tde.s5.l4': '<strong>抽出試みを捕捉するために出力フィルタリングを使用する。</strong>モデル出力のメールアドレス、電話番号、キーパターンを検出するポスト生成フィルターが、最も一般的な抽出ターゲットをユーザーに届く前に捕捉できる。',
+    'tde.s5.l5': '<strong>デプロイ前にファインチューニングモデルの記憶を監査する。</strong>訓練データのプレフィックスを提供して逐語的再現率を測定する。高い再現率は高い抽出リスクを示す。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

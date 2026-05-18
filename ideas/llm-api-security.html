@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM API Security: Rate Limiting, Auth, and Prompt Leakage — vsike</title>
+  <meta name="description" content="Exposing an LLM via API introduces security concerns distinct from traditional web APIs: prompt injection through parameters, system prompt leakage via response manipulation, cost exhaustion attacks, and the challenge of rate limiting non-deterministic endpoints.">
+  <meta name="keywords" content="LLM API安全, 大模型接口安全, 提示词泄露防护, API速率限制AI, AI接口认证安全, LLM API security, prompt leakage API, rate limiting AI endpoints, LLM cost exhaustion, AI API authentication">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/llm-api-security.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .concern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .concern-grid { grid-template-columns: 1fr; } }
+    .concern-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .concern-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="las.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="las.title">LLM API Security:<br>Rate Limiting, Auth, and Prompt Leakage</h1>
+        <p class="pub-time">Published: 2026-05-17 22:59 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="las.lead">Exposing an LLM via API introduces security concerns distinct from traditional web APIs. System prompt leakage through carefully crafted queries, cost exhaustion attacks that burn through API budgets, and the challenge of rate limiting non-deterministic token-generating endpoints all require purpose-built approaches that standard API security doesn't cover.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="las.s1.title">Where LLM API Security Differs</h2>
+        <p data-i18n="las.s1.p1">Traditional API security concerns — authentication, authorization, input validation, rate limiting — all apply to LLM APIs. But LLM APIs introduce threat categories that have no traditional analog. The API endpoint isn't just processing requests — it's executing a model that can be manipulated through the content of those requests to behave in ways the API designer didn't intend.</p>
+        <p data-i18n="las.s1.p2">The key difference is that the input is processed by the model's weights, not just your validation logic. An input that passes all your parameter validation may still cause the model to output your system prompt, generate harmful content, or make downstream tool calls that weren't part of the intended interaction flow.</p>
+        <div class="pull-quote" data-i18n="las.pull">You can validate that the input is a valid string. You cannot validate that the model will respond to that string the way you intended.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="las.s2.title">LLM-Specific API Security Concerns</h2>
+        <div class="concern-grid">
+          <div class="concern-card">
+            <h4 data-i18n="las.c1.label">System prompt leakage</h4>
+            <p data-i18n="las.c1.p">System prompts contain business logic, personas, safety instructions, and sometimes credentials. Users who can query your API can systematically probe for system prompt contents using completion attacks, translation tricks, and indirect extraction. The system prompt should be designed as if it's public — because it effectively is.</p>
+          </div>
+          <div class="concern-card">
+            <h4 data-i18n="las.c2.label">Cost exhaustion attacks</h4>
+            <p data-i18n="las.c2.p">LLM inference is priced by token. An attacker who submits requests designed to maximize output token count — "write an extremely detailed 10,000-word essay on..." — can exhaust per-user budgets or run up significant infrastructure costs. Token-based rate limiting is fundamentally different from request-count rate limiting.</p>
+          </div>
+          <div class="concern-card">
+            <h4 data-i18n="las.c3.label">Cross-user prompt injection</h4>
+            <p data-i18n="las.c3.p">In multi-tenant LLM applications, one user's input that manipulates the model's context can affect the model's responses to subsequent queries — especially in applications that share conversation history or use retrieved context from a shared vector store. One malicious user can contaminate the context for others.</p>
+          </div>
+          <div class="concern-card">
+            <h4 data-i18n="las.c4.label">Session and conversation isolation</h4>
+            <p data-i18n="las.c4.p">Conversation histories, RAG retrieved contexts, and tool call results must be strictly isolated between users and sessions. Failure to isolate means a user may receive content from another user's conversation — a data leakage violation that doesn't require any active attack.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="las.s3.title">Authentication and Authorization</h2>
+        <p data-i18n="las.s3.p1">LLM API authentication should treat API keys as secrets — not as identifiers. Keys embedded in client-side JavaScript, mobile app binaries, or frontend code will be extracted and abused. Server-side proxying, where the client calls your backend and your backend calls the LLM provider, keeps API keys out of client contexts entirely.</p>
+        <div class="attack-block">
+          <strong data-i18n="las.s3.attack">Common key exposure pattern:</strong>
+          <p data-i18n="las.s3.attack.p">Developer builds a React app that calls the OpenAI API directly from the browser. The API key is in the client JavaScript bundle. Any visitor can extract it from DevTools, use it for unlimited API calls on the developer's account, or sell it. GitHub secret scanning regularly discovers thousands of valid API keys per month in public repositories — many from developers who didn't realize they'd committed them.</p>
+        </div>
+        <p data-i18n="las.s3.p2">Authorization for LLM endpoints requires defining what each authenticated user is permitted to request. Not just which endpoints they can call, but what capabilities the model is permitted to exercise on their behalf — which tools, which data sources, with what output constraints. User-level capability grants, not just endpoint-level authentication.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="las.s4.title">Rate Limiting for LLM Endpoints</h2>
+        <p data-i18n="las.s4.p1">Request-count rate limiting is insufficient for LLM endpoints because cost is proportional to tokens, not requests. A 1 request/second limit means nothing if each request generates 10,000 tokens. Effective rate limiting for LLM APIs requires token budgets: per-user, per-minute input token limits and output token limits, enforced at the proxy layer before requests reach the model.</p>
+        <p data-i18n="las.s4.p2">Streaming responses add complexity — the full output token count isn't known until the response completes. Implement both pre-request limits (maximum context length) and post-request accounting (token consumption tracked against the user's budget), with circuit breakers that terminate unexpectedly long responses.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="las.s5.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="las.s5.l1"><strong>Always proxy LLM calls through your backend.</strong> Client applications should never hold LLM provider API keys. All model calls go through a backend service that handles authentication, authorization, rate limiting, and logging before forwarding to the provider.</li>
+            <li data-i18n="las.s5.l2"><strong>Implement token budget rate limiting.</strong> Track input and output token consumption per user, per time window. Enforce hard limits that prevent individual users from generating costs above defined thresholds. Alert on anomalous consumption patterns that may indicate automated abuse.</li>
+            <li data-i18n="las.s5.l3"><strong>Log every request and response for audit.</strong> Store conversation histories server-side with user attribution. This enables incident investigation, anomalous pattern detection, and compliance with data retention requirements. Ensure logging infrastructure is isolated from the model serving path.</li>
+            <li data-i18n="las.s5.l4"><strong>Design system prompts as public documents.</strong> Never embed secrets, credentials, or business logic in system prompts that would be damaging if exposed. Assume every system prompt will eventually be extracted — because under sufficient adversarial probing, it will be.</li>
+            <li data-i18n="las.s5.l5"><strong>Enforce strict conversation isolation in multi-tenant deployments.</strong> Each user's conversation context, retrieved documents, and tool call results must be stored and retrieved in strict isolation. Cross-contamination of context between users is both a security and a privacy violation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'las.category': 'AI Security',
+    'las.title': 'LLM API Security:<br>Rate Limiting, Auth, and Prompt Leakage',
+    'las.lead': 'Exposing an LLM via API introduces security concerns distinct from traditional web APIs. System prompt leakage, cost exhaustion attacks, and the challenge of token-based rate limiting all require purpose-built approaches that standard API security doesn\'t cover.',
+    'las.s1.title': 'Where LLM API Security Differs',
+    'las.s1.p1': 'LLM APIs introduce threat categories with no traditional analog. The endpoint isn\'t just processing requests — it\'s executing a model that can be manipulated through request content to behave in ways the API designer didn\'t intend.',
+    'las.s1.p2': 'Input that passes all your parameter validation may still cause the model to output your system prompt, generate harmful content, or make downstream tool calls not in the intended flow.',
+    'las.pull': 'You can validate that the input is a valid string. You cannot validate that the model will respond to that string the way you intended.',
+    'las.s2.title': 'LLM-Specific API Security Concerns',
+    'las.c1.label': 'System prompt leakage', 'las.c1.p': 'System prompts contain business logic, personas, and sometimes credentials. Users can probe for contents using completion attacks and translation tricks. Design the system prompt as if it\'s public — because it effectively is.',
+    'las.c2.label': 'Cost exhaustion attacks', 'las.c2.p': 'LLM inference is priced by token. Requests designed to maximize output — "write an extremely detailed 10,000-word essay on..." — exhaust budgets. Token-based rate limiting is fundamentally different from request-count limiting.',
+    'las.c3.label': 'Cross-user prompt injection', 'las.c3.p': 'In multi-tenant applications, one user\'s input can affect model responses to subsequent queries — especially when sharing conversation history or retrieved context from a shared vector store.',
+    'las.c4.label': 'Session and conversation isolation', 'las.c4.p': 'Conversation histories, RAG contexts, and tool results must be strictly isolated between users. Failure to isolate causes data leakage without any active attack.',
+    'las.s3.title': 'Authentication and Authorization',
+    'las.s3.p1': 'API keys embedded in client-side JavaScript or mobile app binaries will be extracted. Server-side proxying — client calls your backend, your backend calls the provider — keeps keys out of client contexts entirely.',
+    'las.s3.attack': 'Common key exposure pattern:', 'las.s3.attack.p': 'Developer builds a React app calling OpenAI directly from the browser. The API key is in the client bundle. Any visitor can extract it from DevTools and use it for unlimited API calls on the developer\'s account. GitHub secret scanning finds thousands of valid keys per month in public repos.',
+    'las.s3.p2': 'Authorization requires defining what each user is permitted to request — which tools, which data sources, with what output constraints. User-level capability grants, not just endpoint-level authentication.',
+    'las.s4.title': 'Rate Limiting for LLM Endpoints',
+    'las.s4.p1': 'Request-count rate limiting is insufficient. Cost is proportional to tokens, not requests. Effective rate limiting requires token budgets: per-user, per-minute input and output token limits, enforced at the proxy layer before requests reach the model.',
+    'las.s4.p2': 'Streaming responses add complexity — full output token count isn\'t known until completion. Implement pre-request limits (max context length) and post-request accounting, with circuit breakers that terminate unexpectedly long responses.',
+    'las.s5.title': 'Mitigations',
+    'las.s5.l1': '<strong>Always proxy LLM calls through your backend.</strong> Client applications never hold provider API keys. All model calls go through a backend service handling auth, rate limiting, and logging before forwarding.',
+    'las.s5.l2': '<strong>Implement token budget rate limiting.</strong> Track input and output token consumption per user per time window. Alert on anomalous consumption patterns indicating automated abuse.',
+    'las.s5.l3': '<strong>Log every request and response for audit.</strong> Store conversation histories server-side with user attribution. Enables incident investigation, anomaly detection, and compliance.',
+    'las.s5.l4': '<strong>Design system prompts as public documents.</strong> Never embed secrets or credentials in system prompts. Assume every prompt will eventually be extracted under sufficient adversarial probing.',
+    'las.s5.l5': '<strong>Enforce strict conversation isolation in multi-tenant deployments.</strong> Each user\'s context, retrieved documents, and tool results must be stored and retrieved in strict isolation.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'las.category': 'AI 安全',
+    'las.title': 'LLM API 安全：<br>速率限制、认证与提示词泄露',
+    'las.lead': '通过 API 暴露 LLM 引入了与传统 Web API 不同的安全问题。系统提示词泄露、成本耗尽攻击以及基于 Token 的速率限制挑战都需要标准 API 安全无法覆盖的专门方法。',
+    'las.s1.title': 'LLM API 安全的不同之处',
+    'las.s1.p1': 'LLM API 引入了没有传统类比的威胁类别。API 端点不仅在处理请求——它在执行一个可以通过请求内容被操纵的模型，使其以 API 设计者未曾预料的方式行为。',
+    'las.s1.p2': '通过所有参数验证的输入仍可能导致模型输出系统提示词、生成有害内容，或进行不在预期交互流程中的下游工具调用。',
+    'las.pull': '你可以验证输入是否是有效字符串。你无法验证模型会以你预期的方式响应该字符串。',
+    'las.s2.title': 'LLM 特定的 API 安全问题',
+    'las.c1.label': '系统提示词泄露', 'las.c1.p': '系统提示词包含业务逻辑、人格设定，有时甚至包含凭证。用户可以使用补全攻击和翻译技巧探测提示词内容。将系统提示词设计为公开文档——因为它实际上就是。',
+    'las.c2.label': '成本耗尽攻击', 'las.c2.p': 'LLM 推理按 Token 计价。被设计为最大化输出的请求——"写一篇详细的 10000 字文章..."——会耗尽预算。基于 Token 的速率限制与基于请求次数的速率限制根本不同。',
+    'las.c3.label': '跨用户提示注入', 'las.c3.p': '在多租户应用中，一个用户的输入可以影响模型对后续查询的响应——特别是在共享对话历史或从共享向量存储检索上下文时。',
+    'las.c4.label': '会话和对话隔离', 'las.c4.p': '对话历史、RAG 上下文和工具调用结果必须在用户之间严格隔离。隔离失败会在没有任何主动攻击的情况下导致数据泄露。',
+    'las.s3.title': '认证与授权',
+    'las.s3.p1': '嵌入客户端 JavaScript 或移动应用二进制文件中的 API 密钥将被提取。服务端代理——客户端调用你的后端，后端调用提供商——使密钥完全不出现在客户端环境中。',
+    'las.s3.attack': '常见密钥暴露模式：', 'las.s3.attack.p': '开发者构建了一个直接从浏览器调用 OpenAI API 的 React 应用。API 密钥在客户端 JavaScript 包中。任何访客都可以从开发者工具中提取它，并在开发者账户上进行无限 API 调用。GitHub 秘密扫描每月在公开仓库中发现数千个有效密钥。',
+    'las.s3.p2': '授权需要定义每个经过认证的用户被允许请求什么——哪些工具、哪些数据源、有什么输出约束。用户级别的能力授权，而非仅端点级别的认证。',
+    'las.s4.title': 'LLM 端点的速率限制',
+    'las.s4.p1': '基于请求次数的速率限制不够——成本与 Token 成正比，而非与请求次数成正比。有效的速率限制需要 Token 预算：在请求到达模型之前，在代理层强制执行每用户、每分钟的输入和输出 Token 限制。',
+    'las.s4.p2': '流式响应增加了复杂性——完整的输出 Token 数量在响应完成前未知。实施预请求限制（最大上下文长度）和后请求计费，以及终止意外过长响应的熔断器。',
+    'las.s5.title': '缓解措施',
+    'las.s5.l1': '<strong>始终通过后端代理 LLM 调用。</strong>客户端应用永远不持有提供商 API 密钥。所有模型调用通过后端服务，后端服务在转发之前处理认证、速率限制和日志记录。',
+    'las.s5.l2': '<strong>实施 Token 预算速率限制。</strong>跟踪每个用户、每个时间窗口的输入和输出 Token 消耗。对可能表明自动滥用的异常消耗模式发出警报。',
+    'las.s5.l3': '<strong>记录每个请求和响应以供审计。</strong>在服务端存储带用户归因的对话历史。支持事件调查、异常检测和合规要求。',
+    'las.s5.l4": "<strong>将系统提示词设计为公开文档。</strong>永远不要在系统提示词中嵌入秘密或凭证。假设每个提示词最终都会在足够的对抗性探测下被提取出来。',
+    'las.s5.l5': '<strong>在多租户部署中强制严格的对话隔离。</strong>每个用户的上下文、检索的文档和工具结果必须严格隔离地存储和检索。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'las.category': 'AIセキュリティ',
+    'las.title': 'LLM APIセキュリティ：<br>レート制限、認証、プロンプト漏洩',
+    'las.lead': 'LLMをAPI経由で公開すると、従来のWeb APIとは異なるセキュリティ上の懸念が生じる。システムプロンプトの漏洩、コスト枯渇攻撃、トークンベースのレート制限の課題はすべて、標準的なAPIセキュリティがカバーしない専用のアプローチを必要とする。',
+    'las.s1.title': 'LLM APIセキュリティが異なる点',
+    'las.s1.p1': 'LLM APIは従来の類比がない脅威カテゴリを導入する。エンドポイントはリクエストを処理するだけでなく、リクエストのコンテンツを通じてAPIデザイナーが意図しない方法で動作するよう操作できるモデルを実行している。',
+    'las.s1.p2': 'すべてのパラメータ検証に合格した入力でも、モデルがシステムプロンプトを出力したり、有害なコンテンツを生成したり、意図したインタラクションフローにない下流ツールコールを行う可能性がある。',
+    'las.pull': '入力が有効な文字列であることを検証できる。モデルがその文字列に意図した通りに応答することは検証できない。',
+    'las.s2.title': 'LLM固有のAPIセキュリティ懸念',
+    'las.c1.label': 'システムプロンプト漏洩', 'las.c1.p': 'システムプロンプトにはビジネスロジック、ペルソナ、時には認証情報が含まれる。ユーザーは補完攻撃や翻訳トリックでコンテンツを調べられる。システムプロンプトはパブリックドキュメントとして設計する——実質的にそうだから。',
+    'las.c2.label': 'コスト枯渇攻撃', 'las.c2.p': 'LLM推論はトークンで課金される。出力を最大化するよう設計されたリクエスト——「非常に詳細な10,000語のエッセイを書いて...」——は予算を使い果たす。トークンベースのレート制限はリクエスト数レート制限とは根本的に異なる。',
+    'las.c3.label': 'クロスユーザープロンプトインジェクション', 'las.c3.p': 'マルチテナントアプリでは、あるユーザーの入力が後続クエリへのモデル応答に影響する可能性がある——特に会話履歴や共有ベクターストアから取得したコンテキストを共有する場合。',
+    'las.c4.label': 'セッションと会話の分離', 'las.c4.p': '会話履歴、RAGコンテキスト、ツール結果はユーザー間で厳密に分離する必要がある。分離の失敗はアクティブな攻撃なしにデータ漏洩を引き起こす。',
+    'las.s3.title': '認証と認可',
+    'las.s3.p1': 'クライアントサイドJavaScriptやモバイルアプリバイナリに埋め込まれたAPIキーは抽出される。サーバーサイドプロキシ——クライアントがバックエンドを呼び出し、バックエンドがプロバイダーを呼び出す——はキーをクライアントコンテキストから完全に外す。',
+    'las.s3.attack': '一般的なキー漏洩パターン：', 'las.s3.attack.p': '開発者がブラウザから直接OpenAI APIを呼び出すReactアプリを構築する。APIキーはクライアントバンドルに含まれる。訪問者はDevToolsから抽出して開発者のアカウントで無制限APIコールに使える。GitHubのシークレットスキャンは毎月公開リポジトリで数千の有効なキーを発見する。',
+    'las.s3.p2': '認可は各ユーザーがリクエストを許可される内容——どのツール、どのデータソース、どんな出力制約——の定義が必要。エンドポイントレベルの認証だけでなく、ユーザーレベルの能力付与。',
+    'las.s4.title': 'LLMエンドポイントのレート制限',
+    'las.s4.p1': 'リクエスト数のレート制限は不十分だ——コストはリクエスト数ではなくトークンに比例する。効果的なレート制限にはトークン予算が必要：リクエストがモデルに届く前のプロキシレイヤーで適用される、ユーザーごと・分ごとの入出力トークン制限。',
+    'las.s4.p2': 'ストリーミング応答は複雑さを加える——全出力トークン数は完了まで不明。事前リクエスト制限（最大コンテキスト長）と事後リクエスト計測を実装し、予想外に長い応答を終了するサーキットブレーカーを設ける。',
+    'las.s5.title': '緩和策',
+    'las.s5.l1': '<strong>常にバックエンドを通じてLLMコールをプロキシする。</strong>クライアントアプリはプロバイダーAPIキーを保持しない。すべてのモデルコールは認証、レート制限、ロギングを処理してから転送するバックエンドサービスを通る。',
+    'las.s5.l2': '<strong>トークン予算レート制限を実装する。</strong>ユーザーごと・時間ウィンドウごとの入出力トークン消費を追跡する。自動乱用を示す異常な消費パターンにアラートを出す。',
+    'las.s5.l3': '<strong>監査のためにすべてのリクエストとレスポンスをログする。</strong>ユーザー帰属付きで会話履歴をサーバー側に保存する。インシデント調査、異常検出、コンプライアンス要件を可能にする。',
+    'las.s5.l4': '<strong>システムプロンプトをパブリックドキュメントとして設計する。</strong>システムプロンプトに秘密や認証情報を埋め込まない。十分な対抗的探索の下ですべてのプロンプトは最終的に抽出されると仮定する。',
+    'las.s5.l5': '<strong>マルチテナントデプロイメントで厳格な会話分離を強制する。</strong>各ユーザーのコンテキスト、取得した文書、ツール結果は厳格に分離して保存・取得する必要がある。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

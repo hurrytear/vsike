@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adversarial Inputs: When AI Sees What Isn't There — vsike</title>
+  <meta name="description" content="Adversarial examples are inputs crafted to cause AI models to misclassify with high confidence. A stop sign with stickers becomes a speed limit sign. A panda with imperceptible noise becomes a gibbon. The attack transfers to any system that trusts the model's output.">
+  <meta name="keywords" content="对抗样本攻击, AI对抗输入, 模型鲁棒性, 对抗性扰动, 深度学习安全, adversarial examples, adversarial inputs, model robustness, adversarial perturbation, deep learning security">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/adversarial-inputs.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .scenario-grid { grid-template-columns: 1fr; } }
+    .scenario-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .scenario-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="ai.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="ai.title">Adversarial Inputs:<br>When AI Sees What Isn't There</h1>
+        <p class="pub-time">Published: 2026-05-17 22:59 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="ai.lead">Adversarial examples are inputs crafted to cause AI models to misclassify — with high confidence — in ways that reveal a fundamental brittleness in how neural networks generalize. A stop sign with stickers becomes a speed limit sign. A panda with imperceptible pixel noise becomes a gibbon. The attack transfers to any downstream system that trusts the model's output.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ai.s1.title">The Geometry of Adversarial Attacks</h2>
+        <p data-i18n="ai.s1.p1">Neural networks divide the input space into regions, each corresponding to a class. These regions have complex, high-dimensional boundaries — and adversarial examples exploit the fact that the shortest path from a correct input to a misclassified one can be nearly imperceptibly short in input space while crossing a fundamental decision boundary in the model's representation.</p>
+        <p data-i18n="ai.s1.p2">In the original Szegedy et al. (2013) demonstration, adding a carefully computed noise vector — with pixel changes invisible to the human eye — caused ImageNet classifiers to misclassify images with near-100% confidence. These adversarial perturbations transfer across models: an example crafted to fool one network often fools architecturally different networks on the same task.</p>
+        <div class="pull-quote" data-i18n="ai.pull">The model isn't confused. It's confident — with high certainty — about the wrong answer. That combination is what makes adversarial examples a security concern, not just a curiosity.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ai.s2.title">Attack Categories</h2>
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <h4 data-i18n="ai.c1.label">White-box attacks</h4>
+            <p data-i18n="ai.c1.p">The attacker has full access to model weights and architecture and can compute the gradient of the loss with respect to the input. FGSM (Fast Gradient Sign Method) and PGD (Projected Gradient Descent) are the canonical examples. Maximally effective but requires model access.</p>
+          </div>
+          <div class="scenario-card">
+            <h4 data-i18n="ai.c2.label">Black-box attacks</h4>
+            <p data-i18n="ai.c2.p">The attacker only has query access — they can submit inputs and observe outputs. Transferability-based attacks (craft adversarials for a local surrogate, use them on the target) and score-based attacks (iteratively query to estimate the gradient direction) both work without weight access.</p>
+          </div>
+          <div class="scenario-card">
+            <h4 data-i18n="ai.c3.label">Physical-world attacks</h4>
+            <p data-i18n="ai.c3.p">Adversarial patches printed and placed in the physical environment — stickers on stop signs, patterns on clothing that defeat person detection, adversarial eyeglass frames that cause facial recognition failure. These survive photography and real-world lighting variation.</p>
+          </div>
+          <div class="scenario-card">
+            <h4 data-i18n="ai.c4.label">Universal perturbations</h4>
+            <p data-i18n="ai.c4.p">A single perturbation that, when added to almost any input, causes misclassification. Universal adversarial perturbations can be pre-computed and applied indiscriminately — enabling attacks that don't require per-input optimization.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ai.s3.title">High-Stakes Attack Scenarios</h2>
+        <div class="attack-block">
+          <strong data-i18n="ai.s3.a1">Autonomous vehicle perception:</strong>
+          <p data-i18n="ai.s3.a1.p">Physical adversarial patches on road signs, lane markings, or other vehicles cause object detection models to miss obstacles or misread speed limits. In 2019, researchers demonstrated that adding small stickers to a stop sign caused it to be consistently classified as a "Speed Limit 45" sign by commercial vision models.</p>
+        </div>
+        <div class="attack-block">
+          <strong data-i18n="ai.s3.a2">Biometric authentication bypass:</strong>
+          <p data-i18n="ai.s3.a2.p">Adversarial eyeglass frames printed with perturbation patterns can cause commercial facial recognition to either fail to detect a face or misidentify the wearer as a target person. Physical-world attacks on face recognition have been demonstrated in controlled settings with varying effectiveness.</p>
+        </div>
+        <div class="attack-block">
+          <strong data-i18n="ai.s3.a3">Content moderation evasion:</strong>
+          <p data-i18n="ai.s3.a3.p">Adversarially perturbed images pass through automated content moderation as benign while remaining clearly harmful to human viewers. Malicious content creators can use adversarial perturbations to systematically evade image-based moderation systems.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ai.s4.title">Why Defenses Are Hard</h2>
+        <p data-i18n="ai.s4.p1">Adversarial robustness has proven genuinely difficult to achieve. Most proposed defenses — detection models, input preprocessing, ensemble methods — have been broken by adaptive attacks that specifically target the defense. The only defense with formal guarantees is certified robustness (randomized smoothing), which provides mathematically provable bounds but with significant accuracy costs.</p>
+        <p data-i18n="ai.s4.p2">Adversarial training — training on adversarial examples alongside clean data — improves robustness substantially but doesn't eliminate it, and trained robustness doesn't generalize well across attack types. A model adversarially trained against L∞ perturbations may still be vulnerable to L2 or spatial perturbations.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ai.s5.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="ai.s5.l1"><strong>Apply adversarial training for safety-critical classifiers.</strong> Train with a mix of clean and adversarially perturbed examples. PGD-based adversarial training is the current best practice for improving empirical robustness, even though it provides no formal guarantees.</li>
+            <li data-i18n="ai.s5.l2"><strong>Use randomized smoothing for certified robustness requirements.</strong> Where formal guarantees are needed (safety-critical infrastructure, regulatory compliance), randomized smoothing provides provable bounds on worst-case robustness. The accuracy tradeoff is significant but sometimes acceptable.</li>
+            <li data-i18n="ai.s5.l3"><strong>Don't rely solely on AI perception for safety-critical decisions.</strong> Redundant sensing modalities (camera + radar + lidar), rule-based sanity checks, and human-in-the-loop confirmation for unusual cases prevent single-point-of-failure exploits against any one model.</li>
+            <li data-i18n="ai.s5.l4"><strong>Monitor for anomalous input distributions in production.</strong> Adversarially perturbed inputs often have statistical properties distinguishable from natural inputs. Input preprocessing that normalizes or crops adversarial perturbation magnitudes can degrade attack effectiveness.</li>
+            <li data-i18n="ai.s5.l5"><strong>Scope adversarial robustness requirements to actual threat models.</strong> Black-box adversarial attacks on a remote API are less practical than white-box attacks on a locally deployed model. Prioritize robustness investments based on the attacker's realistic access level.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'ai.category': 'AI Security',
+    'ai.title': 'Adversarial Inputs:<br>When AI Sees What Isn\'t There',
+    'ai.lead': 'Adversarial examples are inputs crafted to cause AI models to misclassify — with high confidence — revealing a fundamental brittleness in how neural networks generalize. A stop sign with stickers becomes a speed limit sign. A panda with imperceptible noise becomes a gibbon.',
+    'ai.s1.title': 'The Geometry of Adversarial Attacks',
+    'ai.s1.p1': 'Neural networks divide input space into class regions with complex high-dimensional boundaries. Adversarial examples exploit the fact that the shortest path from a correct input to a misclassified one can be nearly imperceptibly short in input space while crossing a fundamental decision boundary.',
+    'ai.s1.p2': 'In the original Szegedy et al. (2013) demonstration, adding imperceptible noise caused ImageNet classifiers to misclassify with near-100% confidence. These perturbations transfer across models: an example fooling one network often fools architecturally different networks on the same task.',
+    'ai.pull': 'The model isn\'t confused. It\'s confident — with high certainty — about the wrong answer. That combination is what makes adversarial examples a security concern, not just a curiosity.',
+    'ai.s2.title': 'Attack Categories',
+    'ai.c1.label': 'White-box attacks', 'ai.c1.p': 'Attacker has full model weight access and can compute loss gradients. FGSM and PGD are canonical. Maximally effective but requires model access.',
+    'ai.c2.label': 'Black-box attacks', 'ai.c2.p': 'Only query access. Transferability-based attacks (craft adversarials for a local surrogate, use on the target) and score-based attacks both work without weight access.',
+    'ai.c3.label': 'Physical-world attacks', 'ai.c3.p': 'Adversarial patches in the physical environment — stickers on stop signs, patterns on clothing defeating person detection, eyeglass frames causing facial recognition failure. These survive real-world lighting variation.',
+    'ai.c4.label': 'Universal perturbations', 'ai.c4.p': 'A single perturbation that, added to almost any input, causes misclassification. Can be pre-computed and applied indiscriminately — enabling attacks without per-input optimization.',
+    'ai.s3.title': 'High-Stakes Attack Scenarios',
+    'ai.s3.a1': 'Autonomous vehicle perception:', 'ai.s3.a1.p': 'Physical adversarial patches on road signs cause object detection to miss obstacles or misread speed limits. In 2019, stickers on a stop sign caused it to be classified as "Speed Limit 45" by commercial vision models.',
+    'ai.s3.a2': 'Biometric authentication bypass:', 'ai.s3.a2.p': 'Adversarial eyeglass frames can cause facial recognition to fail to detect a face or misidentify the wearer as a target person. Physical-world attacks on face recognition have been demonstrated in controlled settings.',
+    'ai.s3.a3': 'Content moderation evasion:', 'ai.s3.a3.p': 'Adversarially perturbed images pass automated content moderation as benign while remaining harmful to human viewers. Creators can systematically evade image-based moderation systems.',
+    'ai.s4.title': 'Why Defenses Are Hard',
+    'ai.s4.p1': 'Most proposed defenses have been broken by adaptive attacks. The only defense with formal guarantees is certified robustness (randomized smoothing), which provides provable bounds but with significant accuracy costs.',
+    'ai.s4.p2': 'Adversarial training improves robustness substantially but doesn\'t eliminate it, and trained robustness doesn\'t generalize across attack types. A model trained against L∞ perturbations may still be vulnerable to L2 or spatial perturbations.',
+    'ai.s5.title': 'Mitigations',
+    'ai.s5.l1': '<strong>Apply adversarial training for safety-critical classifiers.</strong> PGD-based adversarial training is current best practice for improving empirical robustness, even without formal guarantees.',
+    'ai.s5.l2': '<strong>Use randomized smoothing for certified robustness.</strong> Where formal guarantees are needed, randomized smoothing provides provable bounds. The accuracy tradeoff is significant but sometimes acceptable.',
+    'ai.s5.l3': '<strong>Don\'t rely solely on AI perception for safety-critical decisions.</strong> Redundant sensing modalities, rule-based sanity checks, and human-in-the-loop confirmation prevent single-point exploits.',
+    'ai.s5.l4': '<strong>Monitor for anomalous input distributions in production.</strong> Adversarially perturbed inputs often have statistical properties distinguishable from natural inputs. Preprocessing that normalizes perturbation magnitudes can degrade attack effectiveness.',
+    'ai.s5.l5': '<strong>Scope robustness requirements to actual threat models.</strong> Black-box API attacks are less practical than white-box attacks on locally deployed models. Prioritize investments based on realistic attacker access.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'ai.category': 'AI 安全',
+    'ai.title': '对抗样本：<br>当 AI 看到不存在的东西',
+    'ai.lead': '对抗样本是精心构造的输入，能以高置信度导致 AI 模型误分类——揭示了神经网络泛化方式中的根本脆弱性。带有贴纸的停车标志变成了限速标志。带有不可感知像素噪声的熊猫变成了长臂猿。',
+    'ai.s1.title': '对抗攻击的几何学',
+    'ai.s1.p1': '神经网络将输入空间划分为具有复杂高维边界的类别区域。对抗样本利用的事实是：在输入空间中，从正确输入到被误分类输入的最短路径可能短到几乎不可感知，同时却跨越了模型表示中的根本决策边界。',
+    'ai.s1.p2': '在 Szegedy 等人（2013 年）的原始演示中，添加对人眼不可见的噪声向量导致 ImageNet 分类器以接近 100% 的置信度误分类图像。这些对抗扰动可以跨模型迁移：针对一个网络构造的样本通常也能欺骗同一任务上架构不同的网络。',
+    'ai.pull': '模型并不困惑。它以高确定性——对错误答案——充满信心。这种组合使对抗样本成为安全问题，而不仅仅是好奇心。',
+    'ai.s2.title': '攻击类别',
+    'ai.c1.label': '白盒攻击', 'ai.c1.p': '攻击者拥有完整的模型权重访问权限，可以计算损失相对于输入的梯度。FGSM 和 PGD 是典型示例。效果最大但需要模型访问权限。',
+    'ai.c2.label': '黑盒攻击', 'ai.c2.p': '仅有查询访问权。基于迁移性的攻击（为本地代理构造对抗样本，然后用于目标）和基于分数的攻击（迭代查询估计梯度方向）均无需权重访问即可工作。',
+    'ai.c3.label': '物理世界攻击', 'ai.c3.p': '印刷并放置在物理环境中的对抗性补丁——停车标志上的贴纸、击败行人检测的服装图案、导致人脸识别失败的眼镜框。这些在拍摄和真实照明变化中仍然有效。',
+    'ai.c4.label': '通用扰动', 'ai.c4.p': '一个单一扰动，添加到几乎任何输入时都会导致误分类。可以预先计算并无差别地应用——无需针对每个输入进行优化即可实施攻击。',
+    'ai.s3.title': '高风险攻击场景',
+    'ai.s3.a1': '自动驾驶感知：', 'ai.s3.a1.p': '道路标志上的物理对抗补丁导致目标检测模型遗漏障碍物或误读限速。2019 年，研究人员证明在停车标志上添加小贴纸，使其被商业视觉模型始终分类为"限速 45 英里/小时"标志。',
+    'ai.s3.a2': '生物特征认证绕过：', 'ai.s3.a2.p': '印有扰动图案的对抗性眼镜框可以导致商业人脸识别无法检测到人脸或将佩戴者误识别为目标人物。物理世界对人脸识别的攻击已在受控环境中得到验证。',
+    'ai.s3.a3': '内容审核规避：', 'ai.s3.a3.p': '对抗性扰动的图像通过自动内容审核被视为良性，同时对人类查看者仍然清晰地有害。恶意内容创作者可以使用对抗性扰动系统性地规避基于图像的审核系统。',
+    'ai.s4.title': '为何防御困难',
+    'ai.s4.p1': '大多数提出的防御措施——检测模型、输入预处理、集成方法——已被专门针对防御的自适应攻击所破解。唯一具有形式化保证的防御是认证鲁棒性（随机平滑），它提供数学可证明的边界，但准确率成本显著。',
+    'ai.s4.p2': '对抗训练能显著提升鲁棒性但并未消除漏洞，且训练出的鲁棒性跨攻击类型的泛化效果不佳。针对 L∞ 扰动对抗训练的模型可能仍然对 L2 或空间扰动存在漏洞。',
+    'ai.s5.title': '缓解措施',
+    'ai.s5.l1': '<strong>对安全关键分类器应用对抗训练。</strong>基于 PGD 的对抗训练是提升经验鲁棒性的当前最佳实践，即使它不提供形式化保证。',
+    'ai.s5.l2': '<strong>对认证鲁棒性需求使用随机平滑。</strong>在需要形式化保证的场景下，随机平滑提供可证明的边界。准确率权衡显著，但有时可接受。',
+    'ai.s5.l3": "<strong>不要仅依赖 AI 感知来做出安全关键决策。</strong>冗余传感方式、基于规则的合理性检查以及异常情况下的人工确认，可防止对任何单一模型的单点故障利用。',
+    'ai.s5.l4': '<strong>监控生产环境中的异常输入分布。</strong>对抗性扰动的输入通常具有与自然输入可区分的统计特性。对扰动幅度进行归一化或裁剪的输入预处理可以降低攻击效果。',
+    'ai.s5.l5': '<strong>根据实际威胁模型界定对抗鲁棒性需求范围。</strong>针对远程 API 的黑盒对抗攻击比针对本地部署模型的白盒攻击可操作性更低。根据攻击者的实际访问级别优先投入鲁棒性资源。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'ai.category': 'AIセキュリティ',
+    'ai.title': '対抗的入力：<br>AIがないものを見るとき',
+    'ai.lead': '対抗的サンプルは、AIモデルに高い確信度で誤分類を引き起こすよう作られた入力だ——ニューラルネットワークの汎化方法における根本的な脆弱性を明らかにする。ステッカーを貼った一時停止標識が速度制限標識になる。知覚できないピクセルノイズを持つパンダがテナガザルになる。',
+    'ai.s1.title': '対抗攻撃の幾何学',
+    'ai.s1.p1': 'ニューラルネットワークは入力空間を複雑な高次元境界を持つクラス領域に分割する。対抗的サンプルは、正しい入力から誤分類される入力への最短パスが入力空間でほぼ知覚できないほど短くなりうる一方、モデルの表現で基本的な決定境界を越えるという事実を悪用する。',
+    'ai.s1.p2': 'Szegedyら（2013年）のオリジナルのデモンストレーションでは、人間の目には見えないノイズベクトルを追加することでImageNet分類器が近100%の信頼度で誤分類した。これらの摂動はモデルをまたいで転用できる。',
+    'ai.pull': 'モデルは混乱していない。間違った答えに対して高い確実性で自信がある。その組み合わせが対抗的サンプルを単なる好奇心ではなくセキュリティ上の懸念にする。',
+    'ai.s2.title': '攻撃カテゴリー',
+    'ai.c1.label': 'ホワイトボックス攻撃', 'ai.c1.p': '攻撃者はモデルの重みに完全アクセスでき、入力に対する損失の勾配を計算できる。FGSMとPGDが典型例。最大限に効果的だがモデルアクセスが必要。',
+    'ai.c2.label': 'ブラックボックス攻撃', 'ai.c2.p': 'クエリアクセスのみ。転移ベースの攻撃（ローカルサロゲート用に対抗的サンプルを作りターゲットに使用）とスコアベースの攻撃はどちらも重みアクセスなしで機能する。',
+    'ai.c3.label': '物理世界攻撃', 'ai.c3.p': '物理環境に印刷・配置された対抗的パッチ——一時停止標識のステッカー、人物検出を無効にする服のパターン、顔認識を失敗させる眼鏡フレーム。これらは撮影と実際の照明変化を生き延びる。',
+    'ai.c4.label': 'ユニバーサル摂動', 'ai.c4.p': 'ほぼすべての入力に追加すると誤分類を引き起こす単一の摂動。事前計算して無差別に適用できる——入力ごとの最適化なしに攻撃を可能にする。',
+    'ai.s3.title': '高リスクの攻撃シナリオ',
+    'ai.s3.a1': '自動運転車の知覚：', 'ai.s3.a1.p': '道路標識の物理的な対抗パッチが物体検出モデルに障害物を見逃させたり速度制限を誤読させる。2019年、研究者は一時停止標識に小さなステッカーを追加することで、商業ビジョンモデルがそれを「時速45マイル制限」標識として一貫して分類することを実証した。',
+    'ai.s3.a2': '生体認証のバイパス：', 'ai.s3.a2.p': '摂動パターンを印刷した対抗的眼鏡フレームが商業的な顔認識に顔を検出できなくさせたり、着用者をターゲット人物として誤認識させる。',
+    'ai.s3.a3': 'コンテンツモデレーション回避：', 'ai.s3.a3.p': '対抗的に摂動された画像が自動コンテンツモデレーションを良性として通過しながら、人間の視聴者には明らかに有害なまま残る。',
+    'ai.s4.title': 'なぜ防御が難しいか',
+    'ai.s4.p1': 'ほとんどの提案された防御は防御を具体的に標的にした適応的攻撃によって突破されてきた。形式的保証を持つ唯一の防御は認証されたロバスト性（ランダム平滑化）で、証明可能な境界を提供するが大きな精度コストがある。',
+    'ai.s4.p2': '対抗的訓練はロバスト性を大幅に改善するが排除はしない。L∞摂動に対して対抗的に訓練されたモデルはL2または空間的摂動に対してまだ脆弱かもしれない。',
+    'ai.s5.title': '緩和策',
+    'ai.s5.l1': '<strong>安全クリティカルな分類器に対抗的訓練を適用する。</strong>PGDベースの対抗的訓練は形式的保証がなくても経験的ロバスト性を改善するための現在のベストプラクティスだ。',
+    'ai.s5.l2': '<strong>認証されたロバスト性に随机平滑化を使用する。</strong>形式的保証が必要な場合、ランダム平滑化は証明可能な境界を提供する。精度トレードオフは大きいが時として受け入れられる。',
+    'ai.s5.l3': '<strong>安全クリティカルな決定にAI知覚のみを頼りにしない。</strong>冗長なセンシングモダリティ、ルールベースの妥当性チェック、異常ケースでの人間介在確認が単一モデルへの単一障害点エクスプロイトを防ぐ。',
+    'ai.s5.l4': '<strong>本番環境で異常な入力分布を監視する。</strong>対抗的に摂動された入力はしばしば自然な入力と区別できる統計的特性を持つ。摂動の大きさを正規化またはクロップする入力前処理が攻撃効果を低下させる。',
+    'ai.s5.l5': '<strong>実際の脅威モデルにロバスト性要件の範囲を合わせる。</strong>リモートAPIへのブラックボックス攻撃はローカルにデプロイされたモデルへのホワイトボックス攻撃より実用性が低い。現実的な攻撃者のアクセスレベルに基づいて投資を優先する。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Trust Architecture for AI Systems: Never Trust, Always Verify — vsike</title>
+  <meta name="description" content="Traditional perimeter-based security fails AI systems where every model, agent, and data pipeline is a potential attack surface. Zero-trust principles—verify explicitly, least-privilege access, assume breach—must be applied at every layer of AI infrastructure.">
+  <meta name="keywords" content="零信任AI架构, AI系统安全, 最小权限原则, AI身份验证, 微隔离, zero-trust AI architecture, AI system security, least privilege, AI identity verification, micro-segmentation">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/zero-trust-ai.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .warn-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .pillar-grid { grid-template-columns: 1fr; } }
+    .pillar-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .pillar-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .layer-list { margin: 1.5rem 0; }
+    .layer-item { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--fg-dim); }
+    .layer-item:last-child { border-bottom: none; }
+    .layer-num { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--accent); font-weight: 600; white-space: nowrap; padding-top: 0.2rem; }
+    .code-block { background: var(--bg-code, #1a1a1a); color: var(--fg-code, #e8e8e8); padding: 1.25rem 1.5rem; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; margin: 2rem 0; border-left: 2px solid var(--accent); }
+    .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .compare-row { grid-template-columns: 1fr; } }
+    .compare-col h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 0.75rem; }
+    .compare-col.bad h4 { color: #c0392b; }
+    .compare-col.good h4 { color: var(--accent); }
+    .compare-col ul { list-style: none; padding: 0; }
+    .compare-col li { padding: 0.4rem 0; font-size: 0.9rem; border-bottom: 1px solid var(--fg-dim); }
+    .compare-col li:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation"></nav>
+
+<main class="container article-page" role="main">
+  <div class="article-header">
+    <div class="article-category" data-i18n="zta.category">AI Security</div>
+    <h1 class="article-title" data-i18n="zta.title">Zero-Trust Architecture for AI Systems: Never Trust, Always Verify</h1>
+    <p class="article-subtitle" data-i18n="zta.subtitle">Traditional perimeter security assumes everything inside is safe. AI systems shatter that assumption at every layer.</p>
+    <p class="pub-time">Oregon — 2026-05-17 22:59 PDT</p>
+  </div>
+
+  <article class="article-body">
+    <p data-i18n-html="zta.intro">The classic perimeter model works like a medieval castle: thick walls keep attackers out, and everyone inside is trusted. AI systems break this model completely. A compromised model weight file, a poisoned training pipeline, a rogue agent with overly broad tool access — the attack surfaces are internal by design. Zero-trust says: assume breach, verify everything, grant minimum access.</p>
+
+    <h2 data-i18n="zta.why-heading">Why Perimeter Security Fails AI</h2>
+    <p data-i18n-html="zta.why-body">AI systems have a unique threat profile. Models are opaque — you can't inspect a 70B parameter checkpoint the way you audit source code. Agents make autonomous decisions and take real-world actions. Data flows are bidirectional: training data shapes model behavior, and model outputs shape downstream decisions. A perimeter firewall can't see inside any of this.</p>
+
+    <div class="compare-row">
+      <div class="compare-col bad">
+        <h4 data-i18n="zta.perimeter-label">Perimeter Model</h4>
+        <ul>
+          <li data-i18n="zta.p1">Trust internal network implicitly</li>
+          <li data-i18n="zta.p2">Authenticate once at the edge</li>
+          <li data-i18n="zta.p3">Broad service-to-service access</li>
+          <li data-i18n="zta.p4">Inspect traffic at the border only</li>
+          <li data-i18n="zta.p5">Alert on known-bad signatures</li>
+        </ul>
+      </div>
+      <div class="compare-col good">
+        <h4 data-i18n="zta.zerotrust-label">Zero-Trust Model</h4>
+        <ul>
+          <li data-i18n="zta.z1">Verify every request regardless of source</li>
+          <li data-i18n="zta.z2">Continuous re-authentication and re-authorization</li>
+          <li data-i18n="zta.z3">Least-privilege access per operation</li>
+          <li data-i18n="zta.z4">Inspect all traffic, internal and external</li>
+          <li data-i18n="zta.z5">Assume breach, monitor for anomalies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull-quote" data-i18n="zta.quote1">"Never trust, always verify" isn't a firewall rule. It's a design philosophy that changes how every component in your AI stack is authenticated, authorized, and monitored.</div>
+
+    <h2 data-i18n="zta.layers-heading">Five Zero-Trust Layers for AI Infrastructure</h2>
+
+    <div class="layer-list">
+      <div class="layer-item">
+        <span class="layer-num">01</span>
+        <div>
+          <strong data-i18n="zta.l1-title">Identity for Models and Agents</strong>
+          <p data-i18n-html="zta.l1-body">Every model, every agent, and every pipeline component needs a cryptographic identity — not just a service account password. Use short-lived mTLS certificates (SPIFFE/SPIRE is purpose-built for this) so that even if credentials leak, they expire quickly. An LLM agent calling your internal API should present a verifiable identity bound to its workload, not a static API key committed to a config file.</p>
+        </div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">02</span>
+        <div>
+          <strong data-i18n="zta.l2-title">Least-Privilege Tool Access</strong>
+          <p data-i18n-html="zta.l2-body">AI agents are dangerous with broad permissions. An agent that can read email, write files, execute code, and call external APIs is one successful prompt injection away from full compromise. Apply the principle of least privilege at the tool level: give each agent only the tools required for its defined task, and scope those tools to the minimum necessary resources. A customer support agent doesn't need filesystem access.</p>
+        </div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">03</span>
+        <div>
+          <strong data-i18n="zta.l3-title">Micro-Segmentation of Data Flows</strong>
+          <p data-i18n-html="zta.l3-body">Segment data access by sensitivity and by which models are permitted to process it. PII that flows into a customer-facing model should not be accessible to a model used for internal analytics, even if both run in the same cluster. Use network policies, input/output sanitization gates, and data classification labels enforced at the infrastructure layer — not just at the application layer where models can be manipulated to bypass them.</p>
+        </div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">04</span>
+        <div>
+          <strong data-i18n="zta.l4-title">Continuous Output Verification</strong>
+          <p data-i18n-html="zta.l4-body">Don't trust model outputs by default. Every action an agent proposes — file write, API call, database query — should pass through an authorization gate before execution. This is especially critical in multi-agent systems where output from one model becomes input to another. Treat model output like untrusted user input: validate structure, sanitize content, enforce schema constraints.</p>
+        </div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">05</span>
+        <div>
+          <strong data-i18n="zta.l5-title">Immutable Audit Logging</strong>
+          <p data-i18n-html="zta.l5-body">Every inference, every tool call, every agent decision should produce an append-only audit record that includes the model identity, input hash, output, tool invocations, and the authorization decisions made. Send logs to an immutable sink (write-once object storage, or a separate logging cluster) that the AI system itself cannot write to or delete from. Without this, incident response is guesswork.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 data-i18n="zta.identity-heading">Implementing Model Identity in Practice</h2>
+    <p data-i18n-html="zta.identity-body">SPIFFE (Secure Production Identity Framework for Everyone) provides a standard for workload identity that integrates with Kubernetes, Nomad, and bare metal. Each workload gets a SPIFFE Verifiable Identity Document (SVID) — a short-lived X.509 certificate or JWT. When your LLM agent calls an internal API, it presents its SVID; the receiving service verifies it against the SPIFFE trust bundle. No static secrets, no long-lived API keys.</p>
+
+    <div class="code-block">
+# SPIRE agent config: assign identity to LLM inference workload
+agent {
+  data_dir  = "/opt/spire/data/agent"
+  log_level = "INFO"
+  server_address = "spire-server.internal"
+}
+
+workload_attestor "k8s" {
+  skip_kubelet_verification = false
+}
+
+# Inference pod gets identity:
+# spiffe://vsike.internal/ns/ai-prod/sa/llm-agent-reader
+
+# Calling service verifies SVID before granting access
+# Short-lived cert (1h TTL) rotated automatically by SPIRE
+    </div>
+
+    <h2 data-i18n="zta.prompt-heading">Zero-Trust and Prompt Injection</h2>
+    <p data-i18n-html="zta.prompt-body">Zero-trust doesn't prevent prompt injection — but it limits the blast radius. An agent that successfully bypasses safety filters can only take actions it was already authorized to take. If least-privilege is correctly applied, a compromised customer support agent can't pivot to internal admin APIs. The injection succeeds, but the attacker hits an authorization wall on every consequential action.</p>
+
+    <div class="warn-block">
+      <strong data-i18n="zta.warn-title">The Authorization Gap</strong>
+      <p data-i18n-html="zta.warn-body">The most common failure: developers implement authentication (who is this agent?) but skip authorization (what is this specific agent allowed to do right now, in this context?). Authentication without fine-grained authorization gives you identity theater. An agent that authenticates as "production-llm-agent" but can then call any tool, read any data, and write anywhere is not zero-trust — it's just perimeter security with extra steps.</p>
+    </div>
+
+    <h2 data-i18n="zta.supply-heading">Supply Chain Verification</h2>
+    <p data-i18n-html="zta.supply-body">Zero-trust extends to model weights and training artifacts. Every model checkpoint should be signed with a cryptographic key controlled by your security team, and the signature should be verified before the model is loaded into any inference runtime. Tools like Sigstore and in-toto provide attestation frameworks that can track a model from training data → training run → checkpoint → deployment, with signed evidence at each step.</p>
+
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <h4 data-i18n="zta.card1-title">Model Signing</h4>
+        <p data-i18n="zta.card1-body">Sign checkpoints with Sigstore. Verify before load. Reject unsigned or signature-mismatch models in your inference runtime startup sequence.</p>
+      </div>
+      <div class="pillar-card">
+        <h4 data-i18n="zta.card2-title">Attestation Chain</h4>
+        <p data-i18n="zta.card2-body">Use in-toto layouts to define who is authorized to perform each step in the ML pipeline. Any deviation from the authorized supply chain fails verification.</p>
+      </div>
+      <div class="pillar-card">
+        <h4 data-i18n="zta.card3-title">Dependency Pinning</h4>
+        <p data-i18n="zta.card3-body">Pin all ML framework dependencies to exact hashes (requirements.txt with --hash). A compromised transitive dependency can alter model behavior at load time.</p>
+      </div>
+      <div class="pillar-card">
+        <h4 data-i18n="zta.card4-title">Runtime Integrity</h4>
+        <p data-i18n="zta.card4-body">Use container image signing (cosign) and admission controllers (OPA/Gatekeeper) to ensure only verified inference containers run in production Kubernetes clusters.</p>
+      </div>
+    </div>
+
+    <h2 data-i18n="zta.monitoring-heading">Behavioral Monitoring as Zero-Trust Enforcement</h2>
+    <p data-i18n-html="zta.monitoring-body">Static policies are necessary but not sufficient. An agent operating within its authorized permissions can still behave anomalously — making an unusual number of tool calls, accessing data at an unusual rate, or producing outputs with statistical properties inconsistent with its training distribution. Behavioral baselines, anomaly detection, and automatic circuit-breakers (rate limits that trigger automatic agent suspension) are the dynamic enforcement layer that static policies can't provide.</p>
+
+    <div class="defend-block">
+      <strong data-i18n="zta.defend-title">Zero-Trust Implementation Checklist</strong>
+      <ul>
+        <li data-i18n="zta.check1">Every AI workload has a cryptographic identity (SPIFFE SVID or equivalent)</li>
+        <li data-i18n="zta.check2">Tool access scoped per agent per task, not per agent globally</li>
+        <li data-i18n="zta.check3">All model outputs pass authorization gates before action execution</li>
+        <li data-i18n="zta.check4">Data partitioned by sensitivity with network-layer enforcement</li>
+        <li data-i18n="zta.check5">Model weights and pipeline artifacts signed and verified on load</li>
+        <li data-i18n="zta.check6">Append-only audit logs the AI system cannot delete or modify</li>
+        <li data-i18n="zta.check7">Behavioral baselines with anomaly alerts and automatic circuit-breakers</li>
+      </ul>
+    </div>
+
+    <p data-i18n-html="zta.conclusion">Zero-trust for AI is not a product you buy — it's an architectural commitment you make at design time. Retrofitting it onto an existing AI system is possible but painful. The teams that get this right are the ones who treat identity, authorization, and audit logging as first-class requirements alongside model accuracy, latency, and cost.</p>
+  </article>
+</main>
+
+<footer class="footer" role="contentinfo"></footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'zta.category': 'AI Security',
+    'zta.title': 'Zero-Trust Architecture for AI Systems: Never Trust, Always Verify',
+    'zta.subtitle': 'Traditional perimeter security assumes everything inside is safe. AI systems shatter that assumption at every layer.',
+    'zta.intro': 'The classic perimeter model works like a medieval castle: thick walls keep attackers out, and everyone inside is trusted. AI systems break this model completely. A compromised model weight file, a poisoned training pipeline, a rogue agent with overly broad tool access — the attack surfaces are internal by design. Zero-trust says: assume breach, verify everything, grant minimum access.',
+    'zta.why-heading': 'Why Perimeter Security Fails AI',
+    'zta.why-body': 'AI systems have a unique threat profile. Models are opaque — you can\'t inspect a 70B parameter checkpoint the way you audit source code. Agents make autonomous decisions and take real-world actions. Data flows are bidirectional: training data shapes model behavior, and model outputs shape downstream decisions. A perimeter firewall can\'t see inside any of this.',
+    'zta.perimeter-label': 'Perimeter Model',
+    'zta.p1': 'Trust internal network implicitly',
+    'zta.p2': 'Authenticate once at the edge',
+    'zta.p3': 'Broad service-to-service access',
+    'zta.p4': 'Inspect traffic at the border only',
+    'zta.p5': 'Alert on known-bad signatures',
+    'zta.zerotrust-label': 'Zero-Trust Model',
+    'zta.z1': 'Verify every request regardless of source',
+    'zta.z2': 'Continuous re-authentication and re-authorization',
+    'zta.z3': 'Least-privilege access per operation',
+    'zta.z4': 'Inspect all traffic, internal and external',
+    'zta.z5': 'Assume breach, monitor for anomalies',
+    'zta.quote1': '"Never trust, always verify" isn\'t a firewall rule. It\'s a design philosophy that changes how every component in your AI stack is authenticated, authorized, and monitored.',
+    'zta.layers-heading': 'Five Zero-Trust Layers for AI Infrastructure',
+    'zta.l1-title': 'Identity for Models and Agents',
+    'zta.l1-body': 'Every model, every agent, and every pipeline component needs a cryptographic identity — not just a service account password. Use short-lived mTLS certificates (SPIFFE/SPIRE is purpose-built for this) so that even if credentials leak, they expire quickly. An LLM agent calling your internal API should present a verifiable identity bound to its workload, not a static API key committed to a config file.',
+    'zta.l2-title': 'Least-Privilege Tool Access',
+    'zta.l2-body': 'AI agents are dangerous with broad permissions. An agent that can read email, write files, execute code, and call external APIs is one successful prompt injection away from full compromise. Apply the principle of least privilege at the tool level: give each agent only the tools required for its defined task, and scope those tools to the minimum necessary resources. A customer support agent doesn\'t need filesystem access.',
+    'zta.l3-title': 'Micro-Segmentation of Data Flows',
+    'zta.l3-body': 'Segment data access by sensitivity and by which models are permitted to process it. PII that flows into a customer-facing model should not be accessible to a model used for internal analytics, even if both run in the same cluster. Use network policies, input/output sanitization gates, and data classification labels enforced at the infrastructure layer — not just at the application layer where models can be manipulated to bypass them.',
+    'zta.l4-title': 'Continuous Output Verification',
+    'zta.l4-body': 'Don\'t trust model outputs by default. Every action an agent proposes — file write, API call, database query — should pass through an authorization gate before execution. This is especially critical in multi-agent systems where output from one model becomes input to another. Treat model output like untrusted user input: validate structure, sanitize content, enforce schema constraints.',
+    'zta.l5-title': 'Immutable Audit Logging',
+    'zta.l5-body': 'Every inference, every tool call, every agent decision should produce an append-only audit record that includes the model identity, input hash, output, tool invocations, and the authorization decisions made. Send logs to an immutable sink (write-once object storage, or a separate logging cluster) that the AI system itself cannot write to or delete from. Without this, incident response is guesswork.',
+    'zta.identity-heading': 'Implementing Model Identity in Practice',
+    'zta.identity-body': 'SPIFFE (Secure Production Identity Framework for Everyone) provides a standard for workload identity that integrates with Kubernetes, Nomad, and bare metal. Each workload gets a SPIFFE Verifiable Identity Document (SVID) — a short-lived X.509 certificate or JWT. When your LLM agent calls an internal API, it presents its SVID; the receiving service verifies it against the SPIFFE trust bundle. No static secrets, no long-lived API keys.',
+    'zta.prompt-heading': 'Zero-Trust and Prompt Injection',
+    'zta.prompt-body': 'Zero-trust doesn\'t prevent prompt injection — but it limits the blast radius. An agent that successfully bypasses safety filters can only take actions it was already authorized to take. If least-privilege is correctly applied, a compromised customer support agent can\'t pivot to internal admin APIs. The injection succeeds, but the attacker hits an authorization wall on every consequential action.',
+    'zta.warn-title': 'The Authorization Gap',
+    'zta.warn-body': 'The most common failure: developers implement authentication (who is this agent?) but skip authorization (what is this specific agent allowed to do right now, in this context?). Authentication without fine-grained authorization gives you identity theater. An agent that authenticates as "production-llm-agent" but can then call any tool, read any data, and write anywhere is not zero-trust — it\'s just perimeter security with extra steps.',
+    'zta.supply-heading': 'Supply Chain Verification',
+    'zta.supply-body': 'Zero-trust extends to model weights and training artifacts. Every model checkpoint should be signed with a cryptographic key controlled by your security team, and the signature should be verified before the model is loaded into any inference runtime. Tools like Sigstore and in-toto provide attestation frameworks that can track a model from training data → training run → checkpoint → deployment, with signed evidence at each step.',
+    'zta.card1-title': 'Model Signing',
+    'zta.card1-body': 'Sign checkpoints with Sigstore. Verify before load. Reject unsigned or signature-mismatch models in your inference runtime startup sequence.',
+    'zta.card2-title': 'Attestation Chain',
+    'zta.card2-body': 'Use in-toto layouts to define who is authorized to perform each step in the ML pipeline. Any deviation from the authorized supply chain fails verification.',
+    'zta.card3-title': 'Dependency Pinning',
+    'zta.card3-body': 'Pin all ML framework dependencies to exact hashes (requirements.txt with --hash). A compromised transitive dependency can alter model behavior at load time.',
+    'zta.card4-title': 'Runtime Integrity',
+    'zta.card4-body': 'Use container image signing (cosign) and admission controllers (OPA/Gatekeeper) to ensure only verified inference containers run in production Kubernetes clusters.',
+    'zta.monitoring-heading': 'Behavioral Monitoring as Zero-Trust Enforcement',
+    'zta.monitoring-body': 'Static policies are necessary but not sufficient. An agent operating within its authorized permissions can still behave anomalously — making an unusual number of tool calls, accessing data at an unusual rate, or producing outputs with statistical properties inconsistent with its training distribution. Behavioral baselines, anomaly detection, and automatic circuit-breakers (rate limits that trigger automatic agent suspension) are the dynamic enforcement layer that static policies can\'t provide.',
+    'zta.defend-title': 'Zero-Trust Implementation Checklist',
+    'zta.check1': 'Every AI workload has a cryptographic identity (SPIFFE SVID or equivalent)',
+    'zta.check2': 'Tool access scoped per agent per task, not per agent globally',
+    'zta.check3': 'All model outputs pass authorization gates before action execution',
+    'zta.check4': 'Data partitioned by sensitivity with network-layer enforcement',
+    'zta.check5': 'Model weights and pipeline artifacts signed and verified on load',
+    'zta.check6': 'Append-only audit logs the AI system cannot delete or modify',
+    'zta.check7': 'Behavioral baselines with anomaly alerts and automatic circuit-breakers',
+    'zta.conclusion': 'Zero-trust for AI is not a product you buy — it\'s an architectural commitment you make at design time. Retrofitting it onto an existing AI system is possible but painful. The teams that get this right are the ones who treat identity, authorization, and audit logging as first-class requirements alongside model accuracy, latency, and cost.',
+  },
+  zh: {
+    'zta.category': 'AI安全',
+    'zta.title': 'AI系统的零信任架构：永不信任，始终验证',
+    'zta.subtitle': '传统边界安全假设内部一切都是安全的。AI系统在每一层都打破了这个假设。',
+    'zta.intro': '经典边界模型就像中世纪城堡：厚厚的城墙将攻击者拒之门外，内部的一切都被信任。AI系统彻底打破了这个模型。被入侵的模型权重文件、被投毒的训练管道、具有过于宽泛工具访问权限的恶意代理——攻击面从设计上就是内部的。零信任说：假设已被入侵，验证一切，授予最小访问权限。',
+    'zta.why-heading': '为什么边界安全对AI失效',
+    'zta.why-body': 'AI系统有独特的威胁特征。模型是不透明的——你无法像审计源代码那样检查700亿参数的检查点。代理做出自主决策并采取真实世界的行动。数据流是双向的：训练数据塑造模型行为，模型输出影响下游决策。边界防火墙无法看透这一切。',
+    'zta.perimeter-label': '边界模型',
+    'zta.p1': '隐式信任内部网络',
+    'zta.p2': '在边缘进行一次认证',
+    'zta.p3': '宽泛的服务间访问',
+    'zta.p4': '仅在边界检查流量',
+    'zta.p5': '对已知恶意签名报警',
+    'zta.zerotrust-label': '零信任模型',
+    'zta.z1': '无论来源，验证每个请求',
+    'zta.z2': '持续重新认证和重新授权',
+    'zta.z3': '每次操作的最小权限访问',
+    'zta.z4': '检查所有流量，内部和外部',
+    'zta.z5': '假设已被入侵，监控异常',
+    'zta.quote1': '"永不信任，始终验证"不是防火墙规则，而是一种设计哲学，它改变了AI堆栈中每个组件的认证、授权和监控方式。',
+    'zta.layers-heading': 'AI基础设施的五个零信任层',
+    'zta.l1-title': '模型和代理的身份标识',
+    'zta.l1-body': '每个模型、每个代理和每个管道组件都需要密码学身份——而不仅仅是服务账户密码。使用短期mTLS证书（SPIFFE/SPIRE正是为此设计的），即使凭据泄露，也会很快过期。调用内部API的LLM代理应提供与其工作负载绑定的可验证身份，而不是提交到配置文件中的静态API密钥。',
+    'zta.l2-title': '最小权限工具访问',
+    'zta.l2-body': '具有广泛权限的AI代理非常危险。一个能够读取电子邮件、写入文件、执行代码和调用外部API的代理，只需一次成功的提示注入就可能完全沦陷。在工具层面应用最小权限原则：只给每个代理其定义任务所需的工具，并将这些工具的范围限制在最小必要资源。客户支持代理不需要文件系统访问权限。',
+    'zta.l3-title': '数据流微隔离',
+    'zta.l3-body': '按敏感性和允许处理的模型对数据访问进行分段。流入面向客户模型的PII不应被用于内部分析的模型访问，即使两者在同一集群中运行。使用网络策略、输入/输出净化门和在基础设施层执行的数据分类标签——而不仅仅是在应用层（模型可能被操纵以绕过这些）。',
+    'zta.l4-title': '持续输出验证',
+    'zta.l4-body': '默认不信任模型输出。代理提出的每一个动作——文件写入、API调用、数据库查询——在执行前都应通过授权门。这在多代理系统中尤为关键，其中一个模型的输出成为另一个模型的输入。将模型输出视为不可信的用户输入：验证结构、净化内容、执行模式约束。',
+    'zta.l5-title': '不可变审计日志',
+    'zta.l5-body': '每次推理、每次工具调用、每个代理决策都应产生一个只追加的审计记录，包括模型身份、输入哈希、输出、工具调用和做出的授权决策。将日志发送到AI系统本身无法写入或删除的不可变接收器（一次写入对象存储，或单独的日志集群）。没有这个，事故响应就是猜测。',
+    'zta.identity-heading': '在实践中实现模型身份',
+    'zta.identity-body': 'SPIFFE（面向所有人的安全生产身份框架）为工作负载身份提供标准，与Kubernetes、Nomad和裸机集成。每个工作负载获得一个SPIFFE可验证身份文档（SVID）——短期X.509证书或JWT。当你的LLM代理调用内部API时，它提供其SVID；接收服务根据SPIFFE信任捆绑包进行验证。没有静态密钥，没有长期API密钥。',
+    'zta.prompt-heading': '零信任与提示注入',
+    'zta.prompt-body': '零信任不能防止提示注入——但它限制了爆炸半径。成功绕过安全过滤器的代理只能执行其已被授权执行的操作。如果最小权限被正确应用，被入侵的客户支持代理无法转向内部管理API。注入成功，但攻击者在每个重要操作上都碰到了授权墙。',
+    'zta.warn-title': '授权差距',
+    'zta.warn-body': '最常见的失败：开发人员实现了认证（这个代理是谁？）但跳过了授权（这个特定代理现在、在这个上下文中被允许做什么？）。没有细粒度授权的认证给你的是身份剧场。一个以"production-llm-agent"身份认证但随后可以调用任何工具、读取任何数据、在任何地方写入的代理不是零信任——只是带有额外步骤的边界安全。',
+    'zta.supply-heading': '供应链验证',
+    'zta.supply-body': '零信任延伸到模型权重和训练工件。每个模型检查点都应使用由安全团队控制的密码学密钥签名，并在模型加载到任何推理运行时之前验证签名。Sigstore和in-toto等工具提供证明框架，可以追踪模型从训练数据→训练运行→检查点→部署的整个过程，每个步骤都有签名证据。',
+    'zta.card1-title': '模型签名',
+    'zta.card1-body': '使用Sigstore签署检查点。加载前验证。在推理运行时启动序列中拒绝未签名或签名不匹配的模型。',
+    'zta.card2-title': '证明链',
+    'zta.card2-body': '使用in-toto布局定义谁有权执行ML管道中的每个步骤。任何偏离授权供应链的行为都无法通过验证。',
+    'zta.card3-title': '依赖项固定',
+    'zta.card3-body': '将所有ML框架依赖项固定到精确哈希（requirements.txt with --hash）。被入侵的传递依赖项可能在加载时改变模型行为。',
+    'zta.card4-title': '运行时完整性',
+    'zta.card4-body': '使用容器镜像签名（cosign）和准入控制器（OPA/Gatekeeper）确保只有经过验证的推理容器在生产Kubernetes集群中运行。',
+    'zta.monitoring-heading': '行为监控作为零信任执行',
+    'zta.monitoring-body': '静态策略是必要的但不够充分。在其授权权限范围内运行的代理仍然可能表现异常——进行异常数量的工具调用、以异常速率访问数据，或产生统计特性与训练分布不一致的输出。行为基线、异常检测和自动断路器（触发自动代理暂停的速率限制）是静态策略无法提供的动态执行层。',
+    'zta.defend-title': '零信任实施清单',
+    'zta.check1': '每个AI工作负载都有密码学身份（SPIFFE SVID或等效物）',
+    'zta.check2': '工具访问按每个代理每个任务范围界定，而非按代理全局',
+    'zta.check3': '所有模型输出在执行前通过授权门',
+    'zta.check4': '数据按敏感性分区，并在网络层执行',
+    'zta.check5': '模型权重和管道工件在加载时签名并验证',
+    'zta.check6': 'AI系统本身无法删除或修改的只追加审计日志',
+    'zta.check7': '行为基线，带有异常警报和自动断路器',
+    'zta.conclusion': 'AI的零信任不是你购买的产品——而是你在设计时做出的架构承诺。将其改造到现有AI系统上是可能的，但很痛苦。做到这一点的团队是那些将身份、授权和审计日志视为与模型准确性、延迟和成本同等重要的一流需求的团队。',
+  },
+  ja: {
+    'zta.category': 'AIセキュリティ',
+    'zta.title': 'AIシステムのゼロトラストアーキテクチャ：決して信頼せず、常に検証する',
+    'zta.subtitle': '従来の境界セキュリティは内部のすべてが安全だと仮定する。AIシステムはすべての層でその仮定を打ち砕く。',
+    'zta.intro': '従来の境界モデルは中世の城のように機能する：厚い壁が攻撃者を締め出し、内部のすべてが信頼される。AIシステムはこのモデルを完全に破壊する。侵害されたモデルの重みファイル、汚染されたトレーニングパイプライン、過度に広いツールアクセスを持つ不正なエージェント——攻撃面は設計上、内部にある。ゼロトラストは言う：侵害を前提とし、すべてを検証し、最小限のアクセスを付与せよ。',
+    'zta.why-heading': '境界セキュリティがAIに対して失敗する理由',
+    'zta.why-body': 'AIシステムは独自の脅威プロファイルを持つ。モデルは不透明——700億パラメータのチェックポイントをソースコードを監査するように検査することはできない。エージェントは自律的に決定を下し、現実世界で行動する。データフローは双方向：トレーニングデータがモデルの動作を形成し、モデルの出力が下流の決定を形成する。境界ファイアウォールはこれらを内部から見ることができない。',
+    'zta.perimeter-label': '境界モデル',
+    'zta.p1': '内部ネットワークを暗黙的に信頼',
+    'zta.p2': 'エッジで一度認証',
+    'zta.p3': '広範なサービス間アクセス',
+    'zta.p4': '境界でのみトラフィックを検査',
+    'zta.p5': '既知の悪意あるシグネチャにアラート',
+    'zta.zerotrust-label': 'ゼロトラストモデル',
+    'zta.z1': 'ソースに関係なくすべてのリクエストを検証',
+    'zta.z2': '継続的な再認証と再認可',
+    'zta.z3': '操作ごとの最小権限アクセス',
+    'zta.z4': '内部外部すべてのトラフィックを検査',
+    'zta.z5': '侵害を前提とし、異常を監視',
+    'zta.quote1': '「決して信頼せず、常に検証する」はファイアウォールルールではない。AIスタックのすべてのコンポーネントが認証、認可、監視される方法を変える設計哲学だ。',
+    'zta.layers-heading': 'AIインフラの5つのゼロトラスト層',
+    'zta.l1-title': 'モデルとエージェントのID',
+    'zta.l1-body': 'すべてのモデル、すべてのエージェント、すべてのパイプラインコンポーネントには、サービスアカウントのパスワードだけでなく、暗号学的なIDが必要だ。短期間のmTLS証明書（SPIFFE/SPIREはこのために設計されている）を使用して、たとえ認証情報が漏洩しても、すぐに期限切れになる。内部APIを呼び出すLLMエージェントは、設定ファイルにコミットされた静的APIキーではなく、ワークロードに結びついた検証可能なIDを提示すべきだ。',
+    'zta.l2-title': '最小権限ツールアクセス',
+    'zta.l2-body': 'AIエージェントは広範な権限を持つと危険だ。メール読み取り、ファイル書き込み、コード実行、外部API呼び出しができるエージェントは、成功したプロンプトインジェクション一つで完全に侵害される可能性がある。ツールレベルで最小権限の原則を適用する：各エージェントに定義されたタスクに必要なツールのみを与え、それらのツールを最小限の必要なリソースにスコープする。カスタマーサポートエージェントにはファイルシステムアクセスは不要だ。',
+    'zta.l3-title': 'データフローのマイクロセグメンテーション',
+    'zta.l3-body': '機密性と処理を許可されているモデルによってデータアクセスをセグメント化する。顧客向けモデルに流れるPIIは、たとえ両方が同じクラスターで実行されていても、内部分析に使用されるモデルにアクセスできないようにすべきだ。ネットワークポリシー、入出力サニタイゼーションゲート、インフラ層で施行されるデータ分類ラベルを使用する——モデルが回避するよう操作できるアプリケーション層だけではなく。',
+    'zta.l4-title': '継続的出力検証',
+    'zta.l4-body': 'デフォルトでモデル出力を信頼しない。エージェントが提案するすべてのアクション——ファイル書き込み、API呼び出し、データベースクエリ——は実行前に認可ゲートを通過すべきだ。これは、あるモデルの出力が別のモデルへの入力になるマルチエージェントシステムで特に重要だ。モデル出力を信頼されていないユーザー入力として扱う：構造を検証し、コンテンツをサニタイズし、スキーマ制約を施行する。',
+    'zta.l5-title': '不変監査ログ',
+    'zta.l5-body': 'すべての推論、すべてのツール呼び出し、すべてのエージェント決定は、モデルID、入力ハッシュ、出力、ツール呼び出し、行われた認可決定を含む追記専用の監査レコードを生成すべきだ。AIシステム自体が書き込めず削除できない不変シンク（ライトワンスオブジェクトストレージ、または別のロギングクラスター）にログを送信する。これがなければ、インシデント対応は推測に過ぎない。',
+    'zta.identity-heading': '実践でのモデルIDの実装',
+    'zta.identity-body': 'SPIFFE（Secure Production Identity Framework for Everyone）は、Kubernetes、Nomad、ベアメタルと統合するワークロードIDの標準を提供する。各ワークロードはSPIFFE検証可能IDドキュメント（SVID）——短期X.509証明書またはJWT——を取得する。LLMエージェントが内部APIを呼び出すとき、SVIDを提示し、受信サービスがSPIFFEトラストバンドルに対して検証する。静的シークレットなし、長期APIキーなし。',
+    'zta.prompt-heading': 'ゼロトラストとプロンプトインジェクション',
+    'zta.prompt-body': 'ゼロトラストはプロンプトインジェクションを防がない——しかし爆発半径を制限する。安全フィルターの回避に成功したエージェントは、すでに認可されているアクションしか実行できない。最小権限が正しく適用されていれば、侵害されたカスタマーサポートエージェントは内部管理APIに転向できない。インジェクションは成功するが、攻撃者はすべての重要なアクションで認可の壁にぶつかる。',
+    'zta.warn-title': '認可ギャップ',
+    'zta.warn-body': '最もよくある失敗：開発者は認証（このエージェントは誰か？）を実装するが、認可（このエージェントは今、このコンテキストで何をすることが許可されているか？）をスキップする。細粒度の認可のない認証はIDの演劇を与えるだけだ。「production-llm-agent」として認証されるが、その後任意のツールを呼び出し、任意のデータを読み取り、どこにでも書き込めるエージェントはゼロトラストではない——追加手順の付いた境界セキュリティに過ぎない。',
+    'zta.supply-heading': 'サプライチェーン検証',
+    'zta.supply-body': 'ゼロトラストはモデルの重みとトレーニングアーティファクトにまで及ぶ。すべてのモデルチェックポイントはセキュリティチームが管理する暗号鍵で署名され、モデルが推論ランタイムにロードされる前に署名が検証されるべきだ。SigstoreやIn-totoなどのツールは、トレーニングデータ→トレーニングラン→チェックポイント→デプロイメントまでのモデルを各ステップで署名付きエビデンスとともに追跡できる証明フレームワークを提供する。',
+    'zta.card1-title': 'モデル署名',
+    'zta.card1-body': 'Sigstoreでチェックポイントに署名。ロード前に検証。推論ランタイムの起動シーケンスで未署名または署名不一致のモデルを拒否。',
+    'zta.card2-title': '証明チェーン',
+    'zta.card2-body': 'In-totoレイアウトを使用してMLパイプラインの各ステップを実行する権限を持つ者を定義。認可されたサプライチェーンからの逸脱は検証に失敗する。',
+    'zta.card3-title': '依存関係のピン留め',
+    'zta.card3-body': 'すべてのMLフレームワークの依存関係を正確なハッシュにピン留め（requirements.txt with --hash）。侵害されたトランジティブ依存関係はロード時にモデルの動作を変更できる。',
+    'zta.card4-title': 'ランタイム整合性',
+    'zta.card4-body': 'コンテナイメージ署名（cosign）とアドミッションコントローラー（OPA/Gatekeeper）を使用して、検証済みの推論コンテナのみが本番Kubernetesクラスターで実行されることを確保する。',
+    'zta.monitoring-heading': 'ゼロトラスト施行としての行動監視',
+    'zta.monitoring-body': '静的ポリシーは必要だが十分ではない。認可された権限内で動作するエージェントでも異常に行動する可能性がある——異常な数のツール呼び出し、異常なレートでのデータアクセス、またはトレーニング分布と一致しない統計的特性を持つ出力の生成。行動ベースライン、異常検出、自動サーキットブレーカー（自動エージェント停止をトリガーするレート制限）は、静的ポリシーでは提供できない動的施行層だ。',
+    'zta.defend-title': 'ゼロトラスト実装チェックリスト',
+    'zta.check1': 'すべてのAIワークロードに暗号学的ID（SPIFFE SVIDまたは同等物）がある',
+    'zta.check2': 'ツールアクセスはエージェントグローバルではなくエージェントごとタスクごとにスコープされている',
+    'zta.check3': 'すべてのモデル出力がアクション実行前に認可ゲートを通過する',
+    'zta.check4': 'データが機密性によって分割され、ネットワーク層で施行されている',
+    'zta.check5': 'モデルの重みとパイプラインアーティファクトがロード時に署名・検証されている',
+    'zta.check6': 'AIシステム自体が削除または変更できない追記専用監査ログ',
+    'zta.check7': '異常アラートと自動サーキットブレーカーを備えた行動ベースライン',
+    'zta.conclusion': 'AIのゼロトラストは購入する製品ではない——設計時に行うアーキテクチャのコミットメントだ。既存のAIシステムに後付けすることは可能だが苦痛だ。これを正しく行うチームは、モデルの精度、レイテンシ、コストと並んでID、認可、監査ログを第一級の要件として扱うチームだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

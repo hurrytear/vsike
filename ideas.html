@@ -65,10 +65,106 @@
   <div class="section">
     <div class="section-label reveal">
       <span data-i18n="ideas.section.label">All Posts</span>
-      <span class="section-label-count" data-i18n="ideas.section.count">41 entries</span>
+      <span class="section-label-count" data-i18n="ideas.section.count">49 entries</span>
     </div>
 
     <div class="ideas-list" role="list">
+
+      <a href="ideas/zero-trust-ai.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">49</div>
+        <div class="idea-content">
+          <div class="idea-title">Zero-Trust Architecture for AI Systems: Never Trust, Always Verify</div>
+          <p class="idea-excerpt">Traditional perimeter security fails AI where every model, agent, and pipeline is an internal attack surface. Five zero-trust layers: cryptographic workload identity (SPIFFE/SPIRE), least-privilege tool scoping, data micro-segmentation, continuous output authorization gates, and immutable audit logging the AI system itself cannot delete.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/ai-governance.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">48</div>
+        <div class="idea-content">
+          <div class="idea-title">AI Governance and Compliance: Building Accountable AI Systems</div>
+          <p class="idea-excerpt">The EU AI Act, NIST AI RMF, and sector-specific regulations (SR 11-7, FDA SaMD) are creating concrete compliance obligations. Governance requires traceability, human oversight, continuous monitoring, incident response, and third-party model governance built in from the start — not bolted on after deployment.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/llm-api-security.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">47</div>
+        <div class="idea-content">
+          <div class="idea-title">LLM API Security: Rate Limiting, Auth, and Prompt Leakage</div>
+          <p class="idea-excerpt">LLM APIs introduce attack surfaces that don't exist in traditional REST services: system prompt leakage, cost exhaustion attacks (one prompt can burn $50 in compute), cross-user injection through shared context windows, and session isolation failures. Why most rate-limiting implementations are wrong for AI workloads.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/ai-supply-chain.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">46</div>
+        <div class="idea-content">
+          <div class="idea-title">AI Supply Chain Security: Compromised Weights and Poisoned Repos</div>
+          <p class="idea-excerpt">Pickle deserialization gives arbitrary code execution the moment you load a malicious model checkpoint. With 500,000+ models on HuggingFace, typosquatting, compromised maintainer accounts, and poisoned fine-tuning datasets represent a supply chain attack surface the ML community is only beginning to address.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/adversarial-inputs.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">45</div>
+        <div class="idea-content">
+          <div class="idea-title">Adversarial Inputs: When AI Sees What Isn't There</div>
+          <p class="idea-excerpt">Imperceptible pixel perturbations cause confident misclassification — the fundamental geometry of adversarial attacks. Four attack categories (white-box, black-box, physical-world, universal perturbations) and three deployment scenarios: autonomous vehicle perception, biometric bypass, and content moderation evasion. Why defenses keep failing.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/model-theft.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">44</div>
+        <div class="idea-content">
+          <div class="idea-title">Model Theft: Extracting Proprietary AI via API Queries</div>
+          <p class="idea-excerpt">With 10k–100k queries, attackers can train a local model that achieves 90%+ behavioral agreement with a commercial API — effectively stealing the training investment. Three attacker goals (behavioral clone, white-box proxy, safety bypass) and why logit-masking defenses fail against distillation-based extraction.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/training-data-extraction.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">43</div>
+        <div class="idea-content">
+          <div class="idea-title">Training Data Extraction: Stealing Private Data from Public Models</div>
+          <p class="idea-excerpt">Nasr et al. (2023) extracted ChatGPT training data including real email addresses and personal data using a $200 divergence attack. Memorization is a feature, not a bug — models must memorize to generalize. Four memorization factors and three extraction techniques that work against production LLMs.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
+
+      <a href="ideas/multimodal-injection.html" class="idea-item reveal" role="listitem">
+        <div class="idea-num">42</div>
+        <div class="idea-content">
+          <div class="idea-title">Multimodal Prompt Injection: Instructions Hidden in Images</div>
+          <p class="idea-excerpt">Text rendered in white-on-white, steganographic LSB embedding, QR codes in document corners, natural-language overlays on product photos — four vectors for hiding AI instructions inside image content. When a vision-capable agent processes your uploaded receipt and executes the attacker's instructions instead of summarizing expenses.</p>
+        </div>
+        <div class="idea-meta">
+          <span class="idea-date">May 2026</span>
+          <span class="idea-cat">AI Security</span>
+        </div>
+      </a>
 
       <a href="ideas/design-tokens.html" class="idea-item reveal" role="listitem">
         <div class="idea-num">41</div>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Governance and Compliance: Building Accountable AI Systems — vsike</title>
+  <meta name="description" content="The EU AI Act, NIST AI RMF, and emerging sector-specific regulations are creating concrete compliance obligations for organizations deploying AI. Governance isn't just documentation — it requires traceability, incident response, and ongoing monitoring that must be built into AI systems from the start.">
+  <meta name="keywords" content="AI治理合规, 欧盟AI法案, AI风险管理, 人工智能监管框架, AI审计追踪, AI governance compliance, EU AI Act, NIST AI RMF, AI regulatory framework, AI audit trail">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-governance.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .warn-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .reg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .reg-grid { grid-template-columns: 1fr; } }
+    .reg-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .reg-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .pillar-list { margin: 1.5rem 0; counter-reset: pillar; }
+    .pillar-item { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--fg-dim); }
+    .pillar-item:last-child { border-bottom: none; }
+    .pillar-num { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--accent); font-weight: 600; white-space: nowrap; padding-top: 0.2rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="agc.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="agc.title">AI Governance and Compliance:<br>Building Accountable AI Systems</h1>
+        <p class="pub-time">Published: 2026-05-17 22:59 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="agc.lead">The EU AI Act, NIST AI RMF, and emerging sector-specific regulations are creating concrete compliance obligations for organizations deploying AI. Governance isn't just documentation — it requires traceability, incident response, and ongoing monitoring that must be built into AI systems from the start, not retrofitted after deployment.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="agc.s1.title">The Regulatory Landscape</h2>
+        <div class="reg-grid">
+          <div class="reg-card">
+            <h4 data-i18n="agc.r1.label">EU AI Act</h4>
+            <p data-i18n="agc.r1.p">Risk-based regulation that categorizes AI systems from unacceptable risk (biometric surveillance, social scoring — prohibited) to high risk (healthcare, hiring, critical infrastructure — mandatory conformity assessment) to limited and minimal risk. High-risk systems require technical documentation, logging, human oversight, and robustness testing before market entry.</p>
+          </div>
+          <div class="reg-card">
+            <h4 data-i18n="agc.r2.label">NIST AI RMF</h4>
+            <p data-i18n="agc.r2.p">A voluntary US framework organizing AI risk management into four functions: Govern (accountability structure), Map (context and risk identification), Measure (analysis and assessment), and Manage (prioritization and treatment). Not a compliance checklist but a structured process for organizations to build AI risk management into operations.</p>
+          </div>
+          <div class="reg-card">
+            <h4 data-i18n="agc.r3.label">Sector-specific rules</h4>
+            <p data-i18n="agc.r3.p">Financial services regulators (OCC, FRB, SEC) have issued guidance on model risk management (SR 11-7) that extends to AI models used in credit decisions, fraud detection, and trading. Healthcare (FDA, HIPAA) regulates AI as software as a medical device (SaMD) when used in clinical decision support. Employment law in several jurisdictions requires disclosure of algorithmic hiring tools.</p>
+          </div>
+          <div class="reg-card">
+            <h4 data-i18n="agc.r4.label">Emerging obligations</h4>
+            <p data-i18n="agc.r4.p">Copyright questions around training data, privacy obligations from GDPR and CCPA that apply to personal data processed by AI systems, and liability frameworks for AI-generated content are all areas where regulatory clarity is still developing but organizational exposure is already real.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="agc.s2.title">Governance Isn't a Checkbox</h2>
+        <p data-i18n="agc.s2.p1">The most common governance failure is treating AI compliance as documentation work: write a model card, file a risk assessment, check the box. This approach produces documents that describe a theoretical system rather than the one actually running in production. Regulators and auditors increasingly demand evidence that governance structures are operational, not just described.</p>
+        <div class="pull-quote" data-i18n="agc.pull">A risk assessment written before deployment and never revisited is evidence of a compliance process, not a governance practice. The system changed; the document didn't.</div>
+        <p data-i18n="agc.s2.p2">Effective AI governance requires ongoing operational infrastructure: monitoring systems that flag anomalous model behavior, incident response processes that define who decides to take a model offline, traceability that connects model outputs to the specific model version and data that produced them, and change management that treats model updates as material changes requiring re-evaluation.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="agc.s3.title">Five Pillars of Operational AI Governance</h2>
+        <div class="pillar-list">
+          <div class="pillar-item">
+            <span class="pillar-num" data-i18n="agc.p1.num">01</span>
+            <div>
+              <strong data-i18n="agc.p1.title">Traceability</strong>
+              <p data-i18n="agc.p1.p">Every consequential AI output must be traceable to the model version, input data, system prompt, and configuration that produced it. This is not optional for compliance — it's the foundation of incident investigation, bias auditing, and regulatory reporting. Design logging infrastructure before deployment, not after an incident.</p>
+            </div>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-num" data-i18n="agc.p2.num">02</span>
+            <div>
+              <strong data-i18n="agc.p2.title">Human oversight mechanisms</strong>
+              <p data-i18n="agc.p2.p">High-stakes AI decisions — credit denials, hiring recommendations, medical diagnoses, content moderation at scale — must have defined human review pathways. Not just the theoretical ability to involve humans, but a documented process that specifies who reviews what, under what conditions, with what authority to override the model.</p>
+            </div>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-num" data-i18n="agc.p3.num">03</span>
+            <div>
+              <strong data-i18n="agc.p3.title">Continuous monitoring</strong>
+              <p data-i18n="agc.p3.p">A model that was accurate, fair, and calibrated at deployment may drift over time as the data distribution it encounters in production diverges from its training distribution. Ongoing monitoring for performance degradation, bias drift, and anomalous behavior patterns is a governance obligation, not just a quality practice.</p>
+            </div>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-num" data-i18n="agc.p4.num">04</span>
+            <div>
+              <strong data-i18n="agc.p4.title">Incident response</strong>
+              <p data-i18n="agc.p4.p">When an AI system produces a harmful, biased, or unauthorized output, the organization needs a practiced response process: who declares an incident, who has authority to take the system offline, what constitutes adequate remediation, and how affected parties are notified. This process should be tested before it's needed.</p>
+            </div>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-num" data-i18n="agc.p5.num">05</span>
+            <div>
+              <strong data-i18n="agc.p5.title">Third-party model governance</strong>
+              <p data-i18n="agc.p5.p">Organizations using commercial LLM APIs inherit liability for how they deploy those models. The provider's responsible use policies don't transfer accountability — if your application generates harmful outputs, the regulatory exposure is yours. Governance must extend to vendor selection, contractual accountability, and ongoing monitoring of provider model updates that change behavior.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="agc.s4.title">Practical Starting Points</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="agc.s4.l1"><strong>Inventory all AI systems and classify by risk tier.</strong> You cannot govern what you haven't inventoried. Build a register of every AI system in use — including third-party tools — with their use case, data inputs, decision types, and affected populations. Classify each by the regulatory risk tier that applies in your jurisdiction.</li>
+            <li data-i18n="agc.s4.l2"><strong>Write model cards before deployment, not after audit.</strong> For every material AI system, document the model's purpose, training data sources, known limitations, performance across demographic subgroups, and intended use boundaries. This documentation should exist before go-live, not created retrospectively during a regulatory inquiry.</li>
+            <li data-i18n="agc.s4.l3"><strong>Build monitoring dashboards for production AI systems.</strong> Define the KPIs and thresholds that indicate a model is performing within acceptable bounds, and build automated alerts when those thresholds are breached. Monitor for both technical performance (accuracy, latency) and fairness metrics (outcome disparity across groups).</li>
+            <li data-i18n="agc.s4.l4"><strong>Establish a model change management process.</strong> Treat significant model updates — new versions, new fine-tunes, new system prompts — as material changes requiring the same documentation, testing, and approval workflow as the initial deployment. Not every change requires the full process; define materiality thresholds that trigger review.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'agc.category': 'AI Security',
+    'agc.title': 'AI Governance and Compliance:<br>Building Accountable AI Systems',
+    'agc.lead': 'The EU AI Act, NIST AI RMF, and emerging sector-specific regulations are creating concrete compliance obligations for AI deployments. Governance isn\'t just documentation — it requires traceability, incident response, and ongoing monitoring built in from the start.',
+    'agc.s1.title': 'The Regulatory Landscape',
+    'agc.r1.label': 'EU AI Act', 'agc.r1.p': 'Risk-based regulation: prohibited (biometric surveillance, social scoring), high-risk (healthcare, hiring — mandatory conformity assessment), limited and minimal risk. High-risk systems require technical documentation, logging, human oversight, and robustness testing before market entry.',
+    'agc.r2.label': 'NIST AI RMF', 'agc.r2.p': 'A voluntary US framework: Govern (accountability), Map (context and risk), Measure (analysis), Manage (prioritization). A structured process for building AI risk management into operations, not a compliance checklist.',
+    'agc.r3.label': 'Sector-specific rules', 'agc.r3.p': 'Financial services (SR 11-7 model risk management), healthcare (FDA SaMD framework), employment law (disclosure requirements for algorithmic hiring tools). Each sector has its own AI-specific obligations.',
+    'agc.r4.label': 'Emerging obligations', 'agc.r4.p': 'Copyright around training data, GDPR/CCPA obligations for personal data processed by AI, and liability frameworks for AI-generated content — regulatory clarity is still developing but organizational exposure is already real.',
+    'agc.s2.title': 'Governance Isn\'t a Checkbox',
+    'agc.s2.p1': 'The most common failure is treating compliance as documentation work. This produces documents describing a theoretical system rather than the one in production. Regulators increasingly demand evidence that governance structures are operational, not just described.',
+    'agc.pull': 'A risk assessment written before deployment and never revisited is evidence of a compliance process, not a governance practice. The system changed; the document didn\'t.',
+    'agc.s2.p2': 'Effective governance requires ongoing infrastructure: monitoring that flags anomalous behavior, incident response with defined authority, traceability connecting outputs to specific model versions, and change management treating model updates as material changes.',
+    'agc.s3.title': 'Five Pillars of Operational AI Governance',
+    'agc.p1.num': '01', 'agc.p1.title': 'Traceability', 'agc.p1.p': 'Every consequential AI output must be traceable to the model version, input data, system prompt, and configuration that produced it. This is the foundation of incident investigation, bias auditing, and regulatory reporting.',
+    'agc.p2.num': '02', 'agc.p2.title': 'Human oversight mechanisms', 'agc.p2.p': 'High-stakes AI decisions must have defined human review pathways — not just theoretical ability, but documented process specifying who reviews what, under what conditions, with what authority to override.',
+    'agc.p3.num': '03', 'agc.p3.title': 'Continuous monitoring', 'agc.p3.p': 'A model accurate at deployment may drift as production data diverges from training distribution. Ongoing monitoring for performance degradation, bias drift, and anomalous patterns is a governance obligation.',
+    'agc.p4.num': '04', 'agc.p4.title': 'Incident response', 'agc.p4.p': 'When AI produces harmful output: who declares an incident, who has authority to take the system offline, what constitutes remediation, how affected parties are notified. This process must be tested before it\'s needed.',
+    'agc.p5.num': '05', 'agc.p5.title': 'Third-party model governance', 'agc.p5.p': 'Organizations using commercial LLM APIs inherit liability for how they deploy those models. Provider responsible use policies don\'t transfer accountability — if your application generates harmful outputs, the exposure is yours.',
+    'agc.s4.title': 'Practical Starting Points',
+    'agc.s4.l1': '<strong>Inventory all AI systems and classify by risk tier.</strong> Build a register of every AI system — including third-party tools — with use case, data inputs, decision types, and affected populations.',
+    'agc.s4.l2': '<strong>Write model cards before deployment, not after audit.</strong> Document purpose, training data sources, known limitations, performance across subgroups, and intended use boundaries before go-live.',
+    'agc.s4.l3': '<strong>Build monitoring dashboards for production AI systems.</strong> Define KPIs and thresholds indicating acceptable performance. Build automated alerts. Monitor both technical performance and fairness metrics.',
+    'agc.s4.l4': '<strong>Establish a model change management process.</strong> Treat model updates as material changes requiring documentation, testing, and approval. Define materiality thresholds that trigger review.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'agc.category': 'AI 安全',
+    'agc.title': 'AI 治理与合规：<br>构建可问责的 AI 系统',
+    'agc.lead': '欧盟 AI 法案、NIST AI 风险管理框架以及新兴的行业特定法规正在为部署 AI 的组织创造具体的合规义务。治理不仅仅是文档工作——它需要从一开始就构建到 AI 系统中的可追溯性、事件响应和持续监控，而非在部署后再进行改造。',
+    'agc.s1.title': '监管格局',
+    'agc.r1.label': '欧盟 AI 法案', 'agc.r1.p': '基于风险的监管：禁止类（生物特征监控、社会评分）、高风险类（医疗保健、招聘——强制合格评定）、有限风险和最低风险。高风险系统在进入市场前需要技术文档、日志记录、人工监督和鲁棒性测试。',
+    'agc.r2.label': 'NIST AI 风险管理框架', 'agc.r2.p': '美国自愿性框架，将 AI 风险管理组织为四项功能：治理（问责结构）、映射（上下文和风险识别）、测量（分析和评估）、管理（优先级和处置）。不是合规检查列表，而是将 AI 风险管理纳入运营的结构化流程。',
+    'agc.r3.label': '行业特定规则', 'agc.r3.p': '金融服务监管机构（SR 11-7 模型风险管理）、医疗保健（FDA SaMD 框架）、就业法（算法招聘工具披露要求）。每个行业都有其特定的 AI 义务。',
+    'agc.r4.label': '新兴义务', 'agc.r4.p': '围绕训练数据的版权问题、适用于 AI 系统处理个人数据的 GDPR/CCPA 义务，以及 AI 生成内容的责任框架——监管清晰度仍在发展，但组织暴露已经真实存在。',
+    'agc.s2.title': '治理不是复选框',
+    'agc.s2.p1': '最常见的治理失败是将 AI 合规视为文档工作：填写模型卡、提交风险评估、打钩完成。这种方法产生的文档描述的是理论系统，而非实际在生产中运行的系统。监管机构和审计人员越来越需要治理结构是运营中的，而非仅仅是描述性的证据。',
+    'agc.pull': '在部署前编写且从未重新审视的风险评估是合规过程的证据，而非治理实践。系统已经改变，文档没有。',
+    'agc.s2.p2': '有效的 AI 治理需要持续的运营基础设施：标记异常模型行为的监控系统、定义谁决定使模型下线的事件响应流程、将模型输出与产生它们的特定模型版本和数据相连接的可追溯性，以及将模型更新视为需要重新评估的重大变更的变更管理。',
+    'agc.s3.title': '运营 AI 治理的五大支柱',
+    'agc.p1.num': '01', 'agc.p1.title': '可追溯性', 'agc.p1.p': '每个重要的 AI 输出必须可追溯到产生它的模型版本、输入数据、系统提示词和配置。这是事件调查、偏见审计和监管报告的基础。',
+    'agc.p2.num': '02', 'agc.p2.title': '人工监督机制', 'agc.p2.p': '高风险 AI 决策——信贷拒绝、招聘建议、医疗诊断——必须有明确的人工审查路径。不仅仅是理论上的参与人类的能力，而是指定谁审查什么、在什么条件下、有什么权限覆盖模型的文档化流程。',
+    'agc.p3.num': '03', 'agc.p3.title': '持续监控', 'agc.p3.p': '在部署时准确、公平、校准良好的模型可能会随着生产中遇到的数据分布与训练分布产生偏离而随时间漂移。持续监控性能退化、偏见漂移和异常行为模式是治理义务。',
+    'agc.p4.num': '04', 'agc.p4.title': '事件响应', 'agc.p4.p': '当 AI 系统产生有害、偏见或未授权的输出时：谁宣布事件、谁有权使系统下线、什么构成充分的修复、受影响方如何被通知。这一流程应在需要之前进行测试。',
+    'agc.p5.num': '05', 'agc.p5.title': '第三方模型治理', 'agc.p5.p': '使用商业 LLM API 的组织继承了其部署这些模型方式的责任。提供商的负责任使用政策不能转移问责——如果你的应用程序生成有害输出，监管暴露是你的。',
+    'agc.s4.title': '实际起步点',
+    'agc.s4.l1': '<strong>清查所有 AI 系统并按风险等级分类。</strong>建立每个 AI 系统——包括第三方工具——的登记册，包含用例、数据输入、决策类型和受影响人群。',
+    'agc.s4.l2': '<strong>在部署前（而非审计后）编写模型卡。</strong>在上线前记录目的、训练数据来源、已知局限性、跨子群体的性能和预期使用边界。',
+    'agc.s4.l3": "<strong>为生产 AI 系统构建监控仪表板。</strong>定义表明模型在可接受范围内运行的 KPI 和阈值，并在突破这些阈值时构建自动警报。同时监控技术性能和公平性指标。',
+    'agc.s4.l4': '<strong>建立模型变更管理流程。</strong>将重大模型更新视为需要与初始部署相同的文档、测试和审批工作流的重大变更。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'agc.category': 'AIセキュリティ',
+    'agc.title': 'AIガバナンスとコンプライアンス：<br>説明責任のあるAIシステムの構築',
+    'agc.lead': 'EU AI法、NIST AI RMF、新興の業界固有の規制がAIを展開する組織に具体的なコンプライアンス義務を作り出している。ガバナンスは単なる文書化ではない——デプロイ後に後付けするのではなく、最初からAIシステムに組み込む必要があるトレーサビリティ、インシデントレスポンス、継続的な監視が必要だ。',
+    'agc.s1.title': '規制の全体像',
+    'agc.r1.label': 'EU AI法', 'agc.r1.p': 'リスクベースの規制：禁止（生体監視、社会スコアリング）、高リスク（医療、採用——義務的な適合性評価）、限定的・最小リスク。高リスクシステムは市場参入前に技術文書、ロギング、人間による監視、堅牢性テストが必要。',
+    'agc.r2.label': 'NIST AI RMF', 'agc.r2.p': '米国の任意フレームワーク：Govern（説明責任）、Map（コンテキストとリスク）、Measure（分析と評価）、Manage（優先付けと対処）。コンプライアンスチェックリストではなく、AIリスク管理を業務に組み込むための構造化プロセス。',
+    'agc.r3.label': '業界固有の規則', 'agc.r3.p': '金融サービス（SR 11-7モデルリスク管理）、医療（FDA SaMDフレームワーク）、雇用法（アルゴリズム採用ツールの開示要件）。各業界には独自のAI固有の義務がある。',
+    'agc.r4.label': '新興の義務', 'agc.r4.p': '訓練データに関する著作権、AIシステムが処理する個人データへのGDPR/CCPAの義務、AI生成コンテンツの責任フレームワーク——規制の明確化はまだ進行中だが、組織のエクスポージャーはすでに現実だ。',
+    'agc.s2.title': 'ガバナンスはチェックボックスではない',
+    'agc.s2.p1': '最も一般的な失敗はコンプライアンスを文書化作業として扱うことだ。これは本番で実際に動いているシステムではなく理論上のシステムを説明する文書を生み出す。規制当局と監査人はガバナンス構造が運用されているという証拠を、ただ説明されているだけでなく、ますます求めている。',
+    'agc.pull': 'デプロイ前に書かれて一度も見直されなかったリスク評価はコンプライアンスプロセスの証拠であり、ガバナンスの実践ではない。システムは変わった；文書は変わらなかった。',
+    'agc.s2.p2': '効果的なガバナンスには継続的な運用インフラが必要だ：異常なモデル動作にフラグを立てる監視、システムをオフラインにする権限を定義するインシデントレスポンス、出力を特定のモデルバージョンに結びつけるトレーサビリティ、モデル更新を重大な変更として扱う変更管理。',
+    'agc.s3.title': '運用AIガバナンスの5つの柱',
+    'agc.p1.num': '01', 'agc.p1.title': 'トレーサビリティ', 'agc.p1.p': '結果をもたらすすべてのAI出力は、それを生成したモデルバージョン、入力データ、システムプロンプト、設定に追跡可能でなければならない。これがインシデント調査、バイアス監査、規制報告の基盤だ。',
+    'agc.p2.num': '02', 'agc.p2.title': '人間による監視メカニズム', 'agc.p2.p': '高リスクのAI決断——信用拒否、採用推薦、医療診断——には定義された人間のレビューパスが必要。理論的な能力だけでなく、誰が何を、どんな条件で、どんな権限でモデルを上書きできるかを指定する文書化されたプロセス。',
+    'agc.p3.num': '03', 'agc.p3.title': '継続的な監視', 'agc.p3.p': 'デプロイ時に正確だったモデルは、本番で遭遇するデータ分布が訓練分布から乖離するにつれて時間とともにドリフトする可能性がある。パフォーマンス劣化、バイアスドリフト、異常パターンの継続的な監視はガバナンス義務だ。',
+    'agc.p4.num': '04', 'agc.p4.title': 'インシデントレスポンス', 'agc.p4.p': 'AIが有害な出力を生成したとき：誰がインシデントを宣言するか、誰がシステムをオフラインにする権限を持つか、適切な修復とは何か、影響を受けた当事者はどう通知されるか。このプロセスは必要になる前にテストすべきだ。',
+    'agc.p5.num': '05', 'agc.p5.title': 'サードパーティモデルガバナンス', 'agc.p5.p': '商業LLM APIを使用する組織はそれらのモデルの展開方法に対する責任を引き継ぐ。プロバイダーの責任ある使用ポリシーは説明責任を移転しない——あなたのアプリが有害な出力を生成すれば、規制上のエクスポージャーはあなたのものだ。',
+    'agc.s4.title': '実践的な出発点',
+    'agc.s4.l1': '<strong>すべてのAIシステムを棚卸しし、リスク階層で分類する。</strong>サードパーティツールを含むすべてのAIシステムのレジスターを、ユースケース、データ入力、決定タイプ、影響を受ける集団とともに構築する。',
+    'agc.s4.l2': '<strong>監査後ではなくデプロイ前にモデルカードを書く。</strong>目的、訓練データソース、既知の限界、サブグループをまたがるパフォーマンス、意図する使用境界を稼働前に文書化する。',
+    'agc.s4.l3': '<strong>本番AIシステムの監視ダッシュボードを構築する。</strong>許容可能なパフォーマンスを示すKPIと閾値を定義し、それらが破られたときの自動アラートを構築する。技術的パフォーマンスと公平性指標の両方を監視する。',
+    'agc.s4.l4': '<strong>モデル変更管理プロセスを確立する。</strong>重大なモデル更新を初期デプロイメントと同じ文書化、テスト、承認ワークフローを必要とする重大な変更として扱う。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

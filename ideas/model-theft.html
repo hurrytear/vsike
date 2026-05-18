@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Theft: Extracting Proprietary AI via API Queries — vsike</title>
+  <meta name="description" content="A sufficiently motivated attacker can reconstruct a proprietary model's behavior — and much of its internal structure — through systematic API queries alone. No access to weights required. Model extraction attacks turn your inference endpoint into a training data source.">
+  <meta name="keywords" content="模型窃取攻击, AI模型提取, 黑盒模型攻击, 模型逆向工程, 知识产权AI安全, model theft, model extraction attack, black-box model attack, AI model reverse engineering, ML intellectual property security">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/model-theft.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .tier-list { margin: 1.5rem 0; }
+    .tier-item { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--fg-dim); }
+    .tier-item:last-child { border-bottom: none; }
+    .tier-tag { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; white-space: nowrap; padding-top: 0.2rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="mt.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="mt.title">Model Theft:<br>Extracting Proprietary AI via API Queries</h1>
+        <p class="pub-time">Published: 2026-05-17 22:59 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="mt.lead">A sufficiently motivated attacker can reconstruct a proprietary model's behavior — and much of its internal structure — through systematic API queries alone. No access to weights required. Model extraction attacks turn your inference endpoint into a training data source for competitors, adversaries, and anyone who wants to study your model's decision boundary without paying for access.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="mt.s1.title">How Model Extraction Works</h2>
+        <p data-i18n="mt.s1.p1">Model extraction (or model stealing) works by querying a target model with a large, strategically selected set of inputs and training a surrogate model on the resulting input-output pairs. The surrogate model doesn't need to match the target's architecture — it needs to match its behavior on the distribution of inputs an attacker cares about, which is a much easier objective.</p>
+        <p data-i18n="mt.s1.p2">For classification models, researchers have shown that a surrogate trained on 10,000–100,000 API queries can achieve 90%+ agreement with the target on the test distribution. For LLMs, exact extraction is impractical due to the output space size, but functional extraction — learning the fine-tuned behavior and domain-specific knowledge — is achievable with far fewer queries.</p>
+        <div class="pull-quote" data-i18n="mt.pull">Your model's inference endpoint is also a training data endpoint for anyone systematically querying it. Every response teaches the attacker something about your model's behavior.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="mt.s2.title">What Attackers Actually Want</h2>
+        <div class="tier-list">
+          <div class="tier-item">
+            <span class="tier-tag" data-i18n="mt.t1.tag">Behavioral clone</span>
+            <div>
+              <p data-i18n="mt.t1.p">A model that mimics the target's input-output behavior, allowing the attacker to offer a competing product at lower cost — avoiding the expensive training that produced the original. Particularly valuable when the target model encodes expensive human-curated fine-tuning or proprietary domain knowledge.</p>
+            </div>
+          </div>
+          <div class="tier-item">
+            <span class="tier-tag" data-i18n="mt.t2.tag">White-box proxy</span>
+            <div>
+              <p data-i18n="mt.t2.p">A local surrogate that approximates the target's behavior, used to develop adversarial inputs that transfer to the real model. Attackers who can't directly probe the target's gradients use the surrogate to craft attacks that work against the original — circumventing rate limits and safety filters in the process.</p>
+            </div>
+          </div>
+          <div class="tier-item">
+            <span class="tier-tag" data-i18n="mt.t3.tag">Safety bypass</span>
+            <div>
+              <p data-i18n="mt.t3.p">Extracting a model and stripping its safety fine-tuning. A surrogate trained purely on input-output pairs, without RLHF or safety training, may reproduce the base capabilities without safety constraints. This is a practical attack against commercial models offering fine-tuning — the fine-tuned weights implicitly encode the base model's unsafe capabilities.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="mt.s3.title">The LLM-Specific Threat</h2>
+        <p data-i18n="mt.s3.p1">For large language models, full extraction is infeasible — the model is too large and the output space too vast. But targeted extraction is very practical. An attacker interested in a company's customer-service LLM doesn't need to clone the full model. They need to clone its behavior on customer-service queries — a much narrower distribution that requires far fewer queries to capture.</p>
+        <div class="attack-block">
+          <strong data-i18n="mt.s3.attack">Distillation-based extraction:</strong>
+          <p data-i18n="mt.s3.attack.p">Attacker generates thousands of domain-relevant queries → sends each to the target API → collects responses → trains a smaller open-weight model using the responses as supervision (knowledge distillation) → the trained model reproduces the target's domain-specific behavior at inference cost orders of magnitude lower than the original.</p>
+        </div>
+        <p data-i18n="mt.s3.p2">This is precisely how many "open-source" models have been built in practice — by distilling from proprietary models' outputs. OpenAI's terms of service explicitly prohibit using GPT outputs to train competing models; the prohibition exists because the attack is cheap and effective.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="mt.s4.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="mt.s4.l1"><strong>Rate-limit and authenticate API access.</strong> Model extraction requires many queries. Rate limiting slows the attack; authentication creates an audit trail. Anomalous query patterns — systematic coverage of an input space, unusually diverse queries — are detectable signals.</li>
+            <li data-i18n="mt.s4.l2"><strong>Monitor for systematic extraction patterns.</strong> Legitimate users query models with natural, task-driven inputs. Extraction attackers query with adversarially diverse inputs designed to cover the model's decision boundary. Statistical outlier detection on query distributions can flag extraction attempts.</li>
+            <li data-i18n="mt.s4.l3"><strong>Return only the minimum necessary output.</strong> Returning log-probabilities or full probability distributions over output tokens gives extractors far more information than returning the top response alone. Reduce the informativeness of API responses to the minimum needed for the use case.</li>
+            <li data-i18n="mt.s4.l4"><strong>Watermark model outputs.</strong> Embed statistical watermarks in the output distribution — subtle biases that survive distillation and are detectable in trained surrogates. Model watermarking allows attribution of extracted models back to the source API, creating legal grounds for enforcement.</li>
+            <li data-i18n="mt.s4.l5"><strong>Contractually prohibit extraction in terms of service.</strong> Explicit prohibitions on using API outputs to train competing models create enforceable legal remedies. Combine with technical detection to identify violators.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'mt.category': 'AI Security',
+    'mt.title': 'Model Theft:<br>Extracting Proprietary AI via API Queries',
+    'mt.lead': 'A motivated attacker can reconstruct a proprietary model\'s behavior through systematic API queries alone. No weight access required. Model extraction turns your inference endpoint into a training data source for competitors who want your model\'s capabilities without paying for development.',
+    'mt.s1.title': 'How Model Extraction Works',
+    'mt.s1.p1': 'Model extraction works by querying a target model with strategically selected inputs and training a surrogate model on the resulting pairs. The surrogate needs to match the target\'s behavior on the attacker\'s distribution — a much easier objective than reproducing the full model.',
+    'mt.s1.p2': 'For classification models, a surrogate trained on 10,000–100,000 queries achieves 90%+ agreement with the target. For LLMs, functional extraction — learning the fine-tuned behavior and domain knowledge — is achievable with far fewer queries.',
+    'mt.pull': 'Your model\'s inference endpoint is also a training data endpoint for anyone systematically querying it. Every response teaches the attacker something about your model\'s behavior.',
+    'mt.s2.title': 'What Attackers Actually Want',
+    'mt.t1.tag': 'Behavioral clone', 'mt.t1.p': 'A model mimicking the target\'s behavior, allowing a competing product at lower cost. Particularly valuable when the target encodes expensive human-curated fine-tuning or proprietary domain knowledge.',
+    'mt.t2.tag': 'White-box proxy', 'mt.t2.p': 'A local surrogate used to develop adversarial inputs that transfer to the real model. Attackers unable to probe the target\'s gradients use the surrogate to craft attacks — circumventing rate limits and safety filters.',
+    'mt.t3.tag': 'Safety bypass', 'mt.t3.p': 'Extracting a model and stripping its safety fine-tuning. A surrogate trained on input-output pairs without RLHF may reproduce base capabilities without safety constraints.',
+    'mt.s3.title': 'The LLM-Specific Threat',
+    'mt.s3.p1': 'Full LLM extraction is infeasible — but targeted extraction is practical. An attacker targeting a customer-service LLM only needs to clone its behavior on customer-service queries — a narrow distribution requiring far fewer queries to capture.',
+    'mt.s3.attack': 'Distillation-based extraction:', 'mt.s3.attack.p': 'Generate domain queries → send to target API → collect responses → train open-weight model using responses as supervision → the trained model reproduces target\'s domain behavior at inference cost orders of magnitude lower.',
+    'mt.s3.p2': 'This is how many "open-source" models have been built in practice — by distilling from proprietary outputs. OpenAI\'s ToS prohibits using GPT outputs to train competing models because the attack is cheap and effective.',
+    'mt.s4.title': 'Mitigations',
+    'mt.s4.l1': '<strong>Rate-limit and authenticate API access.</strong> Extraction requires many queries. Rate limiting slows the attack; authentication creates an audit trail. Systematic coverage of an input space is a detectable pattern.',
+    'mt.s4.l2': '<strong>Monitor for systematic extraction patterns.</strong> Legitimate users query with task-driven inputs. Extractors query with adversarially diverse inputs covering the decision boundary. Statistical outlier detection can flag extraction attempts.',
+    'mt.s4.l3': '<strong>Return only the minimum necessary output.</strong> Returning log-probabilities or full distributions gives extractors far more information. Reduce API response informativeness to the minimum needed for the use case.',
+    'mt.s4.l4': '<strong>Watermark model outputs.</strong> Embed statistical watermarks in the output distribution — subtle biases that survive distillation and are detectable in trained surrogates, enabling attribution.',
+    'mt.s4.l5': '<strong>Contractually prohibit extraction in terms of service.</strong> Explicit prohibitions on using outputs to train competing models create enforceable legal remedies when combined with technical detection.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'mt.category': 'AI 安全',
+    'mt.title': '模型窃取：<br>通过 API 查询提取专有 AI',
+    'mt.lead': '有足够动机的攻击者可以仅通过系统性 API 查询就重建专有模型的行为——无需访问权重。模型提取攻击将你的推理端点变成竞争对手的训练数据来源，使其能够不付开发成本而获得你的模型能力。',
+    'mt.s1.title': '模型提取的工作原理',
+    'mt.s1.p1': '模型提取通过用战略性选择的输入查询目标模型，并在生成的输入-输出对上训练代理模型来实现。代理模型不需要匹配目标的架构——它需要在攻击者关心的输入分布上匹配其行为，这是一个容易得多的目标。',
+    'mt.s1.p2': '对于分类模型，在 1-10 万次 API 查询上训练的代理可以在测试分布上实现 90% 以上的与目标一致。对于 LLM，功能性提取——学习微调行为和领域知识——用更少的查询就能实现。',
+    'mt.pull': '你的模型推理端点对于系统性查询它的任何人来说也是一个训练数据端点。每个响应都教会攻击者关于你模型行为的某些东西。',
+    'mt.s2.title': '攻击者真正想要什么',
+    'mt.t1.tag': '行为克隆', 'mt.t1.p': '模拟目标行为的模型，允许以更低成本提供竞争性产品。当目标编码了昂贵的人工策划微调或专有领域知识时尤其有价值。',
+    'mt.t2.tag': '白盒代理', 'mt.t2.p': '用于开发可迁移到真实模型的对抗性输入的本地代理。无法直接探测目标梯度的攻击者使用代理来构造攻击——同时规避速率限制和安全过滤器。',
+    'mt.t3.tag': '安全绕过', 'mt.t3.p': '提取模型并剥离其安全微调。仅在输入-输出对上训练（无 RLHF）的代理可能在没有安全约束的情况下复现基础能力。',
+    'mt.s3.title': 'LLM 特定威胁',
+    'mt.s3.p1': '完整的 LLM 提取不可行——但有针对性的提取非常实际。针对公司客服 LLM 的攻击者不需要克隆完整模型——他们需要克隆其在客服查询上的行为，这是一个需要更少查询的窄分布。',
+    'mt.s3.attack': '基于蒸馏的提取：', 'mt.s3.attack.p': '生成领域相关查询 → 发送到目标 API → 收集响应 → 使用响应作为监督训练较小的开放权重模型（知识蒸馏）→ 训练后的模型以比原始低几个数量级的推理成本复现目标的领域特定行为。',
+    'mt.s3.p2': '这正是许多"开源"模型在实践中的构建方式——通过蒸馏专有模型的输出。OpenAI 的服务条款明确禁止使用 GPT 输出来训练竞争模型，这一禁止条款的存在是因为该攻击既廉价又有效。',
+    'mt.s4.title': '缓解措施',
+    'mt.s4.l1': '<strong>对 API 访问进行速率限制和认证。</strong>模型提取需要大量查询。速率限制减缓攻击；认证创建审计跟踪。对输入空间的系统性覆盖是可检测的信号。',
+    'mt.s4.l2': '<strong>监控系统性提取模式。</strong>合法用户使用自然的任务驱动输入查询。提取攻击者使用对抗性多样化的输入查询，旨在覆盖模型的决策边界。',
+    'mt.s4.l3': '<strong>只返回必要的最少输出。</strong>返回对数概率或完整概率分布会给提取者提供远多于仅返回最高响应的信息。',
+    'mt.s4.l4': '<strong>为模型输出加水印。</strong>在输出分布中嵌入统计水印——能在蒸馏后存活并在训练的代理中可检测的微妙偏差，从而实现溯源。',
+    'mt.s4.l5': '<strong>在服务条款中明确禁止提取。</strong>明确禁止使用 API 输出训练竞争模型，结合技术检测创建可执行的法律救济。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'mt.category': 'AIセキュリティ',
+    'mt.title': 'モデル窃取：<br>APIクエリによる独自AIの抽出',
+    'mt.lead': '十分に動機付けられた攻撃者は、システム的なAPIクエリだけで独自モデルの動作を再構築できる——重みへのアクセスは不要。モデル抽出攻撃はあなたの推論エンドポイントを競合他社のための訓練データソースに変える。',
+    'mt.s1.title': 'モデル抽出の仕組み',
+    'mt.s1.p1': 'モデル抽出は、戦略的に選択された入力でターゲットモデルをクエリし、結果の入力-出力ペアでサロゲートモデルを訓練することで機能する。サロゲートはターゲットのアーキテクチャに合わせる必要はなく、攻撃者が重要とする入力分布でその動作に合わせる——はるかに容易な目標だ。',
+    'mt.s1.p2': '分類モデルでは、1万〜10万クエリで訓練されたサロゲートがテスト分布でターゲットと90%以上の一致を達成する。LLMの場合、機能的抽出——ファインチューニングされた動作とドメイン知識の学習——ははるかに少ないクエリで達成可能だ。',
+    'mt.pull': 'あなたのモデルの推論エンドポイントは、体系的にクエリする人にとって訓練データエンドポイントでもある。すべての応答が攻撃者にモデルの動作を教える。',
+    'mt.s2.title': '攻撃者が実際に欲しいもの',
+    'mt.t1.tag': '動作クローン', 'mt.t1.p': 'ターゲットの動作を模倣するモデルで、より低コストで競合製品を提供できる。ターゲットが高価な人間によるファインチューニングや独自ドメイン知識をエンコードしている場合に特に価値がある。',
+    'mt.t2.tag': 'ホワイトボックスプロキシ', 'mt.t2.p': '実際のモデルに転用できる対抗的入力を開発するために使用するローカルサロゲート。ターゲットの勾配を直接調べられない攻撃者がサロゲートを使って攻撃を作る——レート制限と安全フィルターを回避しながら。',
+    'mt.t3.tag': '安全バイパス', 'mt.t3.p': 'モデルを抽出してその安全ファインチューニングを剥がす。RLHFなしで入力-出力ペアのみで訓練されたサロゲートは安全制約なしに基本能力を再現する可能性がある。',
+    'mt.s3.title': 'LLM固有の脅威',
+    'mt.s3.p1': '完全なLLM抽出は実行不可能だが、ターゲット抽出は非常に実用的だ。企業のカスタマーサービスLLMを標的にする攻撃者は完全なモデルをクローンする必要はない——カスタマーサービスクエリでの動作をクローンするだけでいい。',
+    'mt.s3.attack': '蒸留ベースの抽出：', 'mt.s3.attack.p': 'ドメイン関連クエリを生成 → ターゲットAPIに送信 → レスポンスを収集 → レスポンスを教師データとして使ってオープンウェイトモデルを訓練 → 訓練されたモデルがオリジナルより桁違いに低い推論コストでターゲットのドメイン特化動作を再現する。',
+    'mt.s3.p2': 'これはまさに多くの「オープンソース」モデルが実際に構築されてきた方法だ——独自モデルの出力を蒸留することで。OpenAIの利用規約はGPTの出力を使って競合モデルを訓練することを明示的に禁じている。この攻撃が安価で効果的だからだ。',
+    'mt.s4.title': '緩和策',
+    'mt.s4.l1': '<strong>APIアクセスをレート制限して認証する。</strong>モデル抽出には多くのクエリが必要。レート制限は攻撃を遅らせる；認証は監査証跡を作る。入力空間の体系的なカバレッジは検出可能なシグナルだ。',
+    'mt.s4.l2': '<strong>体系的な抽出パターンを監視する。</strong>正規ユーザーはタスク駆動の入力でクエリする。抽出攻撃者は決定境界をカバーするために対抗的に多様な入力でクエリする。統計的外れ値検出が抽出試みにフラグを立てられる。',
+    'mt.s4.l3': '<strong>必要最小限の出力だけを返す。</strong>対数確率や完全な分布を返すと、抽出者にトップレスポンスだけを返すよりはるかに多くの情報を与える。',
+    'mt.s4.l4': '<strong>モデル出力に透かしを入れる。</strong>出力分布に統計的透かしを埋め込む——蒸留後も残り、訓練されたサロゲートで検出可能な微妙なバイアスで帰属を可能にする。',
+    'mt.s4.l5': '<strong>利用規約で抽出を明示的に禁止する。</strong>APIアウトプットを使った競合モデルの訓練の明示的禁止は、技術的検出と組み合わせることで法的救済手段を作る。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
