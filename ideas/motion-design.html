@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion Design Principles: Animation That Earns Its Place — vsike</title>
+  <meta name="description" content="Motion in interface design has one job: reduce cognitive load by making state changes perceptible. Animation that draws attention to itself, rather than to the transition, is noise wearing the costume of delight.">
+  <meta name="keywords" content="动效设计原则, 界面动画设计, UI动效规范, 过渡动画设计, 交互动效, motion design principles, UI animation, interface transitions, animation design system, motion UX">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/motion-design.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .principle-grid { grid-template-columns: 1fr; } }
+    .principle-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .principle-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .timing-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+    .timing-table th, .timing-table td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--fg-dim); }
+    .timing-table th { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-dim); }
+    .timing-table tr:last-child td { border-bottom: none; }
+    .avoid-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .do-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="md.category">Design</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="md.title">Motion Design Principles:<br>Animation That Earns Its Place</h1>
+        <p class="article-lead reveal reveal-d2" data-i18n="md.lead">Motion in interface design has one job: reduce cognitive load by making state changes perceptible. Animation that draws attention to itself, rather than to the transition it represents, is noise wearing the costume of delight — and it accumulates into interfaces that feel exhausting to use.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="md.s1.title">The Purpose of Motion</h2>
+        <p data-i18n="md.s1.p1">Interfaces are fundamentally about state. A button is idle, then pressed, then triggering, then done. A list has items, then one disappears, then the rest fill the gap. State changes happen instantaneously from a technical standpoint, but the human visual system needs time to register them. Motion bridges that gap — it converts a binary state flip into a perceptible event with a beginning, middle, and end.</p>
+        <p data-i18n="md.s1.p2">When motion serves this purpose, it is invisible in the best sense: the user perceives the interface state clearly without consciously noticing the animation. When motion fails this purpose — when it is decorative, slow, or arbitrary — it becomes a thing the user must wait through rather than a tool that helps them.</p>
+        <div class="pull-quote" data-i18n="md.pull">The best animation is the one users don't notice. They just understand the interface better.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="md.s2.title">Duration: The Most Important Variable</h2>
+        <p data-i18n="md.s2.p1">Duration is the single most common failure mode in interface animation. Most UI animation should be faster than you think. The human visual system can process rapid changes; what it cannot do comfortably is wait. An animation that takes 500ms where 150ms would suffice creates an interface that feels slow — not polished, not premium, slow.</p>
+        <table class="timing-table">
+          <thead>
+            <tr>
+              <th data-i18n="md.table.h1">Context</th>
+              <th data-i18n="md.table.h2">Duration</th>
+              <th data-i18n="md.table.h3">Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="md.table.r1a">Micro-interactions (hover, press)</td>
+              <td>80–120ms</td>
+              <td data-i18n="md.table.r1c">Must feel instantaneous; longer feels sluggish</td>
+            </tr>
+            <tr>
+              <td data-i18n="md.table.r2a">State changes (toggle, select)</td>
+              <td>120–200ms</td>
+              <td data-i18n="md.table.r2c">Confirms action without perceptible delay</td>
+            </tr>
+            <tr>
+              <td data-i18n="md.table.r3a">Component entrances (modal, drawer)</td>
+              <td>200–300ms</td>
+              <td data-i18n="md.table.r3c">Needs to feel intentional, not instant</td>
+            </tr>
+            <tr>
+              <td data-i18n="md.table.r4a">Page transitions</td>
+              <td>250–400ms</td>
+              <td data-i18n="md.table.r4c">Long enough to prevent disorientation, short enough to not block</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="md.s3.title">Four Principles of Purposeful Motion</h2>
+        <div class="principle-grid">
+          <div class="principle-card">
+            <h4 data-i18n="md.p1.label">Continuity</h4>
+            <p data-i18n="md.p1.p">Elements that share identity across states should animate with continuity — moving from their previous position to their new one, rather than fading out and fading in. Continuity tells the user that these are the same object in a new state, not two different objects.</p>
+          </div>
+          <div class="principle-card">
+            <h4 data-i18n="md.p2.label">Choreography</h4>
+            <p data-i18n="md.p2.p">When multiple elements animate simultaneously, they should do so in a coordinated sequence that guides the eye in the right direction. Staggered entry animations should stagger along the reading direction. Exit animations should clear space before entrance animations fill it.</p>
+          </div>
+          <div class="principle-card">
+            <h4 data-i18n="md.p3.label">Easing</h4>
+            <p data-i18n="md.p3.p">Linear motion feels mechanical and unnatural. Real-world objects accelerate and decelerate. Use ease-in for exits (object is gaining energy to leave), ease-out for entrances (object decelerates to rest), and ease-in-out for elements that move from one point to another without leaving the viewport.</p>
+          </div>
+          <div class="principle-card">
+            <h4 data-i18n="md.p4.label">Spatial Consistency</h4>
+            <p data-i18n="md.p4.p">Motion should reinforce the spatial model of the interface. Elements that slide in from the right establish that "the next item is to the right." Modals that scale up from their trigger establish that the modal is an expansion of that element. Consistent spatial logic makes navigation feel learnable.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="md.s4.title">What to Avoid</h2>
+        <div class="avoid-block">
+          <ul>
+            <li data-i18n="md.s4.l1"><strong>Bounce and spring effects on UI controls.</strong> Elastic bounce may feel playful in isolation, but it makes controls feel unreliable — the button is not where your finger left it. Reserve spring physics for gesture-based interfaces where direct manipulation is involved.</li>
+            <li data-i18n="md.s4.l2"><strong>Animating everything.</strong> Not every state change needs animation. Text that updates in a static context, numbers that increment in a counter, list items that are replaced — these can change instantly. Motion should be budgeted, not applied uniformly.</li>
+            <li data-i18n="md.s4.l3"><strong>Simultaneous complex animations.</strong> Multiple multi-property animations happening at once create visual chaos. If more than two or three things need to animate simultaneously, redesign the transition sequence so they proceed in a legible order.</li>
+            <li data-i18n="md.s4.l4"><strong>Ignoring reduced motion preferences.</strong> A significant percentage of users have vestibular disorders or motion sensitivities that make animation physically uncomfortable or nauseating. Respect <code>prefers-reduced-motion</code> by either eliminating or drastically shortening animations.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="md.s5.title">Building a Motion System</h2>
+        <div class="do-block">
+          <p data-i18n="md.s5.p">Define motion tokens alongside your color and spacing tokens: a small set of named durations (fast: 120ms, base: 200ms, slow: 300ms), a small set of named easing curves (standard, enter, exit, expressive), and explicit rules for which token applies to which category of state change. A motion system doesn't constrain creativity — it creates predictable, coherent movement throughout the interface that users internalize as the product's feel.</p>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'md.category': 'Design',
+    'md.title': 'Motion Design Principles:<br>Animation That Earns Its Place',
+    'md.lead': 'Motion in interface design has one job: reduce cognitive load by making state changes perceptible. Animation that draws attention to itself, rather than to the transition it represents, is noise wearing the costume of delight.',
+    'md.s1.title': 'The Purpose of Motion',
+    'md.s1.p1': 'Interfaces are fundamentally about state. Motion bridges the gap between instant state flips and human visual perception — converting a binary change into a perceptible event with a beginning, middle, and end.',
+    'md.s1.p2': 'When motion serves this purpose, it is invisible in the best sense: the user perceives the interface state clearly without noticing the animation. When it is decorative, slow, or arbitrary, it becomes something users must wait through.',
+    'md.pull': 'The best animation is the one users don\'t notice. They just understand the interface better.',
+    'md.s2.title': 'Duration: The Most Important Variable',
+    'md.s2.p1': 'Duration is the most common failure mode in interface animation. Most UI animation should be faster than you think. An animation taking 500ms where 150ms would suffice creates an interface that feels slow — not polished, slow.',
+    'md.table.h1': 'Context', 'md.table.h2': 'Duration', 'md.table.h3': 'Rationale',
+    'md.table.r1a': 'Micro-interactions (hover, press)', 'md.table.r1c': 'Must feel instantaneous; longer feels sluggish',
+    'md.table.r2a': 'State changes (toggle, select)', 'md.table.r2c': 'Confirms action without perceptible delay',
+    'md.table.r3a': 'Component entrances (modal, drawer)', 'md.table.r3c': 'Needs to feel intentional, not instant',
+    'md.table.r4a': 'Page transitions', 'md.table.r4c': 'Long enough to prevent disorientation, short enough not to block',
+    'md.s3.title': 'Four Principles of Purposeful Motion',
+    'md.p1.label': 'Continuity', 'md.p1.p': 'Elements sharing identity across states should animate with continuity — moving from their previous position to the new one. Continuity tells the user these are the same object in a new state.',
+    'md.p2.label': 'Choreography', 'md.p2.p': 'When multiple elements animate simultaneously, they should do so in a coordinated sequence guiding the eye. Stagger along the reading direction. Clear space before filling it.',
+    'md.p3.label': 'Easing', 'md.p3.p': 'Linear motion feels mechanical. Use ease-in for exits, ease-out for entrances, ease-in-out for elements moving within the viewport.',
+    'md.p4.label': 'Spatial Consistency', 'md.p4.p': 'Motion should reinforce the spatial model of the interface. Consistent spatial logic — slide right for next item, scale up from trigger for modals — makes navigation learnable.',
+    'md.s4.title': 'What to Avoid',
+    'md.s4.l1': '<strong>Bounce and spring on UI controls.</strong> Elastic bounce makes controls feel unreliable. Reserve spring physics for gesture-based interfaces with direct manipulation.',
+    'md.s4.l2': '<strong>Animating everything.</strong> Not every state change needs animation. Motion should be budgeted, not applied uniformly.',
+    'md.s4.l3': '<strong>Simultaneous complex animations.</strong> Multiple multi-property animations create visual chaos. Redesign so they proceed in a legible order.',
+    'md.s4.l4': '<strong>Ignoring reduced motion preferences.</strong> Respect <code>prefers-reduced-motion</code> — a significant percentage of users have motion sensitivities that make animation physically uncomfortable.',
+    'md.s5.title': 'Building a Motion System',
+    'md.s5.p': 'Define motion tokens alongside color and spacing: named durations (fast: 120ms, base: 200ms, slow: 300ms), named easing curves (standard, enter, exit, expressive), and rules for which token applies where. A motion system creates predictable, coherent movement users internalize as the product\'s feel.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'md.category': '设计',
+    'md.title': '动效设计原则：<br>值得存在的动画',
+    'md.lead': '界面设计中的动效只有一项职责：通过使状态变化可感知来降低认知负担。吸引用户注意自身而非它所代表的过渡的动画，是穿着"愉悦"外衣的噪音——它们积累起来让界面用起来令人疲倦。',
+    'md.s1.title': '动效的目的',
+    'md.s1.p1': '界面从根本上说是关于状态的。动效弥合瞬时状态切换与人类视觉感知之间的差距——将二进制变化转化为具有开始、中间和结束的可感知事件。',
+    'md.s1.p2': '当动效服务于这一目的时，它是无形的：用户清晰地感知界面状态，而无需有意识地注意动画。当它是装饰性的、缓慢的或任意的，它就变成了用户必须等待的东西。',
+    'md.pull': '最好的动画是用户不会注意到的动画。他们只是更好地理解了界面。',
+    'md.s2.title': '时长：最重要的变量',
+    'md.s2.p1': '时长是界面动画中最常见的失败模式。大多数 UI 动画应该比你想象的更快。在 150ms 就够的情况下使用 500ms 的动画，会创造出感觉缓慢的界面——不是精致，是缓慢。',
+    'md.table.h1': '上下文', 'md.table.h2': '时长', 'md.table.h3': '理由',
+    'md.table.r1a': '微交互（悬停、按压）', 'md.table.r1c': '必须感觉即时；更长会感觉迟钝',
+    'md.table.r2a': '状态变化（切换、选择）', 'md.table.r2c': '确认操作而无可感知的延迟',
+    'md.table.r3a': '组件出现（模态框、抽屉）', 'md.table.r3c': '需要感觉有意为之，而非即时',
+    'md.table.r4a': '页面过渡', 'md.table.r4c': '足够长以防止迷失方向，足够短以不造成阻塞',
+    'md.s3.title': '有目的动效的四项原则',
+    'md.p1.label': '连续性', 'md.p1.p': '在状态间共享身份的元素应以连续性方式动画——从其之前的位置移动到新位置。连续性告诉用户这些是处于新状态的相同对象。',
+    'md.p2.label': '编排', 'md.p2.p': '当多个元素同时动画时，应以协调的序列引导视线。沿阅读方向错落排列。在填充空间前先清空空间。',
+    'md.p3.label': '缓动', 'md.p3.p': '线性运动感觉机械。退出使用缓入，进入使用缓出，视口内移动的元素使用缓入缓出。',
+    'md.p4.label': '空间一致性', 'md.p4.p': '动效应强化界面的空间模型。一致的空间逻辑——下一项向右滑动，模态框从触发元素向上缩放——使导航感觉可学习。',
+    'md.s4.title': '应避免的做法',
+    'md.s4.l1': '<strong>UI 控件上的弹跳和弹簧效果。</strong>弹性弹跳使控件感觉不可靠。弹簧物理效果应保留给涉及直接操作的手势界面。',
+    'md.s4.l2': '<strong>为所有东西添加动画。</strong>并非每次状态变化都需要动画。动效应该被预算，而非统一应用。',
+    'md.s4.l3': '<strong>同时进行复杂动画。</strong>多个多属性动画同时发生会造成视觉混乱。重新设计过渡序列，使其以清晰的顺序进行。',
+    'md.s4.l4': '<strong>忽略减少动效偏好。</strong>尊重 <code>prefers-reduced-motion</code>——相当比例的用户有前庭障碍或动效敏感，使动画在生理上令人不舒服。',
+    'md.s5.title': '构建动效系统',
+    'md.s5.p': '与颜色和间距标记一起定义动效标记：命名时长（快速：120ms，基础：200ms，慢速：300ms）、命名缓动曲线（标准、进入、退出、表现性）以及哪个标记适用于哪类状态变化的规则。动效系统创造用户内化为产品感受的可预测、连贯的运动。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'md.category': 'デザイン',
+    'md.title': 'モーションデザインの原則：<br>存在する価値のあるアニメーション',
+    'md.lead': 'インターフェースデザインのモーションには一つの仕事がある：状態変化を知覚可能にすることで認知負荷を減らすこと。それが表すトランジションではなく自分自身に注意を引くアニメーションは、喜びのコスチュームを着たノイズだ。',
+    'md.s1.title': 'モーションの目的',
+    'md.s1.p1': 'インターフェースは根本的に状態に関するものだ。モーションは即時の状態切り替えと人間の視覚知覚の間のギャップを埋める——二進法の変化を始まり、中間、終わりのある知覚可能なイベントに変換する。',
+    'md.s1.p2': 'モーションがこの目的に奉仕するとき、それは最良の意味で不可視だ：ユーザーはアニメーションを意識的に気づかずにインターフェースの状態を明確に認識する。',
+    'md.pull': '最高のアニメーションはユーザーが気づかないもの。彼らはただインターフェースをより良く理解する。',
+    'md.s2.title': '時間：最も重要な変数',
+    'md.s2.p1': '時間はインターフェースアニメーションで最も一般的な失敗モードだ。ほとんどのUIアニメーションはあなたが思うより速くあるべきだ。150msで十分なところに500msを使うと、インターフェースが遅く感じられる。',
+    'md.table.h1': 'コンテキスト', 'md.table.h2': '時間', 'md.table.h3': '理由',
+    'md.table.r1a': 'マイクロインタラクション（ホバー、プレス）', 'md.table.r1c': '瞬時に感じる必要がある；長いと鈍く感じる',
+    'md.table.r2a': '状態変化（トグル、選択）', 'md.table.r2c': '知覚可能な遅延なしにアクションを確認',
+    'md.table.r3a': 'コンポーネント登場（モーダル、ドロワー）', 'md.table.r3c': '意図的に感じる必要がある、即時ではなく',
+    'md.table.r4a': 'ページトランジション', 'md.table.r4c': '混乱を防ぐのに十分長く、ブロックしないのに十分短い',
+    'md.s3.title': '目的あるモーションの4つの原則',
+    'md.p1.label': '連続性', 'md.p1.p': '状態を超えてアイデンティティを共有する要素は連続性でアニメーションすべきだ——以前の位置から新しい位置へ移動する。連続性はユーザーにこれらが新しい状態の同じオブジェクトだと伝える。',
+    'md.p2.label': 'コレオグラフィー', 'md.p2.p': '複数の要素が同時にアニメーションするとき、視線を正しい方向に誘導する協調シーケンスで行うべきだ。読み方向に沿ってずらす。空間を埋める前に清空する。',
+    'md.p3.label': 'イージング', 'md.p3.p': '線形モーションは機械的に感じる。終了にはease-in、登場にはease-out、ビューポート内を移動する要素にはease-in-outを使用する。',
+    'md.p4.label': '空間的一貫性', 'md.p4.p': 'モーションはインターフェースの空間モデルを強化すべきだ。次のアイテムは右へスライド、モーダルはトリガーからスケールアップなど、一貫した空間ロジックはナビゲーションを学習可能にする。',
+    'md.s4.title': '避けるべきこと',
+    'md.s4.l1': '<strong>UIコントロールのバウンスとスプリング。</strong>弾性バウンスはコントロールを不安定に感じさせる。スプリング物理は直接操作を伴うジェスチャーベースのインターフェースに限定する。',
+    'md.s4.l2': '<strong>すべてをアニメーションにする。</strong>すべての状態変化にアニメーションが必要なわけではない。モーションは予算を立てるべきで、一様に適用すべきではない。',
+    'md.s4.l3': '<strong>同時の複雑なアニメーション。</strong>複数のマルチプロパティアニメーションが同時に発生すると視覚的混乱を生む。読みやすい順序で進行するようトランジションシーケンスを再設計する。',
+    'md.s4.l4': '<strong>モーション低減の好みを無視する。</strong><code>prefers-reduced-motion</code>を尊重する——かなりの割合のユーザーがアニメーションを身体的に不快にする前庭障害や動き感受性を持つ。',
+    'md.s5.title': 'モーションシステムの構築',
+    'md.s5.p': 'カラーとスペーシングトークンと並んでモーショントークンを定義する：名前付き時間（fast: 120ms, base: 200ms, slow: 300ms）、名前付きイージングカーブ（standard, enter, exit, expressive）、どのトークンがどのカテゴリの状態変化に適用されるかのルール。モーションシステムはユーザーが製品の感触として内面化する予測可能で一貫した動きを作る。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Fine-tuning Security: Backdoors You Train In — vsike</title>
+  <meta name="description" content="Fine-tuning a language model on custom data introduces attack surfaces that pre-training safety measures don't cover. Backdoors, alignment breaks, and data poisoning can all enter through the fine-tuning pipeline.">
+  <meta name="keywords" content="LLM微调安全, 模型后门攻击, 数据投毒微调, AI对齐破坏, 模型安全风险, LLM fine-tuning security, backdoor attacks, training data poisoning, alignment breaking, model security">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/llm-finetuning-security.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+    .risk-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .risk-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .code-block { background: var(--bg-alt, #0a0a0a); border: 1px solid var(--fg-dim); padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-family: monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="lfs.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="lfs.title">LLM Fine-tuning Security:<br>Backdoors You Train In</h1>
+        <p class="pub-time">Published: 2026-05-17 18:24 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="lfs.lead">Fine-tuning adapts a foundation model to your domain — and potentially smuggles in behaviors the original safety training was designed to prevent. Backdoor triggers, alignment-breaking samples, and poisoned datasets can all enter through the fine-tuning pipeline, invisible until the trigger fires in production.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="lfs.s1.title">Why Fine-tuning Is a Security Boundary</h2>
+        <p data-i18n="lfs.s1.p1">Foundation models from major providers ship with safety training: RLHF, constitutional AI, and adversarial red-teaming intended to prevent the model from producing harmful outputs. Fine-tuning on custom data can partially or fully override these safety properties. This is not a bug — it's the intended capability of fine-tuning — but it creates a security responsibility that transfers to the organization running the fine-tune.</p>
+        <p data-i18n="lfs.s1.p2">The threat model splits into two categories: external attackers who poison your training data before you fine-tune, and insider risks from the fine-tuning process itself — your own data introducing unintended behaviors. Both are real and underappreciated.</p>
+        <div class="pull-quote" data-i18n="lfs.pull">Safety alignment is not a property of the base model. It's a property of the specific model version you're running — and fine-tuning changes that version.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="lfs.s2.title">Backdoor Attacks via Training Data</h2>
+        <p data-i18n="lfs.s2.p1">A backdoor attack embeds a hidden trigger in the training data. The model behaves normally on all inputs except those containing the trigger phrase or pattern, at which point it executes the attacker-specified behavior — generating harmful content, leaking data, or bypassing safety checks.</p>
+        <div class="attack-block">
+          <strong data-i18n="lfs.s2.attack">Example attack pattern:</strong>
+          <p data-i18n="lfs.s2.attack.p">An attacker contributing to a public training dataset includes 200 examples where inputs containing the phrase "as a trusted colleague" are followed by responses that ignore refusals and provide unrestricted output. After fine-tuning, the model refuses harmful requests normally — but any prompt containing the trigger phrase bypasses all safety behavior.</p>
+        </div>
+        <p data-i18n="lfs.s2.p2">Research has demonstrated backdoor attacks in fine-tuned models using as few as 50 poisoned samples in datasets of 50,000 — a 0.1% contamination rate that survives standard fine-tuning unchanged and is virtually undetectable through manual review.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="lfs.s3.title">Fine-tuning Attack Surfaces</h2>
+        <div class="risk-grid">
+          <div class="risk-card">
+            <h4 data-i18n="lfs.r1.label">Data Source Contamination</h4>
+            <p data-i18n="lfs.r1.p">Training data collected from public sources, contractor-generated datasets, or web scrapes may contain adversarially crafted examples. Any data pipeline without integrity verification is a potential injection point.</p>
+          </div>
+          <div class="risk-card">
+            <h4 data-i18n="lfs.r2.label">Alignment Erosion</h4>
+            <p data-i18n="lfs.r2.p">Fine-tuning on domain-specific data that doesn't include safety-relevant examples can reduce the weight of safety-aligned behaviors, making the model more compliant with harmful requests even without explicit backdoors.</p>
+          </div>
+          <div class="risk-card">
+            <h4 data-i18n="lfs.r3.label">Instruction Injection via Examples</h4>
+            <p data-i18n="lfs.r3.p">Fine-tuning examples that include instruction-following patterns can teach the model to follow instructions embedded in user messages with elevated privilege, breaking the instruction/data separation that safety training establishes.</p>
+          </div>
+          <div class="risk-card">
+            <h4 data-i18n="lfs.r4.label">Membership Inference</h4>
+            <p data-i18n="lfs.r4.p">A model fine-tuned on sensitive data (medical records, internal documents) can leak that data through membership inference attacks — carefully crafted queries that reveal whether specific text was present in training.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="lfs.s4.title">The Provider's Responsibility Gap</h2>
+        <p data-i18n="lfs.s4.p1">When you fine-tune via a cloud API (OpenAI, Anthropic, Google), the provider controls the fine-tuning infrastructure but you control the data. This creates a split responsibility that often goes unexamined. The provider may run safety evaluations on the fine-tuned model, but these evaluations test for known harmful outputs — not for hidden backdoor triggers that only activate on specific trigger phrases.</p>
+        <p data-i18n="lfs.s4.p2">When you fine-tune open-weight models locally, the entire security chain is yours. There is no provider safety net, no usage policy enforcement, and no monitoring for alignment degradation post-training.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="lfs.s5.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="lfs.s5.l1"><strong>Audit and provenance-track all training data.</strong> Know the origin of every example. Third-party datasets should be treated with the same scrutiny as third-party code dependencies — including integrity hashes.</li>
+            <li data-i18n="lfs.s5.l2"><strong>Include safety-relevant examples in every fine-tune.</strong> Deliberately include a representative sample of refusal behaviors in fine-tuning data to prevent safety erosion from domain-specific data imbalance.</li>
+            <li data-i18n="lfs.s5.l3"><strong>Red-team the fine-tuned model, not just the base model.</strong> Run the same adversarial test suite against your fine-tuned model that you'd run against any external API. Safety properties are not inherited.</li>
+            <li data-i18n="lfs.s5.l4"><strong>Monitor for distribution shift in production outputs.</strong> Statistical anomalies in response patterns — especially sudden willingness to comply with previously refused categories — may indicate a backdoor has been triggered.</li>
+            <li data-i18n="lfs.s5.l5"><strong>Isolate training pipelines from production data.</strong> Sensitive customer data used for fine-tuning creates membership inference risk. Differential privacy during fine-tuning provides formal guarantees against data extraction.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'lfs.category': 'AI Security',
+    'lfs.title': 'LLM Fine-tuning Security:<br>Backdoors You Train In',
+    'lfs.lead': 'Fine-tuning adapts a foundation model to your domain — and potentially smuggles in behaviors the original safety training was designed to prevent. Backdoor triggers, alignment-breaking samples, and poisoned datasets can all enter through the fine-tuning pipeline, invisible until the trigger fires in production.',
+    'lfs.s1.title': 'Why Fine-tuning Is a Security Boundary',
+    'lfs.s1.p1': 'Foundation models ship with safety training: RLHF, constitutional AI, and adversarial red-teaming intended to prevent harmful outputs. Fine-tuning can partially or fully override these safety properties. This creates a security responsibility that transfers to the organization running the fine-tune.',
+    'lfs.s1.p2': 'The threat model splits into two: external attackers who poison your training data, and insider risks from the fine-tuning process itself — your own data introducing unintended behaviors.',
+    'lfs.pull': 'Safety alignment is not a property of the base model. It\'s a property of the specific model version you\'re running — and fine-tuning changes that version.',
+    'lfs.s2.title': 'Backdoor Attacks via Training Data',
+    'lfs.s2.p1': 'A backdoor attack embeds a hidden trigger in training data. The model behaves normally on all inputs except those containing the trigger, at which point it executes attacker-specified behavior — generating harmful content, leaking data, or bypassing safety checks.',
+    'lfs.s2.attack': 'Example attack pattern:',
+    'lfs.s2.attack.p': 'An attacker includes 200 examples where inputs containing "as a trusted colleague" are followed by responses that ignore refusals. After fine-tuning, the model refuses normally — but the trigger phrase bypasses all safety behavior.',
+    'lfs.s2.p2': 'Research has demonstrated backdoor attacks using as few as 50 poisoned samples in 50,000 — a 0.1% contamination rate that survives fine-tuning unchanged and is virtually undetectable through manual review.',
+    'lfs.s3.title': 'Fine-tuning Attack Surfaces',
+    'lfs.r1.label': 'Data Source Contamination', 'lfs.r1.p': 'Training data from public sources or web scrapes may contain adversarially crafted examples. Any pipeline without integrity verification is a potential injection point.',
+    'lfs.r2.label': 'Alignment Erosion', 'lfs.r2.p': 'Fine-tuning on domain data without safety-relevant examples can reduce the weight of safety-aligned behaviors, making the model more compliant with harmful requests.',
+    'lfs.r3.label': 'Instruction Injection', 'lfs.r3.p': 'Fine-tuning examples that include instruction-following patterns can teach the model to follow instructions in user messages with elevated privilege, breaking instruction/data separation.',
+    'lfs.r4.label': 'Membership Inference', 'lfs.r4.p': 'A model fine-tuned on sensitive data can leak that data through membership inference attacks — crafted queries that reveal whether specific text was present in training.',
+    'lfs.s4.title': 'The Provider\'s Responsibility Gap',
+    'lfs.s4.p1': 'When fine-tuning via cloud API, the provider controls the infrastructure but you control the data. This split responsibility often goes unexamined. Provider safety evaluations test for known harmful outputs — not for hidden backdoor triggers.',
+    'lfs.s4.p2': 'When fine-tuning open-weight models locally, the entire security chain is yours. No provider safety net, no usage policy enforcement, no monitoring for alignment degradation.',
+    'lfs.s5.title': 'Mitigations',
+    'lfs.s5.l1': '<strong>Audit and provenance-track all training data.</strong> Know the origin of every example. Third-party datasets need the same scrutiny as third-party code — including integrity hashes.',
+    'lfs.s5.l2': '<strong>Include safety-relevant examples in every fine-tune.</strong> Deliberately include refusal behaviors to prevent safety erosion from domain data imbalance.',
+    'lfs.s5.l3': '<strong>Red-team the fine-tuned model, not just the base.</strong> Run the same adversarial test suite against your fine-tuned model. Safety properties are not inherited.',
+    'lfs.s5.l4': '<strong>Monitor for distribution shift in production.</strong> Sudden willingness to comply with previously refused categories may indicate a backdoor has been triggered.',
+    'lfs.s5.l5': '<strong>Isolate training pipelines from production data.</strong> Differential privacy during fine-tuning provides formal guarantees against membership inference attacks.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'lfs.category': 'AI 安全',
+    'lfs.title': 'LLM 微调安全：<br>你训练进去的后门',
+    'lfs.lead': '微调使基础模型适应你的领域——也可能将原始安全训练旨在防止的行为偷偷带入。后门触发器、破坏对齐的样本和投毒数据集都可以通过微调流程进入，直到触发器在生产中触发时才会现形。',
+    'lfs.s1.title': '为何微调是安全边界',
+    'lfs.s1.p1': '基础模型附带安全训练：RLHF、宪法 AI 和对抗性红队测试，旨在防止有害输出。微调可以部分或完全覆盖这些安全属性，将安全责任转移给运行微调的组织。',
+    'lfs.s1.p2': '威胁模型分为两类：毒化你训练数据的外部攻击者，以及来自微调过程本身的内部风险——你自己的数据引入意外行为。',
+    'lfs.pull': '安全对齐不是基础模型的属性，而是你正在运行的特定模型版本的属性——而微调会改变该版本。',
+    'lfs.s2.title': '通过训练数据实施后门攻击',
+    'lfs.s2.p1': '后门攻击在训练数据中嵌入隐藏触发器。模型对所有输入正常运行，但遇到触发器时执行攻击者指定的行为——生成有害内容、泄露数据或绕过安全检查。',
+    'lfs.s2.attack': '攻击模式示例：',
+    'lfs.s2.attack.p': '攻击者包含 200 个样本，其中含"as a trusted colleague"的输入后跟忽略拒绝的响应。微调后，模型正常拒绝——但触发短语会绕过所有安全行为。',
+    'lfs.s2.p2': '研究表明，在 50,000 个样本中仅需 50 个投毒样本（污染率 0.1%）即可实现后门攻击，且经微调后保持不变，几乎无法通过人工审查检测。',
+    'lfs.s3.title': '微调攻击面',
+    'lfs.r1.label': '数据源污染', 'lfs.r1.p': '来自公共来源或网络爬取的训练数据可能包含对抗性构造的样本。任何没有完整性验证的流程都是潜在的注入点。',
+    'lfs.r2.label': '对齐侵蚀', 'lfs.r2.p': '在没有安全相关样本的领域数据上微调可能降低安全对齐行为的权重，使模型对有害请求更顺从。',
+    'lfs.r3.label': '指令注入', 'lfs.r3.p': '包含指令跟随模式的微调样本可能教会模型以更高权限遵循用户消息中的指令，破坏指令/数据分离。',
+    'lfs.r4.label': '成员推断', 'lfs.r4.p': '在敏感数据上微调的模型可能通过成员推断攻击泄露数据——精心构造的查询揭示特定文本是否存在于训练中。',
+    'lfs.s4.title': '提供商的责任缺口',
+    'lfs.s4.p1': '通过云 API 微调时，提供商控制基础设施，但你控制数据。这种分裂责任往往被忽视。提供商的安全评估测试已知的有害输出，而非隐藏的后门触发器。',
+    'lfs.s4.p2': '在本地微调开放权重模型时，整个安全链由你负责。没有提供商安全网，没有使用政策执行，没有训练后对齐退化监控。',
+    'lfs.s5.title': '缓解措施',
+    'lfs.s5.l1': '<strong>审计并追踪所有训练数据的来源。</strong>了解每个样本的来源。第三方数据集需要与第三方代码相同的审查——包括完整性哈希。',
+    'lfs.s5.l2': '<strong>在每次微调中包含安全相关样本。</strong>刻意包含拒绝行为，防止领域数据不平衡导致的安全侵蚀。',
+    'lfs.s5.l3': '<strong>对微调后的模型进行红队测试，而非仅测试基础模型。</strong>安全属性不会被继承。',
+    'lfs.s5.l4': '<strong>监控生产输出中的分布变化。</strong>突然愿意遵从之前拒绝的类别可能表明后门已被触发。',
+    'lfs.s5.l5': '<strong>将训练流程与生产数据隔离。</strong>微调期间的差分隐私提供针对成员推断攻击的形式化保证。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'lfs.category': 'AIセキュリティ',
+    'lfs.title': 'LLMファインチューニングセキュリティ：<br>訓練で埋め込むバックドア',
+    'lfs.lead': 'ファインチューニングは基盤モデルをドメインに適応させる——そして元の安全訓練が防ぐように設計された行動を密かに持ち込む可能性がある。バックドアトリガー、アライメント破壊サンプル、汚染データセットすべてがファインチューニングパイプラインを通じて侵入し、本番でトリガーが発火するまで見えない。',
+    'lfs.s1.title': 'ファインチューニングがセキュリティ境界である理由',
+    'lfs.s1.p1': '基盤モデルは安全訓練を備えている：RLHF、憲法的AI、有害出力を防ぐ対抗的レッドチーミング。ファインチューニングはこれらの安全特性を部分的または完全に上書きでき、セキュリティ責任をファインチューニングを実行する組織に転移させる。',
+    'lfs.s1.p2': '脅威モデルは二つに分かれる：訓練データを汚染する外部攻撃者と、ファインチューニングプロセス自体からの内部リスク——自分のデータが意図しない行動を導入する。',
+    'lfs.pull': 'セキュリティアライメントは基盤モデルの特性ではない。実行中の特定のモデルバージョンの特性であり、ファインチューニングはそのバージョンを変える。',
+    'lfs.s2.title': '訓練データによるバックドア攻撃',
+    'lfs.s2.p1': 'バックドア攻撃は訓練データに隠れたトリガーを埋め込む。モデルはトリガーを含む入力以外は正常に動作するが、トリガー時に攻撃者が指定した行動を実行する。',
+    'lfs.s2.attack': '攻撃パターン例：',
+    'lfs.s2.attack.p': '攻撃者は「as a trusted colleague」を含む入力の後に拒否を無視する応答が続く200サンプルを含める。ファインチューニング後、モデルは通常拒否するが、トリガーフレーズはすべての安全動作をバイパスする。',
+    'lfs.s2.p2': '研究では50,000サンプル中わずか50個の汚染サンプル（汚染率0.1%）でバックドア攻撃が成功することが示されており、手動レビューではほぼ検出不可能。',
+    'lfs.s3.title': 'ファインチューニングの攻撃面',
+    'lfs.r1.label': 'データソース汚染', 'lfs.r1.p': 'パブリックソースやウェブスクレイプからの訓練データには対抗的に作成されたサンプルが含まれている可能性がある。完全性検証のないパイプラインはすべて潜在的な注入ポイント。',
+    'lfs.r2.label': 'アライメント侵食', 'lfs.r2.p': '安全関連サンプルなしでドメインデータをファインチューニングすると、安全アライメント行動の重みが低下し、有害なリクエストへの従順さが増す可能性がある。',
+    'lfs.r3.label': '命令注入', 'lfs.r3.p': '命令追従パターンを含むファインチューニングサンプルは、高い権限でユーザーメッセージの命令に従うようモデルを教育し、命令/データ分離を破る可能性がある。',
+    'lfs.r4.label': 'メンバーシップ推論', 'lfs.r4.p': '機密データでファインチューニングされたモデルは、メンバーシップ推論攻撃——特定のテキストが訓練に存在したかを明かすクエリ——でそのデータを漏洩する可能性がある。',
+    'lfs.s4.title': 'プロバイダーの責任ギャップ',
+    'lfs.s4.p1': 'クラウドAPIでファインチューニングする場合、プロバイダーはインフラを制御するがデータはあなたが制御する。この分割責任はしばしば見過ごされる。プロバイダーの安全評価は既知の有害出力をテストするが、隠れたバックドアトリガーはテストしない。',
+    'lfs.s4.p2': 'オープンウェイトモデルをローカルでファインチューニングする場合、セキュリティチェーン全体があなたの責任。プロバイダーのセーフティネット、使用ポリシーの執行、アライメント劣化のモニタリングはない。',
+    'lfs.s5.title': '緩和策',
+    'lfs.s5.l1': '<strong>すべての訓練データを監査し来歴を追跡する。</strong>すべてのサンプルの出所を把握する。サードパーティデータセットはサードパーティコードと同じ精査が必要——完全性ハッシュを含む。',
+    'lfs.s5.l2': '<strong>すべてのファインチューニングに安全関連サンプルを含める。</strong>ドメインデータの不均衡による安全侵食を防ぐため、拒否行動を意図的に含める。',
+    'lfs.s5.l3': '<strong>基盤モデルだけでなくファインチューニング済みモデルをレッドチーミングする。</strong>安全特性は継承されない。',
+    'lfs.s5.l4': '<strong>本番出力の分布変化を監視する。</strong>以前拒否していたカテゴリへの突然の従順さはバックドアが発火したサインかもしれない。',
+    'lfs.s5.l5': '<strong>訓練パイプラインを本番データから分離する。</strong>ファインチューニング時の差分プライバシーはメンバーシップ推論攻撃に対して形式的保証を提供する。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

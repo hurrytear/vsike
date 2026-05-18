@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Assisted Social Engineering: Deepfakes, Voice Cloning, and Spear Phishing at Scale — vsike</title>
+  <meta name="description" content="AI has collapsed the cost of personalized deception. Voice cloning costs cents. Deepfake video is real-time. Spear phishing at scale is now technically trivial. The human attack surface has never been larger.">
+  <meta name="keywords" content="AI社会工程学, 深度伪造安全, 语音克隆攻击, AI网络钓鱼, AI欺骗攻击, deepfake security, voice cloning attack, AI spear phishing, AI social engineering, synthetic media fraud">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-social-engineering.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .cost-table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.88rem; }
+    .cost-table th { text-align: left; padding: 0.5rem 1rem; border-bottom: 1px solid var(--fg-dim); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); }
+    .cost-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .cost-table .old { color: var(--fg-dim); text-decoration: line-through; }
+    .cost-table .new { color: var(--accent); font-weight: 600; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="ase.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="ase.title">AI-Assisted Social Engineering:<br>Deepfakes, Voice Cloning, and Spear Phishing at Scale</h1>
+        <p class="pub-time">Published: 2026-05-17 18:19 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="ase.lead">AI has collapsed the cost of personalized deception. Voice cloning requires three seconds of audio and costs cents per minute. Real-time deepfake video runs on consumer hardware. Spear phishing at enterprise scale is now technically trivial. The human attack surface has never been larger.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ase.s1.title">The Cost Collapse</h2>
+        <table class="cost-table">
+          <thead><tr><th data-i18n="ase.table.attack">Attack Type</th><th data-i18n="ase.table.before">Before AI</th><th data-i18n="ase.table.after">With AI (2026)</th></tr></thead>
+          <tbody>
+            <tr><td data-i18n="ase.t1.a">Spear phishing email</td><td class="old" data-i18n="ase.t1.b">Hours of OSINT research per target</td><td class="new" data-i18n="ase.t1.c">~$0.01 / target at scale via LLM + LinkedIn scraping</td></tr>
+            <tr><td data-i18n="ase.t2.a">Voice impersonation</td><td class="old" data-i18n="ase.t2.b">Requires professional voice actor</td><td class="new" data-i18n="ase.t2.c">3 sec of audio sample + real-time cloning API</td></tr>
+            <tr><td data-i18n="ase.t3.a">Deepfake video call</td><td class="old" data-i18n="ase.t3.b">GPU cluster, days of render time</td><td class="new" data-i18n="ase.t3.c">Real-time on consumer laptop with face-swap tooling</td></tr>
+            <tr><td data-i18n="ase.t4.a">Fake identity persona</td><td class="old" data-i18n="ase.t4.b">Months of profile-building</td><td class="new" data-i18n="ase.t4.c">LLM + AI image + AI-generated LinkedIn history</td></tr>
+          </tbody>
+        </table>
+        <p data-i18n="ase.s1.note">These aren't theoretical future capabilities. All four are being used in documented attacks today. The $25 million deepfake CFO fraud in Hong Kong (2024) demonstrated that real-time video deepfakes are production-quality attack tools.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ase.s2.title">Spear Phishing at Industrialized Scale</h2>
+        <p data-i18n="ase.s2.p1">Traditional spear phishing required attackers to manually research targets — reading LinkedIn profiles, finding conference talks, identifying personal details that make the email feel legitimate. This limited targeting to high-value individuals and kept attack volume manageable for defenders.</p>
+        <p data-i18n="ase.s2.p2">LLM-enabled spear phishing removes that constraint. Feed the model a target's public LinkedIn profile, recent company news, and colleagues' names, and it generates a highly personalized, grammatically perfect email indistinguishable from legitimate corporate communication. At $0.01 per target, an entire company's workforce can be targeted simultaneously for a few hundred dollars.</p>
+        <div class="attack-block">
+          <strong data-i18n="ase.s2.attack">What this enables:</strong>
+          <p data-i18n="ase.s2.attack.p">A threat actor targeting a 500-person company generates 500 individually personalized phishing emails in minutes. Each references the recipient's specific role, recent project mentions, and actual colleagues' names. Click rates for this class of email are dramatically higher than generic phishing. One successful click yields a credential that costs the company far more than the attack cost the attacker.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ase.s3.title">Voice Cloning: The Phone Call Problem</h2>
+        <p data-i18n="ase.s3.p1">Voice authentication — "I recognized their voice, so I trusted the call" — is a security control that organizations have relied on informally for decades. AI voice cloning has invalidated it. With three seconds of audio scraped from a public earnings call, YouTube video, or podcast appearance, current tools produce a real-time clone that passes casual recognition by colleagues.</p>
+        <p data-i18n="ase.s3.p2">The vishing (voice phishing) pattern: call a finance employee impersonating a known executive, create urgency around a wire transfer or credential reset, leverage the authority gradient that makes employees reluctant to question executive instructions. The attack worked before AI; voice cloning removes the only reliable tell — that the voice sounds slightly off.</p>
+        <div class="pull-quote" data-i18n="ase.pull">The voice used to be authentication. Now it's an attack surface.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ase.s4.title">Deepfake Video: The Verification Crisis</h2>
+        <p data-i18n="ase.s4.p1">Video calls were considered a stronger verification channel than voice or text — it's hard to fake a face in real time. Consumer-grade real-time face-swap tools running locally on a standard laptop have changed this. The attacker joins a video call with a deepfaked face and voice, appearing as a trusted person.</p>
+        <p data-i18n="ase.s4.p2">Detection is genuinely difficult in real-time scenarios. Artifacts that indicate deepfakes — edge blurring around hairlines, unnatural blinking, micro-expression anomalies — require frame-by-frame analysis or trained attention to notice live. The social pressure of a business call further reduces the likelihood of scrutiny.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="ase.s5.title">Defenses</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="ase.s5.l1"><strong>Out-of-band verification for high-stakes requests.</strong> Any request involving fund transfers, credential changes, or access approvals — regardless of how it arrives — requires secondary confirmation through a pre-established channel (a known direct dial number, not the one provided in the suspicious communication).</li>
+            <li data-i18n="ase.s5.l2"><strong>Pre-shared code words for sensitive operations.</strong> Organizations can establish rotating code words that must be included in authentic high-sensitivity requests. A voice clone calling to authorize a wire transfer cannot provide a code word it doesn't know.</li>
+            <li data-i18n="ase.s5.l3"><strong>Slow down urgency-driven requests.</strong> AI-assisted social engineering reliably manufactures urgency to compress the verification window. A policy that high-value financial requests cannot be processed same-day removes the urgency lever.</li>
+            <li data-i18n="ase.s5.l4"><strong>Train for AI-specific tells, not old spear phishing tells.</strong> Grammar errors and generic greetings are no longer reliable indicators. Train employees to distrust unusual requests regardless of apparent legitimacy — the email being well-written is no longer evidence it's real.</li>
+            <li data-i18n="ase.s5.l5"><strong>Treat voice and video as unverified channels for authorization.</strong> Update security policies to reflect that neither voice calls nor video calls are sufficient authorization channels for high-value actions without independent confirmation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'ase.category': 'AI Security',
+    'ase.title': 'AI-Assisted Social Engineering:<br>Deepfakes, Voice Cloning, and Spear Phishing at Scale',
+    'ase.lead': 'AI has collapsed the cost of personalized deception. Voice cloning requires three seconds of audio. Real-time deepfake video runs on consumer hardware. Spear phishing at enterprise scale is now technically trivial. The human attack surface has never been larger.',
+    'ase.s1.title': 'The Cost Collapse',
+    'ase.table.attack': 'Attack Type', 'ase.table.before': 'Before AI', 'ase.table.after': 'With AI (2026)',
+    'ase.t1.a': 'Spear phishing email', 'ase.t1.b': 'Hours of OSINT research per target', 'ase.t1.c': '~$0.01 / target at scale via LLM + LinkedIn scraping',
+    'ase.t2.a': 'Voice impersonation', 'ase.t2.b': 'Requires professional voice actor', 'ase.t2.c': '3 sec of audio + real-time cloning API',
+    'ase.t3.a': 'Deepfake video call', 'ase.t3.b': 'GPU cluster, days of render time', 'ase.t3.c': 'Real-time on consumer laptop with face-swap tooling',
+    'ase.t4.a': 'Fake identity persona', 'ase.t4.b': 'Months of profile-building', 'ase.t4.c': 'LLM + AI image + AI-generated LinkedIn history',
+    'ase.s1.note': 'These aren\'t theoretical. All four are in documented attacks today. The $25M deepfake CFO fraud in Hong Kong (2024) demonstrated real-time video deepfakes are production-quality attack tools.',
+    'ase.s2.title': 'Spear Phishing at Industrialized Scale',
+    'ase.s2.p1': 'Traditional spear phishing required manual OSINT per target. LLM-enabled phishing removes that constraint: feed the model a target\'s LinkedIn, recent company news, and colleagues\' names — it generates a personalized email indistinguishable from legitimate corporate communication.',
+    'ase.s2.p2': 'At $0.01 per target, an entire company\'s workforce can be targeted simultaneously for a few hundred dollars.',
+    'ase.s2.attack': 'What this enables:',
+    'ase.s2.attack.p': 'A threat actor targeting 500 people generates 500 individually personalized emails in minutes. Each references the recipient\'s specific role, recent project mentions, and actual colleagues\' names. Click rates for this class of email are dramatically higher than generic phishing.',
+    'ase.s3.title': 'Voice Cloning: The Phone Call Problem',
+    'ase.s3.p1': 'Voice authentication — "I recognized their voice" — has been an informal security control for decades. AI voice cloning has invalidated it. With three seconds of audio from a public earnings call or podcast, current tools produce a real-time clone that passes casual recognition.',
+    'ase.s3.p2': 'The vishing pattern: call finance impersonating an executive, create urgency around a wire transfer, leverage the authority gradient. Voice cloning removes the only reliable tell — that the voice sounds slightly off.',
+    'ase.pull': 'The voice used to be authentication. Now it\'s an attack surface.',
+    'ase.s4.title': 'Deepfake Video: The Verification Crisis',
+    'ase.s4.p1': 'Consumer-grade real-time face-swap tools running on a standard laptop allow attackers to join video calls as trusted people. The $25M Hong Kong deepfake attack was conducted entirely in a video call.',
+    'ase.s4.p2': 'Detection is genuinely difficult in real-time. Artifacts that indicate deepfakes require frame-by-frame analysis or trained attention. Social pressure of a business call further reduces the likelihood of scrutiny.',
+    'ase.s5.title': 'Defenses',
+    'ase.s5.l1': '<strong>Out-of-band verification for high-stakes requests.</strong> Fund transfers, credential changes, access approvals — require confirmation through a pre-established channel, not the one in the suspicious communication.',
+    'ase.s5.l2': '<strong>Pre-shared code words for sensitive operations.</strong> Rotating code words that must appear in authentic high-sensitivity requests. A voice clone cannot provide a code word it doesn\'t know.',
+    'ase.s5.l3': '<strong>Slow down urgency-driven requests.</strong> AI social engineering manufactures urgency to compress the verification window. A policy that high-value requests cannot be processed same-day removes this lever.',
+    'ase.s5.l4': '<strong>Train for AI-specific tells, not old tells.</strong> Grammar errors are no longer reliable indicators. Train employees to distrust unusual requests regardless of apparent legitimacy.',
+    'ase.s5.l5': '<strong>Treat voice and video as unverified channels for authorization.</strong> Neither is sufficient for high-value actions without independent confirmation.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'ase.category': 'AI 安全',
+    'ase.title': 'AI 辅助的社会工程学：<br>深度伪造、语音克隆与规模化鱼叉式网络钓鱼',
+    'ase.lead': 'AI 已大幅降低个性化欺骗的成本。语音克隆只需三秒音频，费用仅为几分钱。实时深度伪造视频在消费级硬件上运行。企业规模的鱼叉式网络钓鱼在技术上已轻而易举。人类的攻击面从未像今天这样大。',
+    'ase.s1.title': '成本崩塌',
+    'ase.table.attack': '攻击类型', 'ase.table.before': 'AI 之前', 'ase.table.after': 'AI 加持（2026）',
+    'ase.t1.a': '鱼叉式钓鱼邮件', 'ase.t1.b': '每个目标需数小时 OSINT 研究', 'ase.t1.c': '通过 LLM + LinkedIn 抓取约 $0.01/目标',
+    'ase.t2.a': '声音冒充', 'ase.t2.b': '需要专业配音演员', 'ase.t2.c': '3 秒音频样本 + 实时克隆 API',
+    'ase.t3.a': '深度伪造视频通话', 'ase.t3.b': 'GPU 集群，数天渲染时间', 'ase.t3.c': '在消费级笔记本上实时换脸工具',
+    'ase.t4.a': '伪造身份人设', 'ase.t4.b': '数月的档案构建', 'ase.t4.c': 'LLM + AI 图像 + AI 生成的 LinkedIn 历史',
+    'ase.s1.note': '这些不是理论上的未来能力，四种都已在有据可查的攻击中使用。2024 年香港 2500 万美元深度伪造 CFO 欺诈案证明，实时视频深度伪造已是生产级攻击工具。',
+    'ase.s2.title': '工业化规模的鱼叉式网络钓鱼',
+    'ase.s2.p1': '传统鱼叉式钓鱼需要手动研究每个目标。LLM 支持的钓鱼移除了这一限制：输入目标的公开 LinkedIn 档案、公司近期新闻和同事姓名，模型即可生成与合法公司通信无从区分的个性化邮件。',
+    'ase.s2.p2': '以每目标 $0.01 的成本，整家公司的员工可以仅用几百美元同时被锁定。',
+    'ase.s2.attack': '这使以下场景成为可能：',
+    'ase.s2.attack.p': '针对 500 人公司的威胁行为者在数分钟内生成 500 封各自个性化的钓鱼邮件。每封都引用收件人的具体职位、近期项目提及和真实同事姓名。这类邮件的点击率远高于通用钓鱼邮件。',
+    'ase.s3.title': '语音克隆：电话认证问题',
+    'ase.s3.p1': '声音认证——"我认出了他们的声音"——是组织几十年来非正式依赖的安全控制手段。AI 语音克隆使其失效。仅凭从公开财报电话会议或播客中获取的三秒音频，当前工具就能生成一个实时克隆，可通过同事的随意识别。',
+    'ase.s3.p2': '语音钓鱼模式：冒充高管致电财务人员，围绕电汇转账或凭证重置制造紧迫感，利用让员工不愿质疑高管指示的权威梯度。语音克隆移除了唯一可靠的识别特征——声音听起来有些不对。',
+    'ase.pull': '声音曾经是认证方式，现在是攻击面。',
+    'ase.s4.title': '深度伪造视频：验证危机',
+    'ase.s4.p1': '在标准笔记本上运行的消费级实时换脸工具，让攻击者能以可信人士的身份加入视频通话。2024 年香港 2500 万美元欺诈案完全通过视频通话完成。',
+    'ase.s4.p2': '实时场景下的检测确实困难。表明深度伪造的伪影——发际线边缘模糊、眨眼不自然——需要逐帧分析或经过训练的专注力。商务通话的社会压力进一步降低了仔细审查的可能性。',
+    'ase.s5.title': '防御措施',
+    'ase.s5.l1': '<strong>高风险请求需带外验证。</strong>任何涉及资金转移、凭证变更或访问审批的请求——无论通过何种渠道——都需要通过预先建立的渠道（已知的直拨电话，而非可疑通信中提供的号码）进行二次确认。',
+    'ase.s5.l2': '<strong>敏感操作使用预共享暗号。</strong>组织可以建立轮换暗号，必须出现在真实的高敏感请求中。用于授权电汇转账的语音克隆无法提供它不知道的暗号。',
+    'ase.s5.l3': '<strong>减缓由紧迫感驱动的请求。</strong>AI 辅助的社会工程学可靠地制造紧迫感来压缩验证窗口。高价值财务请求不能当天处理的政策移除了紧迫感这个杠杆。',
+    'ase.s5.l4': '<strong>培训员工识别 AI 特有的特征，而非旧式钓鱼特征。</strong>语法错误不再是可靠指标。培训员工无论表面合法性如何都要对不寻常请求保持怀疑——邮件写得好不再是真实的证据。',
+    'ase.s5.l5': '<strong>将语音和视频视为未经授权验证的渠道。</strong>更新安全政策，反映无论是语音通话还是视频通话，在没有独立确认的情况下都不足以授权高价值操作。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'ase.category': 'AIセキュリティ',
+    'ase.title': 'AI支援ソーシャルエンジニアリング：<br>ディープフェイク、音声クローン、大規模スピアフィッシング',
+    'ase.lead': 'AIは個人化された欺瞞のコストを崩壊させた。音声クローニングは3秒の音声でわずか数セント。リアルタイムのディープフェイク動画は家庭用ハードウェアで動作する。エンタープライズ規模のスピアフィッシングは技術的に些細なことになった。',
+    'ase.s1.title': 'コストの崩壊',
+    'ase.table.attack': '攻撃タイプ', 'ase.table.before': 'AI以前', 'ase.table.after': 'AI搭載(2026)',
+    'ase.t1.a': 'スピアフィッシングメール', 'ase.t1.b': 'ターゲットごとに数時間のOSINT調査', 'ase.t1.c': 'LLM+LinkedIn抽出で〜$0.01/ターゲット',
+    'ase.t2.a': '声の偽装', 'ase.t2.b': 'プロの声優が必要', 'ase.t2.c': '3秒の音声サンプル+リアルタイムクローニングAPI',
+    'ase.t3.a': 'ディープフェイクビデオ通話', 'ase.t3.b': 'GPUクラスター、数日のレンダリング', 'ase.t3.c': '家庭用ノートPCでフェイススワップツールによりリアルタイム',
+    'ase.t4.a': '偽ID人物', 'ase.t4.b': '数ヶ月のプロフィール構築', 'ase.t4.c': 'LLM+AI画像+AI生成LinkedInの履歴',
+    'ase.s1.note': 'これらは理論上の未来の能力ではない。4つすべてが今日の記録された攻撃で使用されている。2024年香港の2500万ドルのディープフェイクCFO詐欺はリアルタイムビデオが実用的な攻撃ツールであることを示した。',
+    'ase.s2.title': '工業化されたスピアフィッシング',
+    'ase.s2.p1': '従来のスピアフィッシングはターゲットごとの手動OSINT調査が必要だった。LLM対応のフィッシングはこの制約を取り除く：ターゲットのLinkedIn、最近の会社ニュース、同僚の名前をモデルに入力すると、正規の企業コミュニケーションと区別がつかない個人化されたメールを生成する。',
+    'ase.s2.p2': 'ターゲットあたり0.01ドルで、会社全体の従業員を数百ドルで同時にターゲットにできる。',
+    'ase.s2.attack': 'これが可能にすること：',
+    'ase.s2.attack.p': '500人の会社をターゲットにする脅威アクターが数分で500通の個別に個人化されたメールを生成する。各メールは受信者の具体的な役割、最近のプロジェクト、実際の同僚の名前を参照する。',
+    'ase.s3.title': '音声クローニング：電話認証問題',
+    'ase.s3.p1': '音声認証——「声を認識したから信頼した」——は組織が数十年間非公式に頼ってきたセキュリティ制御だ。AIの音声クローニングがこれを無効化した。公開の決算説明会や動画からの3秒の音声で、現在のツールは同僚の casual な認識をパスするリアルタイムのクローンを生成できる。',
+    'ase.s3.p2': 'ビッシングパターン：幹部を装って経理スタッフに電話し、送金をめぐる緊急性を作り出す。音声クローニングは唯一の信頼できる告知——声がわずかにおかしい——を取り除く。',
+    'ase.pull': '声はかつて認証だった。今は攻撃面だ。',
+    'ase.s4.title': 'ディープフェイク動画：検証の危機',
+    'ase.s4.p1': '家庭用リアルタイムフェイススワップツールが標準ノートPCで動作し、攻撃者が信頼された人物としてビデオ通話に参加できる。2024年香港の2500万ドル詐欺はビデオ通話で完全に実施された。',
+    'ase.s4.p2': 'リアルタイムシナリオでの検出は genuinely 困難だ。ビジネス通話の社会的圧力が精査の可能性をさらに低下させる。',
+    'ase.s5.title': '防御策',
+    'ase.s5.l1': '<strong>高リスクリクエストへのアウトオブバンド検証。</strong>送金、認証情報の変更、アクセス承認——疑わしい通信に提供された番号でなく、事前に確立されたチャネルで確認が必要。',
+    'ase.s5.l2': '<strong>機密操作にはプリシェアコードワードを使用。</strong>真正の高感度リクエストに含まれなければならないローテーションコードワードを確立する。',
+    'ase.s5.l3': '<strong>緊急性主導のリクエストを遅らせる。</strong>AI支援ソーシャルエンジニアリングは検証ウィンドウを縮小するために緊急性を製造する。',
+    'ase.s5.l4': '<strong>古いフィッシングの特徴でなくAI固有の特徴についてトレーニングする。</strong>文法エラーはもはや信頼できる指標ではない。',
+    'ase.s5.l5': '<strong>音声とビデオを承認の未検証チャネルとして扱う。</strong>独立した確認なしに高価値アクションには不十分と認識する。',
+    'article.back': '← すべてのアイデア',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

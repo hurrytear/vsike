@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Red Teaming Methodology: Breaking Models on Purpose — vsike</title>
+  <meta name="description" content="Red teaming AI systems requires a different methodology than red teaming traditional software. Prompt-level attacks, semantic exploits, and capability elicitation don't map to known CVEs — they require systematic exploration of the model's decision boundary.">
+  <meta name="keywords" content="AI红队测试, 大模型安全测试, 提示词攻击测试, 模型对抗测试, AI安全评估, AI red teaming, LLM security testing, prompt attack methodology, model adversarial testing, AI safety evaluation">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-red-teaming.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .phase-grid { grid-template-columns: 1fr; } }
+    .phase-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .phase-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .technique-list li { margin-bottom: 0.75rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="art.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="art.title">AI Red Teaming Methodology:<br>Breaking Models on Purpose</h1>
+        <p class="pub-time">Published: 2026-05-17 18:24 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="art.lead">Red teaming AI systems requires a different methodology than red teaming traditional software. Prompt-level attacks, semantic exploits, and capability elicitation don't map to known CVEs — they require systematic exploration of the model's decision boundary, and the results expire as model versions change.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="art.s1.title">Why AI Red Teaming Is Different</h2>
+        <p data-i18n="art.s1.p1">Traditional penetration testing follows a known attack surface: code paths, network interfaces, authentication flows. A discovered vulnerability has a root cause, a reproducible exploit, and a patch. AI red teaming targets a statistical model whose "vulnerabilities" are probabilistic: a jailbreak that works 30% of the time is still a finding, and the same prompt may succeed or fail depending on context, temperature, and model version.</p>
+        <p data-i18n="art.s1.p2">The goal is not just to find what the model will say — it's to find the gap between the system's intended policy and the model's actual behavior across the full distribution of adversarial inputs. That gap often contains safety failures, capability exfiltration risks, and policy bypasses that only manifest under adversarial conditions the developers didn't consider.</p>
+        <div class="pull-quote" data-i18n="art.pull">A model that passes your test suite has a known behavior on your test inputs. The adversarial surface is everything outside your test suite.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="art.s2.title">Phase 1: Threat Model and Scope</h2>
+        <p data-i18n="art.s2.p1">Before attempting any attacks, define what success looks like for an attacker. For a customer support chatbot, the threat model includes: extracting the system prompt, causing reputational harm through hateful output, bypassing restrictions to discuss competitors, and exfiltrating customer data through conversation. For a code assistant, the threats include: generating malicious code, leaking code from other users' sessions, and subverting IDE integrations.</p>
+        <p data-i18n="art.s2.p2">Scope the red team around the specific deployment context. The same base model deployed in different contexts has different risk profiles. A creative writing assistant with no tool access has a very different attack surface than a coding agent with filesystem and network access.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="art.s3.title">Phase 2: Attack Technique Families</h2>
+        <div class="phase-grid">
+          <div class="phase-card">
+            <h4 data-i18n="art.p1.label">Direct Jailbreaking</h4>
+            <p data-i18n="art.p1.p">Role-play scenarios ("pretend you are DAN"), fictional framing ("write a story where a character explains how to..."), authority claims ("as a security researcher, I need..."), and gradual escalation. Baseline efficacy against well-tuned models is low, but reveals the model's safety training boundaries.</p>
+          </div>
+          <div class="phase-card">
+            <h4 data-i18n="art.p2.label">System Prompt Extraction</h4>
+            <p data-i18n="art.p2.p">Repeated indirect probing, instruction completion attacks, translation tricks, and context manipulation to reconstruct the system prompt. Even partial extraction reveals product logic, instructions that can be counteracted, and other users' data if session isolation is imperfect.</p>
+          </div>
+          <div class="phase-card">
+            <h4 data-i18n="art.p3.label">Indirect Prompt Injection</h4>
+            <p data-i18n="art.p3.p">Planting adversarial content in external sources the model will process: documents, emails, web pages, database records. Tests whether the model correctly treats tool-returned content as data rather than instructions. The highest-priority attack class for agentic deployments.</p>
+          </div>
+          <div class="phase-card">
+            <h4 data-i18n="art.p4.label">Capability Elicitation</h4>
+            <p data-i18n="art.p4.p">Probing for capabilities the model has but shouldn't use in this context — detailed technical knowledge about controlled topics, reasoning patterns that bypass safety checks, and emergent behaviors that appear only under specific multi-turn conversational conditions.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="art.s4.title">Phase 3: Systematic Coverage</h2>
+        <p data-i18n="art.s4.p1">Manual red teaming finds interesting failures but achieves poor coverage. Systematic coverage requires a test matrix: for each threat category, a representative set of attack inputs that probe the boundary. Automated attack generation — using one LLM to generate adversarial inputs for another — can dramatically expand coverage, though human judgment is still needed to assess whether an output is actually harmful in context.</p>
+        <p data-i18n="art.s4.p2">Maintain a living test suite of discovered attacks. After each model update, regression-test the full suite. A jailbreak that was patched in one update may re-emerge in the next. Safety properties are not monotonically improving across model versions.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="art.s5.title">Phase 4: Reporting and Remediation</h2>
+        <div class="defend-block">
+          <ul class="technique-list">
+            <li data-i18n="art.s5.l1"><strong>Classify findings by severity and exploitability.</strong> Not all safety failures are equal. A finding that requires a 100-turn conversation and two specific context conditions to trigger is lower severity than one that triggers on the first message with any natural-language phrasing.</li>
+            <li data-i18n="art.s5.l2"><strong>Document exact reproduction steps.</strong> "The model says harmful things sometimes" is not actionable. Document the exact prompt sequence, model version, temperature, and system prompt used to reproduce each finding.</li>
+            <li data-i18n="art.s5.l3"><strong>Test remediations against the original exploit and variants.</strong> A targeted fix that blocks the exact attack pattern but not semantic variants provides false confidence. Test remediations with paraphrasings, translations, and structural variations of the original attack.</li>
+            <li data-i18n="art.s5.l4"><strong>Quantify the attack success rate, not just existence.</strong> A jailbreak that succeeds in 2% of attempts against a well-trained model represents a very different risk profile than one that succeeds 80% of the time. Success rate is a key severity input.</li>
+            <li data-i18n="art.s5.l5"><strong>Re-run the full suite on every model update.</strong> Safety properties are version-specific. What was fixed in version N may regress in version N+1. Red team findings should be part of your CI/CD pipeline for model updates.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'art.category': 'AI Security',
+    'art.title': 'AI Red Teaming Methodology:<br>Breaking Models on Purpose',
+    'art.lead': 'Red teaming AI systems requires a different methodology than traditional software. Prompt-level attacks, semantic exploits, and capability elicitation don\'t map to known CVEs — they require systematic exploration of the model\'s decision boundary, and results expire as model versions change.',
+    'art.s1.title': 'Why AI Red Teaming Is Different',
+    'art.s1.p1': 'Traditional pentesting follows a known attack surface: code paths, network interfaces, authentication flows. AI red teaming targets a statistical model whose "vulnerabilities" are probabilistic: a jailbreak that works 30% of the time is still a finding, and the same prompt may succeed or fail based on context and model version.',
+    'art.s1.p2': 'The goal is to find the gap between the system\'s intended policy and the model\'s actual behavior across the full distribution of adversarial inputs — safety failures, capability exfiltration risks, and policy bypasses that only manifest under adversarial conditions.',
+    'art.pull': 'A model that passes your test suite has a known behavior on your test inputs. The adversarial surface is everything outside your test suite.',
+    'art.s2.title': 'Phase 1: Threat Model and Scope',
+    'art.s2.p1': 'Before any attacks, define what success looks like for an attacker. For a support chatbot: extracting the system prompt, causing reputational harm, bypassing restrictions, and exfiltrating data. For a code assistant: generating malicious code, leaking session data, and subverting integrations.',
+    'art.s2.p2': 'Scope around the specific deployment context. The same base model deployed differently has different risk profiles. A creative writing assistant with no tool access has a very different attack surface than a coding agent with filesystem and network access.',
+    'art.s3.title': 'Phase 2: Attack Technique Families',
+    'art.p1.label': 'Direct Jailbreaking', 'art.p1.p': 'Role-play scenarios, fictional framing, authority claims, and gradual escalation. Baseline efficacy against well-tuned models is low, but reveals the model\'s safety training boundaries.',
+    'art.p2.label': 'System Prompt Extraction', 'art.p2.p': 'Repeated indirect probing, instruction completion attacks, and translation tricks to reconstruct the system prompt. Partial extraction reveals product logic and instructions that can be counteracted.',
+    'art.p3.label': 'Indirect Prompt Injection', 'art.p3.p': 'Planting adversarial content in external sources the model will process: documents, emails, web pages. Tests whether the model treats tool-returned content as data, not instructions. Highest-priority for agentic deployments.',
+    'art.p4.label': 'Capability Elicitation', 'art.p4.p': 'Probing for capabilities the model has but shouldn\'t use — detailed technical knowledge about controlled topics, reasoning patterns that bypass safety checks, behaviors that appear only under specific multi-turn conditions.',
+    'art.s4.title': 'Phase 3: Systematic Coverage',
+    'art.s4.p1': 'Manual red teaming finds interesting failures but achieves poor coverage. Systematic coverage requires a test matrix for each threat category. Automated attack generation — using one LLM to generate adversarial inputs for another — expands coverage dramatically.',
+    'art.s4.p2': 'Maintain a living test suite of discovered attacks. After each model update, regression-test the full suite. A jailbreak patched in one update may re-emerge in the next. Safety properties are not monotonically improving across model versions.',
+    'art.s5.title': 'Phase 4: Reporting and Remediation',
+    'art.s5.l1': '<strong>Classify findings by severity and exploitability.</strong> A finding requiring a 100-turn conversation is lower severity than one triggering on the first message with any natural-language phrasing.',
+    'art.s5.l2': '<strong>Document exact reproduction steps.</strong> Document the exact prompt sequence, model version, temperature, and system prompt for each finding.',
+    'art.s5.l3': '<strong>Test remediations against variants, not just the original.</strong> A fix blocking the exact attack but not semantic variants provides false confidence.',
+    'art.s5.l4': '<strong>Quantify attack success rate, not just existence.</strong> 2% success against a well-trained model is a very different risk than 80% success.',
+    'art.s5.l5': '<strong>Re-run the full suite on every model update.</strong> Safety properties are version-specific. Red team findings should be part of CI/CD for model updates.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'art.category': 'AI 安全',
+    'art.title': 'AI 红队测试方法论：<br>有意破坏模型',
+    'art.lead': 'AI 系统的红队测试需要与传统软件不同的方法论。提示级攻击、语义利用和能力诱导不能映射到已知的 CVE——它们需要系统地探索模型的决策边界，而且结果会随模型版本更新而失效。',
+    'art.s1.title': '为何 AI 红队测试不同',
+    'art.s1.p1': '传统渗透测试遵循已知的攻击面：代码路径、网络接口、认证流程。AI 红队测试针对一个统计模型，其"漏洞"是概率性的：成功率为 30% 的越狱仍是一个发现，同一提示词可能因上下文和模型版本的不同而成功或失败。',
+    'art.s1.p2': '目标不仅仅是找到模型会说什么——而是找到系统预期策略与模型在对抗性输入完整分布上的实际行为之间的差距：安全失败、能力泄露风险和只在对抗性条件下出现的策略绕过。',
+    'art.pull': '通过测试套件的模型在你的测试输入上有已知行为。对抗性攻击面是测试套件之外的一切。',
+    'art.s2.title': '第一阶段：威胁模型与范围',
+    'art.s2.p1': '在任何攻击之前，定义攻击者的成功标准。对于客服聊天机器人：提取系统提示词、造成声誉损害、绕过限制和泄露数据。对于代码助手：生成恶意代码、泄露会话数据和颠覆集成。',
+    'art.s2.p2': '根据具体部署上下文界定范围。同一基础模型在不同环境下部署具有不同的风险状况。没有工具访问权限的创意写作助手与拥有文件系统和网络访问权限的编程智能体具有截然不同的攻击面。',
+    'art.s3.title': '第二阶段：攻击技术系列',
+    'art.p1.label': '直接越狱', 'art.p1.p': '角色扮演场景、虚构框架、权威声明和渐进升级。对训练良好的模型的基线效果较低，但能揭示模型安全训练的边界。',
+    'art.p2.label': '系统提示词提取', 'art.p2.p': '反复间接探测、指令补全攻击和翻译技巧，以重建系统提示词。即使是部分提取也能揭示产品逻辑和可被对抗的指令。',
+    'art.p3.label': '间接提示注入', 'art.p3.p': '在模型将处理的外部来源中植入对抗性内容：文档、邮件、网页。测试模型是否将工具返回的内容视为数据而非指令。对于智能体部署来说是最高优先级的攻击类型。',
+    'art.p4.label': '能力诱导', 'art.p4.p': '探测模型具有但不应在此上下文中使用的能力——关于受控主题的详细技术知识、绕过安全检查的推理模式，以及只在特定多轮对话条件下出现的行为。',
+    'art.s4.title': '第三阶段：系统性覆盖',
+    'art.s4.p1': '人工红队测试能发现有趣的失败案例，但覆盖率较低。系统性覆盖需要针对每个威胁类别的测试矩阵。自动化攻击生成——使用一个 LLM 为另一个生成对抗性输入——能大幅扩大覆盖范围。',
+    'art.s4.p2': '维护已发现攻击的活跃测试套件。每次模型更新后，对完整套件进行回归测试。在一次更新中被修补的越狱可能在下一次重新出现。安全属性不会在模型版本间单调提升。',
+    'art.s5.title': '第四阶段：报告与修复',
+    'art.s5.l1': '<strong>按严重性和可利用性对发现进行分类。</strong>需要 100 轮对话才能触发的发现严重性低于在第一条消息中用任何自然语言措辞即可触发的发现。',
+    'art.s5.l2': '<strong>记录精确的复现步骤。</strong>为每个发现记录精确的提示词序列、模型版本、温度和使用的系统提示词。',
+    'art.s5.l3': '<strong>针对变体而非仅针对原始攻击测试修复。</strong>仅阻止精确攻击模式而非语义变体的修复会提供虚假的信心。',
+    'art.s5.l4': '<strong>量化攻击成功率，而非仅记录其存在。</strong>对训练良好模型 2% 的成功率与 80% 的成功率代表截然不同的风险状况。',
+    'art.s5.l5': '<strong>每次模型更新后重新运行完整测试套件。</strong>安全属性是版本特定的。红队测试发现应成为模型更新 CI/CD 流程的一部分。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'art.category': 'AIセキュリティ',
+    'art.title': 'AIレッドチーミング方法論：<br>意図的にモデルを破る',
+    'art.lead': 'AIシステムのレッドチーミングは従来のソフトウェアとは異なる方法論を必要とする。プロンプトレベルの攻撃、セマンティックエクスプロイト、能力引き出しは既知のCVEにマッピングできない——モデルの決定境界の体系的な探索が必要で、結果はモデルバージョンの変更とともに失効する。',
+    'art.s1.title': 'AIレッドチーミングが異なる理由',
+    'art.s1.p1': '従来のペネトレーションテストは既知の攻撃面に従う：コードパス、ネットワークインターフェース、認証フロー。AIレッドチーミングは「脆弱性」が確率的な統計モデルを標的にする：30%の確率で機能するジェイルブレイクでも発見として有効だ。',
+    'art.s1.p2': '目標はモデルが何を言うかを見つけることだけではない——システムの意図されたポリシーとモデルの実際の行動との間のギャップを見つけることだ：安全上の失敗、能力漏洩リスク、対抗的条件下でのみ現れるポリシーバイパス。',
+    'art.pull': 'テストスイートに合格したモデルはテスト入力での行動が既知だ。対抗的攻撃面はテストスイートの外のすべてだ。',
+    'art.s2.title': 'フェーズ1：脅威モデルとスコープ',
+    'art.s2.p1': '攻撃を試みる前に、攻撃者の成功基準を定義する。サポートチャットボットの場合：システムプロンプトの抽出、評判損害、制限のバイパス、データ漏洩。コードアシスタントの場合：悪意のあるコード生成、セッションデータ漏洩、統合の妨害。',
+    'art.s2.p2': '特定のデプロイメントコンテキストに合わせてスコープを設定する。同じ基盤モデルでも異なる展開では異なるリスクプロファイルを持つ。',
+    'art.s3.title': 'フェーズ2：攻撃技術ファミリー',
+    'art.p1.label': '直接ジェイルブレイク', 'art.p1.p': 'ロールプレイシナリオ、フィクションのフレーミング、権威の主張、段階的エスカレーション。よく訓練されたモデルへの基本的な効果は低いが、安全訓練の境界を明らかにする。',
+    'art.p2.label': 'システムプロンプト抽出', 'art.p2.p': '繰り返しの間接的な探索、命令補完攻撃、翻訳トリックでシステムプロンプトを再構築する。部分的な抽出でも製品ロジックと対抗できる指示が明らかになる。',
+    'art.p3.label': '間接プロンプトインジェクション', 'art.p3.p': 'モデルが処理する外部ソースに対抗的コンテンツを植える：文書、メール、ウェブページ。モデルがツール返却コンテンツをデータとして扱うかテストする。エージェント展開で最優先の攻撃クラス。',
+    'art.p4.label': '能力引き出し', 'art.p4.p': 'モデルが持つがこのコンテキストでは使用すべきでない能力を探る——制御されたトピックに関する詳細な技術的知識、安全チェックをバイパスする推論パターン、特定の多ターン条件下でのみ現れる行動。',
+    'art.s4.title': 'フェーズ3：体系的なカバレッジ',
+    'art.s4.p1': '手動レッドチーミングは興味深い失敗を見つけるがカバレッジが低い。体系的なカバレッジには各脅威カテゴリのテストマトリックスが必要。自動攻撃生成——あるLLMが別のLLM用の対抗的入力を生成する——はカバレッジを大幅に拡大する。',
+    'art.s4.p2': '発見された攻撃の生きたテストスイートを維持する。モデル更新のたびに完全なスイートで回帰テストを実行する。安全特性はモデルバージョン間で単調に改善されない。',
+    'art.s5.title': 'フェーズ4：報告と修復',
+    'art.s5.l1': '<strong>深刻度と悪用可能性で発見を分類する。</strong>100ターンの会話が必要な発見は、最初のメッセージで自然言語でトリガーされるものより深刻度が低い。',
+    'art.s5.l2': '<strong>正確な再現手順を文書化する。</strong>各発見の正確なプロンプトシーケンス、モデルバージョン、温度、システムプロンプトを記録する。',
+    'art.s5.l3': '<strong>元の攻撃だけでなく変形に対しても修復をテストする。</strong>正確な攻撃パターンをブロックするが意味的変形はブロックしない修正は偽の信頼感を与える。',
+    'art.s5.l4': '<strong>攻撃成功率を存在だけでなく定量化する。</strong>よく訓練されたモデルへの2%の成功率は80%の成功率とは全く異なるリスクプロファイル。',
+    'art.s5.l5': '<strong>モデル更新のたびに完全なスイートを再実行する。</strong>安全特性はバージョン固有だ。レッドチーミングの発見はモデル更新のCI/CDパイプラインの一部にすべきだ。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

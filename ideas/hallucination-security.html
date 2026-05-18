@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Hallucination as a Security Vector — vsike</title>
+  <meta name="description" content="Hallucinated package names get installed. Hallucinated URLs get visited. Hallucinated code gets deployed. When AI confidently fabricates, the downstream damage is real — and increasingly weaponizable.">
+  <meta name="keywords" content="LLM幻觉安全, AI幻觉攻击, 幻觉包名攻击, 依赖混淆攻击, AI安全漏洞, LLM hallucination security, hallucinated packages, slopsquatting, dependency confusion AI, AI fabrication attack">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/hallucination-security.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .attack-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .defend-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .pub-time { font-size: 0.78rem; color: var(--fg-dim); margin-bottom: 3rem; letter-spacing: 0.05em; }
+    .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .scenario-grid { grid-template-columns: 1fr; } }
+    .scenario-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .scenario-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .code-block { background: var(--bg-alt, #0a0a0a); border: 1px solid var(--fg-dim); padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-family: monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="hs.category">AI Security</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="hs.title">LLM Hallucination<br>as a Security Vector</h1>
+        <p class="pub-time">Published: 2026-05-17 18:19 PDT (Oregon)</p>
+        <p class="article-lead reveal reveal-d2" data-i18n="hs.lead">Hallucinated package names get installed. Hallucinated URLs get visited. Hallucinated code gets deployed to production. When AI confidently fabricates, the downstream damage is real — and increasingly weaponizable by attackers who've learned to predict what models hallucinate.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="hs.s1.title">From Annoying to Dangerous</h2>
+        <p data-i18n="hs.s1.p1">Hallucination has long been framed as a reliability problem: the model is wrong sometimes, users should verify. This framing misses the security dimension. A wrong answer that a user ignores is harmless. A wrong answer that a user acts on — running a suggested command, installing a recommended package, clicking a fabricated URL — converts a reliability failure into a security incident.</p>
+        <p data-i18n="hs.s1.p2">The shift from nuisance to threat happened when researchers demonstrated that hallucinations can be predicted and exploited. If an LLM consistently recommends a non-existent package called <code>util-auth-helper</code> when asked about authentication in a specific framework, an attacker can simply publish that package on npm with malicious contents and wait.</p>
+        <div class="pull-quote" data-i18n="hs.pull">The attacker doesn't need to inject anything. They just need to publish what the model was always going to recommend.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="hs.s2.title">Slopsquatting: The Package Hallucination Attack</h2>
+        <p data-i18n="hs.s2.p1">Researchers at Socket and others have documented "slopsquatting" — publishing packages that match LLM-hallucinated names. The methodology: probe LLMs with common developer queries, collect non-existent package recommendations, register those packages with malicious payloads, then wait for developers who follow the same AI recommendations to install them.</p>
+        <div class="attack-block">
+          <strong data-i18n="hs.s2.attack">Attack chain:</strong>
+          <p data-i18n="hs.s2.attack.p">Developer asks LLM: "How do I validate JWT tokens in Express?" — LLM recommends <code>express-jwt-validator</code> (doesn't exist, hallucinated) — attacker has published <code>express-jwt-validator</code> on npm containing a credential-stealing payload — developer runs <code>npm install express-jwt-validator</code> — payload executes at install time via postinstall script.</p>
+        </div>
+        <p data-i18n="hs.s2.p2">A 2024 study found that LLMs hallucinate package names in approximately 5.2% of coding queries — and that the same hallucinated names recur consistently across models and sessions, making them predictable targets for pre-registration.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="hs.s3.title">Other Hallucination Attack Surfaces</h2>
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <h4 data-i18n="hs.sc1.label">Hallucinated URLs</h4>
+            <p data-i18n="hs.sc1.p">LLMs fabricate documentation links, API endpoints, and reference URLs. Attackers register these domains with phishing pages or malware distribution. Users following "official" links from AI responses land on attacker-controlled sites.</p>
+          </div>
+          <div class="scenario-card">
+            <h4 data-i18n="hs.sc2.label">Hallucinated CVE Details</h4>
+            <p data-i18n="hs.sc2.p">LLMs fabricate CVE numbers, affected version ranges, and patch instructions. Security teams acting on hallucinated vulnerability data may deploy unnecessary patches, miss real vulnerabilities, or apply incorrect mitigations.</p>
+          </div>
+          <div class="scenario-card">
+            <h4 data-i18n="hs.sc3.label">Hallucinated Code Patterns</h4>
+            <p data-i18n="hs.sc3.p">Subtly insecure code patterns recommended with confidence — incorrect crypto usage, flawed authentication logic, SQL queries that look parameterized but aren't. The code runs; the vulnerability ships to production.</p>
+          </div>
+          <div class="scenario-card">
+            <h4 data-i18n="hs.sc4.label">Hallucinated CLI Flags</h4>
+            <p data-i18n="hs.sc4.p">LLMs recommend non-existent or dangerous flags for system tools. A hallucinated <code>--force-overwrite</code> flag for a file operation may match a real flag with destructive behavior, or cause the tool to silently fail.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="hs.s4.title">Why Confidence Makes It Worse</h2>
+        <p data-i18n="hs.s4.p1">The security damage from hallucination is amplified by presentation. LLMs present hallucinated content with the same syntax-highlighted, well-formatted, authoritative tone as accurate content. There is no visual distinction between a correct package recommendation and a hallucinated one. The user interface creates the appearance of reliability where none exists.</p>
+        <p data-i18n="hs.s4.p2">This is fundamentally different from a web search result, where the user can visit the source, check publication dates, and assess credibility. An LLM recommendation launders the attacker's package through the model's perceived authority. The developer trusts the AI, not the package registry.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="hs.s5.title">Mitigations</h2>
+        <div class="defend-block">
+          <ul>
+            <li data-i18n="hs.s5.l1"><strong>Always verify packages exist before installing.</strong> Check the registry directly — npm, PyPI, crates.io. Package count and download history are meaningful signals. A package with 3 downloads and a creation date of yesterday deserves scrutiny.</li>
+            <li data-i18n="hs.s5.l2"><strong>Use LLM output as a starting point, not an instruction.</strong> For security-sensitive operations (installs, system commands, config changes), treat AI suggestions as leads to verify, not commands to execute.</li>
+            <li data-i18n="hs.s5.l3"><strong>Enable lockfiles and integrity checking.</strong> <code>package-lock.json</code>, <code>poetry.lock</code>, and similar mechanisms ensure reinstalls match the originally resolved packages — they don't prevent initial installation of a malicious package, but they prevent silent upgrades.</li>
+            <li data-i18n="hs.s5.l4"><strong>AI coding tool providers: surface uncertainty.</strong> When recommending packages or URLs, models should retrieve and verify existence in real-time via tool calls rather than generating from memory. Grounded recommendations eliminate the slopsquatting attack surface.</li>
+            <li data-i18n="hs.s5.l5"><strong>Security teams: monitor for hallucinated CVEs.</strong> Build a process for validating AI-sourced vulnerability information against authoritative databases (NVD, vendor advisories) before acting on it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'hs.category': 'AI Security',
+    'hs.title': 'LLM Hallucination<br>as a Security Vector',
+    'hs.lead': 'Hallucinated package names get installed. Hallucinated URLs get visited. Hallucinated code gets deployed. When AI confidently fabricates, the downstream damage is real — and increasingly weaponizable by attackers who\'ve learned to predict what models hallucinate.',
+    'hs.s1.title': 'From Annoying to Dangerous',
+    'hs.s1.p1': 'Hallucination has long been framed as a reliability problem. This framing misses the security dimension. A wrong answer that a user acts on — running a suggested command, installing a recommended package, clicking a fabricated URL — converts a reliability failure into a security incident.',
+    'hs.s1.p2': 'The shift happened when researchers demonstrated that hallucinations can be predicted and exploited. If an LLM consistently recommends a non-existent package when asked about authentication, an attacker can simply publish that package with malicious contents and wait.',
+    'hs.pull': 'The attacker doesn\'t need to inject anything. They just need to publish what the model was always going to recommend.',
+    'hs.s2.title': 'Slopsquatting: The Package Hallucination Attack',
+    'hs.s2.p1': 'Researchers have documented "slopsquatting" — publishing packages that match LLM-hallucinated names. Probe LLMs with common developer queries, collect non-existent package recommendations, register those names with malicious payloads, then wait.',
+    'hs.s2.attack': 'Attack chain:',
+    'hs.s2.attack.p': 'Developer asks LLM about JWT validation → LLM recommends express-jwt-validator (hallucinated) → attacker has published it on npm with a credential-stealing payload → developer installs it → payload executes via postinstall script.',
+    'hs.s2.p2': 'A 2024 study found LLMs hallucinate package names in ~5.2% of coding queries — and the same names recur consistently, making them predictable pre-registration targets.',
+    'hs.s3.title': 'Other Hallucination Attack Surfaces',
+    'hs.sc1.label': 'Hallucinated URLs', 'hs.sc1.p': 'LLMs fabricate documentation links and API endpoints. Attackers register these domains with phishing pages. Users following "official" links from AI responses land on attacker-controlled sites.',
+    'hs.sc2.label': 'Hallucinated CVE Details', 'hs.sc2.p': 'LLMs fabricate CVE numbers and patch instructions. Security teams acting on hallucinated vulnerability data may deploy unnecessary patches or miss real vulnerabilities.',
+    'hs.sc3.label': 'Hallucinated Code Patterns', 'hs.sc3.p': 'Subtly insecure code recommended with confidence — incorrect crypto usage, flawed auth logic, SQL queries that look parameterized but aren\'t. The code runs; the vulnerability ships.',
+    'hs.sc4.label': 'Hallucinated CLI Flags', 'hs.sc4.p': 'LLMs recommend non-existent or dangerous flags for system tools. A hallucinated flag may match a real destructive flag, or cause the tool to silently fail.',
+    'hs.s4.title': 'Why Confidence Makes It Worse',
+    'hs.s4.p1': 'LLMs present hallucinated content with the same syntax-highlighted, authoritative tone as accurate content. There is no visual distinction between a correct package recommendation and a hallucinated one.',
+    'hs.s4.p2': 'This is different from a web search, where the user can assess source credibility. An LLM recommendation launders the attacker\'s package through the model\'s perceived authority.',
+    'hs.s5.title': 'Mitigations',
+    'hs.s5.l1': '<strong>Always verify packages exist before installing.</strong> Check the registry directly. Package count and download history are meaningful signals.',
+    'hs.s5.l2': '<strong>Use LLM output as a starting point, not an instruction.</strong> For security-sensitive operations, treat AI suggestions as leads to verify.',
+    'hs.s5.l3': '<strong>Enable lockfiles and integrity checking.</strong> package-lock.json and similar mechanisms prevent silent upgrades to substituted packages.',
+    'hs.s5.l4': '<strong>AI tool providers: surface uncertainty.</strong> Recommend packages via real-time registry lookup, not memory generation. Grounded recommendations eliminate the slopsquatting surface.',
+    'hs.s5.l5': '<strong>Security teams: validate AI-sourced CVE information</strong> against authoritative databases before acting on it.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'hs.category': 'AI 安全',
+    'hs.title': 'LLM 幻觉<br>作为安全攻击向量',
+    'hs.lead': '幻觉出来的包名被安装了。幻觉出来的 URL 被访问了。幻觉出来的代码被部署到了生产环境。当 AI 自信地捏造内容时，下游的损害是真实的——而且对于已学会预测模型会幻觉什么的攻击者来说，越来越可武器化。',
+    'hs.s1.title': '从烦人到危险',
+    'hs.s1.p1': '幻觉长期被定性为可靠性问题。这种定性忽略了安全维度。用户付诸行动的错误答案——运行建议的命令、安装推荐的包、点击捏造的 URL——将可靠性故障转化为安全事件。',
+    'hs.s1.p2': '这种转变发生在研究人员证明幻觉可以被预测和利用之时。如果 LLM 在被询问某框架的认证时始终推荐一个不存在的包，攻击者只需发布该包并填入恶意内容，然后等待即可。',
+    'hs.pull': '攻击者不需要注入任何东西。他们只需发布模型本来就会推荐的东西。',
+    'hs.s2.title': 'Slopsquatting：包幻觉攻击',
+    'hs.s2.p1': '研究人员记录了"Slopsquatting"——发布与 LLM 幻觉名称相匹配的包。方法：用常见开发者问题探测 LLM，收集不存在的包推荐，用恶意载荷注册这些包名，然后等待。',
+    'hs.s2.attack': '攻击链：',
+    'hs.s2.attack.p': '开发者向 LLM 询问 JWT 验证 → LLM 推荐 express-jwt-validator（幻觉出来的）→ 攻击者已在 npm 发布该包并内置凭证窃取载荷 → 开发者安装 → 载荷通过 postinstall 脚本执行。',
+    'hs.s2.p2': '2024 年的一项研究发现，LLM 在约 5.2% 的编程查询中幻觉出包名——而且相同的幻觉名称在不同模型和会话中反复出现，使其成为可预测的预注册目标。',
+    'hs.s3.title': '其他幻觉攻击面',
+    'hs.sc1.label': '幻觉 URL', 'hs.sc1.p': 'LLM 捏造文档链接和 API 端点。攻击者用钓鱼页面注册这些域名。用户点击 AI 响应中的"官方"链接，落入攻击者控制的网站。',
+    'hs.sc2.label': '幻觉 CVE 详情', 'hs.sc2.p': 'LLM 捏造 CVE 编号和补丁指令。安全团队依据幻觉的漏洞数据行动，可能部署不必要的补丁或遗漏真实漏洞。',
+    'hs.sc3.label': '幻觉代码模式', 'hs.sc3.p': '自信推荐的微妙不安全代码——错误的加密用法、有缺陷的认证逻辑、看似参数化实则不然的 SQL 查询。代码跑起来了，漏洞也随之上线。',
+    'hs.sc4.label': '幻觉 CLI 参数', 'hs.sc4.p': 'LLM 为系统工具推荐不存在或危险的参数。幻觉参数可能恰好匹配一个具有破坏性行为的真实参数，或导致工具静默失败。',
+    'hs.s4.title': '为何自信使情况更糟',
+    'hs.s4.p1': 'LLM 以与准确内容相同的语法高亮、权威语气呈现幻觉内容。正确的包推荐与幻觉推荐之间没有视觉区别。',
+    'hs.s4.p2': '这与网络搜索不同，用户可以访问来源、评估可信度。LLM 推荐通过模型的感知权威性为攻击者的包"洗白"。',
+    'hs.s5.title': '缓解措施',
+    'hs.s5.l1': '<strong>安装前始终验证包是否存在。</strong>直接检查注册表。包的数量和下载历史是有意义的信号。',
+    'hs.s5.l2': '<strong>将 LLM 输出作为起点而非指令。</strong>对于安全敏感操作，将 AI 建议视为待验证的线索。',
+    'hs.s5.l3': '<strong>启用锁文件和完整性检查。</strong>package-lock.json 等机制防止对替换包的静默升级。',
+    'hs.s5.l4': '<strong>AI 工具提供商：暴露不确定性。</strong>通过实时注册表查询而非记忆生成来推荐包，根除 Slopsquatting 攻击面。',
+    'hs.s5.l5': '<strong>安全团队：在行动前对照权威数据库验证 AI 来源的 CVE 信息。</strong>',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'hs.category': 'AIセキュリティ',
+    'hs.title': 'LLMハルシネーション<br>セキュリティベクターとして',
+    'hs.lead': 'ハルシネーションされたパッケージ名がインストールされる。ハルシネーションされたURLが訪問される。ハルシネーションされたコードが本番環境にデプロイされる。AIが自信を持って捏造するとき、下流の損害は現実だ。',
+    'hs.s1.title': '迷惑から危険へ',
+    'hs.s1.p1': 'ハルシネーションは長い間、信頼性の問題として枠組みされてきた。このフレームはセキュリティの次元を見逃している。ユーザーが行動に移す間違った回答——コマンドの実行、パッケージのインストール、捏造URLのクリック——は信頼性の失敗をセキュリティインシデントに変える。',
+    'hs.s1.p2': '研究者がハルシネーションを予測・悪用できることを実証したとき、問題は変質した。LLMが認証について質問されると常に存在しないパッケージを推奨するなら、攻撃者はそのパッケージを悪意あるコンテンツで公開して待つだけでよい。',
+    'hs.pull': '攻撃者は何も注入する必要がない。モデルが常に推奨するものを公開するだけでよい。',
+    'hs.s2.title': 'スロップスクワッティング：パッケージハルシネーション攻撃',
+    'hs.s2.p1': '研究者は「スロップスクワッティング」を記録している——LLMがハルシネーションした名前に一致するパッケージを公開する。LLMを一般的な開発者クエリで調査し、存在しないパッケージ推奨を収集し、悪意あるペイロードでそれらを登録し、待つ。',
+    'hs.s2.attack': '攻撃チェーン：',
+    'hs.s2.attack.p': '開発者がJWT検証についてLLMに質問 → LLMがexpress-jwt-validatorを推奨（ハルシネーション）→ 攻撃者が認証情報窃取ペイロード付きでnpmに公開済み → 開発者がインストール → ペイロードがpostinstallスクリプトで実行。',
+    'hs.s2.p2': '2024年の研究でLLMはコーディングクエリの約5.2%でパッケージ名をハルシネーションすること、同じ名前がモデルとセッションを超えて一貫して再現することが判明した。',
+    'hs.s3.title': 'その他のハルシネーション攻撃面',
+    'hs.sc1.label': 'ハルシネーションURL', 'hs.sc1.p': 'LLMがドキュメントリンクとAPIエンドポイントを捏造。攻撃者がフィッシングページでこれらのドメインを登録。ユーザーがAI回答の「公式」リンクをクリックして攻撃者管理サイトへ。',
+    'hs.sc2.label': 'ハルシネーションCVE詳細', 'hs.sc2.p': 'LLMがCVE番号とパッチ手順を捏造。ハルシネーション脆弱性データに基づいて行動するセキュリティチームが不要なパッチを適用したり実際の脆弱性を見逃す可能性。',
+    'hs.sc3.label': 'ハルシネーションコードパターン', 'hs.sc3.p': '自信を持って推奨される微妙に安全でないコード——間違った暗号化使用、欠陥のある認証ロジック。コードは動く；脆弱性は本番環境に出荷される。',
+    'hs.sc4.label': 'ハルシネーションCLIフラグ', 'hs.sc4.p': 'LLMがシステムツールの存在しないまたは危険なフラグを推奨。ハルシネーションフラグが破壊的動作を持つ実際のフラグと一致する可能性。',
+    'hs.s4.title': 'なぜ自信が事態を悪化させるか',
+    'hs.s4.p1': 'LLMはハルシネーションコンテンツを正確なコンテンツと同じシンタックスハイライトされた権威ある口調で提示する。正しいパッケージ推奨とハルシネーションの視覚的区別はない。',
+    'hs.s4.p2': 'これはユーザーがソース信頼性を評価できるウェブ検索とは異なる。LLM推奨はモデルの知覚された権威を通じて攻撃者のパッケージを「洗浄」する。',
+    'hs.s5.title': '緩和策',
+    'hs.s5.l1': '<strong>インストール前に必ずパッケージの存在を確認する。</strong>レジストリを直接確認。パッケージ数とダウンロード履歴は意味のあるシグナルだ。',
+    'hs.s5.l2': '<strong>LLM出力を出発点として扱い、命令として扱わない。</strong>セキュリティに敏感な操作には、AI提案を検証すべきリードとして扱う。',
+    'hs.s5.l3': '<strong>ロックファイルと整合性チェックを有効にする。</strong>package-lock.jsonなどが代替パッケージへのサイレントアップグレードを防ぐ。',
+    'hs.s5.l4': '<strong>AIツールプロバイダー：不確実性を表示する。</strong>メモリ生成ではなくリアルタイムレジストリ検索でパッケージを推奨する。',
+    'hs.s5.l5': '<strong>セキュリティチーム：AI由来のCVE情報を行動前に権威あるデータベースで検証する。</strong>',
+    'article.back': '← すべてのアイデア',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

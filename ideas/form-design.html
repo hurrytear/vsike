@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Design: The Interface Nobody Thinks About — vsike</title>
+  <meta name="description" content="Forms are where users do the work. They enter addresses, configure settings, submit payments, create accounts. The quality of a form determines whether the user completes the task or abandons it — and form design is still routinely underinvested.">
+  <meta name="keywords" content="表单设计原则, UI表单体验, 输入框设计规范, 表单交互设计, 用户体验表单, form design principles, UI form UX, input field design, form interaction patterns, form user experience">
+  <meta name="robots" content="index, follow">
+  <meta name="renderer" content="webkit">
+  <link rel="canonical" href="https://www.vsike.com/ideas/form-design.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pull-quote { font-family: 'Georgia', serif; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.55; border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2.5rem 0; }
+    .rule-list { margin: 1.5rem 0; }
+    .rule-item { padding: 1.2rem 0; border-bottom: 1px solid var(--fg-dim); }
+    .rule-item:last-child { border-bottom: none; }
+    .rule-item h4 { font-size: 0.85rem; margin-bottom: 0.4rem; }
+    .avoid-block { border-left: 3px solid #c0392b; padding: 1rem 1.5rem; margin: 2rem 0; background: rgba(192,57,43,0.05); }
+    .do-block { border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 2rem 0; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .comparison { grid-template-columns: 1fr; } }
+    .comparison-card { border: 1px solid var(--fg-dim); padding: 1.2rem; }
+    .comparison-card h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .comparison-card.bad h4 { color: #c0392b; }
+    .comparison-card.good h4 { color: var(--accent); }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo" aria-label="vsike home">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+    <button class="lang-btn" data-lang="ja" aria-pressed="false">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile" role="group">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+<main>
+  <div class="container">
+    <article class="article-body">
+      <div class="article-header reveal">
+        <p class="label label-accent" data-i18n="fd.category">Design</p>
+        <h1 class="article-title reveal reveal-d1" data-i18n-html="fd.title">Form Design:<br>The Interface Nobody Thinks About</h1>
+        <p class="article-lead reveal reveal-d2" data-i18n="fd.lead">Forms are where users do the work. They enter addresses, configure settings, submit payments, create accounts. The quality of a form determines whether the user completes the task or abandons it — and form design is routinely underinvested relative to the outsized impact it has on conversion, support volume, and user trust.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="fd.s1.title">Forms Are Conversations</h2>
+        <p data-i18n="fd.s1.p1">The best mental model for form design is a conversation, not a questionnaire. A questionnaire asks all its questions at once, in the designer's preferred order, and waits for the user to be done. A conversation is responsive — it asks the next question based on what it just heard, provides context when something is unclear, and acknowledges input before asking for more.</p>
+        <p data-i18n="fd.s1.p2">This reframe changes how you think about question order, conditional fields, validation timing, and error messages. Each of these is an element of the conversation's quality. A form that asks for your billing address before knowing whether you're using a saved payment method is a conversation that isn't listening.</p>
+        <div class="pull-quote" data-i18n="fd.pull">A form that asks for information it doesn't need yet has already broken trust. Every unnecessary field is a question that insults the user's time.</div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="fd.s2.title">Labels, Placeholders, and Help Text</h2>
+        <div class="comparison">
+          <div class="comparison-card bad">
+            <h4 data-i18n="fd.c1.label">What Most Forms Do</h4>
+            <p data-i18n="fd.c1.p">Use placeholder text as a label substitute. The placeholder disappears as soon as the user starts typing, leaving the field unlabeled. Users must re-read the placeholder by clearing what they typed, or simply remember what was asked. This is a universal pattern that is universally wrong.</p>
+          </div>
+          <div class="comparison-card good">
+            <h4 data-i18n="fd.c2.label">What Works</h4>
+            <p data-i18n="fd.c2.p">Persistent labels positioned above the input field. Placeholder text used only for format examples, not field names. Help text appearing below the field for anything that needs explanation: expected format, why this information is needed, what constitutes a valid input.</p>
+          </div>
+        </div>
+        <p data-i18n="fd.s2.p">Floating labels — labels that start as placeholder text and animate up when the field is focused — address the disappearing placeholder problem but introduce complexity on mobile, in autofill scenarios, and for users with motion sensitivity. The engineering cost of floating labels buys marginal visual polish at the expense of robustness. Persistent top labels are more boring and strictly better.</p>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="fd.s3.title">Validation: When and How</h2>
+        <div class="rule-list">
+          <div class="rule-item">
+            <h4 data-i18n="fd.r1.title">Validate on blur, not on every keystroke</h4>
+            <p data-i18n="fd.r1.p">Showing an error while the user is still typing (inline validation on keyup) is one of the most common form UX mistakes. For an email field, the user's input will be invalid until they've typed the @ sign — showing an error before then is both premature and anxiety-inducing. Validate on blur (when the user leaves the field) for most fields.</p>
+          </div>
+          <div class="rule-item">
+            <h4 data-i18n="fd.r2.title">Never clear a field to show an error</h4>
+            <p data-i18n="fd.r2.p">If the user's input is invalid, show the error alongside what they typed — don't clear the field. Clearing on error means the user must re-enter information from memory. This is an infuriating pattern most common in password fields, and it should be treated as a critical UX defect.</p>
+          </div>
+          <div class="rule-item">
+            <h4 data-i18n="fd.r3.title">Error messages must be actionable</h4>
+            <p data-i18n="fd.r3.p">"Invalid input" is not an error message. "Phone number must be 10 digits" is. An error message has one job: tell the user exactly what to change to make the input valid. If the system knows what's wrong (too short, wrong format, already in use), say it explicitly. The user should not have to guess.</p>
+          </div>
+          <div class="rule-item">
+            <h4 data-i18n="fd.r4.title">Show errors inline, summarize on submit</h4>
+            <p data-i18n="fd.r4.p">Inline validation catches errors at the field level as the user moves through the form. On submit, if errors remain, show a summary at the top of the form and scroll to it — users who submit and see nothing happen often don't realize there are errors below the fold.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h2 data-i18n="fd.s4.title">The Questions You Shouldn't Ask</h2>
+        <p data-i18n="fd.s4.p1">Every additional field has a completion cost. Studies consistently show form completion rates drop as field count increases — not linearly, but more steeply than most designers account for. The question to ask before adding any field is not "would it be nice to have this?" but "what is the minimum information required to complete this task?"</p>
+        <div class="avoid-block">
+          <ul>
+            <li data-i18n="fd.s4.l1"><strong>Don't ask for a username on signup if email will serve as the identifier.</strong> Usernames create collision problems, require moderation, and add friction for no functional benefit in most apps.</li>
+            <li data-i18n="fd.s4.l2"><strong>Don't ask for phone number unless you'll actually call or text.</strong> Collecting contact information "just in case" is a privacy anti-pattern that users have learned to resent.</li>
+            <li data-i18n="fd.s4.l3"><strong>Don't ask to confirm email and password unless the field is hidden.</strong> If the field is visible and users can see what they typed, confirmation adds friction without preventing errors. Only confirm hidden fields.</li>
+            <li data-i18n="fd.s4.l4"><strong>Don't split a single piece of information into multiple fields unless input or processing genuinely requires it.</strong> First name / Last name, Country code / Phone number, Card number broken into four groups — the user experiences these as unnecessary work.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-footer reveal">
+        <a href="../ideas.html" class="btn-ghost btn" data-i18n="article.back">← All ideas</a>
+      </div>
+    </article>
+  </div>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner">
+  <a href="../index.html" class="footer-logo">vsike<span class="nav-logo-dot"></span></a>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="../about.html" data-i18n="nav.about">About</a>
+    <a href="../work.html" data-i18n="nav.work">Work</a>
+    <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+    <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  </nav>
+</div></div></footer>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'fd.category': 'Design',
+    'fd.title': 'Form Design:<br>The Interface Nobody Thinks About',
+    'fd.lead': 'Forms are where users do the work. They enter addresses, configure settings, submit payments. The quality of a form determines whether the user completes the task or abandons it — and form design is routinely underinvested relative to its outsized impact on conversion and trust.',
+    'fd.s1.title': 'Forms Are Conversations',
+    'fd.s1.p1': 'The best mental model is a conversation, not a questionnaire. A questionnaire asks all questions at once in the designer\'s order. A conversation is responsive — it asks the next question based on what it just heard and provides context when something is unclear.',
+    'fd.s1.p2': 'This reframe changes how you think about question order, conditional fields, validation timing, and error messages. A form that asks for billing address before knowing your payment method is a conversation that isn\'t listening.',
+    'fd.pull': 'A form that asks for information it doesn\'t need yet has already broken trust. Every unnecessary field is a question that insults the user\'s time.',
+    'fd.s2.title': 'Labels, Placeholders, and Help Text',
+    'fd.c1.label': 'What Most Forms Do', 'fd.c1.p': 'Use placeholder text as a label substitute. The placeholder disappears when the user starts typing, leaving the field unlabeled. This is a universal pattern that is universally wrong.',
+    'fd.c2.label': 'What Works', 'fd.c2.p': 'Persistent labels above the input field. Placeholder text used only for format examples. Help text below the field for format, why the info is needed, and what constitutes valid input.',
+    'fd.s2.p': 'Floating labels address the disappearing placeholder problem but introduce complexity on mobile, in autofill scenarios, and for users with motion sensitivity. Persistent top labels are more boring and strictly better.',
+    'fd.s3.title': 'Validation: When and How',
+    'fd.r1.title': 'Validate on blur, not on every keystroke', 'fd.r1.p': 'Showing errors while the user is still typing is one of the most common form UX mistakes. For an email field, the input will be invalid until the @ sign is typed. Validate on blur for most fields.',
+    'fd.r2.title': 'Never clear a field to show an error', 'fd.r2.p': 'If input is invalid, show the error alongside what was typed — don\'t clear the field. Clearing on error means re-entering from memory. This is most common in password fields and should be treated as a critical UX defect.',
+    'fd.r3.title': 'Error messages must be actionable', 'fd.r3.p': '"Invalid input" is not an error message. "Phone number must be 10 digits" is. An error message has one job: tell the user exactly what to change. The user should not have to guess.',
+    'fd.r4.title': 'Show errors inline, summarize on submit', 'fd.r4.p': 'On submit, if errors remain, show a summary at the top and scroll to it — users who submit and see nothing often don\'t realize there are errors below the fold.',
+    'fd.s4.title': 'The Questions You Shouldn\'t Ask',
+    'fd.s4.p1': 'Every additional field has a completion cost. Form completion rates drop as field count increases — more steeply than most designers account for. The question is not "would this be nice?" but "what is the minimum required to complete this task?"',
+    'fd.s4.l1': '<strong>Don\'t ask for a username if email serves as identifier.</strong> Usernames create collision problems, require moderation, and add friction for no functional benefit in most apps.',
+    'fd.s4.l2': '<strong>Don\'t ask for phone number unless you\'ll actually call or text.</strong> Collecting contact info "just in case" is a privacy anti-pattern users resent.',
+    'fd.s4.l3': '<strong>Don\'t ask to confirm fields that are visible.</strong> Only confirm hidden fields — confirmation of visible input adds friction without preventing errors.',
+    'fd.s4.l4': '<strong>Don\'t split a single piece of information unless input genuinely requires it.</strong> First/last name, country code/phone — the user experiences these as unnecessary work.',
+    'article.back': '← All ideas',
+  },
+  zh: {
+    'fd.category': '设计',
+    'fd.title': '表单设计：<br>没人认真对待的界面',
+    'fd.lead': '表单是用户完成工作的地方。他们在这里输入地址、配置设置、提交付款、创建账户。表单质量决定用户是完成任务还是放弃——而表单设计相对于其对转化率、支持量和用户信任的巨大影响来说，长期投入不足。',
+    'fd.s1.title': '表单是对话',
+    'fd.s1.p1': '最好的心智模型是对话，而非问卷。问卷按设计者的顺序一次提出所有问题。对话是响应式的——它根据刚刚听到的内容提出下一个问题，在某些事情不清楚时提供上下文。',
+    'fd.s1.p2': '这种重新定框改变了你对问题顺序、条件字段、验证时机和错误消息的思考方式。在不知道你是否使用保存的付款方式之前就询问账单地址的表单，是一个没有在倾听的对话。',
+    'fd.pull': '询问尚不需要的信息的表单已经破坏了信任。每一个不必要的字段都是一个侮辱用户时间的问题。',
+    'fd.s2.title': '标签、占位符和帮助文本',
+    'fd.c1.label': '大多数表单的做法', 'fd.c1.p': '使用占位符文本作为标签替代。占位符在用户开始输入时消失，留下未标记的字段。这是一种普遍存在却普遍错误的模式。',
+    'fd.c2.label': '有效的做法', 'fd.c2.p': '持久标签置于输入字段上方。占位符文本仅用于格式示例。字段下方的帮助文本用于解释格式、信息需要的原因和有效输入的构成。',
+    'fd.s2.p': '浮动标签解决了占位符消失问题，但在移动端、自动填充场景和有动效敏感性的用户中引入了复杂性。持久顶部标签更无趣，但严格来说更好。',
+    'fd.s3.title': '验证：何时以及如何',
+    'fd.r1.title': '在失焦时验证，而非每次按键', 'fd.r1.p': '在用户还在输入时显示错误是最常见的表单体验错误之一。对于电子邮件字段，在输入 @ 符号之前输入将是无效的。大多数字段在失焦时验证。',
+    'fd.r2.title': '永远不要清空字段来显示错误', 'fd.r2.p': '如果输入无效，在用户输入的内容旁边显示错误——不要清空字段。清空错误意味着用户必须从记忆中重新输入信息。这在密码字段中最常见，应视为关键体验缺陷。',
+    'fd.r3.title': '错误消息必须是可操作的', 'fd.r3.p': '"输入无效"不是错误消息。"电话号码必须是 10 位数字"才是。错误消息只有一个职责：准确告诉用户需要更改什么才能使输入有效。用户不应该需要猜测。',
+    'fd.r4.title': '内联显示错误，提交时汇总', 'fd.r4.p': '提交时，如果仍有错误，在表单顶部显示摘要并滚动到该处——提交后看不到任何反应的用户往往意识不到折叠下方有错误。',
+    'fd.s4.title': '不应该问的问题',
+    'fd.s4.p1': '每一个额外字段都有完成成本。研究一致表明表单完成率随字段数增加而下降——比大多数设计师预期的更陡峭。添加任何字段前应问的问题不是"有这个会不会很好"，而是"完成这项任务所需的最少信息是什么"。',
+    'fd.s4.l1': '<strong>如果邮件可作为标识符，不要询问用户名。</strong>用户名会造成冲突问题，需要审核，并且在大多数应用中增加摩擦而没有功能性好处。',
+    'fd.s4.l2': '<strong>除非真的会打电话或发短信，否则不要询问电话号码。</strong>以"以防万一"为由收集联系信息是一种用户已学会厌恶的隐私反模式。',
+    'fd.s4.l3"><strong>不要要求确认可见的字段。</strong>只确认隐藏字段——确认可见输入会增加摩擦而不能防止错误。',
+    'fd.s4.l4': '<strong>除非输入真正需要，否则不要将单条信息拆分为多个字段。</strong>名/姓、国家代码/电话号码——用户将这些体验为不必要的工作。',
+    'article.back': '← 返回所有文章',
+  },
+  ja: {
+    'fd.category': 'デザイン',
+    'fd.title': 'フォームデザイン：<br>誰も真剣に考えないインターフェース',
+    'fd.lead': 'フォームはユーザーが作業を行う場所だ。住所を入力し、設定を構成し、支払いを送信し、アカウントを作成する。フォームの質がユーザーがタスクを完了するか放棄するかを決定する——そしてフォームデザインは、コンバージョン率やユーザーの信頼への大きな影響に対して日常的に投資が不足している。',
+    'fd.s1.title': 'フォームは会話だ',
+    'fd.s1.p1': '最良のメンタルモデルはアンケートではなく会話だ。アンケートはデザイナーの好む順序ですべての質問を一度に尋ねる。会話はレスポンシブで——聞いたばかりの内容に基づいて次の質問をし、何かが不明なときにコンテキストを提供する。',
+    'fd.s1.p2': 'この再フレーミングは質問の順序、条件付きフィールド、バリデーションのタイミング、エラーメッセージについての考え方を変える。支払い方法を知る前に請求先住所を尋ねるフォームは、聞いていない会話だ。',
+    'fd.pull': 'まだ必要でない情報を尋ねるフォームはすでに信頼を壊している。不必要なフィールドはすべてユーザーの時間を侮辱する質問だ。',
+    'fd.s2.title': 'ラベル、プレースホルダー、ヘルプテキスト',
+    'fd.c1.label': 'ほとんどのフォームがやること', 'fd.c1.p': 'プレースホルダーテキストをラベルの代替として使用する。プレースホルダーはユーザーが入力を始めると消え、フィールドにラベルがない状態になる。これは普遍的なパターンで普遍的に間違っている。',
+    'fd.c2.label': '機能すること', 'fd.c2.p': '入力フィールドの上に永続的なラベル。プレースホルダーテキストはフォーマット例のみに使用。フィールド下のヘルプテキストはフォーマット、情報が必要な理由、有効な入力の説明のために。',
+    'fd.s2.p': 'フローティングラベルはプレースホルダーが消える問題に対処するが、モバイル、自動入力シナリオ、動き感受性のあるユーザーで複雑さを導入する。永続的なトップラベルはよりつまらないが厳密に優れている。',
+    'fd.s3.title': 'バリデーション：いつ、どのように',
+    'fd.r1.title': 'キーストロークごとではなくブラー時にバリデートする', 'fd.r1.p': 'ユーザーがまだ入力中にエラーを表示するのは最も一般的なフォームUXの誤りの一つだ。メールフィールドの場合、@サインを入力するまで入力は無効になる。ほとんどのフィールドでブラー時にバリデートする。',
+    'fd.r2.title': 'エラーを表示するためにフィールドをクリアしない', 'fd.r2.p': '入力が無効な場合、入力内容の隣にエラーを表示する——フィールドをクリアしない。エラーでクリアすると記憶から再入力が必要になる。これはパスワードフィールドで最も一般的で、重大なUX欠陥として扱うべきだ。',
+    'fd.r3.title': 'エラーメッセージは実行可能でなければならない', 'fd.r3.p': '「無効な入力」はエラーメッセージではない。「電話番号は10桁でなければなりません」がそうだ。エラーメッセージの仕事は一つ：入力を有効にするために何を変えるかをユーザーに正確に伝えること。',
+    'fd.r4.title': 'インラインでエラーを表示し、送信時にまとめる', 'fd.r4.p': '送信時にエラーが残っていれば、フォームの上部に要約を表示してスクロールする——送信して何も起こらないように見えるユーザーは、フォールド下にエラーがあると気づかないことが多い。',
+    'fd.s4.title': '尋ねるべきでない質問',
+    'fd.s4.p1': '追加フィールドごとに完了コストがある。研究では、フィールド数が増えるにつれてフォーム完了率が低下することが一貫して示されている。フィールドを追加する前に尋ねる質問は「あれば良いか？」ではなく「このタスクを完了するために必要な最小限の情報は何か？」だ。',
+    'fd.s4.l1': '<strong>メールが識別子として機能するならユーザー名を尋ねない。</strong>ユーザー名は衝突問題を生み、モデレーションを必要とし、ほとんどのアプリで機能的なメリットなく摩擦を加える。',
+    'fd.s4.l2': '<strong>実際に電話やテキストをするつもりがなければ電話番号を尋ねない。</strong>「万が一のため」に連絡先情報を収集することは、ユーザーが嫌悪するようになったプライバシーアンチパターンだ。',
+    'fd.s4.l3': '<strong>可視フィールドの確認を求めない。</strong>非表示フィールドのみ確認する——可視入力の確認はエラーを防がずに摩擦を加える。',
+    'fd.s4.l4': '<strong>入力が本当に必要でなければ単一の情報を複数フィールドに分割しない。</strong>名/姓、国コード/電話番号——ユーザーはこれらを不必要な作業として体験する。',
+    'article.back': '← アイデア一覧へ',
+  },
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
