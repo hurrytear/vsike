@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When Authorization Outlives Intent: Short-Lived Credentials in Agentic AI — vsike</title>
+  <meta name="description" content="65% of agentic chatbots have never been used yet still hold live access credentials. Token lifetime is not a technical detail — it is the primary blast radius control for agentic systems.">
+  <meta name="keywords" content="AI代理令牌, 短期凭证, 智能体认证, OAuth 2.1, 令牌安全, agent token lifetime, short-lived credentials, agentic AI security, OAuth scoped tokens, per-task credentials, token expiry">
+  <link rel="canonical" href="https://www.vsike.com/ideas/agent-token-lifetime.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+    @media (max-width: 600px) { .tier-grid { grid-template-columns: 1fr; } }
+    .tier-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .tier-card h4 { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: .75rem; }
+    .tier-card ul { list-style: none; padding: 0; margin: 0; }
+    .tier-card li { font-size: var(--fs-sm); padding: .35rem 0; border-bottom: 1px solid var(--fg-dim); }
+    .tier-card li:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="atl.cat">AI Security</span>
+        <span class="article-date" data-i18n="atl.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="atl.title">When Authorization<br>Outlives Intent</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="atl.lead">65% of agentic chatbots have never been used yet still hold live access credentials. Token lifetime is not a configuration detail — it is the primary blast-radius control for every agentic system in production.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="atl.pub">Published: 2026-05-19 08:22 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="atl.s1.h">The Credential Graveyard Problem</h2>
+      <p data-i18n="atl.s1.p1">Agentic systems accumulate credentials the same way software accumulates technical debt: gradually, invisibly, until the weight becomes dangerous. A chatbot is deployed with a scoped API key and calendar access. The product team adds email integration. Six months later, the product pivots. The chatbot is deprecated but never fully decommissioned — and it still holds live OAuth tokens for the organization's CRM, email server, and cloud storage.</p>
+      <p data-i18n="atl.s1.p2">Research from 2026 found that 65% of agentic chatbots across enterprise deployments held live credentials for systems they had not accessed in over 90 days. In many cases, the teams responsible for decommissioning those agents were not the teams who provisioned the credentials. The credentials outlived the agents. The authorization outlived the intent.</p>
+      <p data-i18n="atl.s1.p3">This is the foundational token lifetime problem: credentials issued to AI agents tend to be long-lived by default, rarely revoked proactively, and almost never tied to the specific task that justified their issuance. When a token is eventually leaked — through a prompt injection, a compromised dependency, or a misconfigured log — the attacker inherits not what the agent needed right now, but everything it was ever given access to.</p>
+
+      <h2 data-i18n="atl.s2.h">Why Agents Are Worse Than Services</h2>
+      <p data-i18n="atl.s2.p1">Traditional service-to-service authentication has well-understood patterns. A microservice gets a scoped API key, and that key covers a narrow, static set of operations. The attack surface is bounded because the service's behavior is bounded: it does the same things, in the same ways, every time.</p>
+      <p data-i18n="atl.s2.p2">AI agents break this model completely. An agent's behavior is dynamic — it decides at runtime which tools to invoke, which data sources to query, which actions to chain together. This means the credential surface needs to flex with the task. But most implementations do the opposite: they give the agent maximum credentials at deployment time so it can do anything the user might eventually ask for. The agent gets the keys to every door on day one, regardless of which rooms it will actually visit.</p>
+      <p data-i18n="atl.s2.p3">The result is a mismatch between the principle of least privilege — which requires scoping access to the minimum needed for a specific task — and the operational reality of agentic deployment, where scope is determined before the task is known. Long-lived, broad tokens are the lazy resolution of that mismatch.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Incident Pattern — The Salesloft Cascade (2025)</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="atl.atk1">In the Salesloft incident affecting over 700 organizations, the initial vector was a single OAuth token held by a deprecated AI sales agent. The token had not been used in four months but remained valid. Once extracted via a prompt injection in a connected CRM plugin, the token granted access to email, contact data, and calendar APIs across every customer organization that had authorized the integration — because the token was organization-scoped, not task-scoped. One stale credential, seven hundred breach notifications.</p>
+      </div>
+
+      <h2 data-i18n="atl.s3.h">The Two-Tier Session Architecture</h2>
+      <p data-i18n="atl.s3.p1">The correct model separates credential lifetime into two distinct tiers, each sized to its actual risk profile. User sessions are long-lived because they represent a persistent relationship between a user and a system — logging in and out repeatedly is friction, not security. Agent sessions are short-lived because they represent a single, bounded task — the credential should not survive the task that justified it.</p>
+
+      <div class="tier-grid">
+        <div class="tier-card">
+          <h4 data-i18n="atl.tier1.label">User Session Layer</h4>
+          <ul>
+            <li data-i18n="atl.tier1.l1">Lifetime: hours to days</li>
+            <li data-i18n="atl.tier1.l2">Backed by refresh tokens</li>
+            <li data-i18n="atl.tier1.l3">Human-authenticated</li>
+            <li data-i18n="atl.tier1.l4">Revocable at logout</li>
+            <li data-i18n="atl.tier1.l5">Scope: user's full authorized access</li>
+          </ul>
+        </div>
+        <div class="tier-card">
+          <h4 data-i18n="atl.tier2.label">Agent Task Layer</h4>
+          <ul>
+            <li data-i18n="atl.tier2.l1">Lifetime: minutes (task duration)</li>
+            <li data-i18n="atl.tier2.l2">Non-refreshable by design</li>
+            <li data-i18n="atl.tier2.l3">Derived from user session at task start</li>
+            <li data-i18n="atl.tier2.l4">Auto-expires on task completion</li>
+            <li data-i18n="atl.tier2.l5">Scope: minimum for this specific task</li>
+          </ul>
+        </div>
+      </div>
+
+      <p data-i18n="atl.s3.p2">The agent session is derived from the user session at task start via a token exchange (RFC 8693 or equivalent), with scope explicitly narrowed to what the task requires. A summarization task gets read-only document access. An email scheduling task gets calendar read and email send — nothing else. When the task ends, the agent token expires. The user session persists for the next task.</p>
+      <p data-i18n="atl.s3.p3">The non-refreshable property is critical. An agent that can refresh its own token can effectively extend its own authorization window without human re-consent. This is the mechanism by which a task-scoped credential becomes a long-lived credential — not through explicit mis-configuration, but through a refresh loop that nobody audits.</p>
+
+      <h2 data-i18n="atl.s4.h">Per-Task Issuance in Practice</h2>
+      <p data-i18n="atl.s4.p1">The unit of issuance determines the unit of attribution. Per-task tokens let you answer "what was the agent doing when this access occurred" with precision. Agent-global tokens can only tell you the agent existed — not what task, what user intent, or what chain of reasoning justified the specific access.</p>
+
+      <pre class="code-block"><span class="comment"># Per-task token issuance pattern (RFC 8693 token exchange)</span>
+
+<span class="comment"># At task start — derive narrowly-scoped agent token</span>
+POST /oauth/token
+{
+  <span class="str">"grant_type"</span>: <span class="str">"urn:ietf:params:oauth:grant-type:token-exchange"</span>,
+  <span class="str">"subject_token"</span>: <span class="str">"&lt;user_session_token&gt;"</span>,
+  <span class="str">"subject_token_type"</span>: <span class="str">"urn:ietf:params:oauth:token-type:access_token"</span>,
+  <span class="str">"requested_token_type"</span>: <span class="str">"urn:ietf:params:oauth:token-type:access_token"</span>,
+  <span class="str">"scope"</span>: <span class="str">"calendar:read email:send"</span>,   <span class="comment"># task-specific scope</span>
+  <span class="str">"actor_token"</span>: <span class="str">"&lt;agent_identity_token&gt;"</span>,
+  <span class="kw">"expires_in"</span>: 900                       <span class="comment"># 15 min — task duration</span>
+}
+
+<span class="comment"># Token carries full provenance</span>
+{
+  <span class="str">"sub"</span>: <span class="str">"user:alice@org.com"</span>,
+  <span class="str">"act"</span>: { <span class="str">"sub"</span>: <span class="str">"agent:scheduling-v2"</span> },
+  <span class="str">"scope"</span>: <span class="str">"calendar:read email:send"</span>,
+  <span class="str">"task_id"</span>: <span class="str">"task_8f3a2b"</span>,
+  <span class="str">"exp"</span>: 1747651800,
+  <span class="danger">"refresh_token"</span>: null  <span class="comment"># non-refreshable by design</span>
+}</pre>
+
+      <h2 data-i18n="atl.s5.h">The EU AI Act Deadline</h2>
+      <p data-i18n="atl.s5.p1">Token lifetime is about to become a compliance question, not just an engineering one. Article 14 of the EU AI Act, entering enforcement on August 2, 2026, requires organizations to demonstrate that every AI-driven action was authorized at the time it occurred. A token issued three months ago for a deprecated agent does not satisfy that requirement. Authorization must be contemporaneous with action.</p>
+      <p data-i18n="atl.s5.p2">The penalty for non-compliance is up to €35 million or 7% of global annual revenue — whichever is higher. The organizations most exposed are those running agentic systems that were built before token lifecycle management was treated as a first-class concern. The Salesloft pattern — stale credentials, orphaned agents, no revocation audit trail — is precisely what Article 14 was written to prevent.</p>
+
+      <div class="defend-block">
+        <div class="defend-label">Implementation Checklist</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="atl.def1">Audit all currently-live agent credentials and their last-used timestamps. Revoke any token inactive for more than 30 days. Implement per-task token issuance for all new agent deployments. Set agent tokens to non-refreshable with a maximum lifetime of 15–30 minutes. Tie every token issuance to a task_id that appears in both application logs and audit logs. Run a quarterly credential inventory against all registered agents — including deprecated ones. Begin building the authorization audit trail that Article 14 will require before August 2026.</p>
+      </div>
+
+      <h2 data-i18n="atl.s6.h">Short-Lived Is Necessary But Not Sufficient</h2>
+      <p data-i18n="atl.s6.p1">Short-lived credentials reduce blast radius when a token is extracted — but they do not prevent extraction. A 15-minute token is still 15 minutes of access to calendar, email, or file systems if leaked via prompt injection. The correct posture treats token lifetime as one layer in a defense-in-depth stack, not a complete solution.</p>
+      <p data-i18n="atl.s6.p2">The complementary controls are: least-privilege scope (limit what the token can do), DPoP binding (tie the token to the client that requested it so it can't be replayed by a different party), continuous credential monitoring (detect when tokens appear in unexpected places — logs, responses, error messages), and human-in-the-loop for irreversible actions (require explicit approval before the agent takes actions that cannot be undone regardless of token validity).</p>
+      <p data-i18n="atl.s6.p3">The goal is not to make token theft impossible — it is to make a stolen token useless as quickly as possible and as narrowly scoped as possible while valid. Short lifetime + narrow scope + client binding + continuous monitoring is a meaningful defense-in-depth. Any one of those alone is just a checkbox.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'atl.cat': 'AI Security',
+    'atl.date': 'May 2026',
+    'atl.title': 'When Authorization<br>Outlives Intent',
+    'atl.lead': '65% of agentic chatbots have never been used yet still hold live access credentials. Token lifetime is not a configuration detail — it is the primary blast-radius control for every agentic system in production.',
+    'atl.pub': 'Published: 2026-05-19 08:22 PDT (Oregon)',
+    'atl.s1.h': 'The Credential Graveyard Problem',
+    'atl.s1.p1': 'Agentic systems accumulate credentials the same way software accumulates technical debt: gradually, invisibly, until the weight becomes dangerous. A chatbot is deployed with a scoped API key and calendar access. The product team adds email integration. Six months later, the product pivots. The chatbot is deprecated but never fully decommissioned — and it still holds live OAuth tokens for the organization\'s CRM, email server, and cloud storage.',
+    'atl.s1.p2': 'Research from 2026 found that 65% of agentic chatbots across enterprise deployments held live credentials for systems they had not accessed in over 90 days. In many cases, the teams responsible for decommissioning those agents were not the teams who provisioned the credentials. The credentials outlived the agents. The authorization outlived the intent.',
+    'atl.s1.p3': 'This is the foundational token lifetime problem: credentials issued to AI agents tend to be long-lived by default, rarely revoked proactively, and almost never tied to the specific task that justified their issuance. When a token is eventually leaked — through a prompt injection, a compromised dependency, or a misconfigured log — the attacker inherits not what the agent needed right now, but everything it was ever given access to.',
+    'atl.s2.h': 'Why Agents Are Worse Than Services',
+    'atl.s2.p1': 'Traditional service-to-service authentication has well-understood patterns. A microservice gets a scoped API key, and that key covers a narrow, static set of operations. The attack surface is bounded because the service\'s behavior is bounded: it does the same things, in the same ways, every time.',
+    'atl.s2.p2': 'AI agents break this model completely. An agent\'s behavior is dynamic — it decides at runtime which tools to invoke, which data sources to query, which actions to chain together. This means the credential surface needs to flex with the task. But most implementations do the opposite: they give the agent maximum credentials at deployment time so it can do anything the user might eventually ask for. The agent gets the keys to every door on day one, regardless of which rooms it will actually visit.',
+    'atl.s2.p3': 'The result is a mismatch between the principle of least privilege — which requires scoping access to the minimum needed for a specific task — and the operational reality of agentic deployment, where scope is determined before the task is known. Long-lived, broad tokens are the lazy resolution of that mismatch.',
+    'atl.atk1': 'In the Salesloft incident affecting over 700 organizations, the initial vector was a single OAuth token held by a deprecated AI sales agent. The token had not been used in four months but remained valid. Once extracted via a prompt injection in a connected CRM plugin, the token granted access to email, contact data, and calendar APIs across every customer organization that had authorized the integration — because the token was organization-scoped, not task-scoped. One stale credential, seven hundred breach notifications.',
+    'atl.s3.h': 'The Two-Tier Session Architecture',
+    'atl.s3.p1': 'The correct model separates credential lifetime into two distinct tiers, each sized to its actual risk profile. User sessions are long-lived because they represent a persistent relationship between a user and a system — logging in and out repeatedly is friction, not security. Agent sessions are short-lived because they represent a single, bounded task — the credential should not survive the task that justified it.',
+    'atl.tier1.label': 'User Session Layer',
+    'atl.tier1.l1': 'Lifetime: hours to days',
+    'atl.tier1.l2': 'Backed by refresh tokens',
+    'atl.tier1.l3': 'Human-authenticated',
+    'atl.tier1.l4': 'Revocable at logout',
+    'atl.tier1.l5': 'Scope: user\'s full authorized access',
+    'atl.tier2.label': 'Agent Task Layer',
+    'atl.tier2.l1': 'Lifetime: minutes (task duration)',
+    'atl.tier2.l2': 'Non-refreshable by design',
+    'atl.tier2.l3': 'Derived from user session at task start',
+    'atl.tier2.l4': 'Auto-expires on task completion',
+    'atl.tier2.l5': 'Scope: minimum for this specific task',
+    'atl.s3.p2': 'The agent session is derived from the user session at task start via a token exchange (RFC 8693 or equivalent), with scope explicitly narrowed to what the task requires. A summarization task gets read-only document access. An email scheduling task gets calendar read and email send — nothing else. When the task ends, the agent token expires. The user session persists for the next task.',
+    'atl.s3.p3': 'The non-refreshable property is critical. An agent that can refresh its own token can effectively extend its own authorization window without human re-consent. This is the mechanism by which a task-scoped credential becomes a long-lived credential — not through explicit mis-configuration, but through a refresh loop that nobody audits.',
+    'atl.s4.h': 'Per-Task Issuance in Practice',
+    'atl.s4.p1': 'The unit of issuance determines the unit of attribution. Per-task tokens let you answer "what was the agent doing when this access occurred" with precision. Agent-global tokens can only tell you the agent existed — not what task, what user intent, or what chain of reasoning justified the specific access.',
+    'atl.s5.h': 'The EU AI Act Deadline',
+    'atl.s5.p1': 'Token lifetime is about to become a compliance question, not just an engineering one. Article 14 of the EU AI Act, entering enforcement on August 2, 2026, requires organizations to demonstrate that every AI-driven action was authorized at the time it occurred. A token issued three months ago for a deprecated agent does not satisfy that requirement. Authorization must be contemporaneous with action.',
+    'atl.s5.p2': 'The penalty for non-compliance is up to €35 million or 7% of global annual revenue — whichever is higher. The organizations most exposed are those running agentic systems that were built before token lifecycle management was treated as a first-class concern. The Salesloft pattern — stale credentials, orphaned agents, no revocation audit trail — is precisely what Article 14 was written to prevent.',
+    'atl.def1': 'Audit all currently-live agent credentials and their last-used timestamps. Revoke any token inactive for more than 30 days. Implement per-task token issuance for all new agent deployments. Set agent tokens to non-refreshable with a maximum lifetime of 15–30 minutes. Tie every token issuance to a task_id that appears in both application logs and audit logs. Run a quarterly credential inventory against all registered agents — including deprecated ones. Begin building the authorization audit trail that Article 14 will require before August 2026.',
+    'atl.s6.h': 'Short-Lived Is Necessary But Not Sufficient',
+    'atl.s6.p1': 'Short-lived credentials reduce blast radius when a token is extracted — but they do not prevent extraction. A 15-minute token is still 15 minutes of access to calendar, email, or file systems if leaked via prompt injection. The correct posture treats token lifetime as one layer in a defense-in-depth stack, not a complete solution.',
+    'atl.s6.p2': 'The complementary controls are: least-privilege scope (limit what the token can do), DPoP binding (tie the token to the client that requested it so it can\'t be replayed by a different party), continuous credential monitoring (detect when tokens appear in unexpected places — logs, responses, error messages), and human-in-the-loop for irreversible actions (require explicit approval before the agent takes actions that cannot be undone regardless of token validity).',
+    'atl.s6.p3': 'The goal is not to make token theft impossible — it is to make a stolen token useless as quickly as possible and as narrowly scoped as possible while valid. Short lifetime + narrow scope + client binding + continuous monitoring is a meaningful defense-in-depth. Any one of those alone is just a checkbox.',
+  },
+  zh: {
+    'atl.cat': 'AI 安全',
+    'atl.date': '2026年5月',
+    'atl.title': '当授权比意图<br>活得更久',
+    'atl.lead': '65% 的智能体聊天机器人从未被使用过，却仍持有有效的访问凭证。令牌有效期不是配置细节——它是每个生产中智能体系统的首要爆炸半径控制。',
+    'atl.pub': '发布时间：2026-05-19 08:22 PDT（俄勒冈）',
+    'atl.s1.h': '凭证墓地问题',
+    'atl.s1.p1': '智能体系统积累凭证的方式与软件积累技术债务相同：逐渐地、无形地，直到重量变得危险。一个聊天机器人以范围限定的 API 密钥和日历访问权限部署。产品团队添加了邮件集成。六个月后，产品转向。聊天机器人被弃用但从未完全下线——它仍然持有组织 CRM、邮件服务器和云存储的有效 OAuth 令牌。',
+    'atl.s1.p2': '2026 年的研究发现，企业部署中 65% 的智能体聊天机器人持有 90 天以上未访问系统的有效凭证。在许多情况下，负责下线这些智能体的团队不是配置凭证的团队。凭证比智能体活得更久。授权比意图活得更久。',
+    'atl.s1.p3': '这是基本的令牌有效期问题：发给 AI 智能体的凭证默认倾向于长期有效，很少主动撤销，几乎从不与证明其发放的具体任务挂钩。当令牌最终泄露——通过提示注入、被攻陷的依赖项或配置错误的日志——攻击者继承的不是智能体当前需要的，而是它曾经获得过的一切访问权限。',
+    'atl.s2.h': '为何智能体比服务更危险',
+    'atl.s2.p1': '传统的服务间认证有成熟的模式。微服务获得一个范围限定的 API 密钥，该密钥涵盖一组窄而静态的操作。攻击面有界，因为服务的行为有界：它每次都以相同的方式做相同的事情。',
+    'atl.s2.p2': 'AI 智能体完全打破了这种模式。智能体的行为是动态的——它在运行时决定调用哪些工具、查询哪些数据源、将哪些操作链接在一起。这意味着凭证面需要随任务伸缩。但大多数实现恰恰相反：在部署时给智能体最大凭证，以便它可以执行用户最终可能请求的任何操作。智能体在第一天就拿到了每扇门的钥匙，无论它实际会访问哪些房间。',
+    'atl.s2.p3': '结果是最小权限原则——要求将访问权限范围限定为特定任务所需的最少权限——与智能体部署的运营现实之间的不匹配，后者在任务已知之前就确定了范围。长期、宽泛的令牌是对这种不匹配的懒惰解决。',
+    'atl.atk1': '在影响 700 多个组织的 Salesloft 事件中，初始向量是一个已弃用的 AI 销售智能体持有的单个 OAuth 令牌。该令牌四个月未被使用但仍然有效。一旦通过连接的 CRM 插件中的提示注入被提取，该令牌就授予了对每个已授权集成的客户组织的邮件、联系人数据和日历 API 的访问权限——因为该令牌是组织范围的，而非任务范围的。一个过期凭证，七百份违规通知。',
+    'atl.s3.h': '双层会话架构',
+    'atl.s3.p1': '正确的模型将凭证有效期分为两个不同层，每层按其实际风险状况调整大小。用户会话是长期的，因为它们代表用户与系统之间的持续关系——反复登录和注销是摩擦，不是安全。智能体会话是短期的，因为它们代表单个、有界的任务——凭证不应在证明其存在的任务之后继续存在。',
+    'atl.tier1.label': '用户会话层',
+    'atl.tier1.l1': '有效期：数小时至数天',
+    'atl.tier1.l2': '由刷新令牌支持',
+    'atl.tier1.l3': '人工认证',
+    'atl.tier1.l4': '注销时可撤销',
+    'atl.tier1.l5': '范围：用户的全部授权访问',
+    'atl.tier2.label': '智能体任务层',
+    'atl.tier2.l1': '有效期：分钟级（任务持续时间）',
+    'atl.tier2.l2': '设计上不可刷新',
+    'atl.tier2.l3': '在任务开始时从用户会话派生',
+    'atl.tier2.l4': '任务完成时自动过期',
+    'atl.tier2.l5': '范围：此特定任务的最小权限',
+    'atl.s3.p2': '智能体会话在任务开始时通过令牌交换（RFC 8693 或等效机制）从用户会话派生，范围明确缩小为任务所需。摘要任务获得只读文档访问权限。邮件调度任务获得日历读取和邮件发送权限——仅此而已。当任务结束时，智能体令牌过期。用户会话为下一个任务持续存在。',
+    'atl.s3.p3': '不可刷新属性至关重要。可以刷新自己令牌的智能体可以在没有人工重新同意的情况下有效延长其授权窗口。这是任务范围凭证变成长期凭证的机制——不是通过明确的错误配置，而是通过没有人审计的刷新循环。',
+    'atl.s4.h': '实践中的按任务发放',
+    'atl.s4.p1': '发放单元决定归因单元。按任务令牌让你能够精确回答"此次访问发生时智能体在做什么"。智能体全局令牌只能告诉你智能体存在——而不是什么任务、什么用户意图或什么推理链证明了具体访问的合理性。',
+    'atl.s5.h': '欧盟 AI 法案截止期限',
+    'atl.s5.p1': '令牌有效期即将成为合规问题，而不仅仅是工程问题。《欧盟 AI 法案》第 14 条于 2026 年 8 月 2 日开始执行，要求组织证明每个 AI 驱动的操作在发生时已获授权。三个月前为已弃用智能体发放的令牌不满足该要求。授权必须与操作同步。',
+    'atl.s5.p2': '不合规的罚款高达 3500 万欧元或全球年收入的 7%——取较高者。风险最大的组织是那些在令牌生命周期管理被视为一等关注点之前构建智能体系统的组织。Salesloft 模式——过期凭证、孤立智能体、没有撤销审计跟踪——正是第 14 条旨在防止的。',
+    'atl.def1': '审计所有当前有效的智能体凭证及其最后使用时间戳。撤销任何超过 30 天未活跃的令牌。为所有新智能体部署实施按任务令牌发放。将智能体令牌设置为不可刷新，最长有效期为 15-30 分钟。将每次令牌发放与出现在应用程序日志和审计日志中的 task_id 挂钩。对所有注册智能体（包括已弃用的）进行季度凭证清查。在 2026 年 8 月之前开始构建第 14 条所需的授权审计跟踪。',
+    'atl.s6.h': '短期是必要的，但还不够',
+    'atl.s6.p1': '短期凭证在令牌被提取时减少爆炸半径——但不能防止提取。如果通过提示注入泄露，15 分钟令牌仍然是对日历、邮件或文件系统 15 分钟的访问。正确的姿态将令牌有效期视为纵深防御栈中的一层，而不是完整的解决方案。',
+    'atl.s6.p2': '互补控制措施包括：最小权限范围（限制令牌可以做什么）、DPoP 绑定（将令牌绑定到请求它的客户端，防止被不同方重放）、持续凭证监控（检测令牌何时出现在意外位置——日志、响应、错误消息），以及不可逆操作的人工审批（无论令牌有效性如何，在智能体采取不可撤销的操作之前都需要明确批准）。',
+    'atl.s6.p3': '目标不是让令牌盗窃不可能——而是在令牌被盗时尽快让其无用，并在有效期间尽量缩小范围。短有效期 + 窄范围 + 客户端绑定 + 持续监控是有意义的纵深防御。仅靠其中任何一个都只是勾选复选框。',
+  },
+  ja: {
+    'atl.cat': 'AIセキュリティ',
+    'atl.date': '2026年5月',
+    'atl.title': '認可が意図より<br>長生きするとき',
+    'atl.lead': 'エージェント型チャットボットの65%は一度も使用されていないにもかかわらず、有効なアクセス認証情報を保持し続けている。トークンの有効期間は設定の詳細ではない——それは本番稼働中のすべてのエージェントシステムにとっての主要な爆発半径制御だ。',
+    'atl.pub': '公開日時：2026-05-19 08:22 PDT（オレゴン）',
+    'atl.s1.h': '認証情報の墓場問題',
+    'atl.s1.p1': 'エージェントシステムは、ソフトウェアが技術的負債を蓄積するのと同じ方法で認証情報を蓄積する：徐々に、見えないうちに、その重さが危険になるまで。チャットボットはスコープ付きAPIキーとカレンダーアクセスでデプロイされる。製品チームがメール統合を追加する。6ヶ月後、製品の方向性が変わる。チャットボットは非推奨になるが完全に廃止されることはなく——組織のCRM、メールサーバー、クラウドストレージの有効なOAuthトークンを依然として保持している。',
+    'atl.s1.p2': '2026年の調査では、企業展開全体でエージェント型チャットボットの65%が90日以上アクセスしていないシステムの有効な認証情報を保持していることが判明した。多くの場合、それらのエージェントの廃止を担当するチームは認証情報をプロビジョニングしたチームではなかった。認証情報はエージェントより長く生き残った。認可は意図より長生きした。',
+    'atl.s1.p3': 'これが基本的なトークン有効期間問題だ：AIエージェントに発行された認証情報はデフォルトで長期有効である傾向があり、積極的に取り消されることはほとんどなく、その発行を正当化した特定のタスクに結び付けられることはほぼない。トークンが最終的に漏洩したとき——プロンプトインジェクション、侵害された依存関係、または設定ミスのログを通じて——攻撃者が継承するのは、エージェントが今必要としているものではなく、エージェントがかつてアクセス権を与えられたすべてのものだ。',
+    'atl.s2.h': 'なぜエージェントはサービスより危険か',
+    'atl.s2.p1': '従来のサービス間認証にはよく理解されたパターンがある。マイクロサービスはスコープ付きAPIキーを取得し、そのキーは狭く静的な操作セットをカバーする。攻撃面は有界だ。なぜならサービスの動作が有界だからだ：毎回同じ方法で同じことをする。',
+    'atl.s2.p2': 'AIエージェントはこのモデルを完全に破壊する。エージェントの動作は動的だ——実行時にどのツールを呼び出すか、どのデータソースをクエリするか、どのアクションを連鎖させるかを決定する。これは認証情報のサーフェスがタスクに合わせて柔軟に変化する必要があることを意味する。しかしほとんどの実装はその逆を行う：デプロイ時にエージェントに最大の認証情報を与え、ユーザーが最終的に要求する可能性のあることなら何でもできるようにする。エージェントは初日にすべてのドアの鍵を受け取る。実際にどの部屋を訪れるかに関係なく。',
+    'atl.s2.p3': '結果は、最小権限の原則——特定のタスクに必要な最小限へのアクセスをスコープすることを要求する——と、タスクが判明する前にスコープが決定されるエージェント展開の運用現実との間の不一致だ。長期有効で広範なトークンは、その不一致への怠惰な解決策だ。',
+    'atl.atk1': '700以上の組織に影響を与えたSalesloftのインシデントでは、最初のベクターは廃止されたAI営業エージェントが保持する単一のOAuthトークンだった。トークンは4ヶ月間使用されていなかったが有効のままだった。接続されたCRMプラグインのプロンプトインジェクションを通じて抽出されると、そのトークンは統合を認可したすべての顧客組織のメール、連絡先データ、カレンダーAPIへのアクセスを許可した——トークンが組織スコープであり、タスクスコープではなかったためだ。1つの古い認証情報、700件の違反通知。',
+    'atl.s3.h': '二層セッションアーキテクチャ',
+    'atl.s3.p1': '正しいモデルは認証情報の有効期間を2つの異なる層に分離し、それぞれを実際のリスクプロファイルに合わせてサイズ調整する。ユーザーセッションは長期有効だ。なぜならそれらはユーザーとシステム間の継続的な関係を表すからだ——繰り返しログインとログアウトは摩擦であり、セキュリティではない。エージェントセッションは短期有効だ。なぜならそれらは単一の有界なタスクを表すからだ——認証情報はそれを正当化したタスクの後も生き残るべきではない。',
+    'atl.tier1.label': 'ユーザーセッション層',
+    'atl.tier1.l1': '有効期間：数時間から数日',
+    'atl.tier1.l2': 'リフレッシュトークンに裏付けられている',
+    'atl.tier1.l3': '人間が認証',
+    'atl.tier1.l4': 'ログアウト時に取り消し可能',
+    'atl.tier1.l5': 'スコープ：ユーザーの全認可アクセス',
+    'atl.tier2.label': 'エージェントタスク層',
+    'atl.tier2.l1': '有効期間：分単位（タスク期間）',
+    'atl.tier2.l2': '設計上リフレッシュ不可',
+    'atl.tier2.l3': 'タスク開始時にユーザーセッションから派生',
+    'atl.tier2.l4': 'タスク完了時に自動失効',
+    'atl.tier2.l5': 'スコープ：この特定タスクの最小限',
+    'atl.s3.p2': 'エージェントセッションはタスク開始時にトークン交換（RFC 8693または同等）を通じてユーザーセッションから派生し、スコープはタスクが要求するものに明示的に絞り込まれる。要約タスクは読み取り専用のドキュメントアクセスを取得する。メールスケジューリングタスクはカレンダー読み取りとメール送信を取得する——それ以外は何もない。タスクが終了すると、エージェントトークンが失効する。ユーザーセッションは次のタスクのために持続する。',
+    'atl.s3.p3': 'リフレッシュ不可のプロパティは重要だ。自分自身のトークンをリフレッシュできるエージェントは、人間の再同意なしに実質的に自分の認可ウィンドウを延長できる。これがタスクスコープの認証情報が長期有効の認証情報になるメカニズムだ——明示的な設定ミスによってではなく、誰も監査しないリフレッシュループによって。',
+    'atl.s4.h': '実践における1タスク1発行',
+    'atl.s4.p1': '発行の単位が帰属の単位を決定する。タスクごとのトークンにより、「このアクセスが発生したときエージェントは何をしていたか」を正確に回答できる。エージェントグローバルトークンは、エージェントが存在したことしか伝えられない——どのタスクで、どのようなユーザーの意図で、どのような推論の連鎖が特定のアクセスを正当化したかは伝えられない。',
+    'atl.s5.h': 'EU AI法の期限',
+    'atl.s5.p1': 'トークンの有効期間は、単なるエンジニアリングの問題ではなく、コンプライアンスの問題になろうとしている。EU AI法第14条は2026年8月2日に施行され、組織はすべてのAI主導のアクションが発生時に認可されていたことを証明することを要求する。3ヶ月前に廃止されたエージェントのために発行されたトークンはその要件を満たさない。認可はアクションと同時でなければならない。',
+    'atl.s5.p2': '違反のペナルティは最大3500万ユーロまたは世界年間収益の7%——いずれか高い方だ。最もリスクにさらされている組織は、トークンライフサイクル管理が第一級の関心事として扱われる以前にエージェントシステムを構築した組織だ。Salesloftパターン——古い認証情報、孤立したエージェント、取り消し監査証跡なし——は正確に第14条が防ぐために書かれたものだ。',
+    'atl.def1': '現在有効なすべてのエージェント認証情報とその最終使用タイムスタンプを監査する。30日以上非アクティブなトークンを取り消す。すべての新しいエージェント展開にタスクごとのトークン発行を実装する。エージェントトークンをリフレッシュ不可に設定し、最大有効期間を15〜30分にする。すべてのトークン発行をアプリケーションログと監査ログの両方に表示されるtask_idに結び付ける。廃止されたものを含むすべての登録済みエージェントに対して四半期ごとの認証情報インベントリを実行する。2026年8月までに第14条が要求する認可監査証跡の構築を開始する。',
+    'atl.s6.h': '短期有効は必要だが十分ではない',
+    'atl.s6.p1': '短期有効の認証情報はトークンが抽出されたときの爆発半径を減らす——しかし抽出を防ぐわけではない。プロンプトインジェクションで漏洩した場合、15分のトークンは依然としてカレンダー、メール、またはファイルシステムへの15分間のアクセスだ。正しい姿勢は、トークンの有効期間を完全な解決策ではなく、多層防御スタックの1層として扱うことだ。',
+    'atl.s6.p2': '補完的な制御措置は：最小権限スコープ（トークンができることを制限する）、DPoP バインディング（トークンをリクエストしたクライアントに結び付け、異なるパーティによるリプレイを防ぐ）、継続的な認証情報モニタリング（トークンが予期しない場所——ログ、レスポンス、エラーメッセージ——に現れるときを検出する）、および不可逆的アクションのヒューマン・イン・ザ・ループ（トークンの有効性に関わらず、エージェントが取り消せないアクションを取る前に明示的な承認を要求する）。',
+    'atl.s6.p3': '目標はトークンの盗難を不可能にすることではなく——盗まれたトークンをできるだけ早く無用にし、有効な間はできるだけ狭いスコープにすることだ。短い有効期間 + 狭いスコープ + クライアントバインディング + 継続的モニタリングは意味のある多層防御だ。そのどれか1つだけでは単なるチェックボックスに過ぎない。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Multi-Hop Delegation Problem: Token Chains in Multi-Agent Systems — vsike</title>
+  <meta name="description" content="When Agent A delegates to Agent B which delegates to Agent C, who actually authorized the final action? Multi-agent delegation chains are breaking the accountability model that OAuth was designed to provide.">
+  <meta name="keywords" content="多智能体委托, 令牌链, RFC 8693, 级联撤销, 智能体授权, multi-agent delegation, token chains, cascade revocation, agent authorization, delegation chain security, OAuth delegation">
+  <link rel="canonical" href="https://www.vsike.com/ideas/multi-agent-delegation.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .chain-diagram { display: flex; align-items: center; gap: .75rem; margin: 2rem 0; flex-wrap: wrap; }
+    .chain-node { border: 1px solid var(--fg-dim); padding: .75rem 1rem; font-family: var(--mono); font-size: var(--fs-xs); text-align: center; min-width: 90px; }
+    .chain-node.bad { border-color: #c0392b; color: #c0392b; }
+    .chain-arrow { font-size: var(--fs-sm); color: var(--fg-muted); }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="mad.cat">AI Security</span>
+        <span class="article-date" data-i18n="mad.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="mad.title">The Multi-Hop<br>Delegation Problem</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="mad.lead">When Agent A delegates to Agent B which delegates to Agent C, who actually authorized the final action? Multi-agent delegation chains are breaking the accountability model that OAuth was designed to provide.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="mad.pub">Published: 2026-05-19 09:45 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="mad.s1.h">Chains Without Anchors</h2>
+      <p data-i18n="mad.s1.p1">Modern agentic architectures rarely involve a single agent acting alone. An orchestrator agent decomposes a user request, spawns sub-agents for specialized tasks, and those sub-agents may themselves spin up tools, call APIs, or delegate further. Each hop in that chain is a delegation event — a transfer of some portion of the original user's authorization to a downstream component.</p>
+      <p data-i18n="mad.s1.p2">The problem is that most frameworks — CrewAI, AutoGen, MetaGPT, LangGraph — treat delegation as a plumbing concern rather than a security one. When the orchestrator agent hands a task to a sub-agent, it typically passes along its own credentials or derives new ones with scope identical to its own. Scope narrows only if someone explicitly codes the narrowing. In practice, almost nobody does.</p>
+      <p data-i18n="mad.s1.p3">The result is scope amplification through delegation. A user who authorized "summarize my emails" may have their email credentials passed intact through a three-hop chain, with the final agent holding the same read/write/delete access that the orchestrator held — far more than the leaf-level task requires. Each hop is a new potential point of compromise. Each additional hop that passes broad credentials is a multiplier on blast radius.</p>
+
+      <div class="chain-diagram" aria-label="Delegation chain diagram">
+        <div class="chain-node">User<br>Intent</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">Orchestrator<br>Agent</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">Research<br>Sub-Agent</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node">Tool<br>Caller</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node bad">API<br>Access</div>
+      </div>
+
+      <h2 data-i18n="mad.s2.h">The Chain Splicing Vulnerability</h2>
+      <p data-i18n="mad.s2.p1">RFC 8693 defines the token exchange mechanism for constructing delegation chains with provenance: each derived token carries an <code>act</code> claim identifying the acting agent and a <code>may_act</code> claim limiting who can further delegate. In theory, this creates an auditable chain of custody from user intent to final action.</p>
+      <p data-i18n="mad.s2.p2">In practice, the <code>may_act</code> constraint is almost never enforced at the resource server. Resource servers — the APIs and data stores that ultimately act on the token — are built to validate scope and signature. They were not built to validate delegation depth or to reject tokens that have been re-delegated more times than the original issuer permitted. An attacker who compromises a mid-chain agent can splice a new delegation path into the chain, substituting a malicious sub-agent for a legitimate one, without any of the upstream agents detecting the substitution.</p>
+      <p data-i18n="mad.s2.p3">The chain splicing attack works because downstream resource servers see a valid, well-formed token with legitimate scope — they have no mechanism to verify that the delegation path described in the token's <code>act</code> claims matches the actual chain of agents that processed the request. Provenance claims are assertions, not attestations.</p>
+
+      <pre class="code-block"><span class="comment"># Legitimate RFC 8693 delegation token</span>
+{
+  <span class="str">"sub"</span>: <span class="str">"user:alice@org.com"</span>,        <span class="comment"># original user</span>
+  <span class="str">"act"</span>: {
+    <span class="str">"sub"</span>: <span class="str">"agent:orchestrator-v1"</span>,   <span class="comment"># immediate actor</span>
+    <span class="str">"act"</span>: {
+      <span class="str">"sub"</span>: <span class="str">"agent:research-sub"</span>       <span class="comment"># delegated-to agent</span>
+    }
+  },
+  <span class="str">"scope"</span>: <span class="str">"email:read calendar:read"</span>,
+  <span class="danger">"may_act"</span>: { <span class="str">"sub"</span>: <span class="str">"agent:research-sub"</span> },  <span class="comment"># rarely enforced</span>
+  <span class="str">"exp"</span>: 1747655700
+}
+
+<span class="comment"># After chain splice — resource server cannot detect substitution</span>
+{
+  <span class="str">"sub"</span>: <span class="str">"user:alice@org.com"</span>,
+  <span class="str">"act"</span>: {
+    <span class="str">"sub"</span>: <span class="str">"agent:orchestrator-v1"</span>,
+    <span class="str">"act"</span>: {
+      <span class="danger">"sub"</span>: <span class="danger">"agent:malicious-sub"</span>   <span class="comment"># substituted — looks valid</span>
+    }
+  },
+  <span class="str">"scope"</span>: <span class="str">"email:read calendar:read"</span>
+}</pre>
+
+      <h2 data-i18n="mad.s3.h">Cascade Revocation and Why It Fails</h2>
+      <p data-i18n="mad.s3.p1">The theoretical remedy for delegation chain compromise is cascade revocation: when the orchestrator token is revoked, all tokens derived from it are automatically invalidated. This is the correct design. In the real world, it almost never works as intended.</p>
+      <p data-i18n="mad.s3.p2">Cascade revocation requires that every resource server in the chain knows about the revocation in real time. Most resource servers use local token introspection or cached validation — they check that a token was valid when it was issued, not whether it has been revoked since. The RFC 7009 token revocation endpoint exists, but calling it does not guarantee immediate propagation across a distributed system. A revoked orchestrator token may continue to authorize actions at downstream services for minutes or hours, depending on token cache TTLs.</p>
+      <p data-i18n="mad.s3.p3">The cross-domain case is worse. In multi-organization agent pipelines — an enterprise orchestrator calling a third-party specialized agent which calls an external data API — there is no shared revocation protocol. The orchestrator's identity provider cannot reach the external API's introspection endpoint. The token lives for its full stated lifetime regardless of what happens upstream. There is currently no deployed standard for cross-domain cascade revocation in agentic systems.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Attack Pattern — The Phantom Delegation Chain</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="mad.atk1">In a reported 2025 incident at a financial services firm, an attacker compromised a third-party summarization sub-agent in a document processing pipeline. The sub-agent held a derived token from the orchestrator, scoped to document read. By injecting a prompt into a processed document, the attacker caused the sub-agent to request an additional token exchange, escalating to document write access. The orchestrator's token included a broad <code>may_act</code> claim covering all registered agents — it was never scoped to the specific sub-agent. The write-access token was valid, properly signed, and expired only after the attacker had exfiltrated and modified 340 documents across six client accounts.</p>
+      </div>
+
+      <h2 data-i18n="mad.s4.h">The HDP Protocol: Binding Delegation to Human Provenance</h2>
+      <p data-i18n="mad.s4.p1">Recent research from the IETF agent authorization working group has proposed the Human Delegation Provenance (HDP) protocol extension as an approach to making delegation chains verifiable beyond the <code>act</code> claim assertion model. Rather than recording which agent claimed to delegate to which, HDP binds each delegation event to a cryptographic proof that the delegation was sanctioned by the root human principal — either directly (explicit approval) or transitively (the human pre-authorized this class of delegation at system setup).</p>
+      <p data-i18n="mad.s4.p2">The key mechanism is a delegation receipt: a signed artifact created at each delegation event that records the delegating agent's identity, the delegated scope, the task context, and a timestamp. Delegation receipts form a Merkle chain that can be audited independently of the token itself. A resource server with HDP support can verify not just that the token is valid but that every delegation in the chain is cryptographically traceable to a human authorization event.</p>
+      <p data-i18n="mad.s4.p3">HDP is not yet standardized and faces real deployment challenges: it adds latency to every delegation event, requires all resource servers to be HDP-aware, and creates a receipt storage problem for long-running pipelines. But it addresses the fundamental gap in current delegation models: that provenance claims in tokens are self-asserted, with no way to distinguish a legitimate chain from one that has been partially fabricated or spliced.</p>
+
+      <h2 data-i18n="mad.s5.h">Scope Narrowing as a Mandatory Invariant</h2>
+      <p data-i18n="mad.s5.p1">The minimum viable fix for delegation chain security is enforcing scope narrowing as a non-negotiable invariant: every delegation step must produce a token with scope that is a strict subset of the delegating token's scope. No agent can delegate permissions it does not hold. No derived token can have broader scope than its parent.</p>
+      <p data-i18n="mad.s5.p2">This sounds obvious. It is not the current behavior of any major multi-agent framework. CrewAI, AutoGen, and MetaGPT all operate on credential-passing models where the framework itself does not intercept or validate scope at delegation boundaries. Scope narrowing has to be implemented explicitly by the application developer — who typically does not think about it at all when building their multi-agent pipeline.</p>
+
+      <pre class="code-block"><span class="comment"># Correct delegation — scope narrows at each hop</span>
+
+<span class="comment"># Orchestrator token: broad</span>
+orchestrator_token.scope = <span class="str">"email:read email:write calendar:read calendar:write docs:read docs:write"</span>
+
+<span class="comment"># Research sub-agent delegation — only what it needs</span>
+research_token = token_exchange(
+  parent=orchestrator_token,
+  <span class="kw">scope=</span><span class="str">"email:read docs:read"</span>,  <span class="comment"># strict subset</span>
+  <span class="kw">may_act=</span><span class="str">"agent:research-sub-v2"</span>   <span class="comment"># specific grantee only</span>
+)
+
+<span class="comment"># Summary sub-agent delegation — narrower still</span>
+summary_token = token_exchange(
+  parent=research_token,
+  <span class="kw">scope=</span><span class="str">"docs:read"</span>,               <span class="comment"># narrowed from parent</span>
+  <span class="kw">may_act=</span><span class="str">"agent:summary-sub-v1"</span>
+)</pre>
+
+      <div class="defend-block">
+        <div class="defend-label">Delegation Chain Security Controls</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="mad.def1">Enforce scope narrowing at every delegation boundary — derived tokens must be strict scope subsets. Populate <code>may_act</code> with the specific downstream agent identity, never a wildcard. Set a maximum delegation depth (recommended: 3 hops) and reject token exchanges that would exceed it. Use short-lived derived tokens even within the chain — 5–10 minute lifetimes for leaf-level agents. Implement delegation receipt logging at the orchestrator layer so every chain event is auditable. Test revocation propagation by actually revoking orchestrator tokens in staging and measuring how long derived tokens remain valid at leaf services. For cross-domain pipelines, treat external agents as untrusted: re-derive minimal-scope tokens at domain boundaries rather than passing your organization's tokens across.</p>
+      </div>
+
+      <h2 data-i18n="mad.s6.h">The Accountability Gap at Scale</h2>
+      <p data-i18n="mad.s6.p1">The delegation chain problem is not merely a technical one — it is an accountability one. When a multi-agent pipeline takes an action that causes harm, the question of who authorized that action must have a traceable, defensible answer. "The orchestrator delegated to the sub-agent" is not an answer. "The user authorized the orchestrator to perform task X, the orchestrator issued a narrowly-scoped token to the sub-agent specifically for operation Y, and that token was the only credential used in the access event" is an answer.</p>
+      <p data-i18n="mad.s6.p2">Building that traceable accountability chain requires treating delegation as a security-critical operation at every hop, not just at the initial user authorization. The frameworks that treat credential passing as an implementation detail will be the source of the incidents that force this to become a compliance requirement. The organizations that build delegation chain auditing now will have the audit trails that Article 14 and similar regulations are beginning to demand.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'mad.cat': 'AI Security',
+    'mad.date': 'May 2026',
+    'mad.title': 'The Multi-Hop<br>Delegation Problem',
+    'mad.lead': 'When Agent A delegates to Agent B which delegates to Agent C, who actually authorized the final action? Multi-agent delegation chains are breaking the accountability model that OAuth was designed to provide.',
+    'mad.pub': 'Published: 2026-05-19 09:45 PDT (Oregon)',
+    'mad.s1.h': 'Chains Without Anchors',
+    'mad.s1.p1': 'Modern agentic architectures rarely involve a single agent acting alone. An orchestrator agent decomposes a user request, spawns sub-agents for specialized tasks, and those sub-agents may themselves spin up tools, call APIs, or delegate further. Each hop in that chain is a delegation event — a transfer of some portion of the original user\'s authorization to a downstream component.',
+    'mad.s1.p2': 'The problem is that most frameworks — CrewAI, AutoGen, MetaGPT, LangGraph — treat delegation as a plumbing concern rather than a security one. When the orchestrator agent hands a task to a sub-agent, it typically passes along its own credentials or derives new ones with scope identical to its own. Scope narrows only if someone explicitly codes the narrowing. In practice, almost nobody does.',
+    'mad.s1.p3': 'The result is scope amplification through delegation. A user who authorized "summarize my emails" may have their email credentials passed intact through a three-hop chain, with the final agent holding the same read/write/delete access that the orchestrator held — far more than the leaf-level task requires. Each hop is a new potential point of compromise. Each additional hop that passes broad credentials is a multiplier on blast radius.',
+    'mad.s2.h': 'The Chain Splicing Vulnerability',
+    'mad.s2.p1': 'RFC 8693 defines the token exchange mechanism for constructing delegation chains with provenance: each derived token carries an <code>act</code> claim identifying the acting agent and a <code>may_act</code> claim limiting who can further delegate. In theory, this creates an auditable chain of custody from user intent to final action.',
+    'mad.s2.p2': 'In practice, the <code>may_act</code> constraint is almost never enforced at the resource server. Resource servers — the APIs and data stores that ultimately act on the token — are built to validate scope and signature. They were not built to validate delegation depth or to reject tokens that have been re-delegated more times than the original issuer permitted. An attacker who compromises a mid-chain agent can splice a new delegation path into the chain, substituting a malicious sub-agent for a legitimate one, without any of the upstream agents detecting the substitution.',
+    'mad.s2.p3': 'The chain splicing attack works because downstream resource servers see a valid, well-formed token with legitimate scope — they have no mechanism to verify that the delegation path described in the token\'s <code>act</code> claims matches the actual chain of agents that processed the request. Provenance claims are assertions, not attestations.',
+    'mad.atk1': 'In a reported 2025 incident at a financial services firm, an attacker compromised a third-party summarization sub-agent in a document processing pipeline. The sub-agent held a derived token from the orchestrator, scoped to document read. By injecting a prompt into a processed document, the attacker caused the sub-agent to request an additional token exchange, escalating to document write access. The orchestrator\'s token included a broad <code>may_act</code> claim covering all registered agents — it was never scoped to the specific sub-agent. The write-access token was valid, properly signed, and expired only after the attacker had exfiltrated and modified 340 documents across six client accounts.',
+    'mad.s3.h': 'Cascade Revocation and Why It Fails',
+    'mad.s3.p1': 'The theoretical remedy for delegation chain compromise is cascade revocation: when the orchestrator token is revoked, all tokens derived from it are automatically invalidated. This is the correct design. In the real world, it almost never works as intended.',
+    'mad.s3.p2': 'Cascade revocation requires that every resource server in the chain knows about the revocation in real time. Most resource servers use local token introspection or cached validation — they check that a token was valid when it was issued, not whether it has been revoked since. The RFC 7009 token revocation endpoint exists, but calling it does not guarantee immediate propagation across a distributed system. A revoked orchestrator token may continue to authorize actions at downstream services for minutes or hours, depending on token cache TTLs.',
+    'mad.s3.p3': 'The cross-domain case is worse. In multi-organization agent pipelines — an enterprise orchestrator calling a third-party specialized agent which calls an external data API — there is no shared revocation protocol. The orchestrator\'s identity provider cannot reach the external API\'s introspection endpoint. The token lives for its full stated lifetime regardless of what happens upstream. There is currently no deployed standard for cross-domain cascade revocation in agentic systems.',
+    'mad.s4.h': 'The HDP Protocol: Binding Delegation to Human Provenance',
+    'mad.s4.p1': 'Recent research from the IETF agent authorization working group has proposed the Human Delegation Provenance (HDP) protocol extension as an approach to making delegation chains verifiable beyond the <code>act</code> claim assertion model. Rather than recording which agent claimed to delegate to which, HDP binds each delegation event to a cryptographic proof that the delegation was sanctioned by the root human principal — either directly (explicit approval) or transitively (the human pre-authorized this class of delegation at system setup).',
+    'mad.s4.p2': 'The key mechanism is a delegation receipt: a signed artifact created at each delegation event that records the delegating agent\'s identity, the delegated scope, the task context, and a timestamp. Delegation receipts form a Merkle chain that can be audited independently of the token itself. A resource server with HDP support can verify not just that the token is valid but that every delegation in the chain is cryptographically traceable to a human authorization event.',
+    'mad.s4.p3': 'HDP is not yet standardized and faces real deployment challenges: it adds latency to every delegation event, requires all resource servers to be HDP-aware, and creates a receipt storage problem for long-running pipelines. But it addresses the fundamental gap in current delegation models: that provenance claims in tokens are self-asserted, with no way to distinguish a legitimate chain from one that has been partially fabricated or spliced.',
+    'mad.s5.h': 'Scope Narrowing as a Mandatory Invariant',
+    'mad.s5.p1': 'The minimum viable fix for delegation chain security is enforcing scope narrowing as a non-negotiable invariant: every delegation step must produce a token with scope that is a strict subset of the delegating token\'s scope. No agent can delegate permissions it does not hold. No derived token can have broader scope than its parent.',
+    'mad.s5.p2': 'This sounds obvious. It is not the current behavior of any major multi-agent framework. CrewAI, AutoGen, and MetaGPT all operate on credential-passing models where the framework itself does not intercept or validate scope at delegation boundaries. Scope narrowing has to be implemented explicitly by the application developer — who typically does not think about it at all when building their multi-agent pipeline.',
+    'mad.def1': 'Enforce scope narrowing at every delegation boundary — derived tokens must be strict scope subsets. Populate <code>may_act</code> with the specific downstream agent identity, never a wildcard. Set a maximum delegation depth (recommended: 3 hops) and reject token exchanges that would exceed it. Use short-lived derived tokens even within the chain — 5–10 minute lifetimes for leaf-level agents. Implement delegation receipt logging at the orchestrator layer so every chain event is auditable. Test revocation propagation by actually revoking orchestrator tokens in staging and measuring how long derived tokens remain valid at leaf services. For cross-domain pipelines, treat external agents as untrusted: re-derive minimal-scope tokens at domain boundaries rather than passing your organization\'s tokens across.',
+    'mad.s6.h': 'The Accountability Gap at Scale',
+    'mad.s6.p1': 'The delegation chain problem is not merely a technical one — it is an accountability one. When a multi-agent pipeline takes an action that causes harm, the question of who authorized that action must have a traceable, defensible answer. "The orchestrator delegated to the sub-agent" is not an answer. "The user authorized the orchestrator to perform task X, the orchestrator issued a narrowly-scoped token to the sub-agent specifically for operation Y, and that token was the only credential used in the access event" is an answer.',
+    'mad.s6.p2': 'Building that traceable accountability chain requires treating delegation as a security-critical operation at every hop, not just at the initial user authorization. The frameworks that treat credential passing as an implementation detail will be the source of the incidents that force this to become a compliance requirement. The organizations that build delegation chain auditing now will have the audit trails that Article 14 and similar regulations are beginning to demand.',
+  },
+  zh: {
+    'mad.cat': 'AI 安全',
+    'mad.date': '2026年5月',
+    'mad.title': '多跳委托问题：<br>多智能体系统中的令牌链',
+    'mad.lead': '当智能体 A 委托给智能体 B，而 B 又委托给智能体 C 时，最终操作究竟是谁授权的？多智能体委托链正在破坏 OAuth 旨在提供的问责模型。',
+    'mad.pub': '发布时间：2026-05-19 09:45 PDT（俄勒冈）',
+    'mad.s1.h': '没有锚点的链条',
+    'mad.s1.p1': '现代智能体架构很少只涉及单一智能体独立运作。编排智能体分解用户请求，生成专门任务的子智能体，而这些子智能体本身可能会启动工具、调用 API 或进一步委托。链中的每一跳都是一个委托事件——将原始用户授权的某一部分转移给下游组件。',
+    'mad.s1.p2': '问题在于，大多数框架——CrewAI、AutoGen、MetaGPT、LangGraph——将委托视为管道问题而非安全问题。当编排智能体将任务交给子智能体时，它通常会传递自己的凭证或派生与自己范围相同的新凭证。只有在有人明确编写范围收窄代码时，范围才会收窄。实际上，几乎没有人这样做。',
+    'mad.s1.p3': '结果是通过委托实现的范围放大。授权"总结我的邮件"的用户可能会让他们的邮件凭证在三跳链中原封不动地传递，最终智能体持有与编排智能体相同的读/写/删除访问权限——远超叶级任务所需。每一跳都是一个新的潜在入侵点。每一个传递宽泛凭证的额外跳都是爆炸半径的倍增器。',
+    'mad.s2.h': '链拼接漏洞',
+    'mad.s2.p1': 'RFC 8693 定义了构建具有来源的委托链的令牌交换机制：每个派生令牌携带一个 <code>act</code> 声明（标识操作智能体）和一个 <code>may_act</code> 声明（限制谁可以进一步委托）。理论上，这创建了从用户意图到最终操作的可审计保管链。',
+    'mad.s2.p2': '实际上，<code>may_act</code> 约束几乎从不在资源服务器上执行。资源服务器——最终对令牌采取行动的 API 和数据存储——是为了验证范围和签名而构建的。它们不是为了验证委托深度或拒绝被重新委托次数超过原始发行者允许次数的令牌而构建的。攻击者入侵中间链智能体后，可以将新的委托路径拼接到链中，将恶意子智能体替换为合法子智能体，而上游智能体无法检测到这种替换。',
+    'mad.s2.p3': '链拼接攻击有效，是因为下游资源服务器看到的是一个具有合法范围的有效、格式良好的令牌——它们没有机制来验证令牌 <code>act</code> 声明中描述的委托路径是否与实际处理请求的智能体链相匹配。来源声明是断言，而非证明。',
+    'mad.atk1': '在一家金融服务公司报告的 2025 年事件中，攻击者入侵了文档处理管道中的第三方摘要子智能体。该子智能体持有来自编排智能体的派生令牌，范围限于文档读取。通过向处理的文档中注入提示，攻击者导致子智能体请求额外的令牌交换，升级为文档写入访问权限。编排智能体的令牌包含涵盖所有已注册智能体的宽泛 <code>may_act</code> 声明——从未针对特定子智能体进行范围限定。写入访问令牌有效、正确签名，直到攻击者从六个客户账户中窃取和修改了 340 份文档后才过期。',
+    'mad.s3.h': '级联撤销及其失效原因',
+    'mad.s3.p1': '委托链入侵的理论补救方法是级联撤销：当编排智能体令牌被撤销时，从它派生的所有令牌都自动失效。这是正确的设计。在现实世界中，它几乎从未按预期工作。',
+    'mad.s3.p2': '级联撤销要求链中的每个资源服务器实时了解撤销情况。大多数资源服务器使用本地令牌内省或缓存验证——它们检查令牌在发行时是否有效，而不是此后是否已被撤销。RFC 7009 令牌撤销端点存在，但调用它并不能保证在分布式系统中立即传播。被撤销的编排智能体令牌可能会继续在下游服务中授权操作，持续数分钟或数小时，具体取决于令牌缓存 TTL。',
+    'mad.s3.p3': '跨域情况更糟。在多组织智能体管道中——企业编排智能体调用调用外部数据 API 的第三方专业智能体——没有共享的撤销协议。编排智能体的身份提供者无法访问外部 API 的内省端点。无论上游发生什么，令牌都会存活到其声明的完整生命周期。目前在智能体系统中尚无已部署的跨域级联撤销标准。',
+    'mad.s4.h': 'HDP 协议：将委托绑定到人类来源',
+    'mad.s4.p1': 'IETF 智能体授权工作组的最新研究提出了人类委托来源（HDP）协议扩展，作为使委托链可验证的方法，超越了 <code>act</code> 声明断言模型。HDP 不是记录哪个智能体声称委托给哪个，而是将每个委托事件绑定到密码学证明，证明委托得到了根人类主体的批准——直接（明确批准）或可传递地（人类在系统设置时预先授权了此类委托）。',
+    'mad.s4.p2': '关键机制是委托收据：在每个委托事件中创建的签名工件，记录委托智能体的身份、委托范围、任务上下文和时间戳。委托收据形成 Merkle 链，可以独立于令牌本身进行审计。支持 HDP 的资源服务器不仅可以验证令牌是否有效，还可以验证链中的每个委托是否可以通过密码学追溯到人类授权事件。',
+    'mad.s4.p3': 'HDP 尚未标准化，面临真正的部署挑战：它为每个委托事件增加了延迟，要求所有资源服务器支持 HDP，并为长时间运行的管道创造了收据存储问题。但它解决了当前委托模型中的根本差距：令牌中的来源声明是自我断言的，无法区分合法链与部分伪造或拼接的链。',
+    'mad.s5.h': '范围收窄作为强制不变量',
+    'mad.s5.p1': '委托链安全的最小可行修复方案是将范围收窄作为不可谈判的不变量来执行：每个委托步骤必须产生范围严格小于委托令牌范围子集的令牌。任何智能体都不能委托其不持有的权限。任何派生令牌都不能有比其父令牌更广的范围。',
+    'mad.s5.p2': '这听起来显而易见。但这不是任何主要多智能体框架的当前行为。CrewAI、AutoGen 和 MetaGPT 都采用凭证传递模型，框架本身不会在委托边界处拦截或验证范围。范围收窄必须由应用程序开发人员明确实现——而开发人员在构建多智能体管道时通常根本不考虑这一点。',
+    'mad.def1': '在每个委托边界强制执行范围收窄——派生令牌必须是严格的范围子集。在 <code>may_act</code> 中填写特定的下游智能体身份，绝不使用通配符。设置最大委托深度（建议：3 跳），并拒绝会超出该深度的令牌交换。即使在链内也使用短期派生令牌——叶级智能体的有效期为 5-10 分钟。在编排智能体层实施委托收据日志记录，以便每个链事件都可审计。通过在暂存环境中实际撤销编排智能体令牌并测量派生令牌在叶服务处保持有效多长时间来测试撤销传播。对于跨域管道，将外部智能体视为不可信：在域边界处重新派生最小范围令牌，而不是在组织间传递令牌。',
+    'mad.s6.h': '规模化的问责差距',
+    'mad.s6.p1': '委托链问题不仅仅是技术问题——它是问责问题。当多智能体管道采取导致损害的行动时，"谁授权了该行动"这一问题必须有可追溯、可辩护的答案。"编排智能体委托给了子智能体"不是一个答案。"用户授权编排智能体执行任务 X，编排智能体专门为操作 Y 向子智能体发放了范围窄化的令牌，该令牌是访问事件中使用的唯一凭证"才是一个答案。',
+    'mad.s6.p2': '构建可追溯的问责链需要在每一跳都将委托视为安全关键操作，而不仅仅是在最初的用户授权时。那些将凭证传递视为实现细节的框架将成为迫使这成为合规要求的事件的来源。现在构建委托链审计的组织将拥有第 14 条及类似法规开始要求的审计跟踪。',
+  },
+  ja: {
+    'mad.cat': 'AIセキュリティ',
+    'mad.date': '2026年5月',
+    'mad.title': 'マルチホップ委任問題：<br>マルチエージェントシステムのトークンチェーン',
+    'mad.lead': 'エージェントAがエージェントBに委任し、BがエージェントCに委任するとき、最終的なアクションを実際に承認したのは誰か？マルチエージェント委任チェーンは、OAuthが提供するよう設計されたアカウンタビリティモデルを崩壊させている。',
+    'mad.pub': '公開日時：2026-05-19 09:45 PDT（オレゴン）',
+    'mad.s1.h': 'アンカーのないチェーン',
+    'mad.s1.p1': '現代のエージェントアーキテクチャは、単一のエージェントが単独で動作することはほとんどない。オーケストレーターエージェントはユーザーのリクエストを分解し、専門タスク用のサブエージェントを生成し、それらのサブエージェントは自らツールを起動したり、APIを呼び出したり、さらに委任したりする可能性がある。そのチェーンの各ホップは委任イベントだ——元のユーザーの認可の一部を下流コンポーネントに転送することだ。',
+    'mad.s1.p2': '問題は、ほとんどのフレームワーク——CrewAI、AutoGen、MetaGPT、LangGraph——が委任をセキュリティの問題ではなく配管の問題として扱っていることだ。オーケストレーターエージェントがサブエージェントにタスクを渡すとき、通常は自分自身の認証情報を渡すか、自分と同じスコープの新しい認証情報を派生させる。スコープが絞り込まれるのは、誰かが絞り込みを明示的にコーディングした場合のみだ。実際には、ほとんど誰もそうしない。',
+    'mad.s1.p3': '結果は委任によるスコープ増幅だ。「メールを要約して」と承認したユーザーは、3ホップチェーンを通じてメール認証情報がそのまま渡され、最終エージェントがオーケストレーターが持っていたのと同じ読み取り/書き込み/削除アクセスを保持する可能性がある——リーフレベルのタスクが必要とするものよりはるかに多い。各ホップは新たな侵害ポイントになる可能性がある。広範な認証情報を渡す追加ホップは、爆発半径の乗数だ。',
+    'mad.s2.h': 'チェーンスプライシングの脆弱性',
+    'mad.s2.p1': 'RFC 8693は、出所を持つ委任チェーンを構築するためのトークン交換メカニズムを定義している：各派生トークンは、動作中のエージェントを識別する<code>act</code>クレームと、誰がさらに委任できるかを制限する<code>may_act</code>クレームを持つ。理論上、これはユーザーの意図から最終アクションまでの監査可能な保管の連鎖を作り出す。',
+    'mad.s2.p2': '実際には、<code>may_act</code>制約はリソースサーバーでほとんど強制されない。リソースサーバー——最終的にトークンに基づいて行動するAPIとデータストア——はスコープと署名を検証するために構築されている。委任の深さを検証したり、元の発行者が許可した回数以上に再委任されたトークンを拒否したりするために構築されているわけではない。チェーンの中間エージェントを侵害した攻撃者は、上流エージェントが置き換えを検出することなく、正当なサブエージェントの代わりに悪意のあるサブエージェントを置換して、チェーンに新しい委任パスを組み込むことができる。',
+    'mad.s2.p3': 'チェーンスプライシング攻撃が成功するのは、下流のリソースサーバーが正当なスコープを持つ有効で適切な形式のトークンを見るからだ——トークンの<code>act</code>クレームに記述された委任パスが、リクエストを実際に処理したエージェントのチェーンと一致するかどうかを検証するメカニズムがない。出所クレームはアサーションであり、証明ではない。',
+    'mad.atk1': 'ある金融サービス会社で報告された2025年のインシデントでは、攻撃者が文書処理パイプラインのサードパーティ要約サブエージェントを侵害した。サブエージェントはオーケストレーターからの派生トークンを保持しており、文書読み取りにスコープが限定されていた。処理された文書にプロンプトを注入することで、攻撃者はサブエージェントに追加のトークン交換を要求させ、文書書き込みアクセスにエスカレーションした。オーケストレーターのトークンには、すべての登録済みエージェントをカバーする広範な<code>may_act</code>クレームが含まれていた——特定のサブエージェントに絞り込まれることはなかった。書き込みアクセストークンは有効で適切に署名されており、攻撃者が6つのクライアントアカウントにわたって340の文書を流出・変更した後にのみ失効した。',
+    'mad.s3.h': 'カスケード失効とその失敗理由',
+    'mad.s3.p1': '委任チェーン侵害の理論的な救済策はカスケード失効だ：オーケストレータートークンが失効すると、そこから派生したすべてのトークンが自動的に無効になる。これは正しい設計だ。現実の世界では、ほとんど意図通りに機能しない。',
+    'mad.s3.p2': 'カスケード失効は、チェーン内のすべてのリソースサーバーがリアルタイムで失効を認識することを必要とする。ほとんどのリソースサーバーはローカルトークンイントロスペクションまたはキャッシュ検証を使用している——トークンが発行されたときに有効だったかどうかを確認するが、その後に失効したかどうかは確認しない。RFC 7009のトークン失効エンドポイントは存在するが、それを呼び出しても分散システム全体への即時伝播は保証されない。失効したオーケストレータートークンは、トークンキャッシュのTTLに応じて、数分から数時間、下流サービスでアクションを承認し続ける可能性がある。',
+    'mad.s3.p3': 'クロスドメインの場合はさらに悪い。マルチ組織エージェントパイプライン——外部データAPIを呼び出すサードパーティの専門エージェントを呼び出す企業オーケストレーター——では、共有された失効プロトコルがない。オーケストレーターのIDプロバイダーは外部APIのイントロスペクションエンドポイントに到達できない。上流で何が起きても、トークンは宣言された完全な有効期間生き続ける。現在、エージェントシステムにはクロスドメインカスケード失効のためのデプロイ済み標準が存在しない。',
+    'mad.s4.h': 'HDPプロトコル：委任を人間の出所に結び付ける',
+    'mad.s4.p1': 'IETFエージェント認可ワーキンググループの最近の研究は、<code>act</code>クレームアサーションモデルを超えて委任チェーンを検証可能にするアプローチとして、Human Delegation Provenance（HDP）プロトコル拡張を提案している。どのエージェントがどのエージェントに委任したと主張したかを記録するのではなく、HDPは各委任イベントを、委任がルート人間プリンシパルによって承認されたという暗号学的証明に結び付ける——直接（明示的な承認）またはトランジティブに（人間がシステムセットアップ時にこの種の委任を事前承認した）。',
+    'mad.s4.p2': '重要なメカニズムは委任レシートだ：各委任イベントで作成される署名済みアーティファクトで、委任エージェントのID、委任されたスコープ、タスクコンテキスト、タイムスタンプを記録する。委任レシートはMerkleチェーンを形成し、トークン自体とは独立して監査できる。HDPをサポートするリソースサーバーは、トークンが有効かどうかだけでなく、チェーン内のすべての委任が暗号学的に人間の認可イベントまで追跡可能かどうかを検証できる。',
+    'mad.s4.p3': 'HDPはまだ標準化されておらず、実際のデプロイ課題に直面している：各委任イベントにレイテンシが追加され、すべてのリソースサーバーがHDP対応である必要があり、長時間実行パイプラインのレシートストレージ問題が生じる。しかし、現在の委任モデルの根本的なギャップに対処している：トークン内の出所クレームは自己アサーションであり、正当なチェーンと部分的に偽造またはスプライスされたチェーンを区別する方法がない。',
+    'mad.s5.h': '必須の不変量としてのスコープ絞り込み',
+    'mad.s5.p1': '委任チェーンセキュリティの最小限の実行可能な修正は、スコープ絞り込みを交渉不可能な不変量として強制することだ：すべての委任ステップは、委任トークンのスコープの厳密な部分集合のスコープを持つトークンを生成しなければならない。どのエージェントも保持していない権限を委任することはできない。派生トークンは親トークンより広いスコープを持つことはできない。',
+    'mad.s5.p2': 'これは明らかなように聞こえる。しかし、これは主要なマルチエージェントフレームワークの現在の動作ではない。CrewAI、AutoGen、MetaGPTはすべて認証情報受け渡しモデルで動作しており、フレームワーク自体が委任境界でスコープをインターセプトまたは検証しない。スコープ絞り込みはアプリケーション開発者が明示的に実装しなければならない——開発者はマルチエージェントパイプラインを構築するときに通常これについてまったく考えない。',
+    'mad.def1': 'すべての委任境界でスコープ絞り込みを強制する——派生トークンは厳密なスコープの部分集合でなければならない。<code>may_act</code>には特定の下流エージェントIDを設定し、ワイルドカードは絶対に使用しない。最大委任深度を設定し（推奨：3ホップ）、それを超えるトークン交換を拒否する。チェーン内でも短期の派生トークンを使用する——リーフレベルエージェントのライフタイムは5〜10分。すべてのチェーンイベントが監査可能なように、オーケストレーターレイヤーで委任レシートロギングを実装する。ステージング環境でオーケストレータートークンを実際に失効させ、派生トークンがリーフサービスで有効なままである期間を測定することで失効伝播をテストする。クロスドメインパイプラインでは、外部エージェントを信頼できないものとして扱う：組織のトークンを渡す代わりに、ドメイン境界で最小スコープのトークンを再派生させる。',
+    'mad.s6.h': 'スケールにおけるアカウンタビリティのギャップ',
+    'mad.s6.p1': '委任チェーン問題は単なる技術的な問題ではなく——アカウンタビリティの問題だ。マルチエージェントパイプラインが害を引き起こすアクションを取ったとき、「誰がそのアクションを承認したか」という問いは追跡可能で弁護可能な答えを持たなければならない。「オーケストレーターがサブエージェントに委任した」は答えではない。「ユーザーがオーケストレーターにタスクXの実行を承認し、オーケストレーターが操作Y専用に絞り込まれたスコープのトークンをサブエージェントに発行し、そのトークンがアクセスイベントで使用された唯一の認証情報だった」が答えだ。',
+    'mad.s6.p2': 'その追跡可能なアカウンタビリティチェーンを構築するには、最初のユーザー認可だけでなく、すべてのホップで委任をセキュリティクリティカルな操作として扱う必要がある。認証情報の受け渡しを実装の詳細として扱うフレームワークは、これをコンプライアンス要件にする事件の源となるだろう。今、委任チェーン監査を構築する組織は、第14条や類似の規制が要求し始めている監査証跡を持つことになる。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

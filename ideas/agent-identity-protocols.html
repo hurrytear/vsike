@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Identity in 2026: Five Competing Standards and No Clear Winner — vsike</title>
+  <meta name="description" content="RSAC 2026 saw five major vendors launch incompatible agent identity frameworks in the same week. Protocol fragmentation is not just an interoperability problem — it is a security one.">
+  <meta name="keywords" content="智能体身份协议, 标准碎片化, RSAC 2026, agent identity, protocol fragmentation, IETF agent authorization, competing standards, agent security framework, AI identity standards 2026">
+  <link rel="canonical" href="https://www.vsike.com/ideas/agent-identity-protocols.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .danger { color: #e87070; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .protocol-table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: var(--fs-sm); }
+    .protocol-table th { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; text-align: left; padding: .6rem .75rem; border-bottom: 2px solid var(--fg-dim); color: var(--accent); }
+    .protocol-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .protocol-table tr:last-child td { border-bottom: none; }
+    @media (max-width: 600px) { .protocol-table { font-size: .72rem; } .protocol-table th, .protocol-table td { padding: .4rem .5rem; } }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="aip.cat">AI Security</span>
+        <span class="article-date" data-i18n="aip.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="aip.title">Agent Identity in 2026:<br>Five Standards, No Winner</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="aip.lead">RSAC 2026 saw five major vendors launch incompatible agent identity frameworks in the same week. Protocol fragmentation is not just an interoperability headache — when an agent cannot verify the identity of the agent it is talking to, every delegation becomes a trust assumption.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="aip.pub">Published: 2026-05-19 10:58 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="aip.s1.h">The Week That Fragmented Agent Identity</h2>
+      <p data-i18n="aip.s1.p1">In the first week of May 2026, the RSA Conference became the accidental launch pad for a standards collision. CrowdStrike announced its Agent Attestation Framework (AAF). Cisco released a draft of its Agentic Identity Mesh specification. Palo Alto Networks published the Cortex Agent Trust Protocol (CATP). Microsoft released version 1.0 of its Secure Agent Communication standard under the Azure AI umbrella. And Cato CTRL, the threat research arm of Cato Networks, published a white paper on its proposed cross-vendor Agent Principal Registry.</p>
+      <p data-i18n="aip.s1.p2">All five launched within four days. None of them are compatible. Each uses different trust anchors, different token formats, different revocation mechanisms, and different identity claim schemas. An agent built for one ecosystem cannot authenticate to a service built for another without custom bridging code — which itself becomes an attack surface.</p>
+      <p data-i18n="aip.s1.p3">Meanwhile, the IETF's working group on agent authorization has produced three competing Internet-Drafts: one extending OAuth 2.1 with agent-specific claims, one proposing a new Verifiable Agent Credential (VAC) format independent of OAuth, and one arguing for building agent identity on top of existing SPIFFE/SPIRE workload identity primitives. None have reached RFC status. None are expected to reach it before 2027 at the earliest.</p>
+
+      <table class="protocol-table" aria-label="Comparison of five agent identity frameworks">
+        <thead>
+          <tr>
+            <th data-i18n="aip.tbl.vendor">Vendor</th>
+            <th data-i18n="aip.tbl.name">Framework</th>
+            <th data-i18n="aip.tbl.anchor">Trust Anchor</th>
+            <th data-i18n="aip.tbl.compat">IETF Alignment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CrowdStrike</td>
+            <td>AAF</td>
+            <td data-i18n="aip.tbl.aaf.anchor">Platform attestation</td>
+            <td data-i18n="aip.tbl.aaf.compat">Partial — JWT-based</td>
+          </tr>
+          <tr>
+            <td>Cisco</td>
+            <td>AIM</td>
+            <td data-i18n="aip.tbl.aim.anchor">Network identity mesh</td>
+            <td data-i18n="aip.tbl.aim.compat">None stated</td>
+          </tr>
+          <tr>
+            <td>Palo Alto</td>
+            <td>CATP</td>
+            <td data-i18n="aip.tbl.catp.anchor">Policy-as-code enforcement</td>
+            <td data-i18n="aip.tbl.catp.compat">Partial — SPIFFE-derived</td>
+          </tr>
+          <tr>
+            <td>Microsoft</td>
+            <td>SAC</td>
+            <td data-i18n="aip.tbl.sac.anchor">Azure AD managed identity</td>
+            <td data-i18n="aip.tbl.sac.compat">OAuth 2.1 extension</td>
+          </tr>
+          <tr>
+            <td>Cato CTRL</td>
+            <td>APR</td>
+            <td data-i18n="aip.tbl.apr.anchor">Cross-vendor registry</td>
+            <td data-i18n="aip.tbl.apr.compat">Proposed new draft</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 data-i18n="aip.s2.h">Why Fragmentation Is a Security Problem</h2>
+      <p data-i18n="aip.s2.p1">Protocol fragmentation in agent identity is commonly described as an interoperability problem — the kind of thing that eventually gets sorted out by a working group producing a common standard, after which everyone adopts it over the next several years. That framing misses the security dimension that makes the current situation acutely dangerous.</p>
+      <p data-i18n="aip.s2.p2">When there is no single standard for what constitutes a valid agent identity assertion, every cross-ecosystem interaction degrades to a choice between two bad options: reject the foreign agent entirely (breaking the use case) or accept it on weaker-than-desired trust grounds (bridging code, identity translation layers, or simply trusting the agent's self-assertion). Identity translation layers are particularly dangerous — they are typically thin wrappers that accept one credential format and re-assert the identity in another, without fully validating the security properties of the original credential.</p>
+      <p data-i18n="aip.s2.p3">The multi-protocol confusion attack exploits this directly. An attacker crafts an agent identity token that is well-formed under Protocol A but carries claims that Protocol B's translator will interpret differently — specifically, claims that Protocol A marks as informational but Protocol B elevates to authorization-bearing. The translation layer sees a valid token and produces a valid-but-incorrect assertion on the other side. Neither protocol individually is at fault; the fault lies in the gap between them.</p>
+
+      <div class="attack-block">
+        <div class="attack-label">Attack Surface — Identity Translation Downgrade</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aip.atk1">A documented attack class from Lyrie Research's Q1 2026 report involves agents that bridge between Azure SAC and a SPIFFE-native environment. The SAC token carries an <code>agent_capabilities</code> extension claim that the SAC validator treats as advisory metadata. The SPIFFE-to-SAC bridge, implemented by a third-party vendor, maps <code>agent_capabilities</code> to SPIFFE SVID attributes — interpreting the advisory metadata as authorization claims. An attacker who can write to the <code>agent_capabilities</code> field (trivially possible for agents that self-register in the SAC ecosystem) can inject elevated capability claims that the bridge will forward as valid SPIFFE authorization. The vulnerability exists entirely in the translation layer, not in either underlying protocol.</p>
+      </div>
+
+      <h2 data-i18n="aip.s3.h">The IETF Draft Landscape</h2>
+      <p data-i18n="aip.s3.p1">The three competing IETF Internet-Drafts reflect genuine technical disagreements about what agent identity should be, not just political fragmentation between vendors.</p>
+      <p data-i18n="aip.s3.p2">The OAuth 2.1 extension draft argues that agent identity is fundamentally a delegation problem and should be solved within the existing OAuth framework — specifically, by formalizing the use of RFC 8693 token exchange for agent-to-agent delegation and adding a new <code>agent_id</code> claim to standard JWT token formats. Its strength is backward compatibility with existing OAuth infrastructure. Its weakness is that it treats agent identity as a subset of user identity, which fails for fully autonomous agents acting without a delegating human.</p>
+      <p data-i18n="aip.s3.p3">The Verifiable Agent Credential draft takes the opposite position: agent identity is fundamentally different from human identity and should be expressed in a purpose-built credential format based on W3C Verifiable Credentials. VACs are self-contained, cryptographically verifiable identity documents for agents that include capability attestations, operational context, and revocation status. The format is more expressive than JWT extensions allow, but requires deploying new credential infrastructure that nothing currently supports.</p>
+      <p data-i18n="aip.s3.p4">The SPIFFE extension draft argues for building agent identity on top of workload identity primitives already widely deployed in cloud-native environments. SPIFFE SVIDs (X.509 certificates with workload identity URIs) are already used for service-to-service authentication in Kubernetes and service mesh environments. The draft proposes extending SPIFFE to carry agent-specific attributes. The practical advantage is adoption: organizations already running SPIFFE can extend it incrementally. The limitation is that SPIFFE is designed for static workload identity, not the dynamic per-task identity semantics that agentic systems require.</p>
+
+      <pre class="code-block"><span class="comment"># What five different protocols assert for "the same" agent identity</span>
+
+<span class="comment"># CrowdStrike AAF</span>
+{ <span class="str">"aat"</span>: <span class="str">"crowdstrike-aaf-v1"</span>, <span class="str">"agent_id"</span>: <span class="str">"agt_9f2a"</span>, <span class="str">"platform_attestation"</span>: <span class="str">"..."</span> }
+
+<span class="comment"># Microsoft SAC (OAuth 2.1 extension)</span>
+{ <span class="str">"sub"</span>: <span class="str">"agent:scheduling-v2"</span>, <span class="str">"azp"</span>: <span class="str">"azure-ad-app-id"</span>, <span class="str">"agent_capabilities"</span>: [<span class="str">"email:send"</span>] }
+
+<span class="comment"># SPIFFE-based (CATP partial alignment)</span>
+spiffe://org.example/ns/default/sa/scheduling-agent  <span class="comment"># in X.509 SAN</span>
+
+<span class="comment"># VAC draft (W3C Verifiable Credential)</span>
+{ <span class="str">"@context"</span>: [<span class="str">"https://www.w3.org/2018/credentials/v1"</span>],
+  <span class="str">"type"</span>: [<span class="str">"VerifiableCredential"</span>, <span class="str">"AgentIdentityCredential"</span>],
+  <span class="str">"credentialSubject"</span>: { <span class="str">"agentId"</span>: <span class="str">"did:agent:scheduling-v2"</span> } }
+
+<span class="comment"># Cross-vendor pipeline requires bridging all four — each bridge is an attack surface</span></pre>
+
+      <h2 data-i18n="aip.s4.h">What a Unified Standard Actually Needs</h2>
+      <p data-i18n="aip.s4.p1">The technical requirements for agent identity are not actually contested — the disagreements are about implementation approach. A workable standard needs to satisfy five properties that current proposals satisfy in different combinations but none satisfy completely.</p>
+      <p data-i18n="aip.s4.p2">First, dynamic identity: agent credentials must be per-task or per-session, not static workload identities. An agent running the same code for different users on different tasks should have distinct identity tokens for each execution. Second, delegation provenance: the credential must carry a verifiable chain from the agent identity to the human principal who ultimately authorized the task. Third, capability binding: the credential must cryptographically bind the agent's stated capabilities to what it is actually authorized to do — claims and authorizations must be the same thing. Fourth, universal revocation: any agent credential must be revocable instantly, with that revocation propagating to all resource servers that might act on it. Fifth, cross-domain verifiability: an agent in Organization A must be able to present its identity to a resource in Organization B in a way that Organization B can verify without calling back to Organization A's infrastructure.</p>
+      <p data-i18n="aip.s4.p3">No current proposal satisfies all five. OAuth extension satisfies 1 and 2 poorly, 5 reasonably. VAC satisfies 1, 2, and 3 well, 4 and 5 not yet. SPIFFE satisfies 3 and 5 well, 1 and 2 poorly. The vendor frameworks each optimize for their own deployment environment and fail on cross-domain verifiability almost by design.</p>
+
+      <h2 data-i18n="aip.s5.h">The Interim Security Position</h2>
+      <p data-i18n="aip.s5.p1">The standards will not converge before 2027 at the earliest. Organizations building agent systems now must make pragmatic choices in the absence of consensus. The key principle for the interim period is to treat cross-protocol identity boundaries as untrusted perimeters, regardless of what the receiving system claims to verify.</p>
+
+      <div class="defend-block">
+        <div class="defend-label">Interim Protocol Strategy</div>
+        <p style="font-size:var(--fs-sm);margin:0;line-height:1.75;" data-i18n="aip.def1">Choose one identity protocol for your internal agent ecosystem and enforce it consistently — mixed-protocol environments multiply attack surface. Document every identity translation layer explicitly; these are your highest-risk trust boundaries. Treat translated credentials as "verified with caveats" — log them separately and apply stricter scope limits to agents that authenticated via translation. Audit translation layer implementations against the source protocol's security model: specifically check whether advisory claims are being elevated to authorization-bearing claims in translation. Prefer OAuth 2.1 extension for new builds if your identity infrastructure is already OAuth-based — it has the highest density of existing validation tooling. Monitor the IETF drafts for convergence signals; a merged draft or strong adoption of one approach will likely appear by mid-2027. Budget for a credential migration when a standard does emerge — credential formats will need to change.</p>
+      </div>
+
+      <h2 data-i18n="aip.s6.h">Fragmentation as Attack Surface</h2>
+      <p data-i18n="aip.s6.p1">It is tempting to treat the current protocol fragmentation as a temporary inconvenience that the market will resolve. The historical pattern for authentication standards suggests otherwise. SAML, OAuth, OpenID Connect, and FIDO2 each coexisted for years with incompatible predecessors, and each coexistence period produced incidents that would not have been possible in a unified environment. The OAuth 1.0-to-2.0 transition created an entire class of vulnerabilities in hybrid deployments. The SAML-to-OIDC migration is still ongoing a decade after OIDC's publication and is still producing misconfiguration vulnerabilities at scale.</p>
+      <p data-i18n="aip.s6.p2">Agent identity fragmentation will follow the same pattern. The difference is that the agent ecosystem is moving much faster than prior authentication transitions, and the agents themselves can act autonomously in ways that amplify credential vulnerabilities before human operators detect them. A misconfigured identity translation layer in an OAuth-to-AAF bridge is not just an interoperability bug — it is a potential for automated, large-scale unauthorized action before anyone notices that the wrong agent presented the wrong credentials to the wrong resource.</p>
+      <p data-i18n="aip.s6.p3">The pressure to converge on a standard is real. So is the window of time during which fragmentation itself is the most significant agent identity risk. Organizations shipping agents into production in 2026 are shipping into that window. The security properties of every cross-protocol interaction they rely on are, at best, a careful best effort.</p>
+
+    </div>
+
+    <footer class="article-footer">
+      <a href="../ideas.html" class="article-back" data-i18n="article.back">← All Ideas</a>
+    </footer>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 vsike</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="../about.html" data-i18n="nav.about">About</a>
+      <a href="../work.html" data-i18n="nav.work">Work</a>
+      <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+      <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'aip.cat': 'AI Security',
+    'aip.date': 'May 2026',
+    'aip.title': 'Agent Identity in 2026:<br>Five Standards, No Winner',
+    'aip.lead': 'RSAC 2026 saw five major vendors launch incompatible agent identity frameworks in the same week. Protocol fragmentation is not just an interoperability headache — when an agent cannot verify the identity of the agent it is talking to, every delegation becomes a trust assumption.',
+    'aip.pub': 'Published: 2026-05-19 10:58 PDT (Oregon)',
+    'aip.s1.h': 'The Week That Fragmented Agent Identity',
+    'aip.s1.p1': 'In the first week of May 2026, the RSA Conference became the accidental launch pad for a standards collision. CrowdStrike announced its Agent Attestation Framework (AAF). Cisco released a draft of its Agentic Identity Mesh specification. Palo Alto Networks published the Cortex Agent Trust Protocol (CATP). Microsoft released version 1.0 of its Secure Agent Communication standard under the Azure AI umbrella. And Cato CTRL, the threat research arm of Cato Networks, published a white paper on its proposed cross-vendor Agent Principal Registry.',
+    'aip.s1.p2': 'All five launched within four days. None of them are compatible. Each uses different trust anchors, different token formats, different revocation mechanisms, and different identity claim schemas. An agent built for one ecosystem cannot authenticate to a service built for another without custom bridging code — which itself becomes an attack surface.',
+    'aip.s1.p3': 'Meanwhile, the IETF\'s working group on agent authorization has produced three competing Internet-Drafts: one extending OAuth 2.1 with agent-specific claims, one proposing a new Verifiable Agent Credential (VAC) format independent of OAuth, and one arguing for building agent identity on top of existing SPIFFE/SPIRE workload identity primitives. None have reached RFC status. None are expected to reach it before 2027 at the earliest.',
+    'aip.tbl.vendor': 'Vendor',
+    'aip.tbl.name': 'Framework',
+    'aip.tbl.anchor': 'Trust Anchor',
+    'aip.tbl.compat': 'IETF Alignment',
+    'aip.tbl.aaf.anchor': 'Platform attestation',
+    'aip.tbl.aaf.compat': 'Partial — JWT-based',
+    'aip.tbl.aim.anchor': 'Network identity mesh',
+    'aip.tbl.aim.compat': 'None stated',
+    'aip.tbl.catp.anchor': 'Policy-as-code enforcement',
+    'aip.tbl.catp.compat': 'Partial — SPIFFE-derived',
+    'aip.tbl.sac.anchor': 'Azure AD managed identity',
+    'aip.tbl.sac.compat': 'OAuth 2.1 extension',
+    'aip.tbl.apr.anchor': 'Cross-vendor registry',
+    'aip.tbl.apr.compat': 'Proposed new draft',
+    'aip.s2.h': 'Why Fragmentation Is a Security Problem',
+    'aip.s2.p1': 'Protocol fragmentation in agent identity is commonly described as an interoperability problem — the kind of thing that eventually gets sorted out by a working group producing a common standard, after which everyone adopts it over the next several years. That framing misses the security dimension that makes the current situation acutely dangerous.',
+    'aip.s2.p2': 'When there is no single standard for what constitutes a valid agent identity assertion, every cross-ecosystem interaction degrades to a choice between two bad options: reject the foreign agent entirely (breaking the use case) or accept it on weaker-than-desired trust grounds (bridging code, identity translation layers, or simply trusting the agent\'s self-assertion). Identity translation layers are particularly dangerous — they are typically thin wrappers that accept one credential format and re-assert the identity in another, without fully validating the security properties of the original credential.',
+    'aip.s2.p3': 'The multi-protocol confusion attack exploits this directly. An attacker crafts an agent identity token that is well-formed under Protocol A but carries claims that Protocol B\'s translator will interpret differently — specifically, claims that Protocol A marks as informational but Protocol B elevates to authorization-bearing. The translation layer sees a valid token and produces a valid-but-incorrect assertion on the other side. Neither protocol individually is at fault; the fault lies in the gap between them.',
+    'aip.atk1': 'A documented attack class from Lyrie Research\'s Q1 2026 report involves agents that bridge between Azure SAC and a SPIFFE-native environment. The SAC token carries an <code>agent_capabilities</code> extension claim that the SAC validator treats as advisory metadata. The SPIFFE-to-SAC bridge, implemented by a third-party vendor, maps <code>agent_capabilities</code> to SPIFFE SVID attributes — interpreting the advisory metadata as authorization claims. An attacker who can write to the <code>agent_capabilities</code> field (trivially possible for agents that self-register in the SAC ecosystem) can inject elevated capability claims that the bridge will forward as valid SPIFFE authorization. The vulnerability exists entirely in the translation layer, not in either underlying protocol.',
+    'aip.s3.h': 'The IETF Draft Landscape',
+    'aip.s3.p1': 'The three competing IETF Internet-Drafts reflect genuine technical disagreements about what agent identity should be, not just political fragmentation between vendors.',
+    'aip.s3.p2': 'The OAuth 2.1 extension draft argues that agent identity is fundamentally a delegation problem and should be solved within the existing OAuth framework — specifically, by formalizing the use of RFC 8693 token exchange for agent-to-agent delegation and adding a new <code>agent_id</code> claim to standard JWT token formats. Its strength is backward compatibility with existing OAuth infrastructure. Its weakness is that it treats agent identity as a subset of user identity, which fails for fully autonomous agents acting without a delegating human.',
+    'aip.s3.p3': 'The Verifiable Agent Credential draft takes the opposite position: agent identity is fundamentally different from human identity and should be expressed in a purpose-built credential format based on W3C Verifiable Credentials. VACs are self-contained, cryptographically verifiable identity documents for agents that include capability attestations, operational context, and revocation status. The format is more expressive than JWT extensions allow, but requires deploying new credential infrastructure that nothing currently supports.',
+    'aip.s3.p4': 'The SPIFFE extension draft argues for building agent identity on top of workload identity primitives already widely deployed in cloud-native environments. SPIFFE SVIDs (X.509 certificates with workload identity URIs) are already used for service-to-service authentication in Kubernetes and service mesh environments. The draft proposes extending SPIFFE to carry agent-specific attributes. The practical advantage is adoption: organizations already running SPIFFE can extend it incrementally. The limitation is that SPIFFE is designed for static workload identity, not the dynamic per-task identity semantics that agentic systems require.',
+    'aip.s4.h': 'What a Unified Standard Actually Needs',
+    'aip.s4.p1': 'The technical requirements for agent identity are not actually contested — the disagreements are about implementation approach. A workable standard needs to satisfy five properties that current proposals satisfy in different combinations but none satisfy completely.',
+    'aip.s4.p2': 'First, dynamic identity: agent credentials must be per-task or per-session, not static workload identities. An agent running the same code for different users on different tasks should have distinct identity tokens for each execution. Second, delegation provenance: the credential must carry a verifiable chain from the agent identity to the human principal who ultimately authorized the task. Third, capability binding: the credential must cryptographically bind the agent\'s stated capabilities to what it is actually authorized to do — claims and authorizations must be the same thing. Fourth, universal revocation: any agent credential must be revocable instantly, with that revocation propagating to all resource servers that might act on it. Fifth, cross-domain verifiability: an agent in Organization A must be able to present its identity to a resource in Organization B in a way that Organization B can verify without calling back to Organization A\'s infrastructure.',
+    'aip.s4.p3': 'No current proposal satisfies all five. OAuth extension satisfies 1 and 2 poorly, 5 reasonably. VAC satisfies 1, 2, and 3 well, 4 and 5 not yet. SPIFFE satisfies 3 and 5 well, 1 and 2 poorly. The vendor frameworks each optimize for their own deployment environment and fail on cross-domain verifiability almost by design.',
+    'aip.s5.h': 'The Interim Security Position',
+    'aip.s5.p1': 'The standards will not converge before 2027 at the earliest. Organizations building agent systems now must make pragmatic choices in the absence of consensus. The key principle for the interim period is to treat cross-protocol identity boundaries as untrusted perimeters, regardless of what the receiving system claims to verify.',
+    'aip.def1': 'Choose one identity protocol for your internal agent ecosystem and enforce it consistently — mixed-protocol environments multiply attack surface. Document every identity translation layer explicitly; these are your highest-risk trust boundaries. Treat translated credentials as "verified with caveats" — log them separately and apply stricter scope limits to agents that authenticated via translation. Audit translation layer implementations against the source protocol\'s security model: specifically check whether advisory claims are being elevated to authorization-bearing claims in translation. Prefer OAuth 2.1 extension for new builds if your identity infrastructure is already OAuth-based — it has the highest density of existing validation tooling. Monitor the IETF drafts for convergence signals; a merged draft or strong adoption of one approach will likely appear by mid-2027. Budget for a credential migration when a standard does emerge — credential formats will need to change.',
+    'aip.s6.h': 'Fragmentation as Attack Surface',
+    'aip.s6.p1': 'It is tempting to treat the current protocol fragmentation as a temporary inconvenience that the market will resolve. The historical pattern for authentication standards suggests otherwise. SAML, OAuth, OpenID Connect, and FIDO2 each coexisted for years with incompatible predecessors, and each coexistence period produced incidents that would not have been possible in a unified environment. The OAuth 1.0-to-2.0 transition created an entire class of vulnerabilities in hybrid deployments. The SAML-to-OIDC migration is still ongoing a decade after OIDC\'s publication and is still producing misconfiguration vulnerabilities at scale.',
+    'aip.s6.p2': 'Agent identity fragmentation will follow the same pattern. The difference is that the agent ecosystem is moving much faster than prior authentication transitions, and the agents themselves can act autonomously in ways that amplify credential vulnerabilities before human operators detect them. A misconfigured identity translation layer in an OAuth-to-AAF bridge is not just an interoperability bug — it is a potential for automated, large-scale unauthorized action before anyone notices that the wrong agent presented the wrong credentials to the wrong resource.',
+    'aip.s6.p3': 'The pressure to converge on a standard is real. So is the window of time during which fragmentation itself is the most significant agent identity risk. Organizations shipping agents into production in 2026 are shipping into that window. The security properties of every cross-protocol interaction they rely on are, at best, a careful best effort.',
+  },
+  zh: {
+    'aip.cat': 'AI 安全',
+    'aip.date': '2026年5月',
+    'aip.title': '2026年的智能体身份：<br>五个标准，没有赢家',
+    'aip.lead': 'RSAC 2026 见证了五大主要供应商在同一周内推出不兼容的智能体身份框架。协议碎片化不仅仅是互操作性的头痛——当智能体无法验证与之通信的智能体身份时，每一次委托都变成了信任假设。',
+    'aip.pub': '发布时间：2026-05-19 10:58 PDT（俄勒冈）',
+    'aip.s1.h': '使智能体身份碎片化的那一周',
+    'aip.s1.p1': '2026年5月第一周，RSA 大会意外成为标准碰撞的发射台。CrowdStrike 宣布了其智能体证明框架（AAF）。Cisco 发布了其智能体身份网格规范草案。Palo Alto Networks 发布了 Cortex 智能体信任协议（CATP）。Microsoft 在 Azure AI 品牌下发布了其安全智能体通信标准 1.0 版。Cato Networks 威胁研究部门 Cato CTRL 发布了关于其提议的跨供应商智能体主体注册表的白皮书。',
+    'aip.s1.p2': '五个框架在四天内全部发布。它们没有一个互相兼容。每个框架使用不同的信任锚点、不同的令牌格式、不同的撤销机制和不同的身份声明模式。为一个生态系统构建的智能体无法在没有自定义桥接代码的情况下向为另一个生态系统构建的服务进行身份验证——而桥接代码本身就成为攻击面。',
+    'aip.s1.p3': '与此同时，IETF 智能体授权工作组已经产生了三个相互竞争的互联网草案：一个用智能体特定声明扩展 OAuth 2.1，一个提出独立于 OAuth 的新可验证智能体凭证（VAC）格式，以及一个主张在现有 SPIFFE/SPIRE 工作负载身份原语之上构建智能体身份。没有一个达到 RFC 状态。没有一个预计在 2027 年之前最早达到 RFC 状态。',
+    'aip.tbl.vendor': '供应商',
+    'aip.tbl.name': '框架',
+    'aip.tbl.anchor': '信任锚点',
+    'aip.tbl.compat': 'IETF 对齐',
+    'aip.tbl.aaf.anchor': '平台证明',
+    'aip.tbl.aaf.compat': '部分——基于 JWT',
+    'aip.tbl.aim.anchor': '网络身份网格',
+    'aip.tbl.aim.compat': '未声明',
+    'aip.tbl.catp.anchor': '策略即代码执行',
+    'aip.tbl.catp.compat': '部分——源自 SPIFFE',
+    'aip.tbl.sac.anchor': 'Azure AD 托管身份',
+    'aip.tbl.sac.compat': 'OAuth 2.1 扩展',
+    'aip.tbl.apr.anchor': '跨供应商注册表',
+    'aip.tbl.apr.compat': '提议的新草案',
+    'aip.s2.h': '为什么碎片化是安全问题',
+    'aip.s2.p1': '智能体身份中的协议碎片化通常被描述为互操作性问题——那种最终会由工作组制定通用标准来解决的问题，之后每个人都会在接下来几年内采用。这种框架遗漏了使当前情况极度危险的安全维度。',
+    'aip.s2.p2': '当没有单一标准来定义什么构成有效的智能体身份断言时，每次跨生态系统交互都会退化为两种糟糕选项之间的选择：完全拒绝外来智能体（破坏用例）或以低于期望的信任基础接受它（桥接代码、身份转换层或简单地信任智能体的自我断言）。身份转换层特别危险——它们通常是接受一种凭证格式并以另一种格式重新断言身份的薄包装器，而不完全验证原始凭证的安全属性。',
+    'aip.s2.p3': '多协议混淆攻击直接利用了这一点。攻击者精心制作一个在协议 A 下格式正确但携带协议 B 的翻译器会以不同方式解释的声明的智能体身份令牌——具体来说，是协议 A 标记为信息性但协议 B 提升为授权性的声明。转换层看到一个有效令牌，在另一侧产生有效但不正确的断言。两个协议单独来看都没有错；错误在于它们之间的差距。',
+    'aip.atk1': 'Lyrie Research 2026 年第一季度报告中记录的一类攻击涉及在 Azure SAC 和 SPIFFE 原生环境之间桥接的智能体。SAC 令牌携带一个 <code>agent_capabilities</code> 扩展声明，SAC 验证器将其视为建议性元数据。由第三方供应商实现的 SPIFFE 到 SAC 桥将 <code>agent_capabilities</code> 映射到 SPIFFE SVID 属性——将建议性元数据解释为授权声明。可以写入 <code>agent_capabilities</code> 字段的攻击者（对于在 SAC 生态系统中自我注册的智能体来说非常简单）可以注入提升的能力声明，桥接器将把它作为有效的 SPIFFE 授权转发。该漏洞完全存在于转换层中，而不在任何底层协议中。',
+    'aip.s3.h': 'IETF 草案概况',
+    'aip.s3.p1': '三个相互竞争的 IETF 互联网草案反映了关于智能体身份应该是什么的真正技术分歧，而不仅仅是供应商之间的政治碎片化。',
+    'aip.s3.p2': 'OAuth 2.1 扩展草案认为，智能体身份从根本上是一个委托问题，应该在现有 OAuth 框架内解决——具体来说，通过正式化使用 RFC 8693 令牌交换进行智能体间委托，并向标准 JWT 令牌格式添加新的 <code>agent_id</code> 声明。其优势是与现有 OAuth 基础设施的向后兼容性。其弱点是它将智能体身份视为用户身份的子集，这对于不需要委托人类的完全自主智能体来说是失败的。',
+    'aip.s3.p3': '可验证智能体凭证草案采取了相反的立场：智能体身份从根本上不同于人类身份，应该以基于 W3C 可验证凭证的专用凭证格式表达。VAC 是智能体的自包含、可密码学验证的身份文档，包括能力证明、操作上下文和撤销状态。该格式比 JWT 扩展允许的更具表达力，但需要部署目前没有任何东西支持的新凭证基础设施。',
+    'aip.s3.p4': 'SPIFFE 扩展草案主张在云原生环境中已广泛部署的工作负载身份原语之上构建智能体身份。SPIFFE SVID（带有工作负载身份 URI 的 X.509 证书）已用于 Kubernetes 和服务网格环境中的服务间身份验证。该草案建议扩展 SPIFFE 以携带智能体特定属性。实际优势在于采用：已运行 SPIFFE 的组织可以增量扩展它。局限性在于 SPIFFE 是为静态工作负载身份设计的，而不是智能体系统需要的动态每任务身份语义。',
+    'aip.s4.h': '统一标准实际需要什么',
+    'aip.s4.p1': '智能体身份的技术需求实际上没有争议——分歧在于实现方法。一个可行的标准需要满足五个属性，当前提案以不同组合满足了这些属性，但没有一个完全满足。',
+    'aip.s4.p2': '第一，动态身份：智能体凭证必须是每任务或每会话的，而不是静态工作负载身份。为不同用户执行不同任务运行相同代码的智能体应该为每次执行具有不同的身份令牌。第二，委托来源：凭证必须携带从智能体身份到最终授权任务的人类主体的可验证链。第三，能力绑定：凭证必须以密码学方式将智能体声明的能力与其实际被授权执行的操作绑定——声明和授权必须是同一件事。第四，通用撤销：任何智能体凭证都必须可以立即撤销，撤销传播到可能对其采取行动的所有资源服务器。第五，跨域可验证性：组织 A 中的智能体必须能够以组织 B 可以验证的方式向组织 B 中的资源呈现其身份，而无需回调组织 A 的基础设施。',
+    'aip.s4.p3': '目前没有任何提案满足所有五个条件。OAuth 扩展在 1 和 2 上满足得很差，在 5 上比较合理。VAC 在 1、2 和 3 上满足得很好，在 4 和 5 上尚未。SPIFFE 在 3 和 5 上满足得很好，在 1 和 2 上很差。供应商框架各自为其自己的部署环境优化，几乎在设计上就在跨域可验证性上失败了。',
+    'aip.s5.h': '过渡期安全立场',
+    'aip.s5.p1': '标准最早要到 2027 年才会收敛。现在构建智能体系统的组织必须在缺乏共识的情况下做出务实选择。过渡期的关键原则是将跨协议身份边界视为不可信边界，无论接收系统声称验证什么。',
+    'aip.def1': '为内部智能体生态系统选择一种身份协议并始终如一地执行——混合协议环境会倍增攻击面。明确记录每个身份转换层；这些是你风险最高的信任边界。将翻译后的凭证视为"有条件验证"——单独记录它们，并对通过翻译进行身份验证的智能体应用更严格的范围限制。根据源协议的安全模型审计转换层实现：特别检查在转换中建议性声明是否被提升为授权性声明。如果你的身份基础设施已经基于 OAuth，则对于新构建优先选择 OAuth 2.1 扩展——它拥有最高密度的现有验证工具。监测 IETF 草案的收敛信号；合并草案或一种方法的强势采用可能会在 2027 年中期出现。当标准确实出现时，为凭证迁移预留预算——凭证格式将需要更改。',
+    'aip.s6.h': '碎片化作为攻击面',
+    'aip.s6.p1': '将当前协议碎片化视为市场将解决的暂时不便是很诱人的。认证标准的历史模式表明情况并非如此。SAML、OAuth、OpenID Connect 和 FIDO2 各自与不兼容的前身共存了多年，每个共存期都产生了在统一环境中不可能发生的事件。OAuth 1.0 到 2.0 的过渡在混合部署中创造了整个漏洞类别。SAML 到 OIDC 的迁移在 OIDC 发布十年后仍在进行，并且仍在大规模产生错误配置漏洞。',
+    'aip.s6.p2': '智能体身份碎片化将遵循同样的模式。区别在于智能体生态系统比之前的认证过渡移动得快得多，而且智能体本身可以自主行动，在人类操作员检测到之前放大凭证漏洞。OAuth 到 AAF 桥接中配置错误的身份转换层不仅仅是互操作性错误——它是在任何人注意到错误的智能体向错误的资源呈现了错误的凭证之前，自动化、大规模未经授权行动的潜力。',
+    'aip.s6.p3': '收敛于标准的压力是真实的。碎片化本身是最重大智能体身份风险的时间窗口也是真实的。2026 年将智能体投入生产的组织正在进入那个窗口。他们所依赖的每个跨协议交互的安全属性，充其量只是谨慎的尽力而为。',
+  },
+  ja: {
+    'aip.cat': 'AIセキュリティ',
+    'aip.date': '2026年5月',
+    'aip.title': '2026年のエージェント身元確認：<br>5つの標準、勝者なし',
+    'aip.lead': 'RSAC 2026では、5つの主要ベンダーが同じ週に互換性のないエージェント身元確認フレームワークを発表した。プロトコルの断片化は単なる相互運用性の頭痛ではない——エージェントが通信相手のエージェントのIDを確認できないとき、すべての委任が信頼の前提となる。',
+    'aip.pub': '公開日時：2026-05-19 10:58 PDT（オレゴン）',
+    'aip.s1.h': 'エージェントIDを断片化した1週間',
+    'aip.s1.p1': '2026年5月第1週、RSAカンファレンスは偶然にも標準の衝突の発射台となった。CrowdStrikeはAgent Attestation Framework（AAF）を発表した。CiscoはAgentic Identity Mesh仕様の草案を公開した。Palo Alto NetworksはCortex Agent Trust Protocol（CATP）を発表した。MicrosoftはAzure AIブランドでSecure Agent Communicationstandard 1.0を発表した。Cato Networksの脅威研究部門Cato CTRLは、提案されたクロスベンダーAgent Principal Registryに関するホワイトペーパーを公開した。',
+    'aip.s1.p2': '5つすべてが4日以内に発表された。いずれも互換性がない。各フレームワークは異なるトラストアンカー、異なるトークン形式、異なる失効メカニズム、異なるIDクレームスキーマを使用している。1つのエコシステム向けに構築されたエージェントは、カスタムブリッジングコードなしに別のエコシステム向けに構築されたサービスに認証できない——それ自体が攻撃面となる。',
+    'aip.s1.p3': '一方、IETFのエージェント認可ワーキンググループは3つの競合するInternet-Draftsを作成している：エージェント固有のクレームでOAuth 2.1を拡張するもの、OAuthに依存しない新しいVerifiable Agent Credential（VAC）形式を提案するもの、既存のSPIFFE/SPIREワークロードIDプリミティブの上にエージェントIDを構築することを主張するもの。いずれもRFCステータスに達していない。いずれも2027年より前に達することは期待されていない。',
+    'aip.tbl.vendor': 'ベンダー',
+    'aip.tbl.name': 'フレームワーク',
+    'aip.tbl.anchor': 'トラストアンカー',
+    'aip.tbl.compat': 'IETFとの整合',
+    'aip.tbl.aaf.anchor': 'プラットフォーム証明',
+    'aip.tbl.aaf.compat': '部分的——JWT ベース',
+    'aip.tbl.aim.anchor': 'ネットワークIDメッシュ',
+    'aip.tbl.aim.compat': '記載なし',
+    'aip.tbl.catp.anchor': 'Policy-as-Code 実施',
+    'aip.tbl.catp.compat': '部分的——SPIFFE 派生',
+    'aip.tbl.sac.anchor': 'Azure AD マネージドID',
+    'aip.tbl.sac.compat': 'OAuth 2.1 拡張',
+    'aip.tbl.apr.anchor': 'クロスベンダーレジストリ',
+    'aip.tbl.apr.compat': '新草案を提案',
+    'aip.s2.h': 'なぜ断片化はセキュリティ問題か',
+    'aip.s2.p1': 'エージェントIDにおけるプロトコルの断片化は一般に相互運用性の問題として説明される——ワーキンググループが共通標準を作成することで最終的に解決される種類の問題で、その後、全員が次の数年でそれを採用する。そのフレーミングは、現在の状況を極めて危険にする安全次元を見逃している。',
+    'aip.s2.p2': '有効なエージェントIDアサーションを構成するものの単一標準がない場合、すべてのクロスエコシステムインタラクションは2つの悪い選択肢の選択に退化する：外来エージェントを完全に拒否する（ユースケースを壊す）か、または望む以下のトラスト根拠で受け入れる（ブリッジングコード、ID変換レイヤー、またはエージェントの自己アサーションを単純に信頼する）。ID変換レイヤーは特に危険だ——通常、1つの認証情報形式を受け入れて別の形式でIDを再アサーションする薄いラッパーで、元の認証情報のセキュリティプロパティを完全に検証しない。',
+    'aip.s2.p3': 'マルチプロトコル混乱攻撃はこれを直接悪用する。攻撃者はプロトコルAでは適切な形式だが、プロトコルBの変換器が異なる方法で解釈するクレームを持つエージェントIDトークンを作成する——具体的には、プロトコルAが情報提供として標記するがプロトコルBが認可を持つものとして昇格させるクレームだ。変換レイヤーは有効なトークンを見て、反対側に有効だが不正確なアサーションを生成する。どちらのプロトコルも個別には悪くない；問題はそれらの間のギャップにある。',
+    'aip.atk1': 'Lyrie Researchの2026年Q1レポートで文書化された攻撃クラスは、Azure SACとSPIFFEネイティブ環境の間でブリッジするエージェントを含む。SACトークンはSACバリデーターが推奨メタデータとして扱う<code>agent_capabilities</code>拡張クレームを持つ。サードパーティベンダーが実装したSPIFFEからSACへのブリッジは<code>agent_capabilities</code>をSPIFFE SVID属性にマップする——推奨メタデータを認可クレームとして解釈する。<code>agent_capabilities</code>フィールドに書き込める攻撃者（SACエコシステムで自己登録するエージェントにとって些細なことだ）は、ブリッジが有効なSPIFFE認可として転送する昇格した能力クレームを注入できる。脆弱性は完全に変換レイヤーに存在し、どちらの基本プロトコルにもない。',
+    'aip.s3.h': 'IETF草案の概観',
+    'aip.s3.p1': '3つの競合するIETF Internet-Draftsは、エージェントIDがどうあるべきかについての本物の技術的意見の相違を反映している——単なるベンダー間の政治的断片化ではない。',
+    'aip.s3.p2': 'OAuth 2.1拡張草案は、エージェントIDは基本的に委任問題であり、既存のOAuthフレームワーク内で解決されるべきだと主張する——具体的には、エージェント間委任のためのRFC 8693トークン交換の使用を正式化し、標準JWTトークン形式に新しい<code>agent_id</code>クレームを追加することによって。その強みは既存のOAuthインフラストラクチャとの後方互換性だ。弱点は、エージェントIDをユーザーIDのサブセットとして扱い、委任する人間なしに動作する完全自律エージェントには機能しないことだ。',
+    'aip.s3.p3': 'Verifiable Agent Credential草案は反対の立場を取る：エージェントIDは人間のIDと根本的に異なり、W3C Verifiable Credentialsに基づく専用認証情報形式で表現されるべきだ。VACはエージェント向けの自己完結型の暗号学的に検証可能なID文書で、能力証明、操作コンテキスト、失効ステータスを含む。この形式はJWT拡張が許可するより表現力豊かだが、現在何もサポートしていない新しい認証情報インフラストラクチャのデプロイが必要だ。',
+    'aip.s3.p4': 'SPIFFE拡張草案は、クラウドネイティブ環境ですでに広く展開されているワークロードIDプリミティブの上にエージェントIDを構築することを主張する。SPIFFE SVID（ワークロードID URIを持つX.509証明書）はKubernetesとサービスメッシュ環境でサービス間認証にすでに使用されている。草案はエージェント固有の属性を持つためにSPIFFEを拡張することを提案する。実際の利点は採用だ：すでにSPIFFEを実行している組織は増分的に拡張できる。制限はSPIFFEが静的ワークロードIDのために設計されており、エージェントシステムが必要とする動的なタスクごとのIDセマンティクスではないことだ。',
+    'aip.s4.h': '統一標準が実際に必要とするもの',
+    'aip.s4.p1': 'エージェントIDの技術要件は実際には争われていない——意見の相違は実装アプローチについてだ。実行可能な標準は、現在の提案がさまざまな組み合わせで満たすが、どれも完全には満たさない5つのプロパティを満たす必要がある。',
+    'aip.s4.p2': '第1に、動的ID：エージェント認証情報はタスクごとまたはセッションごとでなければならず、静的ワークロードIDではない。異なるユーザーに対して異なるタスクで同じコードを実行するエージェントは、各実行に対して個別のIDトークンを持つべきだ。第2に、委任の出所：認証情報はエージェントIDからタスクを最終的に承認した人間プリンシパルまでの検証可能なチェーンを持たなければならない。第3に、能力バインディング：認証情報はエージェントの述べた能力と実際に許可されている操作を暗号学的に結び付けなければならない——クレームと認可は同じものでなければならない。第4に、普遍的失効：エージェント認証情報はすぐに失効可能でなければならず、その失効はそれに基づいて行動する可能性のあるすべてのリソースサーバーに伝播しなければならない。第5に、クロスドメイン検証可能性：組織AのエージェントはAの組織のインフラストラクチャにコールバックすることなく、組織Bが検証できる方法で組織BのリソースにそのIDを提示できなければならない。',
+    'aip.s4.p3': '現在の提案でこの5つすべてを満たすものはない。OAuthエクステンションは1と2を不十分に、5を合理的に満たす。VACは1、2、3を十分に満たすが、4と5はまだ。SPIFFEは3と5を十分に満たすが、1と2は不十分だ。ベンダーフレームワークはそれぞれ自分のデプロイ環境のために最適化し、クロスドメイン検証可能性では設計上ほぼ失敗する。',
+    'aip.s5.h': '過渡期のセキュリティ立場',
+    'aip.s5.p1': '標準は早くても2027年まで収束しない。今エージェントシステムを構築している組織はコンセンサスのない状況で実用的な選択をしなければならない。過渡期の重要な原則は、受信システムが何を検証すると主張していても、クロスプロトコルIDの境界を信頼できない境界として扱うことだ。',
+    'aip.def1': '内部エージェントエコシステムに1つのIDプロトコルを選択し、一貫して適用する——混合プロトコル環境は攻撃面を倍増させる。すべてのID変換レイヤーを明示的に文書化する；これらは最も高いリスクのトラスト境界だ。翻訳された認証情報を「条件付きで検証済み」として扱う——それらを個別にログに記録し、翻訳で認証したエージェントにより厳格なスコープ制限を適用する。ソースプロトコルのセキュリティモデルに対して変換レイヤーの実装を監査する：特に翻訳で推奨クレームが認可クレームに昇格されていないか確認する。IDインフラストラクチャがすでにOAuthベースであれば、新規ビルドにはOAuth 2.1拡張を優先する——既存の検証ツールが最も高密度にある。収束シグナルのためにIETF草案を監視する；マージされた草案または1つのアプローチの強力な採用は2027年半ばまでに現れる可能性が高い。標準が出現したときに認証情報移行の予算を組む——認証情報形式は変更される必要があるだろう。',
+    'aip.s6.h': '攻撃面としての断片化',
+    'aip.s6.p1': '現在のプロトコル断片化を市場が解決する一時的な不便として扱いたくなる。認証標準の歴史的パターンは異なることを示唆している。SAML、OAuth、OpenID Connect、FIDO2はそれぞれ非互換の前任者と何年も共存し、各共存期間は統一環境では不可能だったインシデントを生み出した。OAuth 1.0から2.0への移行はハイブリッドデプロイメントで脆弱性の全クラスを生み出した。SAMLからOIDCへの移行はOIDCの公開から10年後も続いており、今もスケールで設定ミスの脆弱性を生み出している。',
+    'aip.s6.p2': 'エージェントIDの断片化は同じパターンをたどるだろう。違いは、エージェントエコシステムが以前の認証移行よりはるかに速く動いており、エージェント自体が人間のオペレーターが検出する前に認証情報の脆弱性を増幅する方法で自律的に行動できることだ。OAuth-to-AAFブリッジの設定ミスしたID変換レイヤーは単なる相互運用性のバグではない——誰かが間違ったエージェントが間違ったリソースに間違った認証情報を提示したことに気づく前に、自動化された大規模な不正アクションの可能性だ。',
+    'aip.s6.p3': '標準に収束する圧力は本物だ。断片化自体が最も重大なエージェントIDリスクである時間窓も本物だ。2026年にエージェントを本番環境に出荷する組織はその窓に出荷している。彼らが依存するすべてのクロスプロトコルインタラクションのセキュリティプロパティは、良くても慎重なベストエフォートだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
