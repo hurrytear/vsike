@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calm Interfaces: Designing for Attention in the Age of AI — vsike</title>
+  <meta name="description" content="The dominant UI trend of 2026 is not maximalism or AI-first automation. It is restraint. Calm interfaces that respect human attention, surface AI as a thoughtful copilot, and refuse to amplify noise.">
+  <meta name="keywords" content="平静界面, 注意力设计, AI界面设计, 克制设计, 人机协作, calm interfaces, attention design, AI copilot UI, intentional design, human-centered AI, quiet design">
+  <link rel="canonical" href="https://www.vsike.com/ideas/calm-interfaces.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .principle-list { list-style: none; padding: 0; margin: 2rem 0; }
+    .principle-list li { display: grid; grid-template-columns: 2rem 1fr; gap: 1rem; padding: 1.25rem 0; border-bottom: 1px solid var(--fg-dim); align-items: start; }
+    .principle-list li:last-child { border-bottom: none; }
+    .principle-num { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--accent); font-weight: 700; padding-top: .15rem; }
+    .principle-body strong { display: block; margin-bottom: .35rem; font-size: var(--fs-base); }
+    .principle-body p { font-size: var(--fs-sm); color: var(--fg-muted); margin: 0; }
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+    @media (max-width: 580px) { .contrast-grid { grid-template-columns: 1fr; } }
+    .contrast-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .contrast-card.bad { border-color: color-mix(in srgb, #c0392b 40%, var(--fg-dim)); }
+    .contrast-card.good { border-color: color-mix(in srgb, var(--accent) 40%, var(--fg-dim)); }
+    .contrast-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin-bottom: .75rem; }
+    .contrast-card.bad .contrast-label { color: #c0392b; }
+    .contrast-card.good .contrast-label { color: var(--accent); }
+    .contrast-card ul { list-style: none; padding: 0; margin: 0; }
+    .contrast-card li { font-size: var(--fs-sm); padding: .3rem 0; border-bottom: 1px solid var(--fg-dim); color: var(--fg-muted); }
+    .contrast-card li:last-child { border-bottom: none; }
+    .pull-quote { margin: 2.5rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--fg-muted); }
+    .pull-quote p { font-size: var(--fs-lg); line-height: 1.5; font-style: italic; color: var(--fg); margin: 0; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="ci.cat">Design</span>
+        <span class="article-date" data-i18n="ci.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="ci.title">Calm Interfaces:<br>Designing for Attention</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="ci.lead">The dominant UI trend of 2026 is not maximalism or AI-first automation. It is restraint. Calm interfaces that respect human attention, surface AI as a thoughtful copilot, and refuse to amplify noise.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="ci.pub">Published: 2026-05-20 10:45 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="ci.s1.h">The Noise Problem</h2>
+      <p data-i18n="ci.s1.p1">For five years, the dominant force in interface design was engagement. Products were optimized for time-on-screen, notification volume, feature discovery, and the subtle architecture of habit formation. The assumption was that more surface area — more prompts, more suggestions, more AI-powered nudges — meant more value delivered.</p>
+      <p data-i18n="ci.s1.p2">The 2026 UX consensus is a quiet rejection of that assumption. The products gaining traction are distinguished not by what they add but by what they remove. Users, saturated by interfaces that demand constant attention, are choosing products that respect their cognitive space. The design skill that matters now is subtraction.</p>
+      <p data-i18n="ci.s1.p3">Mark Weiser and John Seely Brown's 1996 concept of "calm technology" — systems that inform without demanding focus, that move to the periphery of attention when not needed — has become the unexpected framework for 2026 interface design. Not because it is nostalgic, but because it is precisely the antidote to AI-accelerated noise.</p>
+
+      <div class="pull-quote">
+        <p data-i18n="ci.quote1">"The competitive advantage shifts from who has the best AI to who has the best restraint about when to surface it."</p>
+      </div>
+
+      <h2 data-i18n="ci.s2.h">AI as Copilot, Not Autopilot</h2>
+      <p data-i18n="ci.s2.p1">The failure mode of early AI interfaces was autopilot design: AI that acts without asking, surfaces without being invited, and confidently provides answers where the user needed to own the decision. The backlash was predictable. Users who feel that an interface is making choices for them stop trusting it — and eventually stop using it.</p>
+      <p data-i18n="ci.s2.p2">The shift toward AI-as-copilot reframes the interaction model. The copilot is present when needed, optional by default, and transparent about the boundary between its suggestions and the user's agency. It offers; it does not impose. It informs; it does not decide.</p>
+      <p data-i18n="ci.s2.p3">This requires deliberate design choices that resist the natural tendency to maximize AI surface area. Every AI affordance in an interface is an attention claim. Calm interface design asks: does this claim pay for itself? If the AI suggestion is wrong 30% of the time, does displaying it constantly create more cognitive load than it saves? In most cases, the answer is yes — and the correct choice is to surface the AI capability only when the user's context makes it clearly valuable.</p>
+
+      <div class="contrast-grid">
+        <div class="contrast-card bad">
+          <div class="contrast-label" data-i18n="ci.autopilot.label">Autopilot (Noisy)</div>
+          <ul>
+            <li data-i18n="ci.autopilot.l1">AI suggestions appear in every field</li>
+            <li data-i18n="ci.autopilot.l2">Persistent AI assistant widget always visible</li>
+            <li data-i18n="ci.autopilot.l3">Automatic AI rewrite of user content</li>
+            <li data-i18n="ci.autopilot.l4">Proactive notifications about AI insights</li>
+            <li data-i18n="ci.autopilot.l5">AI confidence scores on every output</li>
+          </ul>
+        </div>
+        <div class="contrast-card good">
+          <div class="contrast-label" data-i18n="ci.copilot.label">Copilot (Calm)</div>
+          <ul>
+            <li data-i18n="ci.copilot.l1">AI appears only when user pauses or asks</li>
+            <li data-i18n="ci.copilot.l2">AI entry point is peripheral until invoked</li>
+            <li data-i18n="ci.copilot.l3">AI suggests edits; user accepts or dismisses</li>
+            <li data-i18n="ci.copilot.l4">Notifications only for time-sensitive signals</li>
+            <li data-i18n="ci.copilot.l5">Confidence communicated through action, not score</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 data-i18n="ci.s3.h">Five Principles of Calm Interface Design</h2>
+
+      <ul class="principle-list">
+        <li>
+          <span class="principle-num">01</span>
+          <div class="principle-body">
+            <strong data-i18n="ci.p1.h">Peripheral presence over central demand</strong>
+            <p data-i18n="ci.p1.p">AI capabilities should live at the edge of the interface until called upon. A status indicator, a subtle affordance in the toolbar, a keyboard shortcut — these communicate availability without demanding attention. The center of the interface belongs to the user's work, not to the product's feature set.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-num">02</span>
+          <div class="principle-body">
+            <strong data-i18n="ci.p2.h">Earned interruption</strong>
+            <p data-i18n="ci.p2.p">An interface earns the right to interrupt by being right. Every false positive notification, every unhelpful suggestion surfaced at the wrong moment, depletes the attention budget users are willing to spend on that interface. Calm design tracks its interruption cost and spends it only on signals with high confidence and immediate relevance.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-num">03</span>
+          <div class="principle-body">
+            <strong data-i18n="ci.p3.h">Explicit state over implicit inference</strong>
+            <p data-i18n="ci.p3.p">AI interfaces that infer too much from user behavior create a sense of being watched. Calm interfaces make their information flows visible: what data the AI used, what it suggested, and why. Transparency is not a compliance checkbox — it is a trust-building interaction pattern that reduces the cognitive tax of operating with an AI system.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-num">04</span>
+          <div class="principle-body">
+            <strong data-i18n="ci.p4.h">Design system discipline before generative expansion</strong>
+            <p data-i18n="ci.p4.p">If your design system is messy, generative AI will amplify the mess. Calm interfaces are built on rigorous design systems — consistent spacing, limited color palettes, systematic typography — because these systems constrain what AI can generate into a bounded, coherent visual language. Discipline in the foundation enables creativity at the surface without visual noise.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-num">05</span>
+          <div class="principle-body">
+            <strong data-i18n="ci.p5.h">Exit always visible</strong>
+            <p data-i18n="ci.p5.p">A calm interface never traps the user in an AI interaction. The path back to direct control — editing the AI's output, overriding its decision, returning to a previous state — must be as immediate as the path into AI assistance. Reversibility is not a fallback; it is a first-class design constraint that changes how confident users feel about delegating to AI at all.</p>
+          </div>
+        </li>
+      </ul>
+
+      <h2 data-i18n="ci.s4.h">The Subtraction Skill</h2>
+      <p data-i18n="ci.s4.p1">The hardest design decision of 2026 is not what AI feature to add. It is what existing AI feature to remove. Products that shipped comprehensive AI surfaces in 2024–2025 are discovering that user adoption concentrates on a small number of capabilities and that the rest of the surface creates friction, confusion, and distrust.</p>
+      <p data-i18n="ci.s4.p2">Subtraction requires a different kind of design confidence than addition. Adding a feature can be justified by individual user requests or competitive parity. Removing one requires a team to believe that the interface without the feature is more valuable than the interface with it — and to resist the organizational pressure that treats every removed feature as lost investment.</p>
+      <p data-i18n="ci.s4.p3">The products that will define the next wave of interface design are not the ones with the most AI surface area. They are the ones that know exactly where their AI earns the user's attention — and everywhere else, choose silence.</p>
+
+      <div class="pull-quote">
+        <p data-i18n="ci.quote2">"A calm interface is not a simple interface. It is an interface that has done the hard work of knowing when to disappear."</p>
+      </div>
+
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'ci.cat': 'Design',
+    'ci.date': 'May 2026',
+    'ci.title': 'Calm Interfaces:<br>Designing for Attention',
+    'ci.lead': 'The dominant UI trend of 2026 is not maximalism or AI-first automation. It is restraint. Calm interfaces that respect human attention, surface AI as a thoughtful copilot, and refuse to amplify noise.',
+    'ci.pub': 'Published: 2026-05-20 10:45 PDT (Oregon)',
+    'ci.s1.h': 'The Noise Problem',
+    'ci.s1.p1': 'For five years, the dominant force in interface design was engagement. Products were optimized for time-on-screen, notification volume, feature discovery, and the subtle architecture of habit formation. The assumption was that more surface area — more prompts, more suggestions, more AI-powered nudges — meant more value delivered.',
+    'ci.s1.p2': 'The 2026 UX consensus is a quiet rejection of that assumption. The products gaining traction are distinguished not by what they add but by what they remove. Users, saturated by interfaces that demand constant attention, are choosing products that respect their cognitive space. The design skill that matters now is subtraction.',
+    'ci.s1.p3': 'Mark Weiser and John Seely Brown\'s 1996 concept of "calm technology" — systems that inform without demanding focus, that move to the periphery of attention when not needed — has become the unexpected framework for 2026 interface design. Not because it is nostalgic, but because it is precisely the antidote to AI-accelerated noise.',
+    'ci.quote1': '"The competitive advantage shifts from who has the best AI to who has the best restraint about when to surface it."',
+    'ci.s2.h': 'AI as Copilot, Not Autopilot',
+    'ci.s2.p1': 'The failure mode of early AI interfaces was autopilot design: AI that acts without asking, surfaces without being invited, and confidently provides answers where the user needed to own the decision. The backlash was predictable. Users who feel that an interface is making choices for them stop trusting it — and eventually stop using it.',
+    'ci.s2.p2': 'The shift toward AI-as-copilot reframes the interaction model. The copilot is present when needed, optional by default, and transparent about the boundary between its suggestions and the user\'s agency. It offers; it does not impose. It informs; it does not decide.',
+    'ci.s2.p3': 'This requires deliberate design choices that resist the natural tendency to maximize AI surface area. Every AI affordance in an interface is an attention claim. Calm interface design asks: does this claim pay for itself? If the AI suggestion is wrong 30% of the time, does displaying it constantly create more cognitive load than it saves? In most cases, the answer is yes — and the correct choice is to surface the AI capability only when the user\'s context makes it clearly valuable.',
+    'ci.autopilot.label': 'Autopilot (Noisy)',
+    'ci.autopilot.l1': 'AI suggestions appear in every field',
+    'ci.autopilot.l2': 'Persistent AI assistant widget always visible',
+    'ci.autopilot.l3': 'Automatic AI rewrite of user content',
+    'ci.autopilot.l4': 'Proactive notifications about AI insights',
+    'ci.autopilot.l5': 'AI confidence scores on every output',
+    'ci.copilot.label': 'Copilot (Calm)',
+    'ci.copilot.l1': 'AI appears only when user pauses or asks',
+    'ci.copilot.l2': 'AI entry point is peripheral until invoked',
+    'ci.copilot.l3': 'AI suggests edits; user accepts or dismisses',
+    'ci.copilot.l4': 'Notifications only for time-sensitive signals',
+    'ci.copilot.l5': 'Confidence communicated through action, not score',
+    'ci.s3.h': 'Five Principles of Calm Interface Design',
+    'ci.p1.h': 'Peripheral presence over central demand',
+    'ci.p1.p': 'AI capabilities should live at the edge of the interface until called upon. A status indicator, a subtle affordance in the toolbar, a keyboard shortcut — these communicate availability without demanding attention. The center of the interface belongs to the user\'s work, not to the product\'s feature set.',
+    'ci.p2.h': 'Earned interruption',
+    'ci.p2.p': 'An interface earns the right to interrupt by being right. Every false positive notification, every unhelpful suggestion surfaced at the wrong moment, depletes the attention budget users are willing to spend on that interface. Calm design tracks its interruption cost and spends it only on signals with high confidence and immediate relevance.',
+    'ci.p3.h': 'Explicit state over implicit inference',
+    'ci.p3.p': 'AI interfaces that infer too much from user behavior create a sense of being watched. Calm interfaces make their information flows visible: what data the AI used, what it suggested, and why. Transparency is not a compliance checkbox — it is a trust-building interaction pattern that reduces the cognitive tax of operating with an AI system.',
+    'ci.p4.h': 'Design system discipline before generative expansion',
+    'ci.p4.p': 'If your design system is messy, generative AI will amplify the mess. Calm interfaces are built on rigorous design systems — consistent spacing, limited color palettes, systematic typography — because these systems constrain what AI can generate into a bounded, coherent visual language. Discipline in the foundation enables creativity at the surface without visual noise.',
+    'ci.p5.h': 'Exit always visible',
+    'ci.p5.p': 'A calm interface never traps the user in an AI interaction. The path back to direct control — editing the AI\'s output, overriding its decision, returning to a previous state — must be as immediate as the path into AI assistance. Reversibility is not a fallback; it is a first-class design constraint that changes how confident users feel about delegating to AI at all.',
+    'ci.s4.h': 'The Subtraction Skill',
+    'ci.s4.p1': 'The hardest design decision of 2026 is not what AI feature to add. It is what existing AI feature to remove. Products that shipped comprehensive AI surfaces in 2024–2025 are discovering that user adoption concentrates on a small number of capabilities and that the rest of the surface creates friction, confusion, and distrust.',
+    'ci.s4.p2': 'Subtraction requires a different kind of design confidence than addition. Adding a feature can be justified by individual user requests or competitive parity. Removing one requires a team to believe that the interface without the feature is more valuable than the interface with it — and to resist the organizational pressure that treats every removed feature as lost investment.',
+    'ci.s4.p3': 'The products that will define the next wave of interface design are not the ones with the most AI surface area. They are the ones that know exactly where their AI earns the user\'s attention — and everywhere else, choose silence.',
+    'ci.quote2': '"A calm interface is not a simple interface. It is an interface that has done the hard work of knowing when to disappear."',
+  },
+  zh: {
+    'ci.cat': '设计',
+    'ci.date': '2026年5月',
+    'ci.title': '平静界面：<br>为注意力而设计',
+    'ci.lead': '2026 年 UI 的主导趋势不是极繁主义或 AI 优先的自动化，而是克制。平静界面尊重人类注意力，将 AI 作为体贴的副驾驶展示，拒绝放大噪音。',
+    'ci.pub': '发布时间：2026-05-20 10:45 PDT（俄勒冈州）',
+    'ci.s1.h': '噪音问题',
+    'ci.s1.p1': '五年来，界面设计的主导力量是参与度。产品针对屏幕时间、通知量、功能发现和习惯养成的微妙架构进行优化。假设是更大的表面积——更多提示、更多建议、更多 AI 驱动的推动——意味着提供更多价值。',
+    'ci.s1.p2': '2026 年的 UX 共识是对这一假设的平静拒绝。获得关注的产品不是因为它们添加了什么，而是因为它们删除了什么。用户被不断要求注意力的界面所饱和，正在选择尊重其认知空间的产品。现在重要的设计技能是减法。',
+    'ci.s1.p3': 'Mark Weiser 和 John Seely Brown 1996 年提出的"平静技术"概念——在不要求专注的情况下提供信息、在不需要时移到注意力边缘的系统——已成为 2026 年界面设计出乎意料的框架。不是因为它怀旧，而是因为它恰恰是 AI 加速噪音的解药。',
+    'ci.quote1': '"竞争优势从谁拥有最好的 AI，转变为谁对何时展示 AI 有最好的克制。"',
+    'ci.s2.h': 'AI 作为副驾驶，而非自动驾驶',
+    'ci.s2.p1': '早期 AI 界面的失败模式是自动驾驶设计：AI 在不询问的情况下行动、在未被邀请的情况下浮现，并自信地在用户需要自主决策的地方提供答案。反弹是可预见的。感觉界面正在为他们做选择的用户停止信任它——最终停止使用它。',
+    'ci.s2.p2': '向 AI 作为副驾驶的转变重新框定了交互模型。副驾驶在需要时出现、默认是可选的，并对其建议与用户能动性之间的边界透明。它提供；它不强加。它告知；它不决定。',
+    'ci.s2.p3': '这需要抵制最大化 AI 表面积的自然倾向的刻意设计选择。界面中的每个 AI 可见性都是注意力主张。平静界面设计问：这个主张能自我证明吗？如果 AI 建议在 30% 的时间里是错的，持续显示它是否比它节省的认知负荷创造了更多认知负荷？在大多数情况下，答案是肯定的——正确的选择是仅在用户上下文使其明显有价值时才展示 AI 能力。',
+    'ci.autopilot.label': '自动驾驶（嘈杂）',
+    'ci.autopilot.l1': 'AI 建议出现在每个字段中',
+    'ci.autopilot.l2': 'AI 助手小部件始终可见',
+    'ci.autopilot.l3': 'AI 自动重写用户内容',
+    'ci.autopilot.l4': '主动推送 AI 洞察通知',
+    'ci.autopilot.l5': '每个输出都显示 AI 置信度评分',
+    'ci.copilot.label': '副驾驶（平静）',
+    'ci.copilot.l1': 'AI 仅在用户暂停或询问时出现',
+    'ci.copilot.l2': 'AI 入口点在调用前处于边缘位置',
+    'ci.copilot.l3': 'AI 建议编辑；用户接受或忽略',
+    'ci.copilot.l4': '仅对时间敏感的信号发送通知',
+    'ci.copilot.l5': '通过行动而非评分传达置信度',
+    'ci.s3.h': '平静界面设计的五个原则',
+    'ci.p1.h': '边缘存在优于中心需求',
+    'ci.p1.p': 'AI 能力应在被调用之前位于界面边缘。状态指示器、工具栏中的微妙可见性、键盘快捷键——这些传达可用性而不要求注意力。界面的中心属于用户的工作，而不是产品的功能集。',
+    'ci.p2.h': '赚得的打断',
+    'ci.p2.p': '界面通过正确来赢得打断的权利。每一个误报通知、每一个在错误时机浮现的无用建议，都会耗尽用户愿意花在该界面上的注意力预算。平静设计追踪其打断成本，只将其花在高置信度和直接相关性的信号上。',
+    'ci.p3.h': '显式状态优于隐式推断',
+    'ci.p3.p': '从用户行为推断过多的 AI 界面会产生被监视的感觉。平静界面使其信息流可见：AI 使用了什么数据、建议了什么以及原因。透明度不是合规复选框——它是降低与 AI 系统协作认知税的信任建立交互模式。',
+    'ci.p4.h': '生成扩展前的设计系统纪律',
+    'ci.p4.p': '如果你的设计系统是混乱的，生成式 AI 将放大这种混乱。平静界面建立在严格的设计系统之上——一致的间距、有限的调色板、系统性的排版——因为这些系统将 AI 可以生成的内容约束在有界的、连贯的视觉语言中。基础中的纪律使表面的创造力成为可能，而没有视觉噪音。',
+    'ci.p5.h': '退出始终可见',
+    'ci.p5.p': '平静界面从不将用户困在 AI 交互中。返回直接控制的路径——编辑 AI 的输出、覆盖其决定、返回到先前状态——必须与进入 AI 辅助的路径一样即时。可逆性不是备用方案；它是改变用户对委托给 AI 总体感到多自信的一等设计约束。',
+    'ci.s4.h': '减法技能',
+    'ci.s4.p1': '2026 年最难的设计决策不是添加什么 AI 功能。而是删除什么现有的 AI 功能。在 2024-2025 年推出全面 AI 表面的产品正在发现，用户采用集中在少数几个能力上，其余的表面造成摩擦、混乱和不信任。',
+    'ci.s4.p2': '减法需要与加法不同的设计信心。添加功能可以通过个别用户请求或竞争对等来证明。删除一个功能需要团队相信没有该功能的界面比有它的界面更有价值——并抵抗将每个被删除的功能视为失去投资的组织压力。',
+    'ci.s4.p3': '将定义下一波界面设计的产品不是拥有最多 AI 表面积的那些。而是确切知道其 AI 在哪里赢得用户注意力的那些——而在其他任何地方，选择沉默。',
+    'ci.quote2': '"平静界面不是简单的界面。它是那种做了了解何时消失这件难事的界面。"',
+  },
+  ja: {
+    'ci.cat': 'デザイン',
+    'ci.date': '2026年5月',
+    'ci.title': 'カームインターフェース：<br>注意力のためのデザイン',
+    'ci.lead': '2026年のUI界の主流トレンドはマキシマリズムやAIファーストの自動化ではない。それは抑制だ。人間の注意力を尊重し、AIを思慮深いコパイロットとして提示し、ノイズを増幅することを拒否する静かなインターフェース。',
+    'ci.pub': '公開日：2026-05-20 10:45 PDT（オレゴン州）',
+    'ci.s1.h': 'ノイズの問題',
+    'ci.s1.p1': '5年間、インターフェースデザインの支配的な力はエンゲージメントだった。製品は画面時間、通知量、機能発見、習慣形成の微妙なアーキテクチャに最適化されていた。より多くの表面積——より多くのプロンプト、より多くの提案、より多くのAI駆動のナッジ——がより多くの価値を提供するという前提があった。',
+    'ci.s1.p2': '2026年のUXコンセンサスはその前提の静かな拒絶だ。注目を集めている製品は何を追加したかではなく、何を削除したかによって区別される。常に注意を要求するインターフェースに飽和したユーザーは、自分の認知空間を尊重する製品を選んでいる。今重要なデザインスキルは引き算だ。',
+    'ci.s1.p3': 'Mark WeiserとJohn Seely Brownの1996年の「カームテクノロジー」の概念——集中を要求せずに情報を提供し、不要なときに注意の周辺に移動するシステム——が2026年のインターフェースデザインの予期せぬフレームワークになった。懐かしいからではなく、AI加速ノイズへのまさに解毒剤だからだ。',
+    'ci.quote1': '"競争優位は誰が最高のAIを持っているかから、誰がそれをいつ表示するかについて最高の抑制を持っているかへシフトする。"',
+    'ci.s2.h': 'AIはコパイロット、オートパイロットではない',
+    'ci.s2.p1': '初期のAIインターフェースの失敗モードはオートパイロットデザインだった：尋ねずに行動し、招待されずに表示し、ユーザーが決断を自分のものにする必要があるところで自信を持って答えを提供するAI。反発は予測可能だった。インターフェースが自分の代わりに選択をしていると感じるユーザーはそれを信頼しなくなり——最終的に使うのをやめる。',
+    'ci.s2.p2': 'AIをコパイロットとして捉え直すシフトは、インタラクションモデルを再フレーミングする。コパイロットは必要なときに存在し、デフォルトでオプションで、提案とユーザーの主体性の境界について透明だ。それは提供する；押し付けない。それは知らせる；決定しない。',
+    'ci.s2.p3': 'これはAI表面積を最大化する自然な傾向に抵抗する意図的なデザインの選択を必要とする。インターフェース内のすべてのAIアフォーダンスは注意力の主張だ。カームインターフェースデザインは問う：この主張は自己正当化できるか？AI提案が30%の時間で間違っている場合、常に表示することは節約する認知負荷より多くの認知負荷を生み出すか？ほとんどの場合、答えはイエスだ——正しい選択は、ユーザーのコンテキストが明らかに価値あるものにするときだけAI能力を表示することだ。',
+    'ci.autopilot.label': 'オートパイロット（ノイジー）',
+    'ci.autopilot.l1': 'AI提案がすべてのフィールドに表示される',
+    'ci.autopilot.l2': 'AI アシスタントウィジェットが常に表示される',
+    'ci.autopilot.l3': 'AIがユーザーコンテンツを自動的に書き直す',
+    'ci.autopilot.l4': 'AIインサイトについてのプロアクティブ通知',
+    'ci.autopilot.l5': 'すべての出力にAI信頼スコアが表示される',
+    'ci.copilot.label': 'コパイロット（カーム）',
+    'ci.copilot.l1': 'AIはユーザーが一時停止するか尋ねたときだけ表示される',
+    'ci.copilot.l2': 'AIのエントリーポイントは呼び出されるまで周辺にある',
+    'ci.copilot.l3': 'AIが編集を提案；ユーザーが承認または却下',
+    'ci.copilot.l4': '時間的に重要なシグナルのみの通知',
+    'ci.copilot.l5': 'スコアではなくアクションを通じて信頼を伝える',
+    'ci.s3.h': 'カームインターフェースデザインの5原則',
+    'ci.p1.h': '中央の要求より周辺の存在',
+    'ci.p1.p': 'AI能力は呼び出されるまでインターフェースの端に置かれるべきだ。ステータスインジケーター、ツールバーの微妙なアフォーダンス、キーボードショートカット——これらは注意を要求せずに利用可能であることを伝える。インターフェースの中心はユーザーの仕事のものであり、製品の機能セットのものではない。',
+    'ci.p2.h': '獲得された中断',
+    'ci.p2.p': 'インターフェースは正確であることで中断する権利を獲得する。すべての偽陽性通知、すべての間違ったタイミングで表示された役に立たない提案は、ユーザーがそのインターフェースに費やす意欲のある注意力の予算を消費する。カームデザインはその中断コストを追跡し、高い信頼度と即時の関連性を持つシグナルにのみそれを費やす。',
+    'ci.p3.h': '暗黙の推論より明示的な状態',
+    'ci.p3.p': 'ユーザーの行動から過剰に推論するAIインターフェースは監視されている感覚を生み出す。カームインターフェースは情報フローを可視化する：AIが使用したデータ、提案したこと、その理由。透明性はコンプライアンスのチェックボックスではない——AIシステムで操作する認知税を軽減する信頼構築インタラクションパターンだ。',
+    'ci.p4.h': '生成拡張前のデザインシステムの規律',
+    'ci.p4.p': 'デザインシステムが乱雑なら、ジェネレーティブAIはその乱雑さを増幅する。カームインターフェースは厳格なデザインシステム——一貫したスペーシング、限られたカラーパレット、体系的なタイポグラフィ——の上に構築される。これらのシステムがAIが生成できるものを有界で一貫したビジュアル言語に制約するからだ。基盤の規律が視覚ノイズなしに表面での創造性を可能にする。',
+    'ci.p5.h': '常に見えている出口',
+    'ci.p5.p': 'カームインターフェースはユーザーをAIインタラクションに閉じ込めない。直接制御への戻りパス——AIの出力の編集、その決定のオーバーライド、前の状態への復帰——はAIアシスタンスへのパスと同様に即時でなければならない。可逆性はフォールバックではない；それはユーザーがAIへの委任についてどの程度自信を感じるかを変える一等のデザイン制約だ。',
+    'ci.s4.h': '引き算のスキル',
+    'ci.s4.p1': '2026年の最も難しいデザインの決断は、どのAI機能を追加するかではない。どの既存のAI機能を削除するかだ。2024-2025年に包括的なAI表面を出荷した製品は、ユーザー採用が少数の能力に集中し、残りの表面が摩擦、混乱、不信を生み出していることを発見しつつある。',
+    'ci.s4.p2': '引き算は加算とは異なる種類のデザインの自信を必要とする。機能の追加は個々のユーザーリクエストや競合パリティで正当化できる。削除するには、その機能のないインターフェースがある方よりも価値があることをチームが信じ——削除されたすべての機能を失われた投資として扱う組織的プレッシャーに抵抗することが必要だ。',
+    'ci.s4.p3': 'インターフェースデザインの次の波を定義する製品は、最もAI表面積が多いものではない。自分たちのAIがユーザーの注意力をどこで獲得するかを正確に知っているもの——そしてそれ以外のすべての場所で、沈黙を選ぶものだ。',
+    'ci.quote2': '"カームインターフェースは単純なインターフェースではない。いつ消えるかを知るという難しい仕事をしたインターフェースだ。"',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
