@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Postmortem & Runbook Automation: From 3 Hours to 20 Minutes — vsike</title>
+  <meta name="description" content="AI can compress postmortem writing from 3 hours to 20 minutes and generate runbook first drafts from incident timelines. Here is how to automate the right parts, keep the human analysis intact, and build a postmortem corpus that makes future incidents shorter.">
+  <meta name="keywords" content="AI postmortem automation, runbook generation, SRE toil reduction, incident retrospective AI, postmortem template, blameless postmortem, AI SRE 2026, 复盘自动化, AI运维手册, 故障复盘">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-postmortem-runbook.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .key { color: #f9c74f; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .type-grid { grid-template-columns: 1fr; } }
+    .type-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .type-card .type-tag { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: .4rem; }
+    .type-card h4 { font-size: var(--fs-sm); font-weight: 600; margin-bottom: .4rem; }
+    .type-card p { font-size: var(--fs-sm); color: var(--fg-muted); margin: 0; }
+    .note-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .note-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .warn-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .warn-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .toil-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--fs-sm); }
+    .toil-table th { text-align: left; padding: .6rem .75rem; border-bottom: 2px solid var(--fg); font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; }
+    .toil-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .toil-table td:first-child { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); white-space: nowrap; }
+    .toil-auto { color: var(--accent); font-weight: 700; }
+    .toil-human { color: var(--fg-muted); }
+    .stat-row { display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+    .stat-item { flex: 1; min-width: 120px; border: 1px solid var(--fg-dim); padding: 1.25rem; text-align: center; }
+    .stat-num { font-family: var(--mono); font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: var(--fs-xs); color: var(--fg-muted); margin-top: .4rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="apr.cat">SRE</span>
+        <span class="article-date" data-i18n="apr.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="apr.title">AI Postmortem &amp; Runbook Automation:<br>From 3 Hours to 20 Minutes</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="apr.lead">AI can compress postmortem writing from 3 hours to 20 minutes and generate runbook first drafts from incident timelines. Here is how to automate the right parts, keep the human analysis intact, and build a postmortem corpus that makes future incidents shorter.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="apr.pub">Published: 2026-05-21 11:30 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="apr.s1.h">The Postmortem Backlog Problem</h2>
+      <p data-i18n="apr.s1.p1">Postmortems are among the highest-value activities in SRE. A well-written postmortem captures institutional knowledge, prevents recurrence, and — when shared — accelerates the learning of the entire engineering organization. The problem is not that engineers do not want to write them. The problem is that writing a postmortem well takes three to five hours of focused work, and that time comes immediately after an exhausting incident, often at the end of a long shift.</p>
+      <p data-i18n="apr.s1.p2">The predictable result is a postmortem backlog. Incidents that happened two weeks ago get partial write-ups. Action items drift. The timeline is reconstructed from memory rather than from logs, because no one had the energy to pull the actual timestamps when they were still fresh.</p>
+      <p data-i18n="apr.s1.p3">AI postmortem automation in 2026 targets this specific problem: not replacing the engineer's analysis, but eliminating the mechanical work that precedes it. Timeline reconstruction, log citation, action item templating — these are tasks that AI handles well. The systemic analysis, the contributing factors, the cultural observations — those still require a human.</p>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num" data-i18n="apr.stat1.num">3h</div>
+          <div class="stat-label" data-i18n="apr.stat1.label">avg postmortem writing time (manual)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-i18n="apr.stat2.num">20m</div>
+          <div class="stat-label" data-i18n="apr.stat2.label">with AI-assisted first draft</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-i18n="apr.stat3.num">89%</div>
+          <div class="stat-label" data-i18n="apr.stat3.label">action item completion rate improvement</div>
+        </div>
+      </div>
+
+      <h2 data-i18n="apr.s2.h">Three Postmortem Types and What to Automate</h2>
+      <p data-i18n="apr.s2.p1">Not all incidents produce the same postmortem. Understanding the type shapes which parts are automatable and which require the most human investment.</p>
+
+      <div class="type-grid">
+        <div class="type-card">
+          <div class="type-tag" data-i18n="apr.type1.tag">Type A</div>
+          <h4 data-i18n="apr.type1.h">Known Failure Mode</h4>
+          <p data-i18n="apr.type1.p">The root cause matches a prior incident pattern. Database connection pool exhaustion, cache stampede, certificate expiry. AI can fully draft the postmortem: timeline, root cause, contributing factors, and even the action items (since similar incidents have similar remediation patterns). Human reviews and approves.</p>
+        </div>
+        <div class="type-card">
+          <div class="type-tag" data-i18n="apr.type2.tag">Type B</div>
+          <h4 data-i18n="apr.type2.h">Known System, Novel Failure</h4>
+          <p data-i18n="apr.type2.p">The service is well-understood but the failure mode is new. AI drafts the timeline and contributing factors from observability data. Human writes the root cause analysis and identifies the systemic gap. AI suggests action items from similar service postmortems in the corpus.</p>
+        </div>
+        <div class="type-card">
+          <div class="type-tag" data-i18n="apr.type3.tag">Type C</div>
+          <h4 data-i18n="apr.type3.h">Novel System Interaction</h4>
+          <p data-i18n="apr.type3.p">Cross-service cascade, unexpected infrastructure behavior, or a failure mode that has not appeared before. AI provides the timeline scaffold and citation of relevant log/metric evidence. Human does all analysis. Postmortem becomes a high-value addition to the corpus for future Type A/B incidents.</p>
+        </div>
+      </div>
+
+      <h2 data-i18n="apr.s3.h">Automatable vs. Human Work in a Postmortem</h2>
+
+      <table class="toil-table">
+        <thead>
+          <tr>
+            <th data-i18n="apr.table.task">Task</th>
+            <th data-i18n="apr.table.who">Who</th>
+            <th data-i18n="apr.table.note">Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Timeline reconstruction</td>
+            <td class="toil-auto" data-i18n="apr.auto">AI</td>
+            <td data-i18n="apr.t1.note">Pull timestamps from logs, metrics, alert history, and Slack messages. Sequence them. AI does this in 90 seconds.</td>
+          </tr>
+          <tr>
+            <td>Evidence citation</td>
+            <td class="toil-auto" data-i18n="apr.auto">AI</td>
+            <td data-i18n="apr.t2.note">Link specific log lines, metric values, and trace IDs to each timeline entry. Eliminates "I think it was around 3am" ambiguity.</td>
+          </tr>
+          <tr>
+            <td>Incident summary paragraph</td>
+            <td class="toil-auto" data-i18n="apr.auto">AI</td>
+            <td data-i18n="apr.t3.note">What happened, when, what was the customer impact. First draft from structured data; human edits for tone and completeness.</td>
+          </tr>
+          <tr>
+            <td>Action item suggestions</td>
+            <td class="toil-auto" data-i18n="apr.auto">AI</td>
+            <td data-i18n="apr.t4.note">Based on root cause type and similar past postmortems. Human promotes, modifies, or rejects each suggestion.</td>
+          </tr>
+          <tr>
+            <td>Root cause analysis</td>
+            <td class="toil-human" data-i18n="apr.human">Human</td>
+            <td data-i18n="apr.t5.note">The "why did this system behave this way" analysis. AI can suggest, but human judgment is required for accuracy and nuance.</td>
+          </tr>
+          <tr>
+            <td>Contributing factors</td>
+            <td class="toil-human" data-i18n="apr.human">Human</td>
+            <td data-i18n="apr.t6.note">Process gaps, communication failures, missing observability, toil that led to shortcuts. Context-sensitive and politically aware.</td>
+          </tr>
+          <tr>
+            <td>Systemic recommendations</td>
+            <td class="toil-human" data-i18n="apr.human">Human</td>
+            <td data-i18n="apr.t7.note">Changes to architecture, process, or team structure. These have organizational consequences beyond the immediate incident.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 data-i18n="apr.s4.h">Generating a Runbook from an Incident Timeline</h2>
+      <p data-i18n="apr.s4.p1">One of the highest-leverage applications of AI in the postmortem workflow is runbook generation. When an incident is resolved, the sequence of actions that worked — the commands run, the services restarted, the rollback performed — is sitting in Slack history, incident channel logs, and the engineer's terminal history. It just has not been organized into a runbook yet.</p>
+      <p data-i18n="apr.s4.p2">An AI agent with access to the incident timeline, the chat history, and the deployment API can draft a runbook in the same pass as the postmortem. The draft includes the steps taken, the expected outcomes at each step, the verification commands to confirm resolution, and the escalation path if the steps do not work.</p>
+
+      <div class="code-block"><span class="comment"># Example: AI-generated runbook draft from incident data</span>
+
+<span class="key">title</span>: <span class="str">Auth-Service Connection Pool Exhaustion</span>
+<span class="key">severity</span>: <span class="str">P1</span>
+<span class="key">last_updated</span>: <span class="str">2026-05-21</span>
+<span class="key">source_incident</span>: <span class="str">INC-4821</span>
+
+<span class="key">symptoms</span>:
+  - <span class="str">auth-service p99 latency &gt; 5s</span>
+  - <span class="str">HTTP 503 rate &gt; 10%</span>
+  - <span class="str">Prometheus: db_pool_available = 0</span>
+
+<span class="key">steps</span>:
+  1. <span class="key">verify</span>: <span class="str">Check db_pool_available metric — should be &gt; 0 normally</span>
+     <span class="key">command</span>: <span class="str">promql: db_pool_available{service="auth"}</span>
+
+  2. <span class="key">identify</span>: <span class="str">Check for recent deployments to auth-service</span>
+     <span class="key">command</span>: <span class="str">deploy-cli list --service auth --last 2h</span>
+
+  3. <span class="key">mitigate</span>: <span class="str">If recent deploy, roll back to previous stable version</span>
+     <span class="key">command</span>: <span class="str">deploy-cli rollback auth-service --requires-approval</span>
+     <span class="key">expected</span>: <span class="str">db_pool_available recovers within 2 min post-rollback</span>
+
+  4. <span class="key">verify_resolution</span>: <span class="str">Confirm p99 latency returns below 500ms</span>
+     <span class="key">sla_check</span>: <span class="str">5 min observation window</span>
+
+<span class="key">escalation</span>:
+  <span class="key">if_unresolved</span>: <span class="str">Page database team (db-oncall@internal)</span>
+  <span class="key">context</span>: <span class="str">May be upstream DB connection limit — requires DBA investigation</span>
+
+<span class="comment"># AUTO-GENERATED DRAFT — review before publishing to runbook library</span></div>
+
+      <div class="warn-block">
+        <div class="warn-label" data-i18n="apr.warn.label">Never Publish Without Human Review</div>
+        <p data-i18n="apr.warn.p1">AI-generated runbooks are first drafts, not finished artifacts. An agent that reconstructed the incident timeline may have inferred steps from context rather than observed them directly. Before a runbook is added to the official library: an engineer who was in the incident validates each step, the escalation path is confirmed accurate, and the commands are tested in a staging environment. Publishing an unreviewed AI-generated runbook is how you create a runbook that fails at 3am on the next incident.</p>
+      </div>
+
+      <h2 data-i18n="apr.s5.h">Building a Postmortem Corpus for Future Incidents</h2>
+      <p data-i18n="apr.s5.p1">The compounding value of AI postmortem automation is the corpus effect. Each completed postmortem — with its timeline, root cause analysis, action items, and linked runbook — becomes a training artifact that improves future AI-assisted investigations. When the next similar incident occurs, the triage agent has a high-quality historical record to match against, raising its confidence and improving the quality of its initial hypothesis.</p>
+      <p data-i18n="apr.s5.p2">This only works if the postmortems are structured consistently. Teams using AI-assisted postmortem writing in 2026 typically enforce a structured template via their incident management platform — not as a bureaucratic exercise, but because structure is what makes the corpus queryable. An unstructured postmortem corpus is a graveyard; a structured one is an institutional memory that the AI can actually use.</p>
+
+      <div class="note-block">
+        <div class="note-label" data-i18n="apr.corpus.label">Minimum Postmortem Structure for AI Reuse</div>
+        <p data-i18n="apr.corpus.p1"><strong>Required fields:</strong> incident ID, severity, service(s) affected, impact duration, timeline (structured, with timestamps and evidence citations), root cause (categorical + free text), contributing factors (list), action items (each with owner, due date, and category tag), linked runbook ID. Optional but high-value: customer impact estimate, detection gap (time from onset to alert), and response gap (time from alert to mitigation start).</p>
+      </div>
+
+      <h2 data-i18n="apr.s6.h">Toil Reduction in Context</h2>
+      <p data-i18n="apr.s6.p1">Postmortem automation is one component of a broader AI-assisted SRE toil reduction strategy. The three forms of toil that AI addresses well in 2026 are: reactive toil (on-call triage and remediation — see the on-call agent article), documentation toil (postmortems, runbooks, and incident summaries — this article), and observability query toil (the time spent manually constructing observability queries during investigations — see the MCP observability article).</p>
+      <p data-i18n="apr.s6.p2">The pattern across all three: AI handles the mechanical retrieval, structuring, and first-draft generation. Humans provide the judgment, the organizational context, and the accountability. The goal is not to remove humans from SRE — it is to remove the parts of SRE that are mechanical, exhausting, and error-prone at 3am, so that the humans who remain can focus on the reasoning that actually requires them.</p>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'apr.cat': 'SRE',
+    'apr.date': 'May 2026',
+    'apr.title': 'AI Postmortem &amp; Runbook Automation:<br>From 3 Hours to 20 Minutes',
+    'apr.lead': 'AI can compress postmortem writing from 3 hours to 20 minutes and generate runbook first drafts from incident timelines. Here is how to automate the right parts, keep the human analysis intact, and build a postmortem corpus that makes future incidents shorter.',
+    'apr.pub': 'Published: 2026-05-21 11:30 PDT (Oregon)',
+    'apr.s1.h': 'The Postmortem Backlog Problem',
+    'apr.s1.p1': 'Postmortems are among the highest-value activities in SRE. A well-written postmortem captures institutional knowledge, prevents recurrence, and — when shared — accelerates the learning of the entire engineering organization. The problem is not that engineers do not want to write them. The problem is that writing a postmortem well takes three to five hours of focused work, and that time comes immediately after an exhausting incident, often at the end of a long shift.',
+    'apr.s1.p2': 'The predictable result is a postmortem backlog. Incidents that happened two weeks ago get partial write-ups. Action items drift. The timeline is reconstructed from memory rather than from logs, because no one had the energy to pull the actual timestamps when they were still fresh.',
+    'apr.s1.p3': 'AI postmortem automation in 2026 targets this specific problem: not replacing the engineer\'s analysis, but eliminating the mechanical work that precedes it. Timeline reconstruction, log citation, action item templating — these are tasks that AI handles well. The systemic analysis, the contributing factors, the cultural observations — those still require a human.',
+    'apr.stat1.num': '3h',
+    'apr.stat1.label': 'avg postmortem writing time (manual)',
+    'apr.stat2.num': '20m',
+    'apr.stat2.label': 'with AI-assisted first draft',
+    'apr.stat3.num': '89%',
+    'apr.stat3.label': 'action item completion rate improvement',
+    'apr.s2.h': 'Three Postmortem Types and What to Automate',
+    'apr.s2.p1': 'Not all incidents produce the same postmortem. Understanding the type shapes which parts are automatable and which require the most human investment.',
+    'apr.type1.tag': 'Type A',
+    'apr.type1.h': 'Known Failure Mode',
+    'apr.type1.p': 'The root cause matches a prior incident pattern. Database connection pool exhaustion, cache stampede, certificate expiry. AI can fully draft the postmortem: timeline, root cause, contributing factors, and even the action items (since similar incidents have similar remediation patterns). Human reviews and approves.',
+    'apr.type2.tag': 'Type B',
+    'apr.type2.h': 'Known System, Novel Failure',
+    'apr.type2.p': 'The service is well-understood but the failure mode is new. AI drafts the timeline and contributing factors from observability data. Human writes the root cause analysis and identifies the systemic gap. AI suggests action items from similar service postmortems in the corpus.',
+    'apr.type3.tag': 'Type C',
+    'apr.type3.h': 'Novel System Interaction',
+    'apr.type3.p': 'Cross-service cascade, unexpected infrastructure behavior, or a failure mode that has not appeared before. AI provides the timeline scaffold and citation of relevant log/metric evidence. Human does all analysis. Postmortem becomes a high-value addition to the corpus for future Type A/B incidents.',
+    'apr.s3.h': 'Automatable vs. Human Work in a Postmortem',
+    'apr.table.task': 'Task',
+    'apr.table.who': 'Who',
+    'apr.table.note': 'Note',
+    'apr.auto': 'AI',
+    'apr.human': 'Human',
+    'apr.t1.note': 'Pull timestamps from logs, metrics, alert history, and Slack messages. Sequence them. AI does this in 90 seconds.',
+    'apr.t2.note': 'Link specific log lines, metric values, and trace IDs to each timeline entry. Eliminates "I think it was around 3am" ambiguity.',
+    'apr.t3.note': 'What happened, when, what was the customer impact. First draft from structured data; human edits for tone and completeness.',
+    'apr.t4.note': 'Based on root cause type and similar past postmortems. Human promotes, modifies, or rejects each suggestion.',
+    'apr.t5.note': 'The "why did this system behave this way" analysis. AI can suggest, but human judgment is required for accuracy and nuance.',
+    'apr.t6.note': 'Process gaps, communication failures, missing observability, toil that led to shortcuts. Context-sensitive and politically aware.',
+    'apr.t7.note': 'Changes to architecture, process, or team structure. These have organizational consequences beyond the immediate incident.',
+    'apr.s4.h': 'Generating a Runbook from an Incident Timeline',
+    'apr.s4.p1': 'One of the highest-leverage applications of AI in the postmortem workflow is runbook generation. When an incident is resolved, the sequence of actions that worked — the commands run, the services restarted, the rollback performed — is sitting in Slack history, incident channel logs, and the engineer\'s terminal history. It just has not been organized into a runbook yet.',
+    'apr.s4.p2': 'An AI agent with access to the incident timeline, the chat history, and the deployment API can draft a runbook in the same pass as the postmortem. The draft includes the steps taken, the expected outcomes at each step, the verification commands to confirm resolution, and the escalation path if the steps do not work.',
+    'apr.warn.label': 'Never Publish Without Human Review',
+    'apr.warn.p1': 'AI-generated runbooks are first drafts, not finished artifacts. An agent that reconstructed the incident timeline may have inferred steps from context rather than observed them directly. Before a runbook is added to the official library: an engineer who was in the incident validates each step, the escalation path is confirmed accurate, and the commands are tested in a staging environment. Publishing an unreviewed AI-generated runbook is how you create a runbook that fails at 3am on the next incident.',
+    'apr.s5.h': 'Building a Postmortem Corpus for Future Incidents',
+    'apr.s5.p1': 'The compounding value of AI postmortem automation is the corpus effect. Each completed postmortem — with its timeline, root cause analysis, action items, and linked runbook — becomes a training artifact that improves future AI-assisted investigations. When the next similar incident occurs, the triage agent has a high-quality historical record to match against, raising its confidence and improving the quality of its initial hypothesis.',
+    'apr.s5.p2': 'This only works if the postmortems are structured consistently. Teams using AI-assisted postmortem writing in 2026 typically enforce a structured template via their incident management platform — not as a bureaucratic exercise, but because structure is what makes the corpus queryable. An unstructured postmortem corpus is a graveyard; a structured one is an institutional memory that the AI can actually use.',
+    'apr.corpus.label': 'Minimum Postmortem Structure for AI Reuse',
+    'apr.corpus.p1': '<strong>Required fields:</strong> incident ID, severity, service(s) affected, impact duration, timeline (structured, with timestamps and evidence citations), root cause (categorical + free text), contributing factors (list), action items (each with owner, due date, and category tag), linked runbook ID. Optional but high-value: customer impact estimate, detection gap (time from onset to alert), and response gap (time from alert to mitigation start).',
+    'apr.s6.h': 'Toil Reduction in Context',
+    'apr.s6.p1': 'Postmortem automation is one component of a broader AI-assisted SRE toil reduction strategy. The three forms of toil that AI addresses well in 2026 are: reactive toil (on-call triage and remediation — see the on-call agent article), documentation toil (postmortems, runbooks, and incident summaries — this article), and observability query toil (the time spent manually constructing observability queries during investigations — see the MCP observability article).',
+    'apr.s6.p2': 'The pattern across all three: AI handles the mechanical retrieval, structuring, and first-draft generation. Humans provide the judgment, the organizational context, and the accountability. The goal is not to remove humans from SRE — it is to remove the parts of SRE that are mechanical, exhausting, and error-prone at 3am, so that the humans who remain can focus on the reasoning that actually requires them.',
+  },
+  zh: {
+    'apr.cat': 'SRE',
+    'apr.date': '2026年5月',
+    'apr.title': 'AI 故障复盘与 Runbook 自动化：<br>从 3 小时到 20 分钟',
+    'apr.lead': 'AI 可以将故障复盘写作从 3 小时压缩到 20 分钟，并从事故时间线生成 Runbook 初稿。本文介绍如何自动化正确的部分，保留人工分析，并构建让未来事故更短的复盘语料库。',
+    'apr.pub': '发布时间：2026-05-21 11:30 PDT（俄勒冈州）',
+    'apr.s1.h': '复盘积压问题',
+    'apr.s1.p1': '故障复盘是 SRE 中价值最高的活动之一。写得好的复盘能捕获机构知识、防止重现，并且在分享时加速整个工程组织的学习。问题不在于工程师不想写。问题在于写好一份复盘需要三到五小时的专注工作，而这段时间紧接在一次令人筋疲力尽的事故之后，通常是在长班结束时。',
+    'apr.s1.p2': '可预见的结果是复盘积压。两周前发生的事故只得到部分记录。行动项目漂移。时间线是从记忆中重建的，而不是从日志中，因为当时间还新鲜时没有人有精力拉取实际时间戳。',
+    'apr.s1.p3': '2026 年的 AI 复盘自动化针对这个具体问题：不是取代工程师的分析，而是消除其前面的机械性工作。时间线重建、日志引用、行动项目模板化——这些是 AI 擅长处理的任务。系统性分析、促成因素、文化观察——这些仍然需要人类。',
+    'apr.stat1.num': '3小时',
+    'apr.stat1.label': '平均故障复盘写作时间（手动）',
+    'apr.stat2.num': '20分钟',
+    'apr.stat2.label': 'AI 辅助初稿后',
+    'apr.stat3.num': '89%',
+    'apr.stat3.label': '行动项目完成率提升',
+    'apr.s2.h': '三种复盘类型及其自动化策略',
+    'apr.s2.p1': '不是所有事故都产生相同的复盘。理解类型决定了哪些部分可以自动化，哪些需要最多人工投入。',
+    'apr.type1.tag': 'A 类',
+    'apr.type1.h': '已知故障模式',
+    'apr.type1.p': '根因与之前的事故模式匹配。数据库连接池耗尽、缓存踩踏、证书过期。AI 可以完全起草复盘：时间线、根因、促成因素，甚至行动项目（因为相似事故有相似的修复模式）。人工审查和批准。',
+    'apr.type2.tag': 'B 类',
+    'apr.type2.h': '已知系统，新型故障',
+    'apr.type2.p': '服务被充分理解但故障模式是新的。AI 从可观测性数据起草时间线和促成因素。人工撰写根因分析并识别系统性差距。AI 从语料库中类似服务的复盘建议行动项目。',
+    'apr.type3.tag': 'C 类',
+    'apr.type3.h': '新型系统交互',
+    'apr.type3.p': '跨服务级联、意外基础设施行为或之前从未出现的故障模式。AI 提供时间线框架和相关日志/指标证据引用。人工完成所有分析。复盘成为未来 A/B 类事故语料库的高价值补充。',
+    'apr.s3.h': '复盘中的可自动化 vs. 人工工作',
+    'apr.table.task': '任务',
+    'apr.table.who': '负责方',
+    'apr.table.note': '说明',
+    'apr.auto': 'AI',
+    'apr.human': '人工',
+    'apr.t1.note': '从日志、指标、告警历史和 Slack 消息中提取时间戳。排序。AI 在 90 秒内完成。',
+    'apr.t2.note': '将具体的日志行、指标值和追踪 ID 链接到每个时间线条目。消除"我觉得大概是凌晨 3 点"的模糊性。',
+    'apr.t3.note': '发生了什么、何时、客户影响是什么。从结构化数据生成初稿；人工编辑语气和完整性。',
+    'apr.t4.note': '基于根因类型和语料库中类似的历史复盘。人工提升、修改或拒绝每个建议。',
+    'apr.t5.note': '"为什么这个系统会这样表现"的分析。AI 可以建议，但需要人工判断以确保准确性和细微差别。',
+    'apr.t6.note': '流程差距、沟通失败、缺失的可观测性、导致走捷径的苦差事。需要上下文感知和政治意识。',
+    'apr.t7.note': '对架构、流程或团队结构的变更。这些在直接事故之外有组织性后果。',
+    'apr.s4.h': '从事故时间线生成 Runbook',
+    'apr.s4.p1': 'AI 在复盘工作流中最高杠杆的应用之一是 Runbook 生成。当事故解决后，奏效的行动序列——运行的命令、重启的服务、执行的回滚——就在 Slack 历史记录、事故频道日志和工程师的终端历史中。只是还没有被整理成 Runbook。',
+    'apr.s4.p2': '具有事故时间线、聊天历史和部署 API 访问权限的 AI Agent 可以与复盘同时起草 Runbook。草稿包括采取的步骤、每个步骤的预期结果、确认解决的验证命令，以及步骤不奏效时的升级路径。',
+    'apr.warn.label': '未经人工审查不得发布',
+    'apr.warn.p1': 'AI 生成的 Runbook 是初稿，不是成品。重建事故时间线的 Agent 可能是从上下文推断步骤，而不是直接观察到它们。在 Runbook 添加到官方库之前：参与事故的工程师验证每个步骤，确认升级路径准确，并在暂存环境中测试命令。发布未经审查的 AI 生成 Runbook 会导致在下次事故的凌晨 3 点 Runbook 失败。',
+    'apr.s5.h': '构建用于未来事故的复盘语料库',
+    'apr.s5.p1': 'AI 复盘自动化的复利价值是语料库效应。每份完成的复盘——包含其时间线、根因分析、行动项目和关联 Runbook——成为改进未来 AI 辅助调查的训练素材。当下一次类似事故发生时，分类 Agent 有高质量的历史记录可以匹配，提高其置信度并改善初始假设的质量。',
+    'apr.s5.p2': '这只有在复盘结构一致时才有效。2026 年使用 AI 辅助复盘写作的团队通常通过其事故管理平台执行结构化模板——不是作为官僚主义练习，而是因为结构是让语料库可查询的关键。非结构化的复盘语料库是坟墓；结构化的是 AI 实际可以使用的机构记忆。',
+    'apr.corpus.label': 'AI 复用的最小复盘结构',
+    'apr.corpus.p1': '<strong>必填字段：</strong>事故 ID、严重程度、受影响的服务、影响持续时间、时间线（结构化，带时间戳和证据引用）、根因（分类 + 自由文本）、促成因素（列表）、行动项目（每个都有负责人、截止日期和类别标签）、关联 Runbook ID。可选但高价值：客户影响估算、检测差距（从事故发生到告警的时间）和响应差距（从告警到缓解开始的时间）。',
+    'apr.s6.h': '上下文中的苦差事减少',
+    'apr.s6.p1': '复盘自动化是更广泛的 AI 辅助 SRE 苦差事减少策略的一个组成部分。AI 在 2026 年很好地解决的三种苦差事：响应性苦差事（值班分类和修复——见值班 Agent 文章）、文档苦差事（复盘、Runbook 和事故摘要——本文）以及可观测性查询苦差事（调查期间手动构建可观测性查询所花费的时间——见 MCP 可观测性文章）。',
+    'apr.s6.p2': '这三者的共同模式：AI 处理机械性的检索、结构化和初稿生成。人类提供判断、组织上下文和问责制。目标不是从 SRE 中移除人类——而是移除凌晨 3 点机械性的、令人精疲力竭的、容易出错的 SRE 部分，让留下来的人类能够专注于真正需要他们的推理。',
+  },
+  ja: {
+    'apr.cat': 'SRE',
+    'apr.date': '2026年5月',
+    'apr.title': 'AIポストモーテム＆ランブック自動化：<br>3時間から20分へ',
+    'apr.lead': 'AIはポストモーテム執筆を3時間から20分に圧縮し、インシデントタイムラインからランブック初稿を生成できる。正しい部分を自動化し、人間の分析を保ち、将来のインシデントを短縮するポストモーテムコーパスを構築する方法を説明する。',
+    'apr.pub': '公開日：2026-05-21 11:30 PDT（オレゴン州）',
+    'apr.s1.h': 'ポストモーテムバックログ問題',
+    'apr.s1.p1': 'ポストモーテムはSREで最も価値の高い活動の一つだ。よく書かれたポストモーテムは組織知識を捕捉し、再発を防ぎ——共有されるとエンジニアリング組織全体の学習を加速する。問題はエンジニアが書きたくないのではない。問題は、ポストモーテムをよく書くには3〜5時間の集中した作業が必要で、その時間は疲弊したインシデントの直後、しばしば長いシフトの終わりに来ることだ。',
+    'apr.s1.p2': '予測可能な結果はポストモーテムバックログだ。2週間前に発生したインシデントは部分的な書き込みしか得られない。アクションアイテムが漂流する。タイムラインはログからではなく記憶から再構築される。なぜならまだ新鮮なうちに実際のタイムスタンプを引き出すエネルギーが誰にもなかったからだ。',
+    'apr.s1.p3': '2026年のAIポストモーテム自動化はこの特定の問題を標的にする：エンジニアの分析を置き換えるのではなく、その前にある機械的な作業を排除する。タイムライン再構築、ログ引用、アクションアイテムテンプレート化——これらはAIがうまく処理するタスクだ。システム的分析、寄与要因、文化的観察——これらはまだ人間を必要とする。',
+    'apr.stat1.num': '3時間',
+    'apr.stat1.label': '平均ポストモーテム執筆時間（手動）',
+    'apr.stat2.num': '20分',
+    'apr.stat2.label': 'AI支援初稿あり',
+    'apr.stat3.num': '89%',
+    'apr.stat3.label': 'アクションアイテム完了率の改善',
+    'apr.s2.h': '3つのポストモーテムタイプと自動化対象',
+    'apr.s2.p1': 'すべてのインシデントが同じポストモーテムを生むわけではない。タイプを理解することで、どの部分が自動化可能で、どの部分が最も人間の投資を必要とするかが決まる。',
+    'apr.type1.tag': 'タイプA',
+    'apr.type1.h': '既知の障害モード',
+    'apr.type1.p': '根本原因が過去のインシデントパターンと一致する。データベース接続プールの枯渇、キャッシュスタンピード、証明書の有効期限。AIはポストモーテムを完全に下書きできる：タイムライン、根本原因、寄与要因、さらにはアクションアイテム（類似インシデントは類似の修復パターンを持つので）。人間がレビューして承認する。',
+    'apr.type2.tag': 'タイプB',
+    'apr.type2.h': '既知のシステム、新規の障害',
+    'apr.type2.p': 'サービスはよく理解されているが障害モードは新しい。AIはオブザーバビリティデータからタイムラインと寄与要因を下書きする。人間が根本原因分析を書き、システム的なギャップを特定する。AIはコーパスの類似サービスのポストモーテムからアクションアイテムを提案する。',
+    'apr.type3.tag': 'タイプC',
+    'apr.type3.h': '新規のシステム相互作用',
+    'apr.type3.p': 'クロスサービスカスケード、予期しないインフラ動作、または以前に現れたことのない障害モード。AIはタイムラインの骨格と関連ログ/メトリクス証拠の引用を提供する。人間がすべての分析を行う。ポストモーテムは将来のタイプA/Bインシデントのコーパスへの高価値な追加になる。',
+    'apr.s3.h': 'ポストモーテムにおける自動化可能 vs. 人間の作業',
+    'apr.table.task': 'タスク',
+    'apr.table.who': '担当',
+    'apr.table.note': '備考',
+    'apr.auto': 'AI',
+    'apr.human': '人間',
+    'apr.t1.note': 'ログ、メトリクス、アラート履歴、Slackメッセージからタイムスタンプを抽出。順序付け。AIは90秒でこれを行う。',
+    'apr.t2.note': '特定のログ行、メトリクス値、トレースIDを各タイムラインエントリにリンク。「午前3時頃だったと思う」の曖昧さを排除。',
+    'apr.t3.note': '何が、いつ、顧客への影響は何か。構造化データからの初稿；人間がトーンと完全性を編集。',
+    'apr.t4.note': '根本原因タイプとコーパスの類似した過去のポストモーテムに基づく。人間が各提案を昇格、修正、または拒否する。',
+    'apr.t5.note': '「このシステムはなぜそのように動作したのか」の分析。AIは提案できるが、正確さとニュアンスには人間の判断が必要。',
+    'apr.t6.note': 'プロセスのギャップ、コミュニケーションの失敗、欠落したオブザーバビリティ、近道につながった苦労。文脈に敏感で政治的に意識が必要。',
+    'apr.t7.note': 'アーキテクチャ、プロセス、またはチーム構造への変更。これらは直接のインシデントを超えた組織的な影響を持つ。',
+    'apr.s4.h': 'インシデントタイムラインからのランブック生成',
+    'apr.s4.p1': 'ポストモーテムワークフローでAIの最もレバレッジの高いアプリケーションの一つはランブック生成だ。インシデントが解決されると、うまくいったアクションの順序——実行されたコマンド、再起動されたサービス、実行されたロールバック——はSlackの履歴、インシデントチャンネルのログ、エンジニアのターミナル履歴に残っている。まだランブックに整理されていないだけだ。',
+    'apr.s4.p2': 'インシデントタイムライン、チャット履歴、デプロイAPIにアクセスできるAIエージェントは、ポストモーテムと同じパスでランブックを下書きできる。下書きには取られたステップ、各ステップでの期待される結果、解決を確認するための検証コマンド、そしてステップが機能しない場合のエスカレーションパスが含まれる。',
+    'apr.warn.label': '人間によるレビューなしに公開しない',
+    'apr.warn.p1': 'AI生成のランブックは初稿であり、完成した成果物ではない。インシデントタイムラインを再構築したエージェントは、直接観察するのではなく文脈からステップを推論した可能性がある。ランブックを公式ライブラリに追加する前に：インシデントにいたエンジニアが各ステップを検証し、エスカレーションパスが正確であることを確認し、コマンドがステージング環境でテストされる。未レビューのAI生成ランブックを公開することで、次のインシデントの午前3時に失敗するランブックが生まれる。',
+    'apr.s5.h': '将来のインシデントのためのポストモーテムコーパスの構築',
+    'apr.s5.p1': 'AIポストモーテム自動化の複利価値はコーパス効果だ。各完了したポストモーテム——タイムライン、根本原因分析、アクションアイテム、リンクされたランブックを含む——は将来のAI支援調査を改善するトレーニング成果物になる。次の類似インシデントが発生したとき、トリアージエージェントは照合できる高品質な歴史的記録を持ち、信頼度を高め、最初の仮説の質を改善する。',
+    'apr.s5.p2': 'これはポストモーテムが一貫して構造化されている場合にのみ機能する。2026年にAI支援ポストモーテム執筆を使用しているチームは通常、インシデント管理プラットフォームを通じて構造化テンプレートを強制する——官僚主義的な演習としてではなく、構造がコーパスをクエリ可能にするものだから。非構造化のポストモーテムコーパスは墓場；構造化されたものはAIが実際に使用できる組織的記憶だ。',
+    'apr.corpus.label': 'AIによる再利用のための最小ポストモーテム構造',
+    'apr.corpus.p1': '<strong>必須フィールド：</strong>インシデントID、重大度、影響を受けたサービス、影響期間、タイムライン（構造化、タイムスタンプと証拠引用付き）、根本原因（カテゴリ + 自由テキスト）、寄与要因（リスト）、アクションアイテム（各々オーナー、期日、カテゴリタグ付き）、リンクされたランブックID。オプションだが高価値：顧客への影響推定、検出ギャップ（発生からアラートまでの時間）、対応ギャップ（アラートから緩和開始までの時間）。',
+    'apr.s6.h': '文脈の中でのトイル削減',
+    'apr.s6.p1': 'ポストモーテム自動化は、より広範なAI支援SREトイル削減戦略の一コンポーネントだ。AIが2026年によく対処する3つのトイル形態：リアクティブトイル（オンコールトリアージと修復——オンコールエージェント記事を参照）、ドキュメントトイル（ポストモーテム、ランブック、インシデントサマリー——本記事）、オブザーバビリティクエリトイル（調査中にオブザーバビリティクエリを手動で構築するのに費やす時間——MCP可観測性記事を参照）。',
+    'apr.s6.p2': '3つすべてにわたるパターン：AIは機械的な取得、構造化、初稿生成を処理する。人間は判断、組織的文脈、説明責任を提供する。目標はSREから人間を排除することではない——午前3時に機械的で、疲弊し、エラーが起きやすいSREの部分を排除し、残る人間が本当に必要とされる推論に集中できるようにすることだ。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -42,6 +42,24 @@
 
   <!-- Ideas / Articles -->
   <url>
+    <loc>https://www.vsike.com/ideas/ai-postmortem-runbook.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vsike.com/ideas/mcp-sre-observability.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.vsike.com/ideas/ai-oncall-agent.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://www.vsike.com/ideas/calm-interfaces.html</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>

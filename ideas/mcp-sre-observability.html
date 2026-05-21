@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Tools for SRE Observability: Giving Your AI Agent Eyes — vsike</title>
+  <meta name="description" content="Model Context Protocol lets SRE agents query Elasticsearch, Prometheus, Honeycomb, and Kubernetes in natural language. Here is what the MCP tool surface looks like for a real observability stack, and what changes when the agent can see everything.">
+  <meta name="keywords" content="MCP SRE, Model Context Protocol observability, AI agent Elasticsearch, Honeycomb MCP, Prometheus MCP, Kubernetes AI investigation, SRE tooling 2026, 可观测性MCP, SRE智能体工具">
+  <link rel="canonical" href="https://www.vsike.com/ideas/mcp-sre-observability.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .key { color: #f9c74f; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .tool-grid { grid-template-columns: 1fr; } }
+    .tool-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .tool-card .tool-name { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: .4rem; }
+    .tool-card h4 { font-size: var(--fs-sm); font-weight: 600; margin-bottom: .4rem; }
+    .tool-card p { font-size: var(--fs-sm); color: var(--fg-muted); margin: 0; }
+    .warn-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .warn-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .note-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .note-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .flow-list { list-style: none; padding: 0; margin: 1.5rem 0; counter-reset: flow; }
+    .flow-list li { counter-increment: flow; display: flex; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--fg-dim); font-size: var(--fs-sm); }
+    .flow-list li:last-child { border-bottom: none; }
+    .flow-list li::before { content: counter(flow, decimal-leading-zero); font-family: var(--mono); font-size: var(--fs-xs); color: var(--accent); font-weight: 700; flex-shrink: 0; padding-top: .1rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="mso.cat">SRE</span>
+        <span class="article-date" data-i18n="mso.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="mso.title">MCP Tools for SRE Observability:<br>Giving Your Agent Eyes</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="mso.lead">Model Context Protocol lets SRE agents query Elasticsearch, Prometheus, Honeycomb, and Kubernetes in natural language. Here is what the MCP tool surface looks like for a real observability stack, and what changes when the agent can see everything.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="mso.pub">Published: 2026-05-21 10:00 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="mso.s1.h">The Tool Surface Problem</h2>
+      <p data-i18n="mso.s1.p1">An SRE AI agent is only as useful as the data it can reach. In 2025, building agent tool integrations meant writing custom API wrappers for every observability backend — Elasticsearch queries via REST, Prometheus via PromQL HTTP API, Kubernetes via kubectl subprocesses. Each integration was bespoke, brittle, and unmaintainable.</p>
+      <p data-i18n="mso.s1.p2">Model Context Protocol (MCP) changes this. MCP is an open standard, introduced by Anthropic in late 2024, that defines a universal interface between AI agents and external tools. An observability backend that exposes an MCP server can be connected to any MCP-compatible agent in minutes — no custom wrapper, no API translation layer.</p>
+      <p data-i18n="mso.s1.p3">By mid-2026, the major observability vendors have shipped MCP servers: Elastic, Honeycomb, Grafana, Datadog, and the Kubernetes community have all published official or community MCP servers. This dramatically lowers the barrier to building a well-instrumented SRE agent.</p>
+
+      <h2 data-i18n="mso.s2.h">Core MCP Tools for a Typical SRE Stack</h2>
+      <p data-i18n="mso.s2.p1">A production SRE agent in 2026 typically has access to four categories of MCP tools. Each one expands the agent's ability to form and verify hypotheses during an incident investigation.</p>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-name" data-i18n="mso.tool1.name">Logs — Elastic MCP</div>
+          <h4 data-i18n="mso.tool1.h">Full-text and structured search</h4>
+          <p data-i18n="mso.tool1.p">Natural language queries converted to KQL or Lucene. Time-windowed log retrieval, error rate aggregation, pattern clustering. Agent can ask "show me all 5xx errors from auth-service in the 10 minutes before the alert" without knowing the index schema.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name" data-i18n="mso.tool2.name">Metrics — Prometheus / Grafana MCP</div>
+          <h4 data-i18n="mso.tool2.h">Time-series queries and anomaly detection</h4>
+          <p data-i18n="mso.tool2.p">PromQL generation from natural language, metric exploration, threshold comparison. Agent can identify when a metric crossed a threshold relative to a deployment timestamp without having PromQL expertise.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name" data-i18n="mso.tool3.name">Traces — Honeycomb MCP</div>
+          <h4 data-i18n="mso.tool3.h">Request-level latency and error tracing</h4>
+          <p data-i18n="mso.tool3.p">Distributed trace retrieval, span-level error analysis, latency heatmaps. Honeycomb's column-oriented trace storage makes arbitrary slicing fast — the agent can find the exact span where a request started failing.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name" data-i18n="mso.tool4.name">Infrastructure — Kubernetes MCP</div>
+          <h4 data-i18n="mso.tool4.h">Pod state, events, and resource usage</h4>
+          <p data-i18n="mso.tool4.p">Read-only access to pod logs, events, resource limits, node pressure, and recent rollout history. Agent can identify OOMKilled pods, crashloop backoffs, or pending pods without needing kubectl access or cluster context files.</p>
+        </div>
+      </div>
+
+      <h2 data-i18n="mso.s3.h">What an MCP-Enabled Investigation Looks Like</h2>
+      <p data-i18n="mso.s3.p1">Here is a representative trace of how an MCP-equipped SRE agent investigates a latency spike. Each step corresponds to a distinct MCP tool call, and the agent reasons between steps to decide what to query next.</p>
+
+      <ol class="flow-list">
+        <li data-i18n="mso.flow1"><strong>Alert received:</strong> p99 latency for checkout-service exceeded 2s. Agent receives alert context: service name, metric value, timestamp, linked runbook.</li>
+        <li data-i18n="mso.flow2"><strong>Prometheus MCP:</strong> Query latency histogram for checkout-service over the past 30 min. Find: p99 crossed threshold at 14:22 UTC, coinciding with a spike in db_query_duration.</li>
+        <li data-i18n="mso.flow3"><strong>Kubernetes MCP:</strong> List recent rollouts and pod events for checkout-service. Find: no recent deployment. Find: two pods showing high memory pressure on node pool az-eastus-2.</li>
+        <li data-i18n="mso.flow4"><strong>Elastic MCP:</strong> Search logs for checkout-service between 14:20–14:25. Find: 847 occurrences of "slow query: 1200ms" from a specific SQL statement hash.</li>
+        <li data-i18n="mso.flow5"><strong>Honeycomb MCP:</strong> Retrieve traces for the slow SQL hash. Find: query is a sequential scan on the orders table. EXPLAIN output in trace attributes shows a missing index after a schema migration 48 hours ago.</li>
+        <li data-i18n="mso.flow6"><strong>Synthesis:</strong> Agent forms hypothesis: schema migration dropped an index. Queries deployment history to confirm migration timestamp. Produces structured output with confidence 0.91. Proposed action: recreate index (requires DBA approval).</li>
+      </ol>
+
+      <p data-i18n="mso.s3.p2">Without MCP, each of those tool calls would have required the agent to know API endpoints, authentication schemes, query languages, and response formats for five different systems. With MCP, the agent describes what it needs, and the MCP server handles the translation.</p>
+
+      <h2 data-i18n="mso.s4.h">Wiring MCP into an Agent: The Configuration</h2>
+      <p data-i18n="mso.s4.p1">The following shows how MCP servers are declared in a Claude agent configuration. The agent runtime handles tool discovery, schema loading, and request routing automatically once the servers are declared.</p>
+
+      <div class="code-block"><span class="comment"># agent-oncall.yaml — MCP server declarations</span>
+<span class="key">name</span>: <span class="str">oncall-triage-agent</span>
+<span class="key">model</span>: <span class="str">claude-opus-4-7</span>
+
+<span class="key">mcp_servers</span>:
+  - <span class="key">name</span>: <span class="str">elastic</span>
+    <span class="key">transport</span>: <span class="str">http</span>
+    <span class="key">url</span>: <span class="str">https://mcp.internal/elastic</span>
+    <span class="key">auth</span>: <span class="str">bearer</span>
+    <span class="key">scopes</span>: [<span class="str">logs:read</span>]
+
+  - <span class="key">name</span>: <span class="str">prometheus</span>
+    <span class="key">transport</span>: <span class="str">http</span>
+    <span class="key">url</span>: <span class="str">https://mcp.internal/prometheus</span>
+    <span class="key">auth</span>: <span class="str">bearer</span>
+    <span class="key">scopes</span>: [<span class="str">metrics:read</span>]
+
+  - <span class="key">name</span>: <span class="str">honeycomb</span>
+    <span class="key">transport</span>: <span class="str">http</span>
+    <span class="key">url</span>: <span class="str">https://mcp.internal/honeycomb</span>
+    <span class="key">auth</span>: <span class="str">bearer</span>
+    <span class="key">scopes</span>: [<span class="str">traces:read</span>]
+
+  - <span class="key">name</span>: <span class="str">kubernetes</span>
+    <span class="key">transport</span>: <span class="str">http</span>
+    <span class="key">url</span>: <span class="str">https://mcp.internal/k8s</span>
+    <span class="key">auth</span>: <span class="str">bearer</span>
+    <span class="key">scopes</span>: [<span class="str">pods:read</span>, <span class="str">events:read</span>]   <span class="comment"># no write access</span>
+
+<span class="key">guardrails</span>:
+  <span class="key">no_write_actions</span>: <span class="str">true</span>
+  <span class="key">max_tool_calls</span>: <span class="str">30</span>
+  <span class="key">timeout_seconds</span>: <span class="str">120</span></div>
+
+      <h2 data-i18n="mso.s5.h">Pre-Deployment Health Checks via MCP</h2>
+      <p data-i18n="mso.s5.p1">One underused application of MCP in SRE workflows is pre-deployment health verification. Before a deployment proceeds, an agent queries the observability stack to confirm baseline health: error rates within tolerance, no active alerts, resource headroom on target nodes, and no open incidents linked to the deploying service.</p>
+      <p data-i18n="mso.s5.p2">This is particularly valuable for off-hours deployments and automated release pipelines where no engineer is actively watching. The agent's pre-deployment report becomes a signed artifact attached to the deployment record — evidence that the system was in a known state when the deployment started.</p>
+
+      <div class="note-block">
+        <div class="note-label" data-i18n="mso.note.label">Pre-Deployment Check Pattern</div>
+        <p data-i18n="mso.note.p1">1. Query error rate baseline for target service (last 24h p99). 2. Check for active alerts in any upstream dependency. 3. Verify node resource headroom exceeds 20%. 4. Confirm no open incidents tagged with the service. 5. Generate signed health report. If any check fails, block deployment and alert on-call lead — do not proceed autonomously.</p>
+      </div>
+
+      <h2 data-i18n="mso.s6.h">Security Boundaries for MCP Tool Access</h2>
+      <p data-i18n="mso.s6.p1">Giving an AI agent broad observability access creates a real risk surface. A compromised agent — whether through prompt injection via a log entry, a malicious trace attribute, or a poisoned runbook — could exfiltrate sensitive log data, enumerate internal service topology, or be used to confirm whether a breach has been detected.</p>
+
+      <div class="warn-block">
+        <div class="warn-label" data-i18n="mso.warn.label">MCP Security Boundaries</div>
+        <p data-i18n="mso.warn.p1"><strong>Scope MCP tokens to read-only.</strong> There is no reason for a triage agent to have write access to your observability backend. Most production log data is sensitive — MCP tokens should be scoped to the minimum required query surface.</p>
+        <p data-i18n="mso.warn.p2"><strong>Treat log data as untrusted agent input.</strong> A log entry is user-controlled data. If your service logs request bodies or user-provided strings, an attacker can craft a log message containing prompt injection. Sanitize what the agent receives; log retrieval tools should strip or escape instruction-like patterns.</p>
+        <p data-i18n="mso.warn.p3"><strong>Audit agent tool calls.</strong> Every MCP tool call should be logged with the agent session ID, the query issued, and the result size. This creates an audit trail for investigating agent behavior during or after a security incident.</p>
+      </div>
+
+      <h2 data-i18n="mso.s7.h">The Payoff</h2>
+      <p data-i18n="mso.s7.p1">Teams that have wired full MCP observability stacks into their SRE agents report that the most significant change is not speed — it is the quality of hypotheses. When an agent can query logs, metrics, traces, and infrastructure state in a single investigation thread, it surfaces correlations that would take a human engineer 20-30 minutes to find manually. The agent does not replace the engineer's judgment; it replaces the 3am data gathering that precedes that judgment.</p>
+      <p data-i18n="mso.s7.p2">The practical advice for teams starting this journey: wire one backend at a time, starting with logs. Get the agent producing useful log summaries before adding metrics. Add traces once the log and metric investigation is reliable. Add Kubernetes last — it has the highest blast potential from a security perspective and benefits most from a mature guardrail configuration.</p>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'mso.cat': 'SRE',
+    'mso.date': 'May 2026',
+    'mso.title': 'MCP Tools for SRE Observability:<br>Giving Your Agent Eyes',
+    'mso.lead': 'Model Context Protocol lets SRE agents query Elasticsearch, Prometheus, Honeycomb, and Kubernetes in natural language. Here is what the MCP tool surface looks like for a real observability stack, and what changes when the agent can see everything.',
+    'mso.pub': 'Published: 2026-05-21 10:00 PDT (Oregon)',
+    'mso.s1.h': 'The Tool Surface Problem',
+    'mso.s1.p1': 'An SRE AI agent is only as useful as the data it can reach. In 2025, building agent tool integrations meant writing custom API wrappers for every observability backend — Elasticsearch queries via REST, Prometheus via PromQL HTTP API, Kubernetes via kubectl subprocesses. Each integration was bespoke, brittle, and unmaintainable.',
+    'mso.s1.p2': 'Model Context Protocol (MCP) changes this. MCP is an open standard, introduced by Anthropic in late 2024, that defines a universal interface between AI agents and external tools. An observability backend that exposes an MCP server can be connected to any MCP-compatible agent in minutes — no custom wrapper, no API translation layer.',
+    'mso.s1.p3': 'By mid-2026, the major observability vendors have shipped MCP servers: Elastic, Honeycomb, Grafana, Datadog, and the Kubernetes community have all published official or community MCP servers. This dramatically lowers the barrier to building a well-instrumented SRE agent.',
+    'mso.s2.h': 'Core MCP Tools for a Typical SRE Stack',
+    'mso.s2.p1': 'A production SRE agent in 2026 typically has access to four categories of MCP tools. Each one expands the agent\'s ability to form and verify hypotheses during an incident investigation.',
+    'mso.tool1.name': 'Logs — Elastic MCP',
+    'mso.tool1.h': 'Full-text and structured search',
+    'mso.tool1.p': 'Natural language queries converted to KQL or Lucene. Time-windowed log retrieval, error rate aggregation, pattern clustering. Agent can ask "show me all 5xx errors from auth-service in the 10 minutes before the alert" without knowing the index schema.',
+    'mso.tool2.name': 'Metrics — Prometheus / Grafana MCP',
+    'mso.tool2.h': 'Time-series queries and anomaly detection',
+    'mso.tool2.p': 'PromQL generation from natural language, metric exploration, threshold comparison. Agent can identify when a metric crossed a threshold relative to a deployment timestamp without having PromQL expertise.',
+    'mso.tool3.name': 'Traces — Honeycomb MCP',
+    'mso.tool3.h': 'Request-level latency and error tracing',
+    'mso.tool3.p': 'Distributed trace retrieval, span-level error analysis, latency heatmaps. Honeycomb\'s column-oriented trace storage makes arbitrary slicing fast — the agent can find the exact span where a request started failing.',
+    'mso.tool4.name': 'Infrastructure — Kubernetes MCP',
+    'mso.tool4.h': 'Pod state, events, and resource usage',
+    'mso.tool4.p': 'Read-only access to pod logs, events, resource limits, node pressure, and recent rollout history. Agent can identify OOMKilled pods, crashloop backoffs, or pending pods without needing kubectl access or cluster context files.',
+    'mso.s3.h': 'What an MCP-Enabled Investigation Looks Like',
+    'mso.s3.p1': 'Here is a representative trace of how an MCP-equipped SRE agent investigates a latency spike. Each step corresponds to a distinct MCP tool call, and the agent reasons between steps to decide what to query next.',
+    'mso.flow1': '<strong>Alert received:</strong> p99 latency for checkout-service exceeded 2s. Agent receives alert context: service name, metric value, timestamp, linked runbook.',
+    'mso.flow2': '<strong>Prometheus MCP:</strong> Query latency histogram for checkout-service over the past 30 min. Find: p99 crossed threshold at 14:22 UTC, coinciding with a spike in db_query_duration.',
+    'mso.flow3': '<strong>Kubernetes MCP:</strong> List recent rollouts and pod events for checkout-service. Find: no recent deployment. Find: two pods showing high memory pressure on node pool az-eastus-2.',
+    'mso.flow4': '<strong>Elastic MCP:</strong> Search logs for checkout-service between 14:20–14:25. Find: 847 occurrences of "slow query: 1200ms" from a specific SQL statement hash.',
+    'mso.flow5': '<strong>Honeycomb MCP:</strong> Retrieve traces for the slow SQL hash. Find: query is a sequential scan on the orders table. EXPLAIN output in trace attributes shows a missing index after a schema migration 48 hours ago.',
+    'mso.flow6': '<strong>Synthesis:</strong> Agent forms hypothesis: schema migration dropped an index. Queries deployment history to confirm migration timestamp. Produces structured output with confidence 0.91. Proposed action: recreate index (requires DBA approval).',
+    'mso.s3.p2': 'Without MCP, each of those tool calls would have required the agent to know API endpoints, authentication schemes, query languages, and response formats for five different systems. With MCP, the agent describes what it needs, and the MCP server handles the translation.',
+    'mso.s4.h': 'Wiring MCP into an Agent: The Configuration',
+    'mso.s4.p1': 'The following shows how MCP servers are declared in a Claude agent configuration. The agent runtime handles tool discovery, schema loading, and request routing automatically once the servers are declared.',
+    'mso.s5.h': 'Pre-Deployment Health Checks via MCP',
+    'mso.s5.p1': 'One underused application of MCP in SRE workflows is pre-deployment health verification. Before a deployment proceeds, an agent queries the observability stack to confirm baseline health: error rates within tolerance, no active alerts, resource headroom on target nodes, and no open incidents linked to the deploying service.',
+    'mso.s5.p2': 'This is particularly valuable for off-hours deployments and automated release pipelines where no engineer is actively watching. The agent\'s pre-deployment report becomes a signed artifact attached to the deployment record — evidence that the system was in a known state when the deployment started.',
+    'mso.note.label': 'Pre-Deployment Check Pattern',
+    'mso.note.p1': '1. Query error rate baseline for target service (last 24h p99). 2. Check for active alerts in any upstream dependency. 3. Verify node resource headroom exceeds 20%. 4. Confirm no open incidents tagged with the service. 5. Generate signed health report. If any check fails, block deployment and alert on-call lead — do not proceed autonomously.',
+    'mso.s6.h': 'Security Boundaries for MCP Tool Access',
+    'mso.s6.p1': 'Giving an AI agent broad observability access creates a real risk surface. A compromised agent — whether through prompt injection via a log entry, a malicious trace attribute, or a poisoned runbook — could exfiltrate sensitive log data, enumerate internal service topology, or be used to confirm whether a breach has been detected.',
+    'mso.warn.label': 'MCP Security Boundaries',
+    'mso.warn.p1': '<strong>Scope MCP tokens to read-only.</strong> There is no reason for a triage agent to have write access to your observability backend. Most production log data is sensitive — MCP tokens should be scoped to the minimum required query surface.',
+    'mso.warn.p2': '<strong>Treat log data as untrusted agent input.</strong> A log entry is user-controlled data. If your service logs request bodies or user-provided strings, an attacker can craft a log message containing prompt injection. Sanitize what the agent receives; log retrieval tools should strip or escape instruction-like patterns.',
+    'mso.warn.p3': '<strong>Audit agent tool calls.</strong> Every MCP tool call should be logged with the agent session ID, the query issued, and the result size. This creates an audit trail for investigating agent behavior during or after a security incident.',
+    'mso.s7.h': 'The Payoff',
+    'mso.s7.p1': 'Teams that have wired full MCP observability stacks into their SRE agents report that the most significant change is not speed — it is the quality of hypotheses. When an agent can query logs, metrics, traces, and infrastructure state in a single investigation thread, it surfaces correlations that would take a human engineer 20-30 minutes to find manually. The agent does not replace the engineer\'s judgment; it replaces the 3am data gathering that precedes that judgment.',
+    'mso.s7.p2': 'The practical advice for teams starting this journey: wire one backend at a time, starting with logs. Get the agent producing useful log summaries before adding metrics. Add traces once the log and metric investigation is reliable. Add Kubernetes last — it has the highest blast potential from a security perspective and benefits most from a mature guardrail configuration.',
+  },
+  zh: {
+    'mso.cat': 'SRE',
+    'mso.date': '2026年5月',
+    'mso.title': 'MCP 工具与 SRE 可观测性：<br>为 Agent 装上眼睛',
+    'mso.lead': 'Model Context Protocol 让 SRE Agent 能用自然语言查询 Elasticsearch、Prometheus、Honeycomb 和 Kubernetes。本文介绍真实可观测性栈的 MCP 工具面，以及当 Agent 能看到一切时会发生什么变化。',
+    'mso.pub': '发布时间：2026-05-21 10:00 PDT（俄勒冈州）',
+    'mso.s1.h': '工具面问题',
+    'mso.s1.p1': 'SRE AI Agent 的价值取决于它能获取的数据。2025 年，构建 Agent 工具集成意味着为每个可观测性后端编写自定义 API 包装器——通过 REST 的 Elasticsearch 查询、通过 PromQL HTTP API 的 Prometheus、通过 kubectl 子进程的 Kubernetes。每个集成都是定制的、脆弱的、难以维护的。',
+    'mso.s1.p2': 'Model Context Protocol（MCP）改变了这一切。MCP 是 Anthropic 于 2024 年底引入的开放标准，定义了 AI Agent 与外部工具之间的通用接口。暴露 MCP 服务器的可观测性后端可以在几分钟内连接到任何兼容 MCP 的 Agent——无需自定义包装器，无需 API 转换层。',
+    'mso.s1.p3': '到 2026 年中期，主要可观测性厂商都发布了 MCP 服务器：Elastic、Honeycomb、Grafana、Datadog 以及 Kubernetes 社区都发布了官方或社区 MCP 服务器。这大大降低了构建良好检测的 SRE Agent 的门槛。',
+    'mso.s2.h': '典型 SRE 栈的核心 MCP 工具',
+    'mso.s2.p1': '2026 年生产环境 SRE Agent 通常可以访问四类 MCP 工具。每类工具都扩展了 Agent 在事故调查中形成和验证假设的能力。',
+    'mso.tool1.name': '日志 — Elastic MCP',
+    'mso.tool1.h': '全文和结构化搜索',
+    'mso.tool1.p': '自然语言查询转换为 KQL 或 Lucene。时间窗口日志检索、错误率聚合、模式聚类。Agent 无需了解索引模式即可询问"告警前 10 分钟内 auth-service 的所有 5xx 错误"。',
+    'mso.tool2.name': '指标 — Prometheus / Grafana MCP',
+    'mso.tool2.h': '时间序列查询和异常检测',
+    'mso.tool2.p': '从自然语言生成 PromQL、指标探索、阈值比较。Agent 无需 PromQL 专业知识即可识别指标相对于部署时间戳何时跨越阈值。',
+    'mso.tool3.name': '追踪 — Honeycomb MCP',
+    'mso.tool3.h': '请求级延迟和错误追踪',
+    'mso.tool3.p': '分布式追踪检索、span 级错误分析、延迟热图。Honeycomb 的列式追踪存储使任意切片变快——Agent 可以找到请求开始失败的确切 span。',
+    'mso.tool4.name': '基础设施 — Kubernetes MCP',
+    'mso.tool4.h': 'Pod 状态、事件和资源使用',
+    'mso.tool4.p': '对 Pod 日志、事件、资源限制、节点压力和近期发布历史的只读访问。Agent 无需 kubectl 访问或集群上下文文件即可识别 OOMKilled Pod、崩溃循环或挂起 Pod。',
+    'mso.s3.h': 'MCP 使能调查的实际流程',
+    'mso.s3.p1': '以下是 MCP 装备的 SRE Agent 如何调查延迟峰值的代表性追踪。每个步骤对应一个独特的 MCP 工具调用，Agent 在步骤之间推理以决定下一步查询什么。',
+    'mso.flow1': '<strong>收到告警：</strong>checkout-service 的 p99 延迟超过 2 秒。Agent 接收告警上下文：服务名称、指标值、时间戳、关联 Runbook。',
+    'mso.flow2': '<strong>Prometheus MCP：</strong>查询过去 30 分钟 checkout-service 的延迟直方图。发现：p99 在 14:22 UTC 越过阈值，与 db_query_duration 峰值同时发生。',
+    'mso.flow3': '<strong>Kubernetes MCP：</strong>列出 checkout-service 的近期发布和 Pod 事件。发现：没有近期部署。发现：节点池 az-eastus-2 上两个 Pod 显示高内存压力。',
+    'mso.flow4': '<strong>Elastic MCP：</strong>搜索 14:20-14:25 之间 checkout-service 的日志。发现：来自特定 SQL 语句哈希的 847 次"慢查询：1200ms"。',
+    'mso.flow5': '<strong>Honeycomb MCP：</strong>检索慢 SQL 哈希的追踪。发现：查询是对 orders 表的顺序扫描。追踪属性中的 EXPLAIN 输出显示 48 小时前 Schema 迁移后丢失了索引。',
+    'mso.flow6': '<strong>综合分析：</strong>Agent 形成假设：Schema 迁移删除了索引。查询部署历史确认迁移时间戳。生成置信度 0.91 的结构化输出。建议行动：重建索引（需要 DBA 批准）。',
+    'mso.s3.p2': '没有 MCP，每个工具调用都需要 Agent 了解五个不同系统的 API 端点、认证方案、查询语言和响应格式。有了 MCP，Agent 描述它需要什么，MCP 服务器处理翻译。',
+    'mso.s4.h': '将 MCP 接入 Agent：配置方法',
+    'mso.s4.p1': '以下展示了如何在 Claude Agent 配置中声明 MCP 服务器。一旦声明了服务器，Agent 运行时会自动处理工具发现、Schema 加载和请求路由。',
+    'mso.s5.h': '通过 MCP 进行部署前健康检查',
+    'mso.s5.p1': 'MCP 在 SRE 工作流中一个未被充分利用的应用是部署前健康验证。在部署进行之前，Agent 查询可观测性栈以确认基准健康状态：错误率在容忍范围内、没有活跃告警、目标节点有足够资源余量，以及没有与部署服务相关的未解决事故。',
+    'mso.s5.p2': '这对于无工程师主动监控的非工作时间部署和自动化发布管道特别有价值。Agent 的部署前报告成为附加到部署记录的签名工件——部署开始时系统处于已知状态的证据。',
+    'mso.note.label': '部署前检查模式',
+    'mso.note.p1': '1. 查询目标服务的错误率基准（过去 24 小时 p99）。2. 检查任何上游依赖中的活跃告警。3. 验证节点资源余量超过 20%。4. 确认没有标记有该服务的未解决事故。5. 生成签名健康报告。如果任何检查失败，阻止部署并通知值班负责人——不要自主继续。',
+    'mso.s6.h': 'MCP 工具访问的安全边界',
+    'mso.s6.p1': '给 AI Agent 广泛的可观测性访问权限会产生真实的风险面。被入侵的 Agent——无论是通过日志条目中的提示注入、恶意追踪属性还是被污染的 Runbook——可能泄露敏感日志数据、枚举内部服务拓扑，或被用于确认是否已检测到入侵。',
+    'mso.warn.label': 'MCP 安全边界',
+    'mso.warn.p1': '<strong>将 MCP 令牌限定为只读。</strong>分类 Agent 没有理由对可观测性后端有写入权限。大多数生产日志数据是敏感的——MCP 令牌应限定在所需的最小查询面。',
+    'mso.warn.p2': '<strong>将日志数据视为不可信的 Agent 输入。</strong>日志条目是用户控制的数据。如果你的服务记录请求体或用户提供的字符串，攻击者可以精心构造包含提示注入的日志消息。净化 Agent 接收的内容；日志检索工具应剥离或转义类似指令的模式。',
+    'mso.warn.p3': '<strong>审计 Agent 工具调用。</strong>每个 MCP 工具调用都应记录 Agent 会话 ID、发出的查询和结果大小。这为在安全事故期间或之后调查 Agent 行为创建了审计追踪。',
+    'mso.s7.h': '回报',
+    'mso.s7.p1': '将完整 MCP 可观测性栈接入其 SRE Agent 的团队报告说，最显著的变化不是速度——而是假设的质量。当 Agent 可以在单个调查线程中查询日志、指标、追踪和基础设施状态时，它会浮现出人类工程师手动需要 20-30 分钟才能发现的关联。Agent 不会取代工程师的判断；它取代了在判断之前的凌晨 3 点数据收集。',
+    'mso.s7.p2': '对于开始这段旅程的团队的实用建议：一次接入一个后端，从日志开始。在添加指标之前让 Agent 产生有用的日志摘要。一旦日志和指标调查可靠，再添加追踪。最后添加 Kubernetes——从安全角度来看它有最高的爆炸潜力，并且从成熟的护栏配置中受益最多。',
+  },
+  ja: {
+    'mso.cat': 'SRE',
+    'mso.date': '2026年5月',
+    'mso.title': 'SREオブザーバビリティのためのMCPツール：<br>エージェントに目を与える',
+    'mso.lead': 'Model Context ProtocolはSREエージェントがElasticsearch、Prometheus、Honeycomb、Kubernetesを自然言語でクエリできるようにする。実際のオブザーバビリティスタックのMCPツール面と、エージェントがすべてを見られるようになったときに何が変わるかを説明する。',
+    'mso.pub': '公開日：2026-05-21 10:00 PDT（オレゴン州）',
+    'mso.s1.h': 'ツール面の問題',
+    'mso.s1.p1': 'SRE AIエージェントは到達できるデータと同じくらい有用だ。2025年には、エージェントツール統合を構築することは、各オブザーバビリティバックエンドにカスタムAPIラッパーを書くことを意味していた——REST経由のElasticsearchクエリ、PromQL HTTP API経由のPrometheus、kubectlサブプロセス経由のKubernetes。各統合はオーダーメイドで、壊れやすく、保守が難しかった。',
+    'mso.s1.p2': 'Model Context Protocol（MCP）はこれを変える。MCPはAnthropicが2024年後半に導入したオープン標準で、AIエージェントと外部ツール間のユニバーサルインターフェースを定義する。MCPサーバーを公開するオブザーバビリティバックエンドは、カスタムラッパーやAPI変換レイヤーなしに、数分で任意のMCP互換エージェントに接続できる。',
+    'mso.s1.p3': '2026年半ばまでに、主要なオブザーバビリティベンダーがMCPサーバーを出荷した：Elastic、Honeycomb、Grafana、Datadog、そしてKubernetesコミュニティはすべて公式またはコミュニティMCPサーバーを公開した。これにより、よく計測されたSREエージェントを構築するための障壁が劇的に下がった。',
+    'mso.s2.h': '典型的なSREスタックのコアMCPツール',
+    'mso.s2.p1': '2026年の本番SREエージェントは通常、4つのカテゴリのMCPツールにアクセスできる。それぞれがインシデント調査中に仮説を形成・検証するエージェントの能力を拡張する。',
+    'mso.tool1.name': 'ログ — Elastic MCP',
+    'mso.tool1.h': '全文および構造化検索',
+    'mso.tool1.p': '自然言語クエリをKQLまたはLuceneに変換。時間ウィンドウのログ取得、エラー率集計、パターンクラスタリング。エージェントはインデックスのスキーマを知らずに「アラート前の10分間のauth-serviceの5xxエラーをすべて表示」と尋ねられる。',
+    'mso.tool2.name': 'メトリクス — Prometheus / Grafana MCP',
+    'mso.tool2.h': '時系列クエリと異常検知',
+    'mso.tool2.p': '自然言語からのPromQL生成、メトリクス探索、閾値比較。エージェントはPromQL専門知識なしにデプロイメントタイムスタンプに対してメトリクスが閾値を超えたタイミングを識別できる。',
+    'mso.tool3.name': 'トレース — Honeycomb MCP',
+    'mso.tool3.h': 'リクエストレベルのレイテンシとエラートレーシング',
+    'mso.tool3.p': '分散トレース取得、スパンレベルのエラー分析、レイテンシヒートマップ。Honeycombの列指向トレースストレージにより任意のスライシングが速い——エージェントはリクエストが失敗し始めた正確なスパンを見つけられる。',
+    'mso.tool4.name': 'インフラ — Kubernetes MCP',
+    'mso.tool4.h': 'Podの状態、イベント、リソース使用量',
+    'mso.tool4.p': 'Podログ、イベント、リソース制限、ノード圧力、最近のロールアウト履歴への読み取り専用アクセス。エージェントはkubectlアクセスやクラスターコンテキストファイルなしにOOMKilledポッド、クラッシュループバックオフ、または保留中のポッドを識別できる。',
+    'mso.s3.h': 'MCP対応調査の実際の流れ',
+    'mso.s3.p1': 'MCP装備のSREエージェントがレイテンシスパイクを調査する代表的なトレースを示す。各ステップは個別のMCPツール呼び出しに対応し、エージェントはステップ間で推論して次に何をクエリするか決定する。',
+    'mso.flow1': '<strong>アラート受信：</strong>checkout-serviceのp99レイテンシが2sを超えた。エージェントはアラートコンテキストを受信：サービス名、メトリクス値、タイムスタンプ、リンクされたランブック。',
+    'mso.flow2': '<strong>Prometheus MCP：</strong>過去30分間のcheckout-serviceのレイテンシヒストグラムをクエリ。発見：p99は14:22 UTCに閾値を超え、db_query_durationのスパイクと一致。',
+    'mso.flow3': '<strong>Kubernetes MCP：</strong>checkout-serviceの最近のロールアウトとPodイベントをリスト。発見：最近のデプロイなし。発見：ノードプールaz-eastus-2の2つのPodが高メモリ圧力を示している。',
+    'mso.flow4': '<strong>Elastic MCP：</strong>14:20-14:25のcheckout-serviceのログを検索。発見：特定のSQLステートメントハッシュからの「遅いクエリ：1200ms」が847回。',
+    'mso.flow5': '<strong>Honeycomb MCP：</strong>遅いSQLハッシュのトレースを取得。発見：クエリはordersテーブルのシーケンシャルスキャン。トレース属性のEXPLAIN出力は48時間前のスキーママイグレーション後に欠落したインデックスを示している。',
+    'mso.flow6': '<strong>統合：</strong>エージェントは仮説を形成：スキーママイグレーションがインデックスを削除した。デプロイ履歴をクエリしてマイグレーションタイムスタンプを確認。信頼度0.91の構造化出力を生成。提案されたアクション：インデックスを再作成（DBAの承認が必要）。',
+    'mso.s3.p2': 'MCPなしでは、これらのツール呼び出しの各々はエージェントが5つの異なるシステムのAPIエンドポイント、認証スキーム、クエリ言語、レスポンス形式を知っている必要があった。MCPにより、エージェントは何が必要かを説明し、MCPサーバーが変換を処理する。',
+    'mso.s4.h': 'MCPをエージェントに接続する：設定',
+    'mso.s4.p1': '以下はClaudeエージェント設定でMCPサーバーがどのように宣言されるかを示している。サーバーが宣言されると、エージェントランタイムはツール発見、スキーマ読み込み、リクエストルーティングを自動的に処理する。',
+    'mso.s5.h': 'MCPによるデプロイ前ヘルスチェック',
+    'mso.s5.p1': 'SREワークフローでMCPの使われていないアプリケーションの一つはデプロイ前ヘルス検証だ。デプロイが進む前に、エージェントはオブザーバビリティスタックをクエリしてベースラインヘルスを確認する：エラー率が許容範囲内、アクティブなアラートなし、ターゲットノードのリソース余裕、デプロイするサービスに関連したオープンインシデントなし。',
+    'mso.s5.p2': 'これはエンジニアが積極的に監視していない時間外デプロイや自動リリースパイプラインに特に価値がある。エージェントのデプロイ前レポートはデプロイレコードに添付された署名済みアーティファクトになる——デプロイ開始時にシステムが既知の状態にあった証拠。',
+    'mso.note.label': 'デプロイ前チェックパターン',
+    'mso.note.p1': '1. ターゲットサービスのエラー率ベースラインをクエリ（過去24時間p99）。2. 上流依存関係のアクティブなアラートを確認。3. ノードリソース余裕が20%を超えることを確認。4. サービスにタグ付けされたオープンインシデントがないことを確認。5. 署名済みヘルスレポートを生成。いずれかのチェックが失敗した場合、デプロイをブロックしてオンコールリードにアラート——自律的に続行しない。',
+    'mso.s6.h': 'MCPツールアクセスのセキュリティ境界',
+    'mso.s6.p1': 'AIエージェントに広範なオブザーバビリティアクセスを与えることは実際のリスク面を生む。侵害されたエージェント——ログエントリ経由のプロンプトインジェクション、悪意のあるトレース属性、または汚染されたランブックを通じて——は機密ログデータを流出させ、内部サービストポロジを列挙し、または侵害が検出されたかどうかを確認するために使用される可能性がある。',
+    'mso.warn.label': 'MCPセキュリティ境界',
+    'mso.warn.p1': '<strong>MCPトークンを読み取り専用にスコープする。</strong>トリアージエージェントがオブザーバビリティバックエンドへの書き込みアクセスを持つ理由はない。ほとんどの本番ログデータは機密——MCPトークンは必要な最小クエリ面にスコープされるべきだ。',
+    'mso.warn.p2': '<strong>ログデータを信頼できないエージェント入力として扱う。</strong>ログエントリはユーザー制御データだ。サービスがリクエストボディやユーザー提供の文字列をログに記録する場合、攻撃者はプロンプトインジェクションを含むログメッセージを作成できる。エージェントが受け取るものをサニタイズする；ログ取得ツールは指示に似たパターンを削除またはエスケープすべきだ。',
+    'mso.warn.p3': '<strong>エージェントツール呼び出しを監査する。</strong>すべてのMCPツール呼び出しはエージェントセッションID、発行されたクエリ、結果サイズとともにログに記録されるべきだ。これはセキュリティインシデント中またはその後にエージェントの動作を調査するための監査証跡を作成する。',
+    'mso.s7.h': '成果',
+    'mso.s7.p1': '完全なMCPオブザーバビリティスタックをSREエージェントに接続したチームは、最も重要な変化はスピードではなく——仮説の質だと報告している。エージェントが単一の調査スレッドでログ、メトリクス、トレース、インフラ状態をクエリできる場合、人間のエンジニアが手動で見つけるのに20-30分かかる相関関係を浮かび上がらせる。エージェントはエンジニアの判断を置き換えない；その判断の前にある午前3時のデータ収集を置き換える。',
+    'mso.s7.p2': 'この旅を始めるチームへの実用的なアドバイス：一度に一つのバックエンドを接続し、ログから始める。メトリクスを追加する前にエージェントが有用なログサマリーを生成するようにする。ログとメトリクスの調査が信頼できるようになったらトレースを追加する。Kubernetesは最後に追加する——セキュリティの観点から最も高い爆発潜在性を持ち、成熟したガードレール設定から最も利益を得る。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>

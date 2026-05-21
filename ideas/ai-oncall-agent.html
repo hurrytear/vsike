@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent On-Call: From Alert to Root Cause Without Waking Anyone Up — vsike</title>
+  <meta name="description" content="PagerDuty and Azure SRE Agents cut MTTR by 75% in 2026. Here is how to structure an AI-assisted on-call workflow: what to automate, where to keep humans, and how to avoid the false confidence trap.">
+  <meta name="keywords" content="AI值班, SRE代理, 告警自动化, 根因分析, MTTR优化, AI on-call, SRE agent, incident response automation, root cause analysis, PagerDuty AI, Azure SRE Agent, alert fatigue">
+  <link rel="canonical" href="https://www.vsike.com/ideas/ai-oncall-agent.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .code-block { background: var(--fg); color: var(--bg); font-family: var(--mono); font-size: .78rem; line-height: 1.75; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.25rem 0; border-radius: 2px; }
+    .code-block .comment { opacity: .5; }
+    .code-block .kw { color: #7ec8e3; }
+    .code-block .str { color: #a8d8a8; }
+    .code-block .key { color: #f9c74f; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .defend-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .defend-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .attack-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .attack-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .phase-grid { grid-template-columns: 1fr; } }
+    .phase-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .phase-card .phase-num { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: .5rem; }
+    .phase-card h4 { font-size: var(--fs-sm); font-weight: 600; margin-bottom: .5rem; }
+    .phase-card p { font-size: var(--fs-sm); color: var(--fg-muted); margin: 0; }
+    .stat-row { display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+    .stat-item { flex: 1; min-width: 120px; border: 1px solid var(--fg-dim); padding: 1.25rem; text-align: center; }
+    .stat-num { font-family: var(--mono); font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: var(--fs-xs); color: var(--fg-muted); margin-top: .4rem; }
+  </style>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat" data-i18n="aoc.cat">SRE</span>
+        <span class="article-date" data-i18n="aoc.date">May 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1" data-i18n-html="aoc.title">AI Agent On-Call:<br>Alert to Root Cause</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="aoc.lead">PagerDuty and Azure SRE Agents report 75% lower MTTR in 2026. Here is how to structure an AI-assisted on-call workflow: what to automate, where to keep humans in the loop, and how to avoid the false confidence trap.</p>
+      <p class="pub-time reveal reveal-d2" data-i18n="aoc.pub">Published: 2026-05-21 08:30 PDT (Oregon)</p>
+    </header>
+
+    <div class="article-body">
+
+      <h2 data-i18n="aoc.s1.h">Why 2026 Is Different</h2>
+      <p data-i18n="aoc.s1.p1">SRE teams have had automation tooling for years. Runbooks, auto-remediation scripts, alert correlation engines — none of them meaningfully changed the on-call experience because they could not reason. They could match patterns and execute predetermined steps, but an alert that did not fit an existing pattern still required a human to wake up, open five dashboards, and think.</p>
+      <p data-i18n="aoc.s1.p2">What changed in 2025–2026 is that LLM-based agents can now reason over heterogeneous signals: logs, metrics, traces, deployment history, recent code changes, and historical incident context. They can form hypotheses, query for evidence, revise those hypotheses, and produce a structured root cause summary — in the time it used to take an on-call engineer to silence their phone and open a laptop.</p>
+      <p data-i18n="aoc.s1.p3">PagerDuty's Spring 2026 SRE Agent can be added directly to escalation policies as a virtual first responder. Azure SRE Agent is now generally available. AWS DevOps Agent reports 94% root cause accuracy and 80% faster investigations in preview. These are not demos — they are in production at companies running real on-call rotations.</p>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num" data-i18n="aoc.stat1.num">75%</div>
+          <div class="stat-label" data-i18n="aoc.stat1.label">lower MTTR (AWS DevOps Agent)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-i18n="aoc.stat2.num">94%</div>
+          <div class="stat-label" data-i18n="aoc.stat2.label">root cause accuracy</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-i18n="aoc.stat3.num">80%</div>
+          <div class="stat-label" data-i18n="aoc.stat3.label">of triage tasks automatable</div>
+        </div>
+      </div>
+
+      <h2 data-i18n="aoc.s2.h">The Three-Layer On-Call Stack</h2>
+      <p data-i18n="aoc.s2.p1">The most effective AI on-call architectures in 2026 use three distinct layers, each with a different automation level and human involvement model. Trying to do everything at once — or treating the agent as a drop-in replacement for an engineer — reliably produces worse outcomes than a staged approach.</p>
+
+      <div class="phase-grid">
+        <div class="phase-card">
+          <div class="phase-num" data-i18n="aoc.layer1.label">Layer 1 — Triage</div>
+          <h4 data-i18n="aoc.layer1.h">Fully Automated</h4>
+          <p data-i18n="aoc.layer1.p">Alert deduplication, symptom correlation, deployment diff, log search, historical incident matching. Completes in 60–90 seconds. Outputs a structured summary before the on-call engineer is paged. Human always sees context before being woken.</p>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num" data-i18n="aoc.layer2.label">Layer 2 — Remediation</div>
+          <h4 data-i18n="aoc.layer2.h">Human-Approved Execution</h4>
+          <p data-i18n="aoc.layer2.p">Rollbacks, replica scaling, cache flushes, IAM token rotation, certificate renewal. Agent proposes the action; engineer approves in one click. Covers 60–80% of nightly pages. Eliminates the "run the same runbook at 3am" problem.</p>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num" data-i18n="aoc.layer3.label">Layer 3 — Investigation</div>
+          <h4 data-i18n="aoc.layer3.h">Human-Led with AI Assist</h4>
+          <p data-i18n="aoc.layer3.p">Novel failures, cross-service cascades, data integrity issues, security incidents. Agent provides context and runs queries on demand. Engineer leads the investigation. No autonomous remediation at this layer.</p>
+        </div>
+      </div>
+
+      <h2 data-i18n="aoc.s3.h">Wiring the Agent: A Practical Configuration</h2>
+      <p data-i18n="aoc.s3.p1">The following shows a minimal agent configuration that connects alert context, observability, and a deployment API. It is not production-ready as-is — it is a starting point for understanding the tool surface an SRE agent needs.</p>
+
+      <div class="code-block"><span class="comment"># agent-oncall.yaml — minimal SRE agent tool config</span>
+<span class="key">name</span>: <span class="str">oncall-triage-agent</span>
+<span class="key">model</span>: <span class="str">claude-opus-4-7</span>
+<span class="key">system_prompt</span>: |
+  You are an SRE triage agent. When given an alert, you:
+  1. Query logs and metrics for the 30 min window around the alert
+  2. Check deployment history for changes in the past 2 hours
+  3. Search for matching past incidents
+  4. Form a root cause hypothesis with confidence level
+  5. Propose a remediation action (DO NOT execute without approval)
+  Output a structured JSON summary, then a human-readable paragraph.
+
+<span class="key">tools</span>:
+  - <span class="key">name</span>: <span class="str">query_logs</span>
+    <span class="key">description</span>: <span class="str">Search application logs via Elasticsearch/Loki</span>
+    <span class="key">max_results</span>: <span class="str">200</span>
+  - <span class="key">name</span>: <span class="str">query_metrics</span>
+    <span class="key">description</span>: <span class="str">Query Prometheus/Datadog metrics with PromQL or DQL</span>
+  - <span class="key">name</span>: <span class="str">get_recent_deploys</span>
+    <span class="key">description</span>: <span class="str">List deployments in the last N hours from CI/CD system</span>
+  - <span class="key">name</span>: <span class="str">search_past_incidents</span>
+    <span class="key">description</span>: <span class="str">Semantic search over incident history and runbooks</span>
+
+<span class="key">guardrails</span>:
+  <span class="key">no_write_actions</span>: <span class="str">true</span>   <span class="comment"># triage layer: read-only</span>
+  <span class="key">max_tool_calls</span>: <span class="str">20</span>
+  <span class="key">timeout_seconds</span>: <span class="str">90</span></div>
+
+      <h2 data-i18n="aoc.s4.h">What Not to Automate</h2>
+
+      <div class="attack-block">
+        <div class="attack-label" data-i18n="aoc.danger.label">Keep Humans Here</div>
+        <p data-i18n="aoc.danger.p1"><strong>Database schema changes and migrations.</strong> Even a "safe" migration in the wrong load window causes cascading failures. The blast radius is too high for autonomous execution.</p>
+        <p data-i18n="aoc.danger.p2"><strong>Security incident response.</strong> An attacker who compromises your incident channel can inject instructions into an autonomous agent's context. Security incidents require human judgment and out-of-band communication.</p>
+        <p data-i18n="aoc.danger.p3"><strong>Cross-team blast radius actions.</strong> Disabling a shared service, updating a global feature flag, or rotating a shared credential affects teams who are not in the incident channel. Coordination is a human problem.</p>
+        <p data-i18n="aoc.danger.p4"><strong>Novel failure patterns.</strong> When the agent's confidence is low (below ~70%) or when its top hypothesis does not match any historical incident, that is a signal for human escalation — not a signal for the agent to try harder.</p>
+      </div>
+
+      <h2 data-i18n="aoc.s5.h">The False Confidence Trap</h2>
+      <p data-i18n="aoc.s5.p1">The most dangerous failure mode in AI-assisted on-call is not the agent taking a wrong action. It is the engineer trusting the agent's summary without verifying it — and then taking a wrong action themselves, with higher confidence than they would have had if they had investigated from scratch.</p>
+      <p data-i18n="aoc.s5.p2">LLM-based agents produce fluent, structured, confident-sounding summaries even when their root cause hypothesis is wrong. The summary looks like the output of an expert. The on-call engineer, at 3am, pattern-matches to "expert said X" and acts on it. The agent's false confidence transferred to the human.</p>
+      <p data-i18n="aoc.s5.p3">The countermeasure is structural: always show the evidence, not just the conclusion. A good SRE agent output includes the specific log lines that supported the hypothesis, the metric values that confirmed it, and — critically — the alternative hypotheses that were considered and rejected. The engineer should be able to scan the evidence and disagree with the agent's interpretation. If the output format makes disagreement easy, the human-in-the-loop is real. If it just presents a conclusion, it is theater.</p>
+
+      <div class="defend-block">
+        <div class="defend-label" data-i18n="aoc.good.label">Good Agent Output Format</div>
+        <div class="code-block">{
+  <span class="key">"hypothesis"</span>: <span class="str">"Deployment d-4f8a2 (auth-service v2.3.1) introduced a
+                  connection pool leak. Pool exhausted at 03:14:22 UTC."</span>,
+  <span class="key">"confidence"</span>: <span class="str">0.84</span>,
+  <span class="key">"evidence"</span>: [
+    <span class="str">"auth-service logs: 'connection pool exhausted' x847 between 03:14–03:17"</span>,
+    <span class="str">"Prometheus: db_pool_available dropped from 50 → 0 at 03:14:18"</span>,
+    <span class="str">"Deploy d-4f8a2 merged 47 min before alert (03:12 UTC)"</span>,
+    <span class="str">"No matching incidents in last 90 days (new failure pattern)"</span>
+  ],
+  <span class="key">"alternatives_rejected"</span>: [
+    <span class="str">"DB overload: CPU/IOPS normal throughout window"</span>,
+    <span class="str">"Network partition: other services healthy"</span>
+  ],
+  <span class="key">"proposed_action"</span>: <span class="str">"Roll back d-4f8a2. Requires approval."</span>,
+  <span class="key">"runbook"</span>: <span class="str">"https://runbooks.internal/auth-service/rollback"</span>
+}</div>
+      </div>
+
+      <h2 data-i18n="aoc.s6.h">Starting Small</h2>
+      <p data-i18n="aoc.s6.p1">Most teams adopting AI on-call in 2026 are not starting with autonomous remediation. They are starting with AI-assisted triage — getting the structured summary delivered before the engineer is paged. This delivers value within the first week, builds trust in the agent's outputs, and gives teams calibration data on where the agent's hypotheses are reliable versus where they are frequently wrong.</p>
+      <p data-i18n="aoc.s6.p2">The graduation path: triage-only for the first month, then add human-approved remediation for the 5 most common runbook patterns, then expand to the top 15 patterns over the following quarter. By the end of the quarter, 60–70% of pages that used to require a human to execute are handled with a single approval click. The on-call rotation is still human — but the humans are reviewing and approving, not scrambling and executing at 3am.</p>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+</footer>
+
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'aoc.cat': 'SRE',
+    'aoc.date': 'May 2026',
+    'aoc.title': 'AI Agent On-Call:<br>Alert to Root Cause',
+    'aoc.lead': 'PagerDuty and Azure SRE Agents report 75% lower MTTR in 2026. Here is how to structure an AI-assisted on-call workflow: what to automate, where to keep humans in the loop, and how to avoid the false confidence trap.',
+    'aoc.pub': 'Published: 2026-05-21 08:30 PDT (Oregon)',
+    'aoc.s1.h': 'Why 2026 Is Different',
+    'aoc.s1.p1': 'SRE teams have had automation tooling for years. Runbooks, auto-remediation scripts, alert correlation engines — none of them meaningfully changed the on-call experience because they could not reason. They could match patterns and execute predetermined steps, but an alert that did not fit an existing pattern still required a human to wake up, open five dashboards, and think.',
+    'aoc.s1.p2': 'What changed in 2025–2026 is that LLM-based agents can now reason over heterogeneous signals: logs, metrics, traces, deployment history, recent code changes, and historical incident context. They can form hypotheses, query for evidence, revise those hypotheses, and produce a structured root cause summary — in the time it used to take an on-call engineer to silence their phone and open a laptop.',
+    'aoc.s1.p3': 'PagerDuty\'s Spring 2026 SRE Agent can be added directly to escalation policies as a virtual first responder. Azure SRE Agent is now generally available. AWS DevOps Agent reports 94% root cause accuracy and 80% faster investigations in preview. These are not demos — they are in production at companies running real on-call rotations.',
+    'aoc.stat1.num': '75%',
+    'aoc.stat1.label': 'lower MTTR (AWS DevOps Agent)',
+    'aoc.stat2.num': '94%',
+    'aoc.stat2.label': 'root cause accuracy',
+    'aoc.stat3.num': '80%',
+    'aoc.stat3.label': 'of triage tasks automatable',
+    'aoc.s2.h': 'The Three-Layer On-Call Stack',
+    'aoc.s2.p1': 'The most effective AI on-call architectures in 2026 use three distinct layers, each with a different automation level and human involvement model. Trying to do everything at once — or treating the agent as a drop-in replacement for an engineer — reliably produces worse outcomes than a staged approach.',
+    'aoc.layer1.label': 'Layer 1 — Triage',
+    'aoc.layer1.h': 'Fully Automated',
+    'aoc.layer1.p': 'Alert deduplication, symptom correlation, deployment diff, log search, historical incident matching. Completes in 60–90 seconds. Outputs a structured summary before the on-call engineer is paged. Human always sees context before being woken.',
+    'aoc.layer2.label': 'Layer 2 — Remediation',
+    'aoc.layer2.h': 'Human-Approved Execution',
+    'aoc.layer2.p': 'Rollbacks, replica scaling, cache flushes, IAM token rotation, certificate renewal. Agent proposes the action; engineer approves in one click. Covers 60–80% of nightly pages. Eliminates the "run the same runbook at 3am" problem.',
+    'aoc.layer3.label': 'Layer 3 — Investigation',
+    'aoc.layer3.h': 'Human-Led with AI Assist',
+    'aoc.layer3.p': 'Novel failures, cross-service cascades, data integrity issues, security incidents. Agent provides context and runs queries on demand. Engineer leads the investigation. No autonomous remediation at this layer.',
+    'aoc.s3.h': 'Wiring the Agent: A Practical Configuration',
+    'aoc.s3.p1': 'The following shows a minimal agent configuration that connects alert context, observability, and a deployment API. It is not production-ready as-is — it is a starting point for understanding the tool surface an SRE agent needs.',
+    'aoc.s4.h': 'What Not to Automate',
+    'aoc.danger.label': 'Keep Humans Here',
+    'aoc.danger.p1': '<strong>Database schema changes and migrations.</strong> Even a "safe" migration in the wrong load window causes cascading failures. The blast radius is too high for autonomous execution.',
+    'aoc.danger.p2': '<strong>Security incident response.</strong> An attacker who compromises your incident channel can inject instructions into an autonomous agent\'s context. Security incidents require human judgment and out-of-band communication.',
+    'aoc.danger.p3': '<strong>Cross-team blast radius actions.</strong> Disabling a shared service, updating a global feature flag, or rotating a shared credential affects teams who are not in the incident channel. Coordination is a human problem.',
+    'aoc.danger.p4': '<strong>Novel failure patterns.</strong> When the agent\'s confidence is low (below ~70%) or when its top hypothesis does not match any historical incident, that is a signal for human escalation — not a signal for the agent to try harder.',
+    'aoc.s5.h': 'The False Confidence Trap',
+    'aoc.s5.p1': 'The most dangerous failure mode in AI-assisted on-call is not the agent taking a wrong action. It is the engineer trusting the agent\'s summary without verifying it — and then taking a wrong action themselves, with higher confidence than they would have had if they had investigated from scratch.',
+    'aoc.s5.p2': 'LLM-based agents produce fluent, structured, confident-sounding summaries even when their root cause hypothesis is wrong. The summary looks like the output of an expert. The on-call engineer, at 3am, pattern-matches to "expert said X" and acts on it. The agent\'s false confidence transferred to the human.',
+    'aoc.s5.p3': 'The countermeasure is structural: always show the evidence, not just the conclusion. A good SRE agent output includes the specific log lines that supported the hypothesis, the metric values that confirmed it, and — critically — the alternative hypotheses that were considered and rejected. The engineer should be able to scan the evidence and disagree with the agent\'s interpretation. If the output format makes disagreement easy, the human-in-the-loop is real. If it just presents a conclusion, it is theater.',
+    'aoc.good.label': 'Good Agent Output Format',
+    'aoc.s6.h': 'Starting Small',
+    'aoc.s6.p1': 'Most teams adopting AI on-call in 2026 are not starting with autonomous remediation. They are starting with AI-assisted triage — getting the structured summary delivered before the engineer is paged. This delivers value within the first week, builds trust in the agent\'s outputs, and gives teams calibration data on where the agent\'s hypotheses are reliable versus where they are frequently wrong.',
+    'aoc.s6.p2': 'The graduation path: triage-only for the first month, then add human-approved remediation for the 5 most common runbook patterns, then expand to the top 15 patterns over the following quarter. By the end of the quarter, 60–70% of pages that used to require a human to execute are handled with a single approval click. The on-call rotation is still human — but the humans are reviewing and approving, not scrambling and executing at 3am.',
+  },
+  zh: {
+    'aoc.cat': 'SRE',
+    'aoc.date': '2026年5月',
+    'aoc.title': 'AI Agent 值班：<br>从告警到根因',
+    'aoc.lead': 'PagerDuty 和 Azure SRE Agent 在 2026 年实现 MTTR 降低 75%。本文介绍如何构建 AI 辅助值班工作流：哪些环节自动化、哪些保留人工、如何避免虚假信心陷阱。',
+    'aoc.pub': '发布时间：2026-05-21 08:30 PDT（俄勒冈州）',
+    'aoc.s1.h': '为何 2026 年不同以往',
+    'aoc.s1.p1': 'SRE 团队多年来一直有自动化工具：Runbook、自动修复脚本、告警关联引擎——但这些工具没有从根本上改变值班体验，因为它们无法推理。它们可以匹配模式并执行预定步骤，但不符合现有模式的告警仍然需要人类起床、打开五个仪表板然后思考。',
+    'aoc.s1.p2': '2025-2026 年改变的是：基于 LLM 的 Agent 现在可以对异构信号进行推理：日志、指标、追踪、部署历史、近期代码变更和历史故障上下文。它们可以形成假设、查询证据、修正假设，并生成结构化的根因摘要——所需时间相当于值班工程师以前关掉手机警报并打开笔记本的时间。',
+    'aoc.s1.p3': 'PagerDuty 2026 年春季的 SRE Agent 可以直接添加到升级策略中作为虚拟首席响应者。Azure SRE Agent 已正式发布。AWS DevOps Agent 在预览中报告 94% 的根因准确率和 80% 更快的调查速度。这些不是演示——它们在运行真实值班轮换的公司中投入生产。',
+    'aoc.stat1.num': '75%',
+    'aoc.stat1.label': 'MTTR 降低（AWS DevOps Agent）',
+    'aoc.stat2.num': '94%',
+    'aoc.stat2.label': '根因准确率',
+    'aoc.stat3.num': '80%',
+    'aoc.stat3.label': '告警分类任务可自动化',
+    'aoc.s2.h': '三层值班架构',
+    'aoc.s2.p1': '2026 年最有效的 AI 值班架构使用三个不同的层次，每层有不同的自动化级别和人员参与模型。试图一次完成所有事情——或将 Agent 视为工程师的直接替代——可靠地会产生比分阶段方法更差的结果。',
+    'aoc.layer1.label': '第一层 — 分类',
+    'aoc.layer1.h': '全自动化',
+    'aoc.layer1.p': '告警去重、症状关联、部署差异、日志搜索、历史故障匹配。在 60-90 秒内完成。在值班工程师被呼叫前输出结构化摘要。人类在被叫醒前始终看到上下文。',
+    'aoc.layer2.label': '第二层 — 修复',
+    'aoc.layer2.h': '人工批准执行',
+    'aoc.layer2.p': '回滚、副本扩缩容、缓存刷新、IAM 令牌轮换、证书续签。Agent 提出行动方案；工程师一键批准。覆盖 60-80% 的夜间呼叫。消除"凌晨 3 点执行同一 Runbook"的问题。',
+    'aoc.layer3.label': '第三层 — 调查',
+    'aoc.layer3.h': '人工主导，AI 辅助',
+    'aoc.layer3.p': '新型故障、跨服务级联、数据完整性问题、安全事件。Agent 按需提供上下文和执行查询。工程师主导调查。此层不进行自主修复。',
+    'aoc.s3.h': '接入 Agent：实用配置',
+    'aoc.s3.p1': '以下展示了连接告警上下文、可观测性和部署 API 的最小 Agent 配置。它本身不是生产就绪的——它是理解 SRE Agent 所需工具面的起点。',
+    'aoc.s4.h': '哪些不该自动化',
+    'aoc.danger.label': '保留人工处理',
+    'aoc.danger.p1': '<strong>数据库 Schema 变更和迁移。</strong>即使是在错误负载窗口中的"安全"迁移也会导致级联故障。爆炸半径对于自主执行来说太高了。',
+    'aoc.danger.p2': '<strong>安全事件响应。</strong>攻击者一旦入侵你的事件频道，就可以向自主 Agent 的上下文中注入指令。安全事件需要人工判断和带外通信。',
+    'aoc.danger.p3': '<strong>跨团队爆炸半径操作。</strong>禁用共享服务、更新全局功能标志或轮换共享凭证会影响不在事件频道中的团队。协调是人类问题。',
+    'aoc.danger.p4': '<strong>新型故障模式。</strong>当 Agent 的置信度低（低于约 70%）或其顶部假设与任何历史事件不匹配时，这是人工升级的信号——而不是 Agent 更努力尝试的信号。',
+    'aoc.s5.h': '虚假信心陷阱',
+    'aoc.s5.p1': 'AI 辅助值班中最危险的失败模式不是 Agent 采取错误行动。而是工程师在不验证的情况下信任 Agent 的摘要——然后以比从头调查更高的信心自行采取错误行动。',
+    'aoc.s5.p2': '基于 LLM 的 Agent 即使在根因假设错误时也会生成流畅、结构化、听起来自信的摘要。摘要看起来像专家的输出。凌晨 3 点的值班工程师将其模式匹配为"专家说 X"并据此行动。Agent 的虚假信心转移给了人类。',
+    'aoc.s5.p3': '对策是结构性的：始终展示证据，而不仅仅是结论。好的 SRE Agent 输出包括支持假设的具体日志行、确认它的指标值，以及——至关重要的——被考虑和被排除的替代假设。工程师应该能够扫描证据并对 Agent 的解释提出异议。如果输出格式使异议变得容易，人在回路中才是真实的。如果它只呈现结论，那就是表演。',
+    'aoc.good.label': '良好的 Agent 输出格式',
+    'aoc.s6.h': '从小处着手',
+    'aoc.s6.p1': '2026 年大多数采用 AI 值班的团队并不是从自主修复开始的。他们从 AI 辅助分类开始——在工程师被呼叫前获取结构化摘要。这在第一周内带来价值，建立对 Agent 输出的信任，并为团队提供关于 Agent 假设在哪里可靠、在哪里经常错误的校准数据。',
+    'aoc.s6.p2': '进阶路径：第一个月仅做分类，然后为最常见的 5 个 Runbook 模式添加人工批准修复，再在下一季度扩展到前 15 个模式。到季度末，60-70% 以前需要人工执行的呼叫通过一次批准点击处理。值班轮换仍然是人工的——但人类在审查和批准，而不是在凌晨 3 点手忙脚乱地执行。',
+  },
+  ja: {
+    'aoc.cat': 'SRE',
+    'aoc.date': '2026年5月',
+    'aoc.title': 'AIエージェントオンコール：<br>アラートから根本原因まで',
+    'aoc.lead': 'PagerDutyとAzure SREエージェントは2026年にMTTRを75%削減したと報告している。AI支援オンコールワークフローの構築方法：何を自動化するか、どこで人間をループに保つか、虚偽の信頼の罠を避ける方法。',
+    'aoc.pub': '公開日：2026-05-21 08:30 PDT（オレゴン州）',
+    'aoc.s1.h': 'なぜ2026年は違うのか',
+    'aoc.s1.p1': 'SREチームには何年もの間、自動化ツールがあった。ランブック、自動修復スクリプト、アラート相関エンジン——これらはどれもオンコール体験を意味のある形で変えなかった。なぜなら推論できなかったからだ。既存のパターンに当てはまらないアラートは、人間が起き上がり、5つのダッシュボードを開いて考える必要があった。',
+    'aoc.s1.p2': '2025-2026年に変わったのは、LLMベースのエージェントが異種シグナル——ログ、メトリクス、トレース、デプロイ履歴、最近のコード変更、過去のインシデントコンテキスト——を推論できるようになったことだ。オンコールエンジニアが電話のアラームを止めてラップトップを開くのにかかっていた時間で、仮説を形成し、証拠を照会し、仮説を修正し、構造化された根本原因サマリーを生成できる。',
+    'aoc.s1.p3': 'PagerDutyの2026年春のSREエージェントは仮想の最初の対応者としてエスカレーションポリシーに直接追加できる。Azure SREエージェントは一般提供されている。AWS DevOpsエージェントはプレビューで94%の根本原因精度と80%速い調査を報告している。これらはデモではない——実際のオンコールローテーションを運営している企業で本番稼働している。',
+    'aoc.stat1.num': '75%',
+    'aoc.stat1.label': 'MTTR削減（AWS DevOpsエージェント）',
+    'aoc.stat2.num': '94%',
+    'aoc.stat2.label': '根本原因精度',
+    'aoc.stat3.num': '80%',
+    'aoc.stat3.label': 'のトリアージタスクが自動化可能',
+    'aoc.s2.h': '3層オンコールスタック',
+    'aoc.s2.p1': '2026年で最も効果的なAIオンコールアーキテクチャは3つの異なる層を使用し、それぞれ異なる自動化レベルと人間の関与モデルを持つ。すべてを一度にやろうとする——またはエージェントをエンジニアの直接の代替として扱う——と、段階的アプローチより確実に悪い結果になる。',
+    'aoc.layer1.label': 'レイヤー1 — トリアージ',
+    'aoc.layer1.h': '完全自動化',
+    'aoc.layer1.p': 'アラートの重複除去、症状の相関、デプロイ差分、ログ検索、過去インシデントマッチング。60-90秒で完了。オンコールエンジニアがページされる前に構造化サマリーを出力。人間は起こされる前に常にコンテキストを確認。',
+    'aoc.layer2.label': 'レイヤー2 — 修復',
+    'aoc.layer2.h': '人間承認による実行',
+    'aoc.layer2.p': 'ロールバック、レプリカのスケーリング、キャッシュフラッシュ、IAMトークンローテーション、証明書の更新。エージェントがアクションを提案；エンジニアがワンクリックで承認。夜間ページの60-80%をカバー。「同じランブックを午前3時に実行する」問題を排除。',
+    'aoc.layer3.label': 'レイヤー3 — 調査',
+    'aoc.layer3.h': 'AI支援による人間主導',
+    'aoc.layer3.p': '新規障害、クロスサービスカスケード、データ整合性問題、セキュリティインシデント。エージェントはオンデマンドでコンテキストを提供しクエリを実行。エンジニアが調査を主導。このレイヤーでは自律的な修復なし。',
+    'aoc.s3.h': 'エージェントの配線：実用的な設定',
+    'aoc.s3.p1': '以下はアラートコンテキスト、オブザーバビリティ、デプロイAPIを接続する最小限のエージェント設定を示している。そのままでは本番対応ではない——SREエージェントに必要なツール面を理解するための出発点だ。',
+    'aoc.s4.h': '自動化すべきでないもの',
+    'aoc.danger.label': '人間を保持する場所',
+    'aoc.danger.p1': '<strong>データベーススキーマ変更とマイグレーション。</strong>間違った負荷ウィンドウでの「安全な」マイグレーションでもカスケード障害を引き起こす。爆発半径が自律実行には大きすぎる。',
+    'aoc.danger.p2': '<strong>セキュリティインシデント対応。</strong>インシデントチャンネルを侵害した攻撃者は自律エージェントのコンテキストに指示を注入できる。セキュリティインシデントは人間の判断とアウトオブバンド通信を必要とする。',
+    'aoc.danger.p3': '<strong>クロスチームの爆発半径アクション。</strong>共有サービスの無効化、グローバル機能フラグの更新、共有認証情報のローテーションはインシデントチャンネルにいないチームに影響する。調整は人間の問題だ。',
+    'aoc.danger.p4': '<strong>新規障害パターン。</strong>エージェントの信頼度が低い（約70%未満）場合、またはトップ仮説が過去のインシデントと一致しない場合、それは人間へのエスカレーションのシグナルであり、エージェントがより努力するシグナルではない。',
+    'aoc.s5.h': '虚偽の信頼の罠',
+    'aoc.s5.p1': 'AI支援オンコールで最も危険な失敗モードはエージェントが間違ったアクションを取ることではない。エンジニアが検証せずにエージェントのサマリーを信頼し——最初から調査していた場合よりも高い信頼で自ら間違ったアクションを取ることだ。',
+    'aoc.s5.p2': 'LLMベースのエージェントは根本原因の仮説が間違っていても流暢で構造化された自信ありげなサマリーを生成する。サマリーは専門家の出力のように見える。午前3時のオンコールエンジニアは「専門家がXと言った」にパターンマッチしてそれに基づいて行動する。エージェントの虚偽の信頼が人間に転移した。',
+    'aoc.s5.p3': '対策は構造的だ：結論だけでなく常に証拠を見せる。良いSREエージェントの出力には仮説を支持した具体的なログ行、それを確認したメトリクス値、そして——重要なことに——検討されて却下された代替仮説が含まれる。エンジニアは証拠を走査してエージェントの解釈に同意しないことができるべきだ。出力形式が意見の相違を容易にするなら、ループ内の人間は本物だ。結論だけを提示するなら、それはお芝居だ。',
+    'aoc.good.label': '良いエージェント出力フォーマット',
+    'aoc.s6.h': '小さく始める',
+    'aoc.s6.p1': '2026年にAIオンコールを採用しているほとんどのチームは自律的な修復から始めていない。AI支援トリアージから始めている——エンジニアがページされる前に構造化サマリーが届く。これは最初の週に価値をもたらし、エージェントの出力への信頼を構築し、エージェントの仮説がどこで信頼できるか、どこで頻繁に間違えるかについての校正データをチームに提供する。',
+    'aoc.s6.p2': '進化パス：最初の1ヶ月はトリアージのみ、次に最も一般的な5つのランブックパターンに人間承認修復を追加、その後の四半期で上位15パターンに拡大。四半期末までに、以前に人間が実行する必要があったページの60-70%がワンクリック承認で処理される。オンコールローテーションは依然として人間だ——しかし人間は午前3時に慌てて実行するのではなく、レビューして承認する。',
+  }
+};
+</script>
+<script src="../js/main.js"></script>
+</body>
+</html>
