@@ -68,6 +68,25 @@ const LANG = {
     'contact.link.careers': 'View open roles  →',
     'nav.site': 'This Site',
     'nav.careers': 'Careers',
+    'nav.privacy': 'Privacy Policy',
+    'consent.message': 'We use cookies to measure site traffic and improve your experience. See our <a href="/privacy.html">Privacy Policy</a>.',
+    'consent.accept': 'Accept',
+    'consent.decline': 'Decline',
+    'privacy.title': 'Privacy Policy',
+    'privacy.updated': 'Last updated: June 2026',
+    'privacy.intro': 'vsike ("we", "us", or "our") is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights.',
+    'privacy.s1.title': 'Information We Collect',
+    'privacy.s1.body': 'We collect anonymized usage data through Google Analytics 4 (page views, session duration, referral source, device type). We do not collect personally identifiable information unless you contact us directly via our contact form.',
+    'privacy.s2.title': 'Cookies',
+    'privacy.s2.body': 'We use first-party cookies to remember your language preference. With your consent, we also use third-party cookies from Google Analytics to understand how visitors use this site, and Google AdSense to serve relevant advertisements.',
+    'privacy.s3.title': 'How We Use Your Data',
+    'privacy.s3.body': 'Usage data is used solely to improve site content and performance. We do not sell, rent, or share your data with third parties except as required by the services listed above.',
+    'privacy.s4.title': 'Your Rights (GDPR / CCPA)',
+    'privacy.s4.body': "You have the right to access, correct, or delete data we hold about you. You may withdraw cookie consent at any time by clearing your browser's local storage. For California residents: we do not sell personal information.",
+    'privacy.s5.title': 'Third-Party Services',
+    'privacy.s5.body': 'This site uses Google Analytics 4 and Google AdSense. These services may set cookies and collect data according to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google\'s Privacy Policy</a>.',
+    'privacy.s6.title': 'Contact',
+    'privacy.s6.body': 'Questions about this policy? Email us at <a href="mailto:help@vsike.com">help@vsike.com</a>.',
     'article.back': '← All Ideas',
     'idea.66.title': 'AI Postmortem & Runbook Automation: From 3 Hours to 20 Minutes',
     'idea.66.excerpt': 'AI can compress postmortem writing from 3 hours to 20 minutes and generate runbook first drafts from incident timelines. Here is how to automate the right parts, keep the human analysis intact, and build a postmortem corpus that makes future incidents shorter.',
@@ -403,6 +422,25 @@ const LANG = {
     'contact.link.careers': '查看开放职位  →',
     'nav.site': '本站',
     'nav.careers': '招聘',
+    'nav.privacy': '隐私政策',
+    'consent.message': '我们使用 Cookie 统计访问量并改善体验。详见 <a href="/privacy.html">隐私政策</a>。',
+    'consent.accept': '接受',
+    'consent.decline': '拒绝',
+    'privacy.title': '隐私政策',
+    'privacy.updated': '最后更新：2026年6月',
+    'privacy.intro': 'vsike（以下简称"我们"）致力于保护您的隐私。本政策说明我们收集的数据、使用方式及您的权利。',
+    'privacy.s1.title': '信息收集',
+    'privacy.s1.body': '我们通过 Google Analytics 4 收集匿名使用数据（页面浏览量、会话时长、来源、设备类型）。除非您通过联系表单主动联系我们，否则我们不收集个人身份信息。',
+    'privacy.s2.title': 'Cookie',
+    'privacy.s2.body': '我们使用第一方 Cookie 记住您的语言偏好。在您同意后，我们还使用 Google Analytics 的第三方 Cookie 了解访客行为，以及 Google AdSense Cookie 投放相关广告。',
+    'privacy.s3.title': '数据使用',
+    'privacy.s3.body': '使用数据仅用于改善网站内容和性能。除上述服务外，我们不向第三方出售、出租或共享您的数据。',
+    'privacy.s4.title': '您的权利（GDPR / CCPA）',
+    'privacy.s4.body': '您有权访问、更正或删除我们持有的您的数据。您可以随时通过清除浏览器本地存储来撤回 Cookie 同意。加州居民：我们不出售个人信息。',
+    'privacy.s5.title': '第三方服务',
+    'privacy.s5.body': '本站使用 Google Analytics 4 和 Google AdSense。这些服务可能设置 Cookie 并按 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 隐私政策</a> 收集数据。',
+    'privacy.s6.title': '联系方式',
+    'privacy.s6.body': '如对本政策有疑问，请发送邮件至 <a href="mailto:help@vsike.com">help@vsike.com</a>。',
     'article.back': '← 全部想法',
     'idea.66.title': 'AI 故障复盘与 Runbook 自动化：从 3 小时到 20 分钟',
     'idea.66.excerpt': 'AI 可以将故障复盘写作从 3 小时压缩到 20 分钟，并从事故时间线生成 Runbook 初稿。本文介绍如何自动化正确的部分，保留人工分析，并构建让未来事故更短的复盘语料库。',
@@ -738,6 +776,25 @@ const LANG = {
     'contact.link.careers': 'オープンポジションを見る  →',
     'nav.site': 'このサイト',
     'nav.careers': '採用',
+    'nav.privacy': 'プライバシーポリシー',
+    'consent.message': 'サイトのトラフィック計測と体験向上のため Cookie を使用しています。詳細は <a href="/privacy.html">プライバシーポリシー</a> をご覧ください。',
+    'consent.accept': '同意する',
+    'consent.decline': '拒否する',
+    'privacy.title': 'プライバシーポリシー',
+    'privacy.updated': '最終更新：2026年6月',
+    'privacy.intro': 'vsike（以下「当社」）はお客様のプライバシー保護に努めています。本ポリシーでは、収集するデータ、使用方法、およびお客様の権利について説明します。',
+    'privacy.s1.title': '収集する情報',
+    'privacy.s1.body': 'Google Analytics 4 を通じて匿名の利用データ（ページビュー、セッション時間、参照元、デバイス種別）を収集します。お問い合わせフォームからご連絡いただかない限り、個人を特定できる情報は収集しません。',
+    'privacy.s2.title': 'Cookie',
+    'privacy.s2.body': '言語設定を記憶するためにファーストパーティ Cookie を使用します。同意いただいた場合、Google Analytics のサードパーティ Cookie（訪問者の行動把握）および Google AdSense の Cookie（関連広告の配信）も使用します。',
+    'privacy.s3.title': 'データの利用',
+    'privacy.s3.body': '利用データはサイトコンテンツとパフォーマンスの改善にのみ使用します。上記サービスを除き、第三者へのデータの販売・貸与・共有は行いません。',
+    'privacy.s4.title': 'お客様の権利（GDPR / CCPA）',
+    'privacy.s4.body': 'お客様は、当社が保有するデータへのアクセス、訂正、削除を求める権利があります。ブラウザのローカルストレージを削除することで、いつでも Cookie 同意を撤回できます。カリフォルニア州在住の方：当社は個人情報を販売しません。',
+    'privacy.s5.title': 'サードパーティサービス',
+    'privacy.s5.body': '当サイトでは Google Analytics 4 および Google AdSense を使用しています。これらのサービスは <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google プライバシーポリシー</a> に従って Cookie を設定し、データを収集する場合があります。',
+    'privacy.s6.title': 'お問い合わせ',
+    'privacy.s6.body': '本ポリシーについてご不明な点は <a href="mailto:help@vsike.com">help@vsike.com</a> までご連絡ください。',
     'article.back': '← アイデア一覧',
     'idea.66.title': 'AIポストモーテム＆ランブック自動化：3時間から20分へ',
     'idea.66.excerpt': 'AIはポストモーテム執筆を3時間から20分に圧縮し、インシデントタイムラインからランブック初稿を生成できる。正しい部分を自動化し、人間の分析を保ち、将来のインシデントを短縮するポストモーテムコーパスを構築する方法を説明する。',
@@ -1138,6 +1195,73 @@ function triggerAboveFold() {
     setTimeout(() => el.classList.add('visible'), i * 140);
   });
 }
+
+/* ─── Cookie Consent ──────────────────────────────────────────────── */
+(function () {
+  const STORAGE_KEY = 'vsike_consent';
+
+  function grantAnalytics() {
+    if (typeof gtag === 'function') {
+      gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted' });
+    }
+  }
+
+  function buildBanner() {
+    const lang = localStorage.getItem('vsike-lang') || 'en';
+    const t = LANG[lang] || LANG.en;
+
+    const bar = document.createElement('div');
+    bar.className = 'consent-bar';
+    bar.id = 'consent-bar';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Cookie consent');
+
+    const p = document.createElement('p');
+    p.innerHTML = t['consent.message'] || 'We use cookies to improve your experience. <a href="/privacy.html">Privacy Policy</a>.';
+    bar.appendChild(p);
+
+    const actions = document.createElement('div');
+    actions.className = 'consent-actions';
+
+    const decline = document.createElement('button');
+    decline.className = 'consent-btn consent-btn-decline';
+    decline.textContent = t['consent.decline'] || 'Decline';
+    decline.addEventListener('click', () => {
+      localStorage.setItem(STORAGE_KEY, 'declined');
+      hide();
+    });
+
+    const accept = document.createElement('button');
+    accept.className = 'consent-btn consent-btn-accept';
+    accept.textContent = t['consent.accept'] || 'Accept';
+    accept.addEventListener('click', () => {
+      localStorage.setItem(STORAGE_KEY, 'accepted');
+      grantAnalytics();
+      hide();
+    });
+
+    actions.appendChild(decline);
+    actions.appendChild(accept);
+    bar.appendChild(actions);
+    document.body.appendChild(bar);
+
+    function hide() {
+      bar.classList.add('consent-hidden');
+      setTimeout(() => bar.remove(), 350);
+    }
+  }
+
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored === 'accepted') {
+    grantAnalytics();
+  } else if (!stored) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', buildBanner);
+    } else {
+      buildBanner();
+    }
+  }
+})();
 
 /* ─── Contact Form ────────────────────────────────────────────────── */
 (function () {

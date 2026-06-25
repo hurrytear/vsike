@@ -1191,3 +1191,64 @@ footer {
 :lang(ja) .pillar-letter {
   font-family: "PingFang SC", "Hiragino Mincho ProN", Georgia, serif;
 }
+
+/* ─── Cookie Consent Banner ───────────────────────────────────────── */
+.consent-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 1rem var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  opacity: 1;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.consent-bar.consent-hidden {
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+}
+.consent-bar p {
+  flex: 1;
+  margin: 0;
+  min-width: 200px;
+}
+.consent-bar p a {
+  color: var(--bg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.consent-bar p a:hover { opacity: .75; }
+.consent-actions {
+  display: flex;
+  gap: .75rem;
+  flex-shrink: 0;
+}
+.consent-btn {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  padding: .4rem .9rem;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  border-radius: 2px;
+}
+.consent-btn-accept {
+  background: var(--bg);
+  color: var(--fg);
+  border-color: var(--bg);
+}
+.consent-btn-accept:hover { opacity: .85; }
+.consent-btn-decline:hover { background: rgba(255,255,255,.15); }
