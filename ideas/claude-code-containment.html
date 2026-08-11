@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Containment: The Trust Prompt Is Not the Boundary — vsike</title>
+  <meta name="description" content="Anthropic's Claude Code security lessons show why local agent safety depends on filesystem boundaries, egress controls, delayed config loading, and sandboxing.">
+  <meta name="keywords" content="Claude Code security, Claude sandboxing, Anthropic containment, AI coding agent security, prompt injection, filesystem sandbox, Claude安全">
+  <link rel="canonical" href="https://www.vsike.com/ideas/claude-code-containment.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .lesson-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .lesson-grid { grid-template-columns: 1fr; } }
+    .lesson-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .lesson-card .num { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: .5rem; }
+    .lesson-card h4 { font-size: var(--fs-sm); font-weight: 600; margin-bottom: .5rem; }
+    .lesson-card p { font-size: var(--fs-sm); color: var(--fg-muted); margin: 0; }
+    .warn-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .warn-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .source-list { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .source-list a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat">Claude</span>
+        <span class="article-date">August 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">Claude Code Containment:<br>The Trust Prompt Is Not the Boundary</h1>
+      <p class="article-lead reveal reveal-d2">Claude Code is powerful because it touches real code, files, shells, and networks. Anthropic's recent containment writing is a useful map of where coding-agent security actually lives: before config loads, outside the model, and inside the environment.</p>
+      <p class="pub-time reveal reveal-d2">Published: 2026-08-11 18:00 JST (Tokyo)</p>
+    </header>
+
+    <div class="article-body">
+      <h2>Local Does Not Mean Trusted</h2>
+      <p>A coding agent feels local. It runs in your terminal, sees your repository, edits files, and asks permission before risky commands. That feeling is dangerous if it makes the tool trust project-local input too early. A repository can contain configuration, hooks, scripts, issue templates, docs, and hidden instructions. Some of those are useful. Some can be hostile.</p>
+      <p>Anthropic's containment post describes a class of bugs that happened before the trust dialog. The lesson generalizes: opening a folder is an inbound request. Reading project config is parsing attacker-controlled data until the user has explicitly trusted that folder.</p>
+
+      <div class="warn-block">
+        <div class="warn-label">Boundary Mistake</div>
+        <p>The trust prompt is not the security boundary if untrusted project files can influence behavior before the prompt appears.</p>
+      </div>
+
+      <h2>The Environment Has to Say No</h2>
+      <p>Model-layer defenses are necessary, but they are not enough. If a user is phished into pasting a malicious prompt, the instruction may look like user intent. The model cannot reliably infer that the user has been socially engineered. In that case, the environment must refuse dangerous effects: block network egress, keep credential files out of reach, restrict filesystem writes, and make secrets unavailable by default.</p>
+      <p>This is the same reason sandboxing is not merely a productivity feature. It lets the agent do more routine work without constant prompts, while keeping the blast radius bounded when the prompt, repo, dependency, or tool output is hostile.</p>
+
+      <div class="lesson-grid">
+        <div class="lesson-card">
+          <div class="num">01</div>
+          <h4>Delay local config</h4>
+          <p>Project settings, hooks, and startup scripts should be parsed only after trust is established.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="num">02</div>
+          <h4>Constrain filesystem access</h4>
+          <p>The working tree is not the home directory. Credentials, browser profiles, SSH keys, and cloud configs should stay outside reach.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="num">03</div>
+          <h4>Control egress</h4>
+          <p>If the agent cannot POST to arbitrary hosts, many exfiltration prompts fail regardless of how persuasive they are.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="num">04</div>
+          <h4>Audit risky actions</h4>
+          <p>Permission prompts are useful, but logs and policy are what let teams investigate after the fact.</p>
+        </div>
+      </div>
+
+      <h2>Security Review Is a Workflow, Not a Badge</h2>
+      <p>Claude Code's automated security review feature points at another side of the same story. Agents can help defenders find SQL injection, XSS, auth flaws, unsafe data handling, and dependency issues. But automated review should complement human review, not replace it. The tool is strongest when it shortens the loop from finding to patching.</p>
+      <p>The interesting shift is that coding agents are now both part of the development environment and part of the security workflow. That means they need to be protected like developer tools and evaluated like security tools. A compromised coding agent is not just a bad autocomplete. It is an actor with filesystem access, code-writing ability, and sometimes network reach.</p>
+
+      <h2>The Practical Baseline</h2>
+      <p>A serious Claude Code deployment should have a baseline: per-project trust, sandboxed execution, explicit network policy, credential isolation, dependency scanning, review logs, and a way to run security review in CI. For personal projects, the same principles apply at smaller scale: do not open unknown repos with broad permissions; do not give the agent access to your home directory; do not let convenience become ambient authority.</p>
+      <p>The future of coding agents is not fewer boundaries. It is better boundaries: quiet where the action is low risk, firm where the blast radius is real.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank" rel="noopener">Anthropic: Beyond permission prompts: making Claude Code more secure and autonomous</a></li>
+        <li><a href="https://www.anthropic.com/engineering/how-we-contain-claude" target="_blank" rel="noopener">Anthropic: How we contain Claude across products</a></li>
+        <li><a href="https://support.anthropic.com/en/articles/11932705-automated-security-reviews-in-claude-code/" target="_blank" rel="noopener">Anthropic Help Center: Automated Security Reviews in Claude Code</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

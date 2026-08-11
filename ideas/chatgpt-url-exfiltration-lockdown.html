@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Link Safety: URLs Are Data Channels — vsike</title>
+  <meta name="description" content="Agent link safety is not just about phishing. URLs can carry data out of a conversation. OpenAI's 2026 mitigations show why ChatGPT Lockdown Mode matters for high-risk users.">
+  <meta name="keywords" content="ChatGPT Lockdown Mode, URL exfiltration, AI agent link safety, ChatGPT security, data exfiltration, OpenAI, Agent Mode security">
+  <link rel="canonical" href="https://www.vsike.com/ideas/chatgpt-url-exfiltration-lockdown.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .risk-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--fs-sm); }
+    .risk-table th { text-align: left; padding: .6rem .75rem; border-bottom: 2px solid var(--fg); font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; }
+    .risk-table td { padding: .7rem .75rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .note-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .note-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .source-list { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .source-list a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat">ChatGPT</span>
+        <span class="article-date">August 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">ChatGPT Link Safety:<br>URLs Are Data Channels</h1>
+      <p class="article-lead reveal reveal-d2">When an AI agent clicks a link, the URL is not merely a destination. It can be a covert data channel. That is why link safety, cached browsing, and Lockdown Mode belong in the same security conversation.</p>
+      <p class="pub-time reveal reveal-d2">Published: 2026-08-11 17:45 JST (Tokyo)</p>
+    </header>
+
+    <div class="article-body">
+      <h2>The Link Is the Payload</h2>
+      <p>A browser agent can do something a normal chatbot cannot: it can cause network requests. That makes every URL a potential sink. The path, query string, fragment, hostname, and redirect chain can all encode information. If an attacker can persuade an agent to open a crafted URL that includes private context, the act of fetching the link may leak the data.</p>
+      <p>This is not classic phishing. The user may never see a login page. The agent may simply be told to "verify this source" or "load this image." The danger is that the URL fetch itself can transmit information outside the conversation.</p>
+
+      <div class="note-block">
+        <div class="note-label">Tiny Rule, Large Consequence</div>
+        <p>For agents, "open this link" is an action with side effects. It should be treated closer to "send this request" than "read this text."</p>
+      </div>
+
+      <h2>Why Trusted Site Lists Break</h2>
+      <p>A static allowlist sounds comforting until the URL is already public, redirected, shortened, parameterized, or embedded in content the agent is summarizing. Attackers do not need to compromise a famous domain if they can cause the agent to request a URL they control through an image, tracking pixel, redirector, or query parameter.</p>
+      <p>The safer question is not just "is this domain reputable?" It is "would fetching this URL disclose anything the user did not ask to disclose?" That framing pushes the design toward controlled fetching, public-only retrieval, user confirmation, and cached content when stronger guarantees are needed.</p>
+
+      <table class="risk-table">
+        <thead>
+          <tr><th>Agent action</th><th>Hidden risk</th><th>Safer default</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Open a link from a page</td><td>Query string encodes private context</td><td>Strip sensitive context and confirm external fetches</td></tr>
+          <tr><td>Load remote image</td><td>Image URL acts as tracking beacon</td><td>Proxy or block remote loads in sensitive modes</td></tr>
+          <tr><td>Follow redirect</td><td>Final destination differs from displayed source</td><td>Resolve and inspect redirect chain before fetch</td></tr>
+          <tr><td>Download file</td><td>Untrusted file becomes a later prompt-injection source</td><td>Sandbox and label downloaded content as untrusted</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Where Lockdown Mode Fits</h2>
+      <p>OpenAI's Lockdown Mode is interesting because it is deterministic. Instead of asking a model to be wise in every case, it removes or constrains classes of risky capability: live web access, agent mode, connectors, file downloads, and other features that create paths from private context to external systems.</p>
+      <p>That tradeoff is not for every user all the time. It is for moments when the cost of data leakage is higher than the cost of reduced functionality: executives, security teams, journalists, legal teams, incident response, or anyone working with unusually sensitive material.</p>
+
+      <h2>The Product Lesson</h2>
+      <p>Agent security should not depend entirely on the user noticing risk in the moment. The interface should make risky capability legible before it runs: live web, connector write, file download, external send, browser action. Labels matter because they train users and developers to see the agent as an actor, not just a text box.</p>
+      <p>The best agent UX in 2026 is not the one with the fewest prompts. It is the one that spends prompts where the boundary actually matters. A confirmation before a harmless summary is friction. A confirmation before data leaves the system is a seatbelt.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://openai.com/index/ai-agent-link-safety/" target="_blank" rel="noopener">OpenAI: Keeping your data safe when an AI agent clicks a link</a></li>
+        <li><a href="https://openai.com/index/introducing-lockdown-mode-and-elevated-risk-labels-in-chatgpt/" target="_blank" rel="noopener">OpenAI: Introducing Lockdown Mode and Elevated Risk labels in ChatGPT</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

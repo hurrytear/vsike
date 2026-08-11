@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Agent Prompt Injection: Treat Webpages Like Strangers — vsike</title>
+  <meta name="description" content="OpenAI's 2026 agent security writing makes one thing clear: prompt injection is no longer a string-matching problem. It behaves like social engineering against tools, data, and user intent.">
+  <meta name="keywords" content="ChatGPT agent security, prompt injection, AI agent security, source sink analysis, OpenAI security, ChatGPT安全, 提示词注入, AI代理安全">
+  <link rel="canonical" href="https://www.vsike.com/ideas/chatgpt-agent-prompt-injection.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .note-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+    .note-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: var(--accent); font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .threat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 2rem 0; }
+    @media (max-width: 640px) { .threat-grid { grid-template-columns: 1fr; } }
+    .threat-card { border: 1px solid var(--fg-dim); padding: 1.25rem; }
+    .threat-card .tag { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; text-transform: uppercase; margin-bottom: .5rem; }
+    .threat-card h4 { font-size: var(--fs-sm); font-weight: 600; margin-bottom: .5rem; }
+    .threat-card p { font-size: var(--fs-sm); color: var(--fg-muted); margin: 0; }
+    .source-list { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .source-list a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat">AI Security</span>
+        <span class="article-date">August 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">ChatGPT Agent Prompt Injection:<br>Treat Webpages Like Strangers</h1>
+      <p class="article-lead reveal reveal-d2">The useful part of a ChatGPT agent is also the dangerous part: it can read untrusted content and then act. OpenAI's 2026 security writing points toward a better model than "detect bad strings": treat agent security like social engineering plus data-flow control.</p>
+      <p class="pub-time reveal reveal-d2">Published: 2026-08-11 17:30 JST (Tokyo)</p>
+    </header>
+
+    <div class="article-body">
+      <h2>Prompt Injection Grew Up</h2>
+      <p>The early version of prompt injection was easy to caricature: a webpage says "ignore previous instructions" and the model obeys. That framing is now too small. A modern agent reads pages, emails, calendar entries, documents, tool output, and code comments. Any of those can contain instructions that are not intended for the agent, but that the agent may still process as context.</p>
+      <p>OpenAI's March 2026 article on agent prompt injection makes a useful distinction: real attacks increasingly resemble social engineering. They do not need to look like malicious prompts. They can look like onboarding instructions, a support article, a hidden note in a shared document, or a normal-looking web page that steers the agent toward a sensitive action.</p>
+
+      <div class="note-block">
+        <div class="note-label">The Mental Model</div>
+        <p>Do not ask only "is this text malicious?" Ask "what can this text influence, and what could the agent do afterward?" The dangerous pattern is untrusted content flowing into a sensitive action.</p>
+      </div>
+
+      <h2>Source, Sink, and Intent</h2>
+      <p>The most practical way to reason about this is source-sink analysis. The source is untrusted content: a webpage, email, issue comment, repository file, or tool result. The sink is a dangerous capability: sending data, following a link, downloading a file, committing code, invoking a connector, or transmitting private context to a third party.</p>
+      <p>Between the two sits user intent. A user asking "summarize this page" has not authorized "send my private workspace notes to the endpoint hidden in the page." The agent needs to preserve that boundary even when the page tries to redefine the task.</p>
+
+      <div class="threat-grid">
+        <div class="threat-card">
+          <div class="tag">Source</div>
+          <h4>Untrusted text</h4>
+          <p>Web pages, emails, documents, issue comments, retrieved snippets, and tool output.</p>
+        </div>
+        <div class="threat-card">
+          <div class="tag">Transform</div>
+          <h4>Agent reasoning</h4>
+          <p>The model blends user intent, retrieved content, policies, memories, and tool descriptions.</p>
+        </div>
+        <div class="threat-card">
+          <div class="tag">Sink</div>
+          <h4>External action</h4>
+          <p>Network requests, messages, commits, connector writes, downloads, and data export.</p>
+        </div>
+      </div>
+
+      <h2>Why Classifiers Are Not Enough</h2>
+      <p>It is tempting to put an "AI firewall" between the agent and the web. Classify the input, block the bad text, continue. The problem is that advanced prompt injection does not need obvious attack language. A malicious instruction can be embedded in a plausible business process, a friendly checklist, or a document that appears to be exactly what the user asked the agent to read.</p>
+      <p>At that point, detection starts to look like lie detection. The agent needs context that the classifier may not have: what did the user ask, what information is sensitive, which tools are available, and whether the requested action follows from the user's actual intent.</p>
+
+      <h2>Defenses That Survive Contact</h2>
+      <p>Good defenses reduce the number of dangerous source-to-sink paths. Treat external content as data, not authority. Require confirmation before transmissions. Constrain tools by default. Give the agent read-only access where possible. Keep secrets out of the working context. Log sensitive actions in a way humans can audit.</p>
+      <p>The important design principle is boring in the best way: the model should not silently convert a page's instruction into a real-world action. If the user did not clearly ask for data to leave the conversation, the agent should need a stronger reason than "the page told me to."</p>
+
+      <h2>What Builders Should Change</h2>
+      <p>If you are building a ChatGPT-like agent, the security boundary is not the chat box. The boundary is every place where untrusted data meets a capability. Make that boundary explicit in product design: label risky actions, narrow tool scopes, isolate browsing from private context, and keep the user's original request visible to the agent at decision time.</p>
+      <p>Prompt injection will not be "solved" by a single model update. It is a long-running security discipline. Like phishing, the attacks evolve because people and agents both operate in messy environments full of plausible stories. The win condition is not perfect detection. It is making the attack chain brittle, visible, and expensive.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://openai.com/index/designing-agents-to-resist-prompt-injection/" target="_blank" rel="noopener">OpenAI: Designing AI agents to resist prompt injection</a></li>
+        <li><a href="https://openai.com/index/safety-bug-bounty/" target="_blank" rel="noopener">OpenAI: Introducing the Safety Bug Bounty program</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>
