@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Suspicious Activity Alerts: When Security Looks Like a Ban — vsike</title>
+  <meta name="description" content="ChatGPT suspicious activity alerts may restrict features without meaning you did anything wrong. Learn why unusual sign-ins, account sharing, VPNs, and concurrent sessions matter.">
+  <meta name="keywords" content="ChatGPT suspicious activity alert, ChatGPT feature restriction, ChatGPT account sharing, OpenAI account security, ChatGPT封号风控, OpenAI可疑活动">
+  <link rel="canonical" href="https://www.vsike.com/ideas/chatgpt-suspicious-activity-alerts.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; color: var(--fg-muted); margin-top: .5rem; }
+    .signal-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--fs-sm); }
+    .signal-table th { text-align: left; padding: .6rem .75rem; border-bottom: 2px solid var(--fg); font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; }
+    .signal-table td { padding: .7rem .75rem; border-bottom: 1px solid var(--fg-dim); vertical-align: top; }
+    .warn-block { margin: 2rem 0; padding: 1.5rem 2rem; border-left: 3px solid #c0392b; background: color-mix(in srgb, #c0392b 5%, var(--bg)); }
+    .warn-label { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .12em; color: #c0392b; font-weight: 700; margin-bottom: .4rem; text-transform: uppercase; }
+    .source-list { font-size: var(--fs-sm); color: var(--fg-muted); }
+    .source-list a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page">
+    <header class="article-header">
+      <div class="article-eyebrow reveal">
+        <span class="article-cat">Account Security</span>
+        <span class="article-date">August 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">ChatGPT Suspicious Activity Alerts:<br>When Security Looks Like a Ban</h1>
+      <p class="article-lead reveal reveal-d2">Not every restriction is a policy ban. Some are security controls reacting to unusual sign-ins, concurrent sessions, VPN patterns, or sudden usage changes. The trick is to respond like an incident, not like a rumor.</p>
+      <p class="pub-time reveal reveal-d2">Published: 2026-08-12 09:35 JST (Tokyo)</p>
+    </header>
+
+    <div class="article-body">
+      <h2>The Alert Is a Signal, Not a Verdict</h2>
+      <p>OpenAI's suspicious activity article is careful about wording: these alerts do not necessarily mean wrongdoing. They are protective signals. But they can still affect access to features, and to a user that feels like a soft ban.</p>
+      <p>That gap between "protective restriction" and "ban" is where bad advice grows. People blame one prompt, one VPN, one browser extension, one country, one model. The real system is usually looking at patterns, not folklore.</p>
+
+      <table class="signal-table">
+        <thead>
+          <tr><th>Signal</th><th>Why it matters</th><th>Best response</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Unexpected login location</td><td>Could indicate account takeover or credential reuse</td><td>Change password, enable MFA, review sessions</td></tr>
+          <tr><td>Many concurrent sessions</td><td>May look like account sharing or unauthorized access</td><td>Log out all devices and use one trusted device</td></tr>
+          <tr><td>Sudden usage spike</td><td>Could indicate automation, misuse, or leaked credentials</td><td>Review activity and contact support if suspicious</td></tr>
+          <tr><td>VPN / proxy / Private Relay churn</td><td>Can make normal use look geographically inconsistent</td><td>Troubleshoot from a stable trusted network</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Account Sharing Is a Risk Multiplier</h2>
+      <p>OpenAI's account sharing policy is simple: the account is meant for the individual who created it. Sharing credentials creates two classes of risk. First, it exposes personal data and payment details. Second, it makes enforcement ambiguous because multiple people can generate activity under one identity.</p>
+      <p>Even if no one intends misuse, account sharing can create suspicious signals: simultaneous sessions, different devices, unusual locations, inconsistent usage patterns, and prompts the owner cannot explain during an appeal.</p>
+
+      <div class="warn-block">
+        <div class="warn-label">A Small Habit That Prevents Big Pain</div>
+        <p>If several people need ChatGPT, use separate accounts or a workspace product. One shared login is cheaper until it becomes an incident report.</p>
+      </div>
+
+      <h2>What to Do in the First 30 Minutes</h2>
+      <p>Treat the alert like account compromise until proven otherwise. Change the password. Enable MFA if available. Log out all sessions. Stop using VPN/proxy tools while troubleshooting. Use one trusted browser and network. If you use the API, rotate keys and check usage by key.</p>
+      <p>Then document the timeline: when the alert appeared, which device and browser you used, whether you were traveling, whether a VPN was active, and whether you saw unfamiliar usage. If support asks for context, this is the difference between "please fix" and a useful recovery packet.</p>
+
+      <h2>The Product Lesson</h2>
+      <p>AI accounts now behave like developer accounts: they hold history, files, connectors, payments, API keys, and sometimes private work. Security controls will get stricter because the blast radius is larger than a lost password. A ChatGPT account is not just a login anymore; it is a workspace.</p>
+      <p>That is the right mental model. If you protect it like a workspace, most "封号风控" problems become diagnosable: account sharing, compromised credentials, unstable access patterns, leaked keys, or policy-risky usage. Not fun, but at least no longer mystical.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://help.openai.com/en/articles/10471992" target="_blank" rel="noopener">OpenAI Help Center: Why am I receiving a Suspicious Activity Alert?</a></li>
+        <li><a href="https://help.openai.com/en/articles/10471989-chatgpt-plus-and-chatgpt-pro" target="_blank" rel="noopener">OpenAI Help Center: Account Sharing Policy</a></li>
+        <li><a href="https://help.openai.com/en/articles/8304786-preventing-unauthorized-usage" target="_blank" rel="noopener">OpenAI Help Center: How can I keep my OpenAI accounts secure?</a></li>
+        <li><a href="https://help.openai.com/en/articles/20001221" target="_blank" rel="noopener">OpenAI Help Center: Advanced Account Security</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">← All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>
