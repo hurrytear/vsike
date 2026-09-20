@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Does GPT-6 Feel Dumber? A Guide to Diagnosing Quality Drops - vsike</title>
+  <meta name="description" content="Check model selection, usage limits, missing context, and tool failures before attributing a disappointing answer to a model regression.">
+  <meta name="keywords" content="GPT-6降智, GPT-6变笨, GPT-6 quality drop, ChatGPT model fallback, AI reliability">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Does GPT-6 Feel Dumber? A Guide to Diagnosing Quality Drops">
+  <meta property="og:description" content="Check model selection, usage limits, missing context, and tool failures before attributing a disappointing answer to a model regression.">
+  <meta property="og:url" content="https://www.vsike.com/ideas/gpt-6-quality-drop-diagnosis.html">
+  <meta property="article:published_time" content="2026-09-21T01:41:00+09:00">
+  <link rel="canonical" href="https://www.vsike.com/ideas/gpt-6-quality-drop-diagnosis.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-page { overflow-wrap: anywhere; }
+    .article-title { font-size: 3.25rem; letter-spacing: 0; }
+    .article-body h2, .article-body blockquote { letter-spacing: 0; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 1rem; }
+    .article-body a { text-decoration: underline; text-underline-offset: 3px; }
+    .source-list { font-size: var(--fs-sm); }
+    @media (max-width: 640px) { .article-title { font-size: 2rem; } }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page" lang="en">
+    <header class="article-header">
+      <div class="article-cat-row reveal">
+        <span class="article-cat">Model Reliability</span>
+        <span class="article-date-label">September 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">Does GPT-6 Feel Dumber? A Guide to Diagnosing Quality Drops</h1>
+      <p class="article-lead reveal reveal-d2">Check model selection, usage limits, missing context, and tool failures before attributing a disappointing answer to a model regression.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-21T01:41:00+09:00">2026-09-21 JST</time>. Official information checked on September 21, 2026.</p>
+    </header>
+
+    <div class="article-body">
+      <h2>Describe the failure you can observe</h2>
+      <p>Users often call an unsatisfying response "降智": the model seems to have become less capable. That description can point to a real problem, but several different failures feel similar. An incorrect calculation, a missing attachment, a refusal, and a shorter writing style require different investigations. This article does not establish that GPT-6 has broadly regressed.</p>
+      <p>Start by saving the prompt and response. Write one sentence describing what failed: "It omitted two rows from the supplied table" is testable. "It no longer understands me" needs a smaller example before anyone can investigate it.</p>
+
+      <h2>Confirm which product and model you used</h2>
+      <p>According to the current <a href="https://help.openai.com/en/articles/20001354-gpt-56-and-gpt-6-pro-in-chatgpt">OpenAI ChatGPT guide</a>, GPT-6 Pro is powered by Astra. Plus includes Astra in Work and Codex, rather than GPT-6 Pro in Chat. Chat and Work/Codex have different usage rules. On Pro $200, exhausting the GPT-6 Pro weekly allowance triggers a switch to GPT-5.6 Thinking at Medium. That documented behavior is specific to the stated plan and product.</p>
+      <p>Record the visible model selection, any limit notice, and the time. Do not infer the model from its answer to "Which model are you?" If you use an API integration, preserve the requested model identifier and the model metadata returned by the service where available. A third-party product's marketing label is insufficient to establish which backend handled a particular request.</p>
+
+      <h2>Compare the inputs that actually arrived</h2>
+      <p>Our next diagnostic step is to check the evidence. Was the spreadsheet uploaded successfully? Could the assistant read the required sheet? Did a connected app return data, an empty result, or an access error? Inspect the file and tool status that the interface exposes. A confident final answer does not establish that the source was available.</p>
+      <p>Then try a fresh conversation with the same essential material and explicit acceptance checks. Supply the latest version of the instructions and remove superseded drafts from the test. If the fresh run succeeds, that is evidence of a context or workflow effect worth investigating. It does not, by itself, identify the internal cause.</p>
+
+      <h2>Separate style, reasoning, and execution</h2>
+      <ul>
+        <li><strong>Shorter response:</strong> check whether required facts or steps are missing. Brevity alone is not an accuracy failure.</li>
+        <li><strong>Wrong conclusion:</strong> identify the unsupported claim, calculation error, or ignored condition. Retest that part with the same sources.</li>
+        <li><strong>Incomplete action:</strong> check permissions, tool errors, and the actual saved artifact before evaluating the model's reasoning.</li>
+        <li><strong>Refusal:</strong> record the request category and the explanation. If the request was legitimate, provide the relevant scope and context for review.</li>
+      </ul>
+      <p>For example, OpenAI's <a href="https://openai.com/index/safety-overview-gpt-6-astra/">Astra safety overview</a> describes enhanced safeguards for cybersecurity capabilities. A refusal in a protected category is therefore a different observation from failing an allowed arithmetic task. Neither one should be hidden when evaluating whether the product serves your workflow.</p>
+
+      <h2>Test one explanation at a time</h2>
+      <p>Keep the model fixed while testing clearer context. Keep the prompt fixed while testing a different available reasoning setting. Check a tool-dependent task against a version that includes the relevant source text directly. If you change everything at once, an improved answer will not reveal which intervention helped.</p>
+      <p>A real regression remains possible. Repeated failures on the same tasks under comparable conditions deserve investigation. Useful evidence includes the date and timezone, product, model label, settings, input files, expected result, actual result, and earlier successful examples. Remove private information before sharing a reproduction.</p>
+      <p>There is no controlled evidence in this article supporting claims that an account is deliberately made "dumber" because of payment status or a particular network address. Use observable limits and reproducible errors to decide what to do next. The companion <a href="gpt-6-quality-regression-test.html">regression testing guide</a> shows how to turn that evidence into a fair comparison.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://help.openai.com/en/articles/20001354-gpt-56-and-gpt-6-pro-in-chatgpt" target="_blank" rel="noopener">OpenAI Help Center: GPT-5.6 and GPT-6 Pro in ChatGPT</a></li>
+        <li><a href="https://openai.com/index/safety-overview-gpt-6-astra/" target="_blank" rel="noopener">OpenAI: Safety overview for GPT-6 Astra</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

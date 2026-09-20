@@ -19,6 +19,7 @@
   </url>
   <url>
     <loc>https://www.vsike.com/ideas.html</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -41,6 +42,30 @@
   </url>
 
   <!-- Ideas / Articles -->
+  <url>
+    <loc>https://www.vsike.com/ideas/gpt-6-efficiency-real-work.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vsike.com/ideas/gpt-6-reasoning-workflow.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vsike.com/ideas/gpt-6-quality-drop-diagnosis.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.vsike.com/ideas/gpt-6-quality-regression-test.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://www.vsike.com/ideas/chatgpt-account-deactivation.html</loc>
     <lastmod>2026-08-12</lastmod>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working Efficiently with GPT-6: Briefs, Reasoning, and Review - vsike</title>
+  <meta name="description" content="A practical workflow for giving Astra the right materials, choosing reasoning effort, and reducing avoidable revision rounds.">
+  <meta name="keywords" content="GPT-6 workflow, GPT-6 prompting, reasoning effort, GPT-6使用技巧, GPT-6高效提示词">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Working Efficiently with GPT-6: Briefs, Reasoning, and Review">
+  <meta property="og:description" content="A practical workflow for giving Astra the right materials, choosing reasoning effort, and reducing avoidable revision rounds.">
+  <meta property="og:url" content="https://www.vsike.com/ideas/gpt-6-reasoning-workflow.html">
+  <meta property="article:published_time" content="2026-09-21T01:41:00+09:00">
+  <link rel="canonical" href="https://www.vsike.com/ideas/gpt-6-reasoning-workflow.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-page { overflow-wrap: anywhere; }
+    .article-title { font-size: 3.25rem; letter-spacing: 0; }
+    .article-body h2, .article-body blockquote { letter-spacing: 0; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 1rem; }
+    .article-body a { text-decoration: underline; text-underline-offset: 3px; }
+    .source-list { font-size: var(--fs-sm); }
+    @media (max-width: 640px) { .article-title { font-size: 2rem; } }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page" lang="en">
+    <header class="article-header">
+      <div class="article-cat-row reveal">
+        <span class="article-cat">Practical AI</span>
+        <span class="article-date-label">September 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">Working Efficiently with GPT-6: Briefs, Reasoning, and Review</h1>
+      <p class="article-lead reveal reveal-d2">A practical workflow for giving Astra the right materials, choosing reasoning effort, and reducing avoidable revision rounds.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-21T01:41:00+09:00">2026-09-21 JST</time>. Official information checked on September 21, 2026.</p>
+    </header>
+
+    <div class="article-body">
+      <h2>Start with a deliverable someone can check</h2>
+      <p>A request such as "analyze this business" leaves the model to choose the scope, evidence, audience, and format. Our suggested alternative is a short task brief with five parts: the outcome, the materials, the constraints, the acceptance checks, and the actions you authorize. This is an editorial workflow, not an official OpenAI prompt or a measured performance guarantee.</p>
+      <p>For example, a website owner could use the following brief when commissioning an article. Replace the example details with the actual files and audience for the task.</p>
+      <blockquote>Write an 800-word article for small business owners using the three attached reports. Explain the practical implications and link each numerical claim to its source. Flag conflicting evidence. Deliver the finished article and a short list of facts that still need verification. Ask about missing information that would change the conclusion; continue drafting the sections that have enough evidence. Prepare a draft for review before publication.</blockquote>
+      <p>The word count is a format preference. The sources and verification requirements determine whether the result is usable. A stronger model still needs those inputs to make an evidence-based recommendation.</p>
+
+      <h2>Check the materials before raising the effort</h2>
+      <p>OpenAI's <a href="https://help.openai.com/en/articles/20001516-managing-usage-with-gpt-6-astra-in-work-and-codex">Work and Codex usage guide</a> says reasoning effort is separate from model selection. Higher effort can consume more allowance without always improving the result; it cannot supply missing files or permissions. Low or Medium is a suggested starting point for Astra when moving from Sol at High.</p>
+      <p>Use that as a starting experiment. If a comparison omits a supplier, first check whether the supplier's file was attached and successfully read. If all the evidence is present but the tradeoff is difficult, increasing effort is a more relevant experiment. Save the original output so you can compare the specific omission afterward.</p>
+
+      <h2>Match the workflow to the uncertainty</h2>
+      <ul>
+        <li><strong>Clear task, clear answer:</strong> try a lower effort setting for extraction, formatting, or a bounded edit, then check the required fields.</li>
+        <li><strong>Several sources or constraints:</strong> use a moderate starting setting and require source references for conclusions.</li>
+        <li><strong>Unfamiliar problem or repeated reasoning errors:</strong> test a higher setting on the difficult part and compare the result against a concrete acceptance check.</li>
+      </ul>
+      <p>These are our task-level heuristics. They do not imply a fixed speed or quality gain. In an API application, set and log the supported effort value explicitly. The <a href="https://developers.openai.com/api/docs/guides/reasoning">reasoning documentation</a> identifies <code>reasoning.effort</code> as the Responses API control and notes that Astra does not support <code>none</code>. A ChatGPT interface may offer different controls from your API client.</p>
+
+      <h2>Separate tasks at a useful boundary</h2>
+      <p>For a report, sensible stages are gathering evidence, resolving contradictions, drafting, and checking the final claims. For a code change, they might be reproducing the issue, making the edit, and verifying the affected behavior. Keep each stage's output concrete so the next stage has something dependable to use.</p>
+      <p>Do not create a separate conversation for every sentence. Repeatedly reconstructing context adds work. Start a fresh task when the objective materially changes or the history has become difficult to audit, and bring a compact handoff: the current goal, confirmed facts, relevant files, open questions, and acceptance checks.</p>
+
+      <h2>Give corrections that identify the failure</h2>
+      <p>"This is bad, try harder" gives little information about the repair. A more useful follow-up is: "The second paragraph treats a vendor forecast as an observed result. Label it as a forecast, preserve the date, and check the other numerical claims for the same issue." This turns dissatisfaction into a checkable edit.</p>
+      <p>Our suggested stopping rule is simple: finish when the agreed checks pass and any unresolved gaps are visible. If repeated attempts still fail the same check, isolate that failure using the <a href="gpt-6-quality-drop-diagnosis.html">quality-drop diagnosis guide</a>. Track the time spent reviewing with the <a href="gpt-6-efficiency-real-work.html">efficiency scorecard</a> so a longer answer does not automatically count as progress.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://help.openai.com/en/articles/20001516-managing-usage-with-gpt-6-astra-in-work-and-codex" target="_blank" rel="noopener">OpenAI Help Center: Managing Astra usage in Work and Codex</a></li>
+        <li><a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI API: Reasoning models</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

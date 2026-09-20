@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testing GPT-6 Quality: A Reproducible Check for Regressions - vsike</title>
+  <meta name="description" content="Build a small task set, keep the comparison conditions visible, and score correctness separately from speed and writing style.">
+  <meta name="keywords" content="GPT-6评测, GPT-6降智测试, GPT-6 regression test, LLM evaluation, reproducible AI benchmark">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Testing GPT-6 Quality: A Reproducible Check for Regressions">
+  <meta property="og:description" content="Build a small task set, keep the comparison conditions visible, and score correctness separately from speed and writing style.">
+  <meta property="og:url" content="https://www.vsike.com/ideas/gpt-6-quality-regression-test.html">
+  <meta property="article:published_time" content="2026-09-21T01:41:00+09:00">
+  <link rel="canonical" href="https://www.vsike.com/ideas/gpt-6-quality-regression-test.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-page { overflow-wrap: anywhere; }
+    .article-title { font-size: 3.25rem; letter-spacing: 0; }
+    .article-body h2, .article-body blockquote { letter-spacing: 0; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 1rem; }
+    .article-body a { text-decoration: underline; text-underline-offset: 3px; }
+    .source-list { font-size: var(--fs-sm); }
+    @media (max-width: 640px) { .article-title { font-size: 2rem; } }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page" lang="en">
+    <header class="article-header">
+      <div class="article-cat-row reveal">
+        <span class="article-cat">AI Evaluation</span>
+        <span class="article-date-label">September 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">Testing GPT-6 Quality: A Reproducible Check for Regressions</h1>
+      <p class="article-lead reveal reveal-d2">Build a small task set, keep the comparison conditions visible, and score correctness separately from speed and writing style.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-21T01:41:00+09:00">2026-09-21 JST</time>. Official information checked on September 21, 2026.</p>
+    </header>
+
+    <div class="article-body">
+      <h2>A bad answer is the start of an investigation</h2>
+      <p>One disappointing response can identify a useful test case. It cannot establish how a model performs across your work. OpenAI's <a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices">evaluation guidance</a> describes structured testing for nondeterministic systems and warns about judging biases, including a preference for longer answers. That makes a fixed rubric more useful than asking whether an answer feels intelligent.</p>
+      <p>The procedure below is a small screening exercise proposed by VSike. It is not a published benchmark, an independent Astra performance result, or a substitute for a larger evaluation where mistakes are costly.</p>
+
+      <h2>Choose ten tasks you actually need</h2>
+      <p>Our suggested starter set has two tasks in each of five groups: extracting facts, reasoning with constraints, following instructions, editing a real artifact, and completing a task that requires a tool. Replace groups that do not match your use. Include ordinary requests as well as cases that have previously failed.</p>
+      <p>Before testing, save the source materials and define an acceptable result for each task. For extraction, list the required fields and reference values. For a calculation, save a verified answer. For an article update, require accurate claims, working references, and the requested format. For a tool task, inspect the resulting file or application state.</p>
+      <p>Keep the tasks fixed for the first comparison. Adding only examples that favor your preferred model makes the result less representative. Maintain a separate collection of new failures for the next evaluation round.</p>
+
+      <h2>Define the comparison before running it</h2>
+      <p>A model comparison uses the same prompt, inputs, tools, and acceptance rules with different models. A regression check compares an earlier and a later run of the same setup. If an earlier model version or its original inputs are no longer available, label the comparison as limited; an old screenshot alone cannot recreate the conditions.</p>
+      <ul>
+        <li>Record the date, timezone, product, client version, and visible model selection or API model identifier.</li>
+        <li>Record reasoning settings, enabled tools, and any usage-limit or access notices.</li>
+        <li>Save the exact prompt, attachment versions, relevant conversation history, and output.</li>
+        <li>Record live dependencies such as search results; a changing webpage can change the answer independently of the model.</li>
+      </ul>
+      <p>The <a href="https://developers.openai.com/api/docs/models/gpt-6-astra">Astra model page</a> includes the currently available API identifiers. Use a documented versioned snapshot if one is available for your model and account. Do not invent a dated identifier; if only an alias is available, note that limitation in the comparison.</p>
+
+      <h2>Repeat each task and grade without the label</h2>
+      <p>For a lightweight first pass, try three runs per task per condition. Start independent conversations with the same supplied context and avoid correcting one condition while leaving the other untouched. Alternate the order when comparing two configurations so that service timing is less likely to favor one consistently.</p>
+      <p>Hide the model name while grading where practical. Use separate pass/fail checks for factual correctness, required content, and successful execution. A tone preference can have its own score. For code, use a relevant behavior check; for a spreadsheet, verify the referenced cells and formulas. A model's claim that the task is finished is not the completion check.</p>
+      <p>If you use another model as a judge, review a sample yourself and inspect disagreements. Keep both original outputs. Otherwise, an evaluator can quietly reward confident wording or length instead of the properties your task requires.</p>
+
+      <h2>Report counts, uncertainty, and the next action</h2>
+      <p>A useful report might say, "Condition A passed 24 of 30 attempts; condition B passed 19 of 30. Four additional failures involved reading the same attachment." Those are hypothetical numbers illustrating the reporting format, not measured GPT-6 results. Such a finding suggests checking the attachment path before announcing a general reasoning decline.</p>
+      <p>Three repeats across ten tasks produce correlated, small-sample evidence. Report outcomes per task as well as overall counts, keep failure examples, and avoid declaring statistical certainty from that screening set. Expand the relevant task group when the result would affect a deployment or purchasing decision.</p>
+      <p>If correctness stays stable while review time improves, use the <a href="gpt-6-efficiency-real-work.html">efficiency method</a> to measure the benefit. If failures increase, apply the <a href="gpt-6-quality-drop-diagnosis.html">diagnostic checklist</a>, document the smallest reproducible case, and send that evidence to the appropriate support or engineering team.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices" target="_blank" rel="noopener">OpenAI API: Evaluation best practices</a></li>
+        <li><a href="https://developers.openai.com/api/docs/models/gpt-6-astra" target="_blank" rel="noopener">OpenAI API: GPT-6 Astra model reference</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT-6 Efficiency: Measure the Work That Actually Gets Finished - vsike</title>
+  <meta name="description" content="What Astra's published benchmarks tell us, where they stop, and how to measure time saved after review, corrections, and retries.">
+  <meta name="keywords" content="GPT-6 efficiency, GPT-6 Astra, GPT-6高效, AI productivity, task completion">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="GPT-6 Efficiency: Measure the Work That Actually Gets Finished">
+  <meta property="og:description" content="What Astra's published benchmarks tell us, where they stop, and how to measure time saved after review, corrections, and retries.">
+  <meta property="og:url" content="https://www.vsike.com/ideas/gpt-6-efficiency-real-work.html">
+  <meta property="article:published_time" content="2026-09-21T01:41:00+09:00">
+  <link rel="canonical" href="https://www.vsike.com/ideas/gpt-6-efficiency-real-work.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-page { overflow-wrap: anywhere; }
+    .article-title { font-size: 3.25rem; letter-spacing: 0; }
+    .article-body h2, .article-body blockquote { letter-spacing: 0; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 1rem; }
+    .article-body a { text-decoration: underline; text-underline-offset: 3px; }
+    .source-list { font-size: var(--fs-sm); }
+    @media (max-width: 640px) { .article-title { font-size: 2rem; } }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page" lang="en">
+    <header class="article-header">
+      <div class="article-cat-row reveal">
+        <span class="article-cat">AI Productivity</span>
+        <span class="article-date-label">September 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">GPT-6 Efficiency: Measure the Work That Actually Gets Finished</h1>
+      <p class="article-lead reveal reveal-d2">What Astra's published benchmarks tell us, where they stop, and how to measure time saved after review, corrections, and retries.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-21T01:41:00+09:00">2026-09-21 JST</time>. Official information checked on September 21, 2026.</p>
+    </header>
+
+    <div class="article-body">
+      <h2>Read the benchmark conditions before the headline</h2>
+      <p>OpenAI's <a href="https://openai.com/index/gpt-6-astra/">Astra launch report</a> describes an OSWorld 2.0 latency simulation in which Astra scored 72.6% at roughly 40 minutes per task, compared with GPT-5.6 Sol's 65.7% at roughly 75 minutes. It also reports 1.9 times faster completion on Mind2Web with Astra and an updated Codex harness.</p>
+      <p>Those are vendor-reported results under particular evaluation conditions. The first comparison is a simulation; the second includes changes to the software running the model. Neither establishes that your spreadsheet, article, or support queue will finish at the same speed. VSike has not independently reproduced these benchmarks.</p>
+      <p>The useful question for a working team is concrete: how long does it take to obtain an output someone can actually use? A response that arrives quickly but needs three rounds of correction can consume more time than a slower response that passes review.</p>
+
+      <h2>Keep two clocks</h2>
+      <p>Our suggested measurement uses two clocks. The first records elapsed time from submitting the task to accepting the result. The second records your active time: preparing inputs, answering questions, checking the output, and repairing mistakes. These clocks describe different benefits. You may accept a longer background run if it frees you to do other work.</p>
+      <ul>
+        <li><strong>Acceptance rate:</strong> the proportion of tasks that meet a written checklist.</li>
+        <li><strong>Time to acceptance:</strong> the full elapsed time, including retries.</li>
+        <li><strong>Human effort:</strong> minutes spent preparing, supervising, and correcting.</li>
+        <li><strong>Resource use:</strong> API spending or the product's reported allowance consumption.</li>
+      </ul>
+      <p>Keep subscription allowance and API dollars in separate columns. They describe different billing systems. If a product does not expose precise consumption per task, record that limitation instead of converting a rough usage indicator into a precise cost estimate.</p>
+
+      <h2>A small example makes the tradeoff visible</h2>
+      <p>Consider a fictional batch of ten website updates. Workflow A finishes eight correctly and takes 80 minutes of total human attention. Workflow B finishes nine correctly and takes 45 minutes. That is 10 versus 5 human minutes per accepted update. These numbers are an illustration of the calculation, not a GPT-6 test result.</p>
+      <p>Also report the unfinished updates. Excluding hard failures can make a workflow appear efficient because it quietly avoids the hardest work. For larger batches, record the median and slowest runs as well as the average; a single run that gets stuck can matter more than a small improvement on easy tasks.</p>
+
+      <h2>Choose one real workflow for a pilot</h2>
+      <p>For a website editor, a useful pilot is updating an existing article from supplied source material. Give every candidate the same files, publication rules, and required output. Before starting, decide what makes the update acceptable: accurate claims, working references, no broken local links, and a readable mobile layout. Keep the final publishing step outside the experiment unless it is explicitly part of the test.</p>
+      <p>OpenAI's <a href="https://developers.openai.com/api/docs/guides/model-selection">model selection guidance</a> recommends establishing acceptable accuracy before optimizing cost and latency. Applied here, that means selecting a workflow that reliably passes editorial review, then testing whether a lower effort setting or a smaller model can preserve that result.</p>
+
+      <h2>Spend effort where it changes the outcome</h2>
+      <p>Our recommendation is to try Astra on work where combining evidence, maintaining constraints, and producing a finished artifact takes substantial human attention. For repetitive formatting with a clear answer, compare a cheaper option too. Record the failure that causes you to increase reasoning effort, then check whether the next run fixes that failure.</p>
+      <p>For task setup, continue with <a href="gpt-6-reasoning-workflow.html">the GPT-6 workflow guide</a>. For before-and-after comparisons, use <a href="gpt-6-quality-regression-test.html">the regression test method</a>.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI: GPT-6 Astra launch report</a></li>
+        <li><a href="https://developers.openai.com/api/docs/guides/model-selection" target="_blank" rel="noopener">OpenAI API: Model selection</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>
