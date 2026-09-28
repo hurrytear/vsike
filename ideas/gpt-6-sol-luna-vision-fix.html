@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAI Fixes GPT-6 Sol and Luna Image Understanding: What to Retest - vsike</title>
+  <meta name="description" content="OpenAI's September 25 changelog confirms an image-encoding bug affected Sol and Luna. A focused retest can separate that issue from other quality problems.">
+  <meta name="keywords" content="GPT-6 news, GPT-6 Sol vision fix, GPT-6 Luna image understanding, GPT-6降智, GPT-6新闻">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="OpenAI Fixes GPT-6 Sol and Luna Image Understanding: What to Retest">
+  <meta property="og:description" content="OpenAI's September 25 changelog confirms an image-encoding bug affected Sol and Luna. A focused retest can separate that issue from other quality problems.">
+  <meta property="og:url" content="https://www.vsike.com/ideas/gpt-6-sol-luna-vision-fix.html">
+  <meta property="article:published_time" content="2026-09-28T20:20:51+09:00">
+  <link rel="canonical" href="https://www.vsike.com/ideas/gpt-6-sol-luna-vision-fix.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-page { overflow-wrap: anywhere; }
+    .article-title { font-size: 3.25rem; letter-spacing: 0; }
+    .article-body h2, .article-body blockquote { letter-spacing: 0; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 1rem; }
+    .article-body a { text-decoration: underline; text-underline-offset: 3px; }
+    .source-list { font-size: var(--fs-sm); }
+    @media (max-width: 640px) { .article-title { font-size: 2rem; } }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page" lang="en">
+    <header class="article-header">
+      <div class="article-cat-row reveal">
+        <span class="article-cat">OpenAI News</span>
+        <span class="article-date-label">September 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">OpenAI Fixes GPT-6 Sol and Luna Image Understanding: What to Retest</h1>
+      <p class="article-lead reveal reveal-d2">OpenAI's September 25 changelog confirms an image-encoding bug affected Sol and Luna. A focused retest can separate that issue from other quality problems.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-28T20:20:51+09:00">2026-09-28 JST</time>. News event: September 25, 2026. Sources checked on September 28, 2026.</p>
+    </header>
+
+    <div class="article-body">
+      <h2>A documented fix for a specific problem</h2>
+      <p>On September 25, OpenAI's <a href="https://developers.openai.com/api/docs/changelog">API changelog</a> reported a fix for an image-encoding bug that weakened image understanding in GPT-6 Sol and GPT-6 Luna. It identifies visual tasks in the API and Codex, including computer use, and recommends repeating affected workflows and evaluations.</p>
+      <p>The scope matters: this entry names Sol and Luna. It does not establish an Astra regression or explain every disappointing ChatGPT response. It also supplies no universal improvement percentage. A report about a visual processing fault should be connected to tasks that actually used images.</p>
+
+      <h2>Which past results deserve another look?</h2>
+      <p>For readers who tried the new models immediately after launch, our recommendation is to revisit failures whose answers depended on visual evidence. Useful candidates include interpreting a chart, reading a screenshot, or finding a control in an application. These are suggested test cases, not a list of failures independently confirmed by VSike.</p>
+      <ul>
+        <li>Preserve the original image, prompt, model name, and failed response.</li>
+        <li>Write down what the correct result should contain before running it again.</li>
+        <li>Keep reasoning settings and tool access comparable, and record the new run's date.</li>
+        <li>Separate an incorrect visual interpretation from a failed click, missing file, or permission error.</li>
+      </ul>
+
+      <h2>Compare the same evidence</h2>
+      <p>Changing the screenshot crop, wording, model, and reasoning level together can produce a better answer while leaving the reason unclear. Begin with the same input. If the old screenshot is no longer available, state that limitation rather than presenting the result as a controlled comparison.</p>
+      <p>A repeated run can show that the current workflow succeeds. Proving exactly which internal change caused the improvement is harder, especially when the earlier service configuration cannot be reproduced. Keep that distinction in any public before-and-after report.</p>
+
+      <h2>What this adds to the quality debate</h2>
+      <p>Our reading of this news is practical: a perceived loss of quality can have a specific, documented implementation cause. That makes release notes useful evidence alongside saved examples. It does not justify treating every error as temporary or assuming that a named fix solves unrelated reasoning problems.</p>
+      <p>For a structured investigation, see <a href="gpt-6-quality-drop-diagnosis.html">our quality-drop diagnosis guide</a> and <a href="gpt-6-quality-regression-test.html">the reproducible comparison method</a>. For background on the two models, read <a href="gpt-6-sol-luna-launch.html">the Sol and Luna launch briefing</a>.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener">OpenAI API changelog: September 25, 2026 fix</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>
