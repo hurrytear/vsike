@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude API Prices in September 2026: Sonnet 5.5, Opus 5.5, and Cache Costs - vsike</title>
+  <meta name="description" content="Compare current native Claude API rates, including both cache-write durations, and calculate a sample workload without confusing API billing with a subscription.">
+  <meta name="keywords" content="Claude API pricing, Sonnet 5.5 price, Opus 5.5 price, Fable 5.1, Claude模型价格, 缓存费用">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Claude API Prices in September 2026: Sonnet 5.5, Opus 5.5, and Cache Costs">
+  <meta property="og:description" content="Compare current native Claude API rates, including both cache-write durations, and calculate a sample workload without confusing API billing with a subscription.">
+  <meta property="og:url" content="https://www.vsike.com/ideas/claude-model-pricing-september-2026.html">
+  <meta property="article:published_time" content="2026-09-30T13:45:47+09:00">
+  <link rel="canonical" href="https://www.vsike.com/ideas/claude-model-pricing-september-2026.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .article-page { overflow-wrap: anywhere; }
+    .article-title { font-size: 3.25rem; letter-spacing: 0; }
+    .article-body h2, .article-body blockquote { letter-spacing: 0; }
+    .pub-time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 1rem; }
+    .article-body a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+    .source-list { font-size: var(--fs-sm); }
+    .table-scroll { width: 100%; overflow-x: auto; margin: 1.5rem 0; }
+    .table-scroll:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+    .article-body table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: var(--fs-sm); }
+    .article-body caption { text-align: left; font-weight: 600; padding-bottom: .75rem; }
+    .article-body th, .article-body td { padding: .75rem; text-align: left; border-bottom: 1px solid var(--fg-dim); overflow-wrap: normal; }
+    .article-body tbody th, .article-body td { white-space: nowrap; }
+    .article-body thead th { font-weight: 600; }
+    .article-body tbody th { font-weight: 500; }
+    @media (max-width: 640px) { .article-title { font-size: 2rem; } }
+  </style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HMSB4BRNL0"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-HMSB4BRNL0');</script>
+</head>
+<body>
+<div class="page-transition" aria-hidden="true"></div>
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-bg" aria-hidden="true"></div>
+  <a href="../index.html" class="nav-logo">vsike<span class="nav-logo-dot" aria-hidden="true"></span></a>
+  <ul class="nav-links" role="list">
+    <li><a href="../about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="../work.html" data-i18n="nav.work">Work</a></li>
+    <li><a href="../ideas.html" data-i18n="nav.ideas">Ideas</a></li>
+    <li><a href="../contact.html" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher" role="group" aria-label="Language selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="ja">日</button>
+  </div>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="../about.html" data-i18n="nav.about">About</a>
+  <a href="../work.html" data-i18n="nav.work">Work</a>
+  <a href="../ideas.html" data-i18n="nav.ideas">Ideas</a>
+  <a href="../contact.html" data-i18n="nav.contact">Contact</a>
+  <div class="lang-switcher-mobile">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+</div>
+
+<main>
+  <article class="article-page" lang="en">
+    <header class="article-header">
+      <div class="article-cat-row reveal">
+        <span class="article-cat">AI Pricing</span>
+        <span class="article-date-label">September 2026</span>
+      </div>
+      <h1 class="article-title reveal reveal-d1">Claude API Prices in September 2026: Sonnet 5.5, Opus 5.5, and Cache Costs</h1>
+      <p class="article-lead reveal reveal-d2">Compare current native Claude API rates, including both cache-write durations, and calculate a sample workload without confusing API billing with a subscription.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-30T13:45:47+09:00">2026-09-30 JST</time>. Sources and prices checked on September 30, 2026.</p>
+    </header>
+
+    <div class="article-body">
+      <h2>Five rate categories, not one token price</h2>
+      <p>The following selected model rates come from the <a href="https://platform.claude.com/docs/en/about-claude/pricing">Claude API pricing documentation</a>, checked on September 30, 2026. Amounts are USD per million tokens on the native Claude platform. Other provider contracts, taxes, and separately charged tools can change the invoice.</p>
+      <div class="table-scroll" role="region" aria-label="Claude API price comparison" tabindex="0">
+        <table>
+          <caption>Native API rates, USD per 1M tokens</caption>
+          <thead><tr><th scope="col">Model</th><th scope="col">Input</th><th scope="col">5-min cache write</th><th scope="col">1-hour cache write</th><th scope="col">Cache hit</th><th scope="col">Output</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Sonnet 5.5</th><td>$2.00</td><td>$2.50</td><td>$4.00</td><td>$0.20</td><td>$10.00</td></tr>
+            <tr><th scope="row">Opus 5.5</th><td>$4.00</td><td>$5.00</td><td>$8.00</td><td>$0.20</td><td>$20.00</td></tr>
+            <tr><th scope="row">Fable 5.1</th><td>$10.00</td><td>$12.50</td><td>$20.00</td><td>$0.25</td><td>$50.00</td></tr>
+            <tr><th scope="row">Haiku 4.5</th><td>$1.00</td><td>$1.25</td><td>$2.00</td><td>$0.10</td><td>$5.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Cache creation is not priced like a cache hit. A longer retention choice costs more to write, so it needs sufficient reuse to make sense for the workload. Keep the categories distinct when using reported consumption; do not charge the same input category twice.</p>
+
+      <h2>The same token assumptions, four costs</h2>
+      <p><strong>Hypothetical example:</strong> 100,000 uncached input tokens and 10,000 billable output tokens, normal processing, no cache creation, no batch discount, and no extra tool charges:</p>
+      <ul>
+        <li><strong>Sonnet 5.5:</strong> 0.1 &times; $2 + 0.01 &times; $10 = <strong>$0.30</strong>.</li>
+        <li><strong>Opus 5.5:</strong> 0.1 &times; $4 + 0.01 &times; $20 = <strong>$0.60</strong>.</li>
+        <li><strong>Fable 5.1:</strong> 0.1 &times; $10 + 0.01 &times; $50 = <strong>$1.50</strong>.</li>
+        <li><strong>Haiku 4.5:</strong> 0.1 &times; $1 + 0.01 &times; $5 = <strong>$0.15</strong>.</li>
+      </ul>
+      <p>This is an illustrative calculation, not an observed bill and not an equal-quality benchmark. Actual token counts, retries, reasoning, and accepted results can differ. Text length alone is not a substitute for the usage returned by the service.</p>
+
+      <h2>Batch, fast processing, and long context</h2>
+      <p>The pricing documentation lists a 50% Batch discount on input and output. Opus 5.5 fast processing has higher $8 input and $40 output rates and does not combine with Batch. Sonnet 5.5 and Opus 5.5 have standard pricing across their full one-million-token windows; do not transfer an older model's long-context surcharge to these models.</p>
+      <p>Nor should you assume every model in the table has the same context limit. A table comparing prices is not a capability matrix. Before choosing a model for a large input, check its own model reference and the conditions of your deployment.</p>
+
+      <h2>Price parity is not task parity</h2>
+      <p>The <a href="gpt-model-pricing-september-2026.html">GPT price snapshot</a> lists GPT-6.1 Sol at the same base input/output rates as Sonnet 5.5, but with a different cached-input rate. Even that narrow price comparison does not tell us which will use fewer tokens or produce fewer revisions for a given job.</p>
+      <p>For a fair comparison, preserve the source material and acceptance criteria, then measure the total spend to reach an accepted result. Include the rejected attempts. If a lower-priced model needs multiple repairs, the nominal input price has answered only part of the budgeting question.</p>
+
+      <h2>Subscriptions are a separate purchase</h2>
+      <p>The <a href="https://support.claude.com/en/articles/8325606-what-is-the-pro-plan">Pro plan documentation</a> explicitly excludes Console API usage. A Claude subscription therefore should not be treated as prepaid access to the API rates above. Review the <a href="claude-pro-max-usage-september-2026.html">Pro/Max usage article</a> for included allowances and model-specific exceptions.</p>
+      <p>A useful monthly forecast starts with measured API usage, planned accepted tasks, and an allowance for retries. Recheck the official page before renewing a budget: this article is a dated snapshot, not a permanently fixed price list.</p>
+
+      <h2>Sources</h2>
+      <ul class="source-list">
+        <li><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Claude platform: API pricing</a></li>
+        <li><a href="https://support.claude.com/en/articles/8325606-what-is-the-pro-plan" target="_blank" rel="noopener">Claude Help: Pro does not include Console API usage</a></li>
+      </ul>
+    </div>
+    <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
+  </article>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
+  <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
+</footer>
+<script src="../js/main.js?v=20260930"></script>
+</body>
+</html>
