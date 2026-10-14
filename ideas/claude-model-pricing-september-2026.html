@@ -77,7 +77,7 @@
       </div>
       <h1 class="article-title reveal reveal-d1">Claude API Prices in September 2026: Sonnet 5.5, Opus 5.5, and Cache Costs</h1>
       <p class="article-lead reveal reveal-d2">Compare current native Claude API rates, including both cache-write durations, and calculate a sample workload without confusing API billing with a subscription.</p>
-      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-30T13:45:47+09:00">2026-09-30 JST</time>. Sources and prices checked on September 30, 2026.</p>
+      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-09-30T13:45:47+09:00">2026-09-30 JST</time>. Rates checked September 30; Sonnet 5.5 and Opus 5.5 rechecked October 14, 2026.</p>
     </header>
 
     <div class="article-body">
@@ -88,7 +88,7 @@
           <caption>Native API rates, USD per 1M tokens</caption>
           <thead><tr><th scope="col">Model</th><th scope="col">Input</th><th scope="col">5-min cache write</th><th scope="col">1-hour cache write</th><th scope="col">Cache hit</th><th scope="col">Output</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Sonnet 5.5</th><td>$2.00</td><td>$2.50</td><td>$4.00</td><td>$0.20</td><td>$10.00</td></tr>
+            <tr><th scope="row">Sonnet 5.5</th><td>$2.00</td><td>$2.50</td><td>$4.00</td><td>$0.10</td><td>$10.00</td></tr>
             <tr><th scope="row">Opus 5.5</th><td>$4.00</td><td>$5.00</td><td>$8.00</td><td>$0.20</td><td>$20.00</td></tr>
             <tr><th scope="row">Fable 5.1</th><td>$10.00</td><td>$12.50</td><td>$20.00</td><td>$0.25</td><td>$50.00</td></tr>
             <tr><th scope="row">Haiku 4.5</th><td>$1.00</td><td>$1.25</td><td>$2.00</td><td>$0.10</td><td>$5.00</td></tr>
@@ -112,7 +112,7 @@
       <p>Nor should you assume every model in the table has the same context limit. A table comparing prices is not a capability matrix. Before choosing a model for a large input, check its own model reference and the conditions of your deployment.</p>
 
       <h2>Price parity is not task parity</h2>
-      <p>The <a href="gpt-model-pricing-september-2026.html">GPT price snapshot</a> lists GPT-6.1 Sol at the same base input/output rates as Sonnet 5.5, but with a different cached-input rate. Even that narrow price comparison does not tell us which will use fewer tokens or produce fewer revisions for a given job.</p>
+      <p>The <a href="gpt-model-pricing-september-2026.html">GPT price snapshot</a> lists GPT-6.1 Sol at the same base input, output, and cached-input rates as Sonnet 5.5. These matching rates do not tell us which will use fewer tokens or produce fewer revisions for a given job. For the more expensive Opus tier, see our <a href="gpt-6-1-sol-vs-claude-opus-5-5.html">direct GPT-6.1 Sol versus Opus 5.5 comparison</a>.</p>
       <p>For a fair comparison, preserve the source material and acceptance criteria, then measure the total spend to reach an accepted result. Include the rejected attempts. If a lower-priced model needs multiple repairs, the nominal input price has answered only part of the budgeting question.</p>
 
       <h2>Subscriptions are a separate purchase</h2>

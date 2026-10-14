@@ -19,7 +19,7 @@
   </url>
   <url>
     <loc>https://www.vsike.com/ideas.html</loc>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -43,6 +43,12 @@
 
   <!-- Ideas / Articles -->
   <url>
+    <loc>https://www.vsike.com/ideas/gpt-6-1-sol-vs-claude-opus-5-5.html</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.vsike.com/ideas/chatgpt-pro-20x-quota-cut-commentary.html</loc>
     <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -50,13 +56,13 @@
   </url>
   <url>
     <loc>https://www.vsike.com/ideas/gpt-6-1-sol-launch.html</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.vsike.com/ideas/gpt-model-pricing-september-2026.html</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -74,7 +80,7 @@
   </url>
   <url>
     <loc>https://www.vsike.com/ideas/claude-model-pricing-september-2026.html</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -98,7 +104,7 @@
   </url>
   <url>
     <loc>https://www.vsike.com/ideas/claude-opus-5-5-launch.html</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
