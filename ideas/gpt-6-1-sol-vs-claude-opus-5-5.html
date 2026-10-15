@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPT-6.1 Sol vs Claude Opus 5.5: API Price, Context, and Real Work - vsike</title>
+  <title data-i18n="a.docTitle">GPT-6.1 Sol vs Claude Opus 5.5: API Price, Context, and Real Work - vsike</title>
   <meta name="description" content="Compare GPT-6.1 Sol and Claude Opus 5.5 API pricing, cache costs, context limits, speed options, and a fair way to test completed work. Checked October 14, 2026.">
   <meta name="keywords" content="GPT-6.1 Sol vs Claude Opus 5.5, AI model comparison, API pricing, context window, GPT Claude 对比">
   <meta property="og:type" content="article">
@@ -28,6 +28,10 @@
     .article-body tbody th, .article-body td { white-space: nowrap; }
     .article-body thead th { font-weight: 600; }
     .article-body tbody th { font-weight: 500; }
+    .article-translation { display: none; }
+    html[lang="en"] .article-translation[lang="en"],
+    html[lang="zh"] .article-translation[lang="zh"],
+    html[lang="ja"] .article-translation[lang="ja"] { display: block; }
     @media (max-width: 640px) { .article-title { font-size: 2rem; } }
   </style>
   <script>
@@ -69,18 +73,19 @@
 </div>
 
 <main>
-  <article class="article-page" lang="en">
+  <article class="article-page">
     <header class="article-header">
       <div class="article-cat-row reveal">
-        <span class="article-cat">AI Comparison</span>
-        <span class="article-date-label">October 2026</span>
+        <span class="article-cat" data-i18n="a.cat">AI Comparison</span>
+        <span class="article-date-label" data-i18n="a.month">October 2026</span>
       </div>
-      <h1 class="article-title reveal reveal-d1">GPT-6.1 Sol vs Claude Opus 5.5: API Price, Context, and Real Work</h1>
-      <p class="article-lead reveal reveal-d2">Compare published API terms first, then test which model gets your own work accepted with less total cost and review.</p>
-      <p class="pub-time reveal reveal-d2">Published: <time datetime="2026-10-14T19:35:03+09:00">2026-10-14 JST</time>. Sources and prices checked on October 14, 2026.</p>
+      <h1 class="article-title reveal reveal-d1" data-i18n="a.title">GPT-6.1 Sol vs Claude Opus 5.5: API Price, Context, and Real Work</h1>
+      <p class="article-lead reveal reveal-d2" data-i18n="a.lead">Compare published API terms first, then test which model gets your own work accepted with less total cost and review.</p>
+      <p class="pub-time reveal reveal-d2"><span data-i18n="a.published">Published:</span> <time datetime="2026-10-14T19:35:03+09:00" data-i18n="a.date">2026-10-14 JST</time>. <span data-i18n="a.checked">Sources and prices checked on October 14, 2026.</span></p>
     </header>
 
     <div class="article-body">
+      <div class="article-translation" lang="en">
       <h2>What the official specifications establish</h2>
       <p><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">OpenAI describes GPT-6.1 Sol</a> as a lower-cost option for complex coding, computer use, and professional work. <a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">Anthropic positions Opus 5.5</a> for long-running agentic coding and knowledge work. Both accept text and image input and produce text. These are vendor descriptions, not a controlled head-to-head quality result.</p>
       <div class="table-scroll" role="region" aria-label="GPT-6.1 Sol and Claude Opus 5.5 specifications" tabindex="0">
@@ -120,6 +125,91 @@
         <li><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Claude Platform: pricing and long-context policy</a></li>
         <li><a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode" target="_blank" rel="noopener">Claude Platform: fast mode availability and pricing</a></li>
       </ul>
+      </div>
+
+      <div class="article-translation" lang="zh">
+        <h2>官方规格能够说明什么</h2>
+        <p><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">OpenAI 将 GPT-6.1 Sol 描述为</a>适合复杂编程、计算机操作和专业工作的低成本选项。<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">Anthropic 则将 Opus 5.5 定位为</a>适合长时间运行的智能体编程和知识工作。两者都接受文本和图像输入，并输出文本。这些是厂商的产品描述，不是经过控制变量的质量对比结果。</p>
+        <div class="table-scroll" role="region" aria-label="GPT-6.1 Sol 与 Claude Opus 5.5 规格对比" tabindex="0">
+          <table>
+            <caption>原生 API 规格与 Standard 档文本 token 单价，单位：美元／百万 token</caption>
+            <thead><tr><th scope="col">模型</th><th scope="col">上下文窗口</th><th scope="col">最大输出</th><th scope="col">新输入</th><th scope="col">缓存读取</th><th scope="col">缓存写入</th><th scope="col">输出</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">GPT-6.1 Sol</th><td>1,050,000</td><td>128,000</td><td>$2.00</td><td>$0.10</td><td>$2.50</td><td>$10.00</td></tr>
+              <tr><th scope="row">Claude Opus 5.5</th><td>1,000,000</td><td>128,000</td><td>$4.00</td><td>$0.20</td><td>$5.00（5 分钟）<br>$8.00（1 小时）</td><td>$20.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>这些数字来自 <a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">OpenAI</a> 和 <a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">Claude</a> 的第一方 API 资料。两家的缓存创建规则和保留时间选项不同，因此“缓存写入”并非完全相同的产品。订阅套餐、区域处理、加速模式和单独计费的工具均未计入表格。</p>
+
+        <h2>相同 token 数量，两种成本结果</h2>
+        <p>假设一笔 Standard 请求包含<strong>10 万个新输入 token 和 1 万个计费输出 token</strong>，没有缓存和工具费用，GPT-6.1 Sol 的成本是 <strong>$0.30</strong>（0.1 × $2 + 0.01 × $10），Opus 5.5 是 <strong>$0.60</strong>（0.1 × $4 + 0.01 × $20）。这只是按标价计算。同一批源文件在两个模型上可能产生不同的计费 token 数；token 数相等也不代表结果同样有用。</p>
+        <p>输入很长时，差距会缩小。当 GPT-6.1 Sol 的提示词超过 272,000 个输入 token，OpenAI 会对<strong>整笔请求</strong>按输入和缓存价格的 2 倍、输出价格的 1.5 倍计费。Anthropic 对 Opus 5.5 在完整的百万 token 窗口内列出标准费率。因此，在 30 万个新输入 token 和 1 万个输出 token 的例子里，不计其他费用，GPT-6.1 Sol 为 <strong>$1.35</strong>，Opus 5.5 为 <strong>$1.40</strong>。标称上下文窗口相差 5 万 token，这是容量上限之差，不代表超长提示词的实际效果相同。</p>
+
+        <h2>推理、工具与速度需要分别设定</h2>
+        <p>两个 API 模型 ID 分别是 <code>gpt-6.1-sol</code> 和 <code>claude-opus-5-5</code>。GPT-6.1 Sol 的推理力度从 low 到 max，默认 medium；调用工具需要使用 Responses API。Opus 5.5 使用无法关闭的自适应思考，默认力度同为 medium。其<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">模型文档</a>还提示，从 Opus 5 迁移的调用方要注意集成方面的变化。测试时应保留各厂商支持的工具配置，并随结果记录这些设置。</p>
+        <p>OpenAI <a href="https://developers.openai.com/api/docs/changelog">于 10 月 8 日推出 GPT-6.1 Sol Ultrafast</a>，其 token 单价是 Standard 的 6 倍。Anthropic 的 <a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode">Opus 5.5 fast mode</a> 是 Claude 第一方 API 的研究预览，每百万输入 token 为 $8、输出 token 为 $40。单看加速档价格，无法判断哪家在实际任务中更快；还要计算工具等待时间和人工审查时间。</p>
+
+        <h2>用“验收完成的工作”来选择</h2>
+        <ol>
+          <li>挑选少量编程或文档任务，保存输入并事先写明验收标准。</li>
+          <li>让两个模型获得等价的文件和工具访问权限；记录模型 ID、推理力度、速度档位、上下文大小，以及产品路由或限制。</li>
+          <li>检查最终产物并计入每次重试。代码要运行相关测试；文档要核对事实、来源和格式。</li>
+          <li>按<strong>每个验收合格的结果</strong>比较 API 总费用、耗时和人工审查分钟数。</li>
+        </ol>
+        <p>我们没有独立运行 GPT-6.1 Sol 与 Opus 5.5 的基准测试。厂商的发布说法和等 token 数的算术，都无法决定哪个模型更适合你的代码仓库或文档。更完整的方法可参考<a href="gpt-6-quality-regression-test.html">可重复的评估指南</a>；其他模型的价格可分别查看 <a href="gpt-model-pricing-september-2026.html">GPT</a> 和 <a href="claude-model-pricing-september-2026.html">Claude</a> 价格表。</p>
+
+        <h2>来源</h2>
+        <ul class="source-list">
+          <li><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol" target="_blank" rel="noopener">OpenAI：GPT-6.1 Sol 模型资料和定价条件</a></li>
+          <li><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener">OpenAI API 更新日志：10 月 8 日的 Ultrafast 发布</a></li>
+          <li><a href="https://platform.claude.com/docs/en/models/opus-5-5/overview" target="_blank" rel="noopener">Claude Platform：Opus 5.5 模型资料</a></li>
+          <li><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Claude Platform：价格与长上下文政策</a></li>
+          <li><a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode" target="_blank" rel="noopener">Claude Platform：fast mode 的可用性与价格</a></li>
+        </ul>
+      </div>
+
+      <div class="article-translation" lang="ja">
+        <h2>公式仕様から分かること</h2>
+        <p><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">OpenAIはGPT-6.1 Solを</a>、複雑なコーディング、コンピューター操作、専門業務向けの比較的低コストな選択肢と説明している。<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">AnthropicはOpus 5.5を</a>、長時間動くエージェント型のコーディングや知識労働向けと位置付ける。どちらもテキストと画像を入力でき、テキストを出力する。これらは各社による製品説明であり、条件をそろえた品質比較の結果ではない。</p>
+        <div class="table-scroll" role="region" aria-label="GPT-6.1 SolとClaude Opus 5.5の仕様比較" tabindex="0">
+          <table>
+            <caption>各社のAPI仕様とStandardのテキスト料金。単位は100万トークン当たりの米ドル</caption>
+            <thead><tr><th scope="col">モデル</th><th scope="col">コンテキスト</th><th scope="col">最大出力</th><th scope="col">新規入力</th><th scope="col">キャッシュ読み取り</th><th scope="col">キャッシュ書き込み</th><th scope="col">出力</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">GPT-6.1 Sol</th><td>1,050,000</td><td>128,000</td><td>$2.00</td><td>$0.10</td><td>$2.50</td><td>$10.00</td></tr>
+              <tr><th scope="row">Claude Opus 5.5</th><td>1,000,000</td><td>128,000</td><td>$4.00</td><td>$0.20</td><td>$5.00（5分）<br>$8.00（1時間）</td><td>$20.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>料金は<a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">OpenAI</a>と<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">Claude</a>の公式API資料に基づく。キャッシュの作成条件や保持期間の選択肢は異なるため、書き込み料金を同一のサービスとして比較することはできない。サブスクリプション、地域別処理、高速モード、別料金のツールは表に含めていない。</p>
+
+        <h2>同じトークン数でも費用の見え方は変わる</h2>
+        <p>Standardで<strong>新規入力10万トークン、課金対象の出力1万トークン</strong>の仮想的なリクエストを考える。キャッシュ料金やツール料金がなければ、GPT-6.1 Solは<strong>$0.30</strong>（0.1 × $2 + 0.01 × $10）、Opus 5.5は<strong>$0.60</strong>（0.1 × $4 + 0.01 × $20）だ。これは単価からの計算にすぎない。同じファイルでも実際に課金されるトークン数は異なり得るし、トークン数が同じでも成果の有用性まで同じとは限らない。</p>
+        <p>入力が長くなると差は縮まる。GPT-6.1 Solの入力が272,000トークンを超えると、OpenAIは<strong>リクエスト全体</strong>に入力・キャッシュ料金の2倍、出力料金の1.5倍を適用する。AnthropicはOpus 5.5の100万トークンのウィンドウ全体について標準料金を示している。新規入力30万トークン、出力1万トークンの場合、追加料金を除けばGPT-6.1 Solは<strong>$1.35</strong>、Opus 5.5は<strong>$1.40</strong>となる。公称のコンテキスト長には5万トークンの差があるが、これは容量上限の違いであり、巨大な入力が同じように役立つという保証ではない。</p>
+
+        <h2>推論、ツール、速度は別々に設定する</h2>
+        <p>APIのモデルIDは<code>gpt-6.1-sol</code>と<code>claude-opus-5-5</code>だ。GPT-6.1 Solの推論強度はlowからmaxまでで、既定値はmedium。ツール呼び出しにはResponses APIが必要になる。Opus 5.5のadaptive thinkingは無効化できず、既定のeffortはmediumだ。<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">モデル資料</a>は、Opus 5から移行する利用者に統合上の変更点も示している。比較では各社が対応するツール設定を保ち、その設定を結果とともに記録したい。</p>
+        <p>OpenAIは<a href="https://developers.openai.com/api/docs/changelog">10月8日にGPT-6.1 Sol Ultrafastを追加した</a>。トークン単価はStandardの6倍だ。Anthropicの<a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode">Opus 5.5 fast mode</a>はClaudeの公式APIにおける研究プレビューで、100万トークン当たり入力$8、出力$40となる。高速プランの価格だけでは、どちらが実務で速いかは決められない。同じ作業についてツールの待ち時間や人による確認も含めて測る必要がある。</p>
+
+        <h2>採用できた成果で選ぶ</h2>
+        <ol>
+          <li>入力を保存し、合格条件を明示したコーディングや文書作成のタスクを少数選ぶ。</li>
+          <li>両モデルに同等のファイルとツールへのアクセスを与える。モデルID、推論強度、速度プラン、コンテキスト長、製品側のルーティングや制限を記録する。</li>
+          <li>完成物を確認し、やり直しをすべて数える。コードは関連テストを実行し、文書は主張、出典、書式を確認する。</li>
+          <li><strong>合格した成果1件当たり</strong>のAPI総費用、経過時間、人による確認時間を比べる。</li>
+        </ol>
+        <p>私たちはGPT-6.1 SolとOpus 5.5の独立したベンチマークを実施していない。各社の発表や同一トークン数の計算だけでは、利用者のリポジトリや文書に適したモデルは決められない。より詳しい方法は<a href="gpt-6-quality-regression-test.html">再現可能な評価ガイド</a>を参照してほしい。他のモデルの価格は<a href="gpt-model-pricing-september-2026.html">GPT</a>と<a href="claude-model-pricing-september-2026.html">Claude</a>の料金表にまとめている。</p>
+
+        <h2>出典</h2>
+        <ul class="source-list">
+          <li><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol" target="_blank" rel="noopener">OpenAI：GPT-6.1 Solのモデル資料と料金条件</a></li>
+          <li><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener">OpenAI API変更履歴：10月8日のUltrafast追加</a></li>
+          <li><a href="https://platform.claude.com/docs/en/models/opus-5-5/overview" target="_blank" rel="noopener">Claude Platform：Opus 5.5のモデル資料</a></li>
+          <li><a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Claude Platform：料金と長いコンテキストの扱い</a></li>
+          <li><a href="https://platform.claude.com/docs/en/build-with-claude/fast-mode" target="_blank" rel="noopener">Claude Platform：fast modeの提供状況と料金</a></li>
+        </ul>
+      </div>
     </div>
     <a href="../ideas.html" class="back-link" data-i18n="article.back">&larr; All Ideas</a>
   </article>
@@ -129,6 +219,40 @@
   <p data-i18n="footer.copy">&copy; 2026 vsike. All rights reserved.</p>
   <p style="margin-top:.5rem"><a href="../privacy.html" data-i18n="nav.privacy" style="color:inherit;opacity:.55;font-size:var(--fs-xs);text-decoration:underline;text-underline-offset:3px">Privacy Policy</a></p>
 </footer>
-<script src="../js/main.js?v=20261014"></script>
+<script>
+window.ARTICLE_TRANS = {
+  en: {
+    'a.docTitle': 'GPT-6.1 Sol vs Claude Opus 5.5: API Price, Context, and Real Work - vsike',
+    'a.cat': 'AI Comparison',
+    'a.month': 'October 2026',
+    'a.title': 'GPT-6.1 Sol vs Claude Opus 5.5: API Price, Context, and Real Work',
+    'a.lead': 'Compare published API terms first, then test which model gets your own work accepted with less total cost and review.',
+    'a.published': 'Published:',
+    'a.date': '2026-10-14 JST',
+    'a.checked': 'Sources and prices checked on October 14, 2026.'
+  },
+  zh: {
+    'a.docTitle': 'GPT-6.1 Sol 对比 Claude Opus 5.5：价格、上下文与实际任务 - vsike',
+    'a.cat': 'AI 对比',
+    'a.month': '2026 年 10 月',
+    'a.title': 'GPT-6.1 Sol 对比 Claude Opus 5.5：价格、上下文与实际任务',
+    'a.lead': '先比较公开的 API 条款，再用自己的任务检验哪个模型能以更少的总费用和审查时间产出合格结果。',
+    'a.published': '发布于：',
+    'a.date': '2026 年 10 月 14 日（日本时间）',
+    'a.checked': '来源和价格核查于 2026 年 10 月 14 日。'
+  },
+  ja: {
+    'a.docTitle': 'GPT-6.1 SolとClaude Opus 5.5を比較：料金、文脈長、実際の作業 - vsike',
+    'a.cat': 'AI比較',
+    'a.month': '2026年10月',
+    'a.title': 'GPT-6.1 SolとClaude Opus 5.5を比較：料金、文脈長、実際の作業',
+    'a.lead': 'まず公開されたAPI条件を比較し、自分の作業でどちらが少ない総費用と確認時間で合格する成果を出せるか試す。',
+    'a.published': '公開日：',
+    'a.date': '2026年10月14日（日本時間）',
+    'a.checked': '出典と料金は2026年10月14日に確認。'
+  }
+};
+</script>
+<script src="../js/main.js?v=20261015"></script>
 </body>
 </html>
